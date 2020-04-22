@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "emmVRCLoader", "emmVRC-Revised\emmVRCLoader.csproj", "{76F297C1-576D-45BB-8A1C-F50C13B7A3C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "emmVRC", "emmVRC\emmVRC.csproj", "{202AE309-F205-40CA-9562-A9DB4529FCE0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76F297C1-576D-45BB-8A1C-F50C13B7A3C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76F297C1-576D-45BB-8A1C-F50C13B7A3C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76F297C1-576D-45BB-8A1C-F50C13B7A3C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76F297C1-576D-45BB-8A1C-F50C13B7A3C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{202AE309-F205-40CA-9562-A9DB4529FCE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{202AE309-F205-40CA-9562-A9DB4529FCE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{202AE309-F205-40CA-9562-A9DB4529FCE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{202AE309-F205-40CA-9562-A9DB4529FCE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D24B490-DFD4-4F8E-9FEC-00EB2D5E8565}
+	EndGlobalSection
+EndGlobal

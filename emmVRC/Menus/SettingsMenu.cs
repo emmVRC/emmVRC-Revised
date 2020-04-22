@@ -1,0 +1,521 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine.Events;
+using emmVRC.Libraries;
+
+namespace emmVRC.Menus
+{
+    public class SettingsMenu
+    {
+        // Base menu for the Settings menu
+        public static PaginatedMenu baseMenu;
+
+        // Page 1
+        private static PageItem OpenBeta;
+        private static PageItem UnlimitedFPS;
+        private static PageItem RiskyFunctions;
+        private static PageItem GlobalDynamicBones;
+        private static PageItem EveryoneGlobalDynamicBones;
+        private static PageItem emmVRCNetwork;
+        private static PageItem GlobalChat;
+        private static PageItem AutoInviteMessage;
+        private static PageItem AvatarFavoriteList;
+
+        // Page 2
+        private static PageItem InfoBar;
+        private static PageItem Clock;
+        private static PageItem MasterIcon;
+        private static PageItem LogoButton;
+        private static PageItem HUD;
+        private static PageItem ForceRestart;
+        private static PageItem InfoSpoofing;
+        private static PageItem InfoHiding;
+        private static PageItem InfoSpooferNamePicker;
+
+        // Page 3
+        private static PageItem UIColorChanging;
+        private static PageItem UIColorChangePickerButton;
+        private static ColorPicker UIColorChangePicker;
+
+        // Page 4
+        private static PageItem NameplateColorChanging;
+        private static PageItem FriendNameplateColorPickerButton;
+        private static ColorPicker FriendNameplateColorPicker;
+        private static PageItem VisitorNameplateColorPickerButton;
+        private static ColorPicker VisitorNameplateColorPicker;
+        private static PageItem NewUserNameplateColorPickerButton;
+        private static ColorPicker NewUserNameplateColorPicker;
+        private static PageItem UserNameplateColorPickerButton;
+        private static ColorPicker UserNameplateColorPicker;
+        private static PageItem KnownUserNameplateColorPickerButton;
+        private static ColorPicker KnownUserNameplateColorPicker;
+        private static PageItem TrustedUserNameplateColorPickerButton;
+        private static ColorPicker TrustedUserNameplateColorPicker;
+
+        // Page 5
+        private static PageItem DisableReportWorld;
+        private static PageItem DisableEmoji;
+        private static PageItem DisableRankToggle;
+
+        // Page 6
+        private static PageItem DisablePlaylists;
+        private static PageItem DisableAvatarStats;
+        private static PageItem DisableReportUser;
+
+        // Page 7
+        private static PageItem DisableAvatarHotWorlds;
+        private static PageItem DisableAvatarRandomWorlds;
+        private static PageItem DisableAvatarLegacyList;
+        private static PageItem DisableAvatarPublicList;
+
+
+        public static void Initialize()
+        {
+            // Initialize the Paginated Menu for the Settings menu.
+            baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 1024, 768, "Settings", "The base menu for the settings menu", null);
+            baseMenu.menuEntryButton.DestroyMe();
+
+
+
+            OpenBeta = new PageItem("Open Beta", () =>
+            {
+                Configuration.JSONConfig.OpenBetaEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.OpenBetaEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the emmVRC Open Beta. Requires a restart to take affect");
+            UnlimitedFPS = new PageItem("Unlimited FPS", () => {
+                Configuration.JSONConfig.UnlimitedFPSEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () => {
+                Configuration.JSONConfig.UnlimitedFPSEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the FPS unlimiter, in desktop only.");
+            RiskyFunctions = new PageItem("Risky Functions", () => {
+                Configuration.JSONConfig.RiskyFunctionsEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () => {
+                Configuration.JSONConfig.RiskyFunctionsEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the Risky Functions, which contains functions that shouldn't be used in public worlds. This includes flight, noclip, speed, and teleporting/waypoints");
+            GlobalDynamicBones = new PageItem("Global\nDynamic Bones", () =>
+            {
+                Configuration.JSONConfig.GlobalDynamicBonesEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the Global Dynamic Bones system");
+            EveryoneGlobalDynamicBones = new PageItem("Everybody Global\nDynamic Bones", () =>
+            {
+                Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances");
+            emmVRCNetwork = new PageItem("emmVRC Network\nEnabled", () =>
+            {
+                Configuration.JSONConfig.emmVRCNetworkEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.emmVRCNetworkEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
+            GlobalChat = new PageItem("Global Chat", () =>
+            {
+                Configuration.JSONConfig.GlobalChatEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.GlobalChatEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network");
+            AutoInviteMessage = new PageItem("Automatic\nInvite Messages", () =>
+            {
+                Configuration.JSONConfig.AutoInviteMessage = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.AutoInviteMessage = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: When a message fails to send through the emmVRC Network, sends it immediately through an invite message instead");
+            AvatarFavoriteList = new PageItem("emmVRC\nFavorite List", () =>
+            {
+                Configuration.JSONConfig.AvatarFavoritesEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.AvatarFavoritesEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network");
+            baseMenu.pageItems.Add(OpenBeta);
+            baseMenu.pageItems.Add(UnlimitedFPS);
+            baseMenu.pageItems.Add(RiskyFunctions);
+            baseMenu.pageItems.Add(GlobalDynamicBones);
+            baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
+            baseMenu.pageItems.Add(emmVRCNetwork);
+            baseMenu.pageItems.Add(GlobalChat);
+            baseMenu.pageItems.Add(AutoInviteMessage);
+            baseMenu.pageItems.Add(AvatarFavoriteList);
+
+            InfoBar = new PageItem("Info Bar", () =>
+            {
+                Configuration.JSONConfig.InfoBarDisplayEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.InfoBarDisplayEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enable the info bar in the Quick Menu, which shows the current emmVRC version and network compatibility");
+            Clock = new PageItem("Clock", () =>
+            {
+                Configuration.JSONConfig.ClockEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.ClockEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the clock in the Quick Menu, which shows your computer time, and instance time");
+            MasterIcon = new PageItem("Master Icon", () =>
+            {
+                Configuration.JSONConfig.MasterIconEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.MasterIconEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the crown icon above the instance master");
+            LogoButton = new PageItem("Logo Button", () =>
+            {
+                Configuration.JSONConfig.LogoButtonEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.LogoButtonEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "TOGGLE: Enables the emmVRC Logo on your Quick Menu, that takes you to the Discord.");
+            HUD = new PageItem("HUD", () =>
+            {
+                emmVRCLoader.Logger.Log("Beep");
+                Configuration.JSONConfig.HUDEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                emmVRCLoader.Logger.Log("Beep");
+                Configuration.JSONConfig.HUDEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the HUD, which shows players in the room and instance information in Desktop and VR");
+            ForceRestart = new PageItem("Force Restart\non Loading Screen", () =>
+            {
+                Configuration.JSONConfig.ForceRestartButtonEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.ForceRestartButtonEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the Force Restart button on the loading screen, to help free you from softlocks");
+            InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
+            {
+                Configuration.JSONConfig.InfoSpoofingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.InfoSpoofingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables local info spoofing, which can protect your identity in screenshots, recordings, and streams");
+            //InfoSpooferNamePicker = new PageItem("")
+            InfoHiding = new PageItem("Local\nInfo Hiding", () =>
+            {
+                Configuration.JSONConfig.InfoHidingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.InfoHidingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables local info hiding, which can protect your identity in screenshots, recordings, and streams");
+            baseMenu.pageItems.Add(InfoBar);
+            baseMenu.pageItems.Add(Clock);
+            baseMenu.pageItems.Add(MasterIcon);
+            baseMenu.pageItems.Add(LogoButton);
+            baseMenu.pageItems.Add(HUD);
+            baseMenu.pageItems.Add(ForceRestart);
+            baseMenu.pageItems.Add(InfoSpoofing);
+            baseMenu.pageItems.Add(InfoHiding);
+            baseMenu.pageItems.Add(PageItem.Space());
+
+            UIColorChanging = new PageItem("UI Color\nChange", () =>
+            {
+                Configuration.JSONConfig.UIColorChangingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.UIColorChangingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the color changing module, which affects UI, ESP, and loading");
+            UIColorChangePicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1001, 1000, "UI Color", "Select the color for the UI", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.UIColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => { LoadMenu(); });
+            UIColorChangePickerButton = new PageItem("Select UI\nColor", () =>
+            {
+                QuickMenuUtils.ShowQuickmenuPage(UIColorChangePicker.baseMenu.getMenuName());
+            }, "Selects the color splashed across the rest of the UI");
+            baseMenu.pageItems.Add(UIColorChanging);
+            baseMenu.pageItems.Add(UIColorChangePickerButton);
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+
+            FriendNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1000, "Friend Nameplate Color", "Select the color for Friend Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.FriendNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => { LoadMenu(); });
+            VisitorNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1001, "Visitor Nameplate Color", "Select the color for Visitor Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.VisitorNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => { LoadMenu(); });
+            NewUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1002, "New User Nameplate Color", "Select the color for New User Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.NewUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => { LoadMenu(); });
+            UserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1003, "User Nameplate Color", "Select the color for User Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.UserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => { LoadMenu(); });
+            KnownUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1004, "Known User Nameplate Color", "Select the color for Known User Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.KnownUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => { LoadMenu(); });
+            TrustedUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1005, "Trusted User Nameplate Color", "Select the color for Trusted User Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.TrustedUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => { LoadMenu(); });
+            NameplateColorChanging = new PageItem("Nameplate\nColor Changing", () =>
+            {
+                Configuration.JSONConfig.NameplateColorChangingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.NameplateColorChangingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the nameplate color changing module, which changes the colors of the various trust ranks in nameplates and the UI");
+            FriendNameplateColorPickerButton = new PageItem("Friend\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(FriendNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Friend Nameplate colors");
+            VisitorNameplateColorPickerButton = new PageItem("Visitor\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(VisitorNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Visitor Nameplate colors");
+            NewUserNameplateColorPickerButton = new PageItem("New User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(NewUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for New User Nameplate colors");
+            UserNameplateColorPickerButton = new PageItem("User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(UserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for User Nameplate colors");
+            KnownUserNameplateColorPickerButton = new PageItem("Known User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(KnownUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Known User Nameplate colors");
+            TrustedUserNameplateColorPickerButton = new PageItem("Trusted User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(TrustedUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Trusted User Nameplate colors");
+            baseMenu.pageItems.Add(NameplateColorChanging);
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(FriendNameplateColorPickerButton);
+            baseMenu.pageItems.Add(VisitorNameplateColorPickerButton);
+            baseMenu.pageItems.Add(NewUserNameplateColorPickerButton);
+            baseMenu.pageItems.Add(UserNameplateColorPickerButton);
+            baseMenu.pageItems.Add(KnownUserNameplateColorPickerButton);
+            baseMenu.pageItems.Add(TrustedUserNameplateColorPickerButton);
+
+            DisableReportWorld = new PageItem("Disable\nReport World", () =>
+            {
+                Configuration.JSONConfig.DisableReportWorldButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "Enabled", () => {
+                Configuration.JSONConfig.DisableReportWorldButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "TOGGLE: Disables the 'Report World' button in the Quick Menu. Its functionality can be found in the Worlds menu, and the Disabled Buttons menu");
+            DisableEmoji = new PageItem("Disable\nEmoji", () =>
+            {
+                Configuration.JSONConfig.DisableEmojiButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "Enabled", () => {
+                Configuration.JSONConfig.DisableEmojiButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "TOGGLE: Disables the 'Emoji' button in the Quick Menu. Its functionality can be found in the Disabled Buttons menu");
+            DisableRankToggle = new PageItem("Disable\nRank Toggle", () => {
+                Configuration.JSONConfig.DisableRankToggleButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "Enabled", () => {
+                Configuration.JSONConfig.DisableRankToggleButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "TOGGLE: Disables the 'Rank Toggle' switch in the Quick Menu. Its functionality can be found in the Disabled Buttons menu");
+            DisableReportUser = new PageItem("Disable\nReport User", () =>
+            {
+                Configuration.JSONConfig.DisableReportUserButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableReportUserButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu");
+            DisablePlaylists = new PageItem("Disable\nPlaylists", () =>
+            {
+                Configuration.JSONConfig.DisablePlaylistsButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisablePlaylistsButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu");
+            DisableAvatarStats = new PageItem("Disable\nAvatar Stats", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarStatsButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarStatsButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ShortcutMenuButtons.Process();
+            }, "TOGGLE: Disables the 'Avatar Stats' button in the User Interact Menu.");
+            baseMenu.pageItems.Add(DisableReportWorld);
+            baseMenu.pageItems.Add(DisableEmoji);
+            baseMenu.pageItems.Add(DisableRankToggle);
+            baseMenu.pageItems.Add(DisablePlaylists);
+            baseMenu.pageItems.Add(DisableReportUser);
+            baseMenu.pageItems.Add(DisableAvatarStats);
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            
+            
+            
+            baseMenu.pageTitles.Add("Core Features");
+            baseMenu.pageTitles.Add("Visual Features");
+            baseMenu.pageTitles.Add("UI Color Changing");
+            baseMenu.pageTitles.Add("Nameplate Color Changing");
+            baseMenu.pageTitles.Add("Disable VRChat Buttons");
+        }
+        public static void RefreshMenu()
+        {
+            try
+            {
+                UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
+                RiskyFunctions.SetToggleState(Configuration.JSONConfig.RiskyFunctionsEnabled);
+                GlobalDynamicBones.SetToggleState(Configuration.JSONConfig.GlobalDynamicBonesEnabled);
+                EveryoneGlobalDynamicBones.SetToggleState(Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled);
+                emmVRCNetwork.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
+                GlobalChat.SetToggleState(Configuration.JSONConfig.GlobalChatEnabled);
+                AutoInviteMessage.SetToggleState(Configuration.JSONConfig.AutoInviteMessage);
+                AvatarFavoriteList.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);
+
+                InfoBar.SetToggleState(Configuration.JSONConfig.InfoBarDisplayEnabled);
+                Clock.SetToggleState(Configuration.JSONConfig.ClockEnabled);
+                MasterIcon.SetToggleState(Configuration.JSONConfig.MasterIconEnabled);
+                LogoButton.SetToggleState(Configuration.JSONConfig.LogoButtonEnabled);
+                HUD.SetToggleState(Configuration.JSONConfig.HUDEnabled);
+                ForceRestart.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
+                InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
+                InfoHiding.SetToggleState(Configuration.JSONConfig.InfoHidingEnabled);
+
+                UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
+
+                NameplateColorChanging.SetToggleState(Configuration.JSONConfig.NameplateColorChangingEnabled);
+
+                DisableReportWorld.SetToggleState(Configuration.JSONConfig.DisableReportWorldButton);
+                DisableEmoji.SetToggleState(Configuration.JSONConfig.DisableEmojiButton);
+                DisableRankToggle.SetToggleState(Configuration.JSONConfig.DisableRankToggleButton);
+                DisablePlaylists.SetToggleState(Configuration.JSONConfig.DisablePlaylistsButton);
+                DisableAvatarStats.SetToggleState(Configuration.JSONConfig.DisableAvatarStatsButton);
+                DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);
+
+            } catch (Exception ex)
+            {
+                emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
+            }
+        }
+        public static void LoadMenu()
+        {
+            RefreshMenu();
+            baseMenu.OpenMenu();
+        }
+    }
+}
