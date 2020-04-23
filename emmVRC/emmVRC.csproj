@@ -159,7 +159,6 @@
     <Compile Include="Libraries\UserInterfaceUtils.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
-    <Compile Include="Menus\AvatarFavorites.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
     <Compile Include="Menus\FunctionsMenu.cs" />
     <Compile Include="Menus\InstanceHistory.cs" />
