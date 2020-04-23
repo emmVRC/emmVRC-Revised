@@ -492,7 +492,7 @@ namespace emmVRC.Libraries
                     }
                 }*/
 
-                if (currentPage > pageTitles.Count && menuTitle != null)
+                if ((currentPage+1 > pageTitles.Count || pageTitles.Count <= 0) && menuTitle != null)
                 {
                     menuTitle.GetComponent<Text>().text = "";
                     //menuTitle.GetComponent<Text>().color = configUtils.menuColor();
