@@ -11,7 +11,6 @@ namespace emmVRC.Hacks
 {
     public class MasterCrown
     {
-        public static Thread MasterCrownThread;
         private static GameObject masterIconObj;
         public static void Initialize()
         {
@@ -21,8 +20,6 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-                try
-                {
                     if (RoomManager.field_ApiWorld_0 != null && Configuration.JSONConfig.MasterIconEnabled && Resources.crownSprite != null)
                     {
                         if (PlayerManager.Method_Public_10().Count > 1)
@@ -40,11 +37,6 @@ namespace emmVRC.Hacks
                                 }
                             }
                     }
-                }
-                catch (System.Exception ex)
-                {
-                    emmVRCLoader.Logger.LogError("[emmVRC] " + ex.ToString());
-                }
                 yield return new WaitForSeconds(0.25f);
             }
         }

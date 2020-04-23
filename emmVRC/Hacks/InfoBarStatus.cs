@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,6 @@ namespace emmVRC.Hacks
     {
         private static bool Enabled = true;
         internal static Text emmVRCStatusText;
-        private static Thread InfoBarStatusThread;
 
         public static void Initialize()
         {
@@ -54,23 +54,18 @@ namespace emmVRC.Hacks
                     component2.sizeDelta = new Vector2(component2.sizeDelta.x, component2.sizeDelta.y - 80f);
                     component2.anchoredPosition = new Vector2(component2.anchoredPosition.x, component2.anchoredPosition.y + 40f);
                 }
-                InfoBarStatusThread = new Thread(Loop)
-                {
-                    Name = "emmVRC Info Bar Status Thread",
-                    IsBackground = true
-                };
-                InfoBarStatusThread.Start();
+                MelonLoader.MelonCoroutines.Start(Loop());
             }
             else
             {
                 emmVRCLoader.Logger.LogError("QuickMenu/ShortcutMenu/PingText is null");
             }
         }
-        private static void Loop()
+        private static IEnumerator Loop()
         {
             while (Enabled)
             {
-                Thread.Sleep(5000);
+                yield return new WaitForSeconds(5f);
                 if (Configuration.JSONConfig.InfoBarDisplayEnabled)
                 {
                     /*if (Configuration.JSONConfig.emmVRCNetworkEnabled)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,6 @@ namespace emmVRC.Hacks
         private static bool Enabled = true;
         public static Text clockText;
         public static uint instanceTime = 0;
-        private static Thread ClockThread;
         
         public static void Initialize()
         {
@@ -49,23 +49,18 @@ namespace emmVRC.Hacks
                 clockText.fontSize = baseTextTransform.GetComponent<Text>().fontSize - 8;
                 clockText.fontStyle = baseTextTransform.GetComponent<Text>().fontStyle;
                 clockText.gameObject.SetActive(Configuration.JSONConfig.ClockEnabled);
-                ClockThread = new Thread(Loop)
-                {
-                    Name = "emmVRC Clock Thread",
-                    IsBackground = true
-                };
-                ClockThread.Start();
+                MelonLoader.MelonCoroutines.Start(Loop());
             }
             else
             {
                 emmVRCLoader.Logger.LogError("QuickMenu/ShortcutMenu/PingText is null");
             }
         }
-        private static void Loop()
+        private static IEnumerator Loop()
         {
             while (Enabled)
             {
-                Thread.Sleep(1000);
+                yield return new WaitForSeconds(1f);
                 if (Configuration.JSONConfig.ClockEnabled)
                 {
                     var timeString = DateTime.Now.ToShortTimeString();

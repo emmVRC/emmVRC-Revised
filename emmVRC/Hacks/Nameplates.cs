@@ -1,26 +1,21 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using UnityEngine;
 namespace emmVRC.Hacks
 {
     public class Nameplates
     {
         public static bool colorChanged = true;
-        private static Thread NameplateColorThread;
         public static void Initialize()
         {
-            NameplateColorThread = new Thread(Loop)
-            {
-                Name = "emmVRC Nameplate Coloring Thread",
-                IsBackground = true
-            };
-            NameplateColorThread.Start();
+            MelonLoader.MelonCoroutines.Start(Loop());
         }
-        private static void Loop()
+        private static IEnumerator Loop()
         {
             while (true)
             {
@@ -44,6 +39,7 @@ namespace emmVRC.Hacks
                     VRCPlayer.field_Color_6 = Libraries.ColorConversion.HexToColor("#8143E6");
                     colorChanged = false;
                 }
+                yield return new WaitForSeconds(0.5f);
             }
         }
     }

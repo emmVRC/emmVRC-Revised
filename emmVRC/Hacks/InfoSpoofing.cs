@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -180,7 +181,6 @@ namespace emmVRC.Hacks
         private static GameObject avatarImage;
         private static GameObject spoofedAvatarImage;
         private static int spoofedWorldID = 294756;
-        private static Thread InfoSpoofThread;
 
         public static void Initialize()
         {
@@ -196,19 +196,13 @@ namespace emmVRC.Hacks
             spoofedAvatarImage = GameObject.Instantiate(avatarImage, avatarImage.transform.parent);
 
             NameSpoofGenerator.GenerateNewName();
-
-            InfoSpoofThread = new Thread(Loop)
-            {
-                Name = "emmVRC Info Spoofing Thread",
-                IsBackground = true
-            };
-            InfoSpoofThread.Start();
+            MelonLoader.MelonCoroutines.Start(Loop());
         }
-        private static void Loop()
+        private static IEnumerator Loop()
         {
             while (Enabled)
             {
-                Thread.Sleep(10);
+                yield return new WaitForSeconds(0.1f);
                 try
                 {
                     if (Configuration.JSONConfig.InfoHidingEnabled /*|| Configuration.JSONConfig.InfoSpoofingEnabled*/)
