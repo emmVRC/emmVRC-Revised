@@ -33,7 +33,7 @@ namespace emmVRC
         {
             emmVRCLoader.Logger.Log("UI manager initialized");
             // Load resources for emmVRC, including downloading them if needed
-            MelonLoader.MelonCoroutines.Start(Resources.LoadResources());
+            Resources.LoadResources();
 
             // Initialize the "Functions" menu
             emmVRCLoader.Logger.LogDebug("Initializing functions menu...");

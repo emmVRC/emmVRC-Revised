@@ -261,20 +261,22 @@ namespace emmVRC.Libraries
                 {
                     qmtoggle.setActive(false);
                 }
+                int maxPages = (int)Math.Ceiling((double)pageItems.Count / 9);
+                maxPages--;
                 if (currentPage < 0)
                     currentPage = 0;
-                if (currentPage > pageItems.Count / 9)
-                    currentPage = (int)pageItems.Count / 9;
+                if (currentPage > maxPages)
+                    currentPage = maxPages;
                 if (pageItems.Count > 9)
                 {
                     pageCount.setActive(true);
-                    pageCount.setButtonText("Page\n" + (currentPage + 1) + " of " + (((int)pageItems.Count / 9) + 1));
+                    pageCount.setButtonText("Page\n" + (currentPage + 1) + " of " + ((int)Math.Ceiling((double)pageItems.Count / 9)));
                 }
 
                 List<PageItem> itemsToAdd = pageItems.GetRange(currentPage * 9, Math.Abs(currentPage * 9 - pageItems.Count));
 
                 if (itemsToAdd == null)
-                    emmVRCLoader.Logger.LogError("The page list of items is null. This is a problem.");
+                    emmVRCLoader.Logger.LogError("[emmVRC] The page list of items is null. This is a problem.");
                 else if (itemsToAdd.Count > 0)
                 {
                     if (itemsToAdd[0].type == PageItems.Button)
