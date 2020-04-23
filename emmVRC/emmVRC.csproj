@@ -138,8 +138,10 @@
     <Compile Include="Hacks\MasterCrown.cs" />
     <Compile Include="Hacks\Nameplates.cs" />
     <Compile Include="Hacks\ShortcutMenuButtons.cs" />
+    <Compile Include="Hacks\SocialMenuFunctions.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
+    <Compile Include="Libraries\InputUtilities.cs" />
     <Compile Include="Libraries\MainMenuUtils.cs" />
     <Compile Include="Libraries\PaginatedMenu.cs" />
     <Compile Include="Libraries\PopupManagerUtils.cs" />
