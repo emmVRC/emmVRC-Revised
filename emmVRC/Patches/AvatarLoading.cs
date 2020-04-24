@@ -22,6 +22,8 @@ namespace emmVRC.Patches
         {
             
             //var HarmonyInstance = NET_SDK.Harmony.Manager.CreateInstance("emmVRC Patching");
+            //var AvatarManager = SDK.GetClass("VRCAvatarManager");
+            //HarmonyInstance.Patch(AvatarManager.GetMethods().FirstOrDefault(x => (x.GetReturnType().Name == "System.Void") && x.GetParameters().FirstOrDefault().Ptr == NET_SDK.IL2CPP.il2cpp_class_get_type(SDK.GetClass("UnityEngine.GameObject").Ptr)), AccessTools.Method(typeof(Avatarload), "AvatarLoadingPatch"));
             //var VRCAvatarManager = NET_SDK.SDK.GetClass("VRCAvatarManager");
             //IL2CPP_Method[] methods = VRCAvatarManager.GetMethods(x => (x.HasFlag(NET_SDK.Reflection.IL2CPP_BindingFlags.METHOD_PUBLIC) && (x.GetParameterCount() == 1) && x.GetParameters()[0].));
             //for (int i = 0; i < methods.Length; i++)
@@ -44,7 +46,7 @@ namespace emmVRC.Patches
                 avatarLoadingPatch = instance.Patch(methIsBadMkay, typeof(AvatarLoading).GetMethod("ApplyAvatarFeaturePermissions"));*/
 
         }
-        public bool AvatarLoadingPatch(UnityEngine.GameObject _1, VRCAvatarManager _instance)
+        public static bool AvatarLoadingPatch(UnityEngine.GameObject __0, VRCAvatarManager __instance)
         {
             
             emmVRCLoader.Logger.Log("I did it!");

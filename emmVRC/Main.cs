@@ -63,6 +63,12 @@ namespace emmVRC
             // Initialize the Quick Menu status
             Hacks.InfoBarStatus.Initialize();
 
+            // Initialize the Flight and Noclip module for Risky Functions
+            Hacks.Flight.Initialize();
+
+            // Initialize the Avatar Menu hacks
+            Hacks.AvatarMenu.Initialize();
+
             // Initialize the Info Spoof/Hider
             // Hacks.InfoSpoofing.Initialize();
 
@@ -77,9 +83,7 @@ namespace emmVRC
 
             // Start the Master Icon Crown
             Hacks.MasterCrown.Initialize();
-
             
-
             // Start the Avatar Favorite system
             Hacks.CustomAvatarFavorites.Initialize();
 
@@ -88,7 +92,16 @@ namespace emmVRC
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
-            
+
+            // As a last-ditch effort, try changing colors
+            try
+            {
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }
+            catch (Exception ex)
+            {
+                Exception ex2 = ex;
+            }
         }
         public static void OnLevelWasLoaded(int level)
         {
@@ -99,8 +112,19 @@ namespace emmVRC
                 // Reset the instance clock when you switch instances
                 if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
                     Hacks.InfoBarClock.instanceTime = 0;
-
-
+                
+            }
+            
+        }
+        public static void OnLevelWasInitialized(int level)
+        {
+            // Apply color changes, if applicable
+            try
+            {
+                Hacks.ColorChanger.ApplyIfApplicable();
+            } catch (Exception ex)
+            {
+                Exception ex2 = ex;
             }
         }
         public static void OnUpdate()
@@ -118,9 +142,11 @@ namespace emmVRC
             }
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                KeybindChanger.Show("Please select a keybind for \"TestFunction\":", (KeyCode mainKey, KeyCode modifier1) => {
-                    emmVRCLoader.Logger.LogDebug(mainKey.ToString() + modifier1.ToString());
-                }, null);
+                Hacks.Flight.FlightEnabled = !Hacks.Flight.FlightEnabled;
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Hacks.Flight.NoclipEnabled = !Hacks.Flight.NoclipEnabled;
             }
             Hacks.CustomAvatarFavorites.OnUpdate();            
         }

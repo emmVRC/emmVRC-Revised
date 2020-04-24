@@ -130,6 +130,7 @@
     <Compile Include="Hacks\AvatarMenu.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />
     <Compile Include="Hacks\CustomAvatarFavorites.cs" />
+    <Compile Include="Hacks\Flight.cs" />
     <Compile Include="Hacks\FOV.cs" />
     <Compile Include="Hacks\FPS.cs" />
     <Compile Include="Hacks\Hook.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Objects\Slider.cs" />
     <Compile Include="Patches\AvatarLoading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReplaceCubemap.cs" />
     <Compile Include="Resources.cs" />
   </ItemGroup>
   <ItemGroup>

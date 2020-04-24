@@ -68,12 +68,17 @@ namespace emmVRC.Hacks
                 yield return new WaitForSeconds(5f);
                 if (Configuration.JSONConfig.InfoBarDisplayEnabled)
                 {
+                    emmVRCStatusText.gameObject.SetActive(true);
                     /*if (Configuration.JSONConfig.emmVRCNetworkEnabled)
                     {
                         emmVRCStatusText.text = emmVRCNet.loggedIn ? "<color=#FF69B4>emmVRC</color> v" + emmVRC.version + "    Network Status: <color=lime>Connected</color>" : "emmVRC v" + emmVRC.version + "    Network Status: <color=red> Disconnected </color>";
                     }*/
 
                     emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version;
+                }
+                else
+                {
+                    emmVRCStatusText.gameObject.SetActive(false);
                 }
             }
         }

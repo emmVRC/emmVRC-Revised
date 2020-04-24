@@ -63,6 +63,7 @@ namespace emmVRC.Hacks
                 yield return new WaitForSeconds(1f);
                 if (Configuration.JSONConfig.ClockEnabled)
                 {
+                    clockText.gameObject.SetActive(true);
                     var timeString = DateTime.Now.ToShortTimeString();
                     string instanceTimeString = "00:00:00";
                     if (RoomManager.field_ApiWorld_0 != null)
@@ -72,6 +73,10 @@ namespace emmVRC.Hacks
                         instanceTime += 1;
                     }
                     clockText.text = "(" + instanceTimeString + ") " + timeString;
+                }
+                else
+                {
+                    clockText.gameObject.SetActive(false);
                 }
             }
         }

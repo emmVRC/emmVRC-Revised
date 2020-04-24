@@ -85,6 +85,8 @@ namespace emmVRC.Hacks
             GameObject oldPublicAvatarList;
             oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
+            PublicAvatarList.name = "emmVRC Avatar List";
+            PublicAvatarList.GetComponent<UiAvatarList>().category = UiAvatarList.Nested0.SpecificList;
             PublicAvatarList.transform.SetAsFirstSibling();
             ChangeButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Change Button").gameObject;
             baseChooseEvent = ChangeButton.GetComponent<Button>().onClick;
@@ -103,7 +105,7 @@ namespace emmVRC.Hacks
         }
         public static void FavoriteAvatar(ApiAvatar avtr)
         {
-            LoadedAvatars.Add(avtr);
+            LoadedAvatars.Insert(0, avtr);
             Objects.SerializedAvatar serAvtr = new Objects.SerializedAvatar
             {
                 name = avtr.name,
@@ -113,7 +115,7 @@ namespace emmVRC.Hacks
                 authorId = avtr.authorId,
                 supportedPlatforms = avtr.supportedPlatforms
             };
-            LoadedSerializedAvatars.Insert(LoadedSerializedAvatars.Count, serAvtr);
+            LoadedSerializedAvatars.Insert(0, serAvtr);
             avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
         }
         public static void UnfavoriteAvatar(ApiAvatar avtr)
@@ -226,14 +228,16 @@ namespace emmVRC.Hacks
                     }
                 }
             }
-            if ((error || !Configuration.JSONConfig.AvatarFavoritesEnabled) && PublicAvatarList.activeSelf && FavoriteButtonNew.activeSelf)
+            if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled) && PublicAvatarList.activeSelf && FavoriteButtonNew.activeSelf)
             {
                 PublicAvatarList.SetActive(false);
-                FavoriteButtonNew.SetActive(false);
+                if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled)
+                    FavoriteButtonNew.SetActive(false);
             }
             else if (!PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled)
             {
-                PublicAvatarList.SetActive(true);
+                if (LoadedAvatars.Count > 0)
+                    PublicAvatarList.SetActive(true);
                 FavoriteButtonNew.SetActive(true);
             }
             if (error && !errorWarned)

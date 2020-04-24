@@ -311,6 +311,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.UIColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
             }, () => { LoadMenu(); });
             UIColorChangePickerButton = new PageItem("Select UI\nColor", () =>
             {
@@ -473,6 +474,61 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageItems.Add(PageItem.Space());
 
+            DisableAvatarHotWorlds = new PageItem("Disable Hot Avatar\nWorld List", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarHotWorlds = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarHotWorlds = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Disables the 'Hot Avatar Worlds' list in your Avatars menu");
+            DisableAvatarRandomWorlds = new PageItem("Disable Random\nAvatar World List", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarRandomWorlds = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarRandomWorlds = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Disables the 'Random Avatar Worlds' list in your Avatars menu");
+            DisableAvatarLegacyList = new PageItem("Disable Legacy\nAvatar List", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarLegacy = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarLegacy = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Disables the 'Legacy Avatars' list in your Avatars menu");
+            DisableAvatarPublicList = new PageItem("Disable Public\nAvatar List", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarPublic = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarPublic = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Disables the 'Public Avatars' list in your Avatars menu");
+            baseMenu.pageItems.Add(DisableAvatarHotWorlds);
+            baseMenu.pageItems.Add(DisableAvatarRandomWorlds);
+            baseMenu.pageItems.Add(DisableAvatarLegacyList);
+            baseMenu.pageItems.Add(DisableAvatarPublicList);
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+
+
             FlightKeybind = new PageItem("Flight\nKeybind:\nLeftCTRL + F", () => { 
                 KeybindChanger.Show("Please press a keybind for Flight:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
                 Configuration.JSONConfig.FlightKeybind[0] = (int)mainKey;
@@ -534,6 +590,7 @@ namespace emmVRC.Menus
             baseMenu.pageTitles.Add("UI Color Changing");
             baseMenu.pageTitles.Add("Nameplate Color Changing");
             baseMenu.pageTitles.Add("Disable VRChat Buttons");
+            baseMenu.pageTitles.Add("Disable Avatar Menu Lists");
             baseMenu.pageTitles.Add("Keybinds");
         }
         public static void RefreshMenu()
@@ -568,6 +625,11 @@ namespace emmVRC.Menus
                 DisablePlaylists.SetToggleState(Configuration.JSONConfig.DisablePlaylistsButton);
                 DisableAvatarStats.SetToggleState(Configuration.JSONConfig.DisableAvatarStatsButton);
                 DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);
+
+                DisableAvatarHotWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarHotWorlds);
+                DisableAvatarRandomWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarRandomWorlds);
+                DisableAvatarLegacyList.SetToggleState(Configuration.JSONConfig.DisableAvatarLegacy);
+                DisableAvatarPublicList.SetToggleState(Configuration.JSONConfig.DisableAvatarPublic);
 
                 FlightKeybind.Name = "Flight:\n"+(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "")+(KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));
                 NoclipKeybind.Name = "Noclip:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0])));
