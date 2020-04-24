@@ -1,4 +1,5 @@
-﻿namespace emmVRC.Objects
+﻿
+namespace emmVRC.Objects
 {
     public class Config
     {
@@ -74,5 +75,11 @@
         // Hook-ins for the VRChat nameplate and UI hiding
         public bool NameplatesVisible = true;
         public bool UIVisible = true;
+
+        public int[] FlightKeybind = new int[2] {  102, 306 };
+        public int[] NoclipKeybind = new int[2] {  109, 306 };
+        public int[] SpeedKeybind = new int[2] {  103, 306 };
+        public int[] ThirdPersonKeybind = new int[2] {  116, 306 };
+        public int[] ToggleHUDEnabledKeybind = new int[2] {  106, 306 };
     }
 }

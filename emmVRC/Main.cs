@@ -47,6 +47,9 @@ namespace emmVRC
             emmVRCLoader.Logger.LogDebug("Initializing Settings menu...");
             Menus.SettingsMenu.Initialize();
 
+            // Initialize the Keybind Changing UI
+            Libraries.KeybindChanger.Initialize();
+
             // Start the Notification manager
             emmVRCLoader.Logger.LogDebug("Initializing Notification manager...");
             Managers.NotificationManager.Initialize();
@@ -75,10 +78,12 @@ namespace emmVRC
             // Start the Master Icon Crown
             Hacks.MasterCrown.Initialize();
 
+            
+
             // Start the Avatar Favorite system
             Hacks.CustomAvatarFavorites.Initialize();
 
-            //Patches.AvatarLoading.Apply();
+            Patches.AvatarLoading.Apply();
 
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
@@ -110,6 +115,12 @@ namespace emmVRC
                     Configuration.JSONConfig.WelcomeMessageShown = true;
                     Configuration.SaveConfig();
                 }
+            }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                KeybindChanger.Show("Please select a keybind for \"TestFunction\":", (KeyCode mainKey, KeyCode modifier1) => {
+                    emmVRCLoader.Logger.LogDebug(mainKey.ToString() + modifier1.ToString());
+                }, null);
             }
             Hacks.CustomAvatarFavorites.OnUpdate();            
         }

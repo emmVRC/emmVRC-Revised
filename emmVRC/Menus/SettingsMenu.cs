@@ -71,6 +71,13 @@ namespace emmVRC.Menus
         private static PageItem DisableAvatarLegacyList;
         private static PageItem DisableAvatarPublicList;
 
+        // Page 8
+        private static PageItem FlightKeybind;
+        private static PageItem NoclipKeybind;
+        private static PageItem SpeedKeybind;
+        private static PageItem ThirdPersonKeybind;
+        private static PageItem ToggleHUDEnabledKeybind;
+
 
         public static void Initialize()
         {
@@ -465,14 +472,69 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageItems.Add(PageItem.Space());
-            
-            
-            
+
+            FlightKeybind = new PageItem("Flight\nKeybind:\nLeftCTRL + F", () => { 
+                KeybindChanger.Show("Please press a keybind for Flight:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+                Configuration.JSONConfig.FlightKeybind[0] = (int)mainKey;
+                Configuration.JSONConfig.FlightKeybind[1] = (int)modifier;
+                Configuration.SaveConfig();
+                LoadMenu();
+            }, () => {
+                LoadMenu();
+            }); }, "Change the keybind for flying (Default is LeftCTRL + F");
+            NoclipKeybind = new PageItem("Noclip\nKeybind:\nLeftCTRL + M", () => {
+                KeybindChanger.Show("Please press a keybind for Noclip:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+                    Configuration.JSONConfig.NoclipKeybind[0] = (int)mainKey;
+                    Configuration.JSONConfig.NoclipKeybind[1] = (int)modifier;
+                    Configuration.SaveConfig();
+                    LoadMenu();
+                }, () => {
+                    LoadMenu();
+                });
+            }, "Change the keybind for noclip (Default is LeftCTRL + M");
+            SpeedKeybind = new PageItem("Speed\nKeybind:\nLeftCTRL + G", () => {
+                KeybindChanger.Show("Please press a keybind for Speed:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+                    Configuration.JSONConfig.SpeedKeybind[0] = (int)mainKey;
+                    Configuration.JSONConfig.SpeedKeybind[1] = (int)modifier;
+                    Configuration.SaveConfig();
+                    LoadMenu();
+                }, () => {
+                    LoadMenu();
+                });
+            }, "Change the keybind for speed (Default is LeftCTRL + G");
+            ThirdPersonKeybind = new PageItem("Third\nPerson\nKeybind:\nLeftCTRL + T", () => {
+                KeybindChanger.Show("Please press a keybind for Third Person:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+                    Configuration.JSONConfig.ThirdPersonKeybind[0] = (int)mainKey;
+                    Configuration.JSONConfig.ThirdPersonKeybind[1] = (int)modifier;
+                    Configuration.SaveConfig();
+                    LoadMenu();
+                }, () => {
+                    LoadMenu();
+                });
+            }, "Change the keybind for third person (Default is LeftCTRL + T");
+            ToggleHUDEnabledKeybind = new PageItem("Toggle HUD\nEnabled\nKeybind:\nLeftCTRL + J", () => {
+                KeybindChanger.Show("Please press a keybind for toggling the HUD:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+                    Configuration.JSONConfig.ToggleHUDEnabledKeybind[0] = (int)mainKey;
+                    Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] = (int)modifier;
+                    Configuration.SaveConfig();
+                    LoadMenu();
+                }, () => {
+                    LoadMenu();
+                });
+            }, "Change the keybind for toggling the HUD on and off (Default is LeftCTRL + J");
+            baseMenu.pageItems.Add(FlightKeybind);
+            baseMenu.pageItems.Add(NoclipKeybind);
+            baseMenu.pageItems.Add(SpeedKeybind);
+            baseMenu.pageItems.Add(ThirdPersonKeybind);
+            baseMenu.pageItems.Add(ToggleHUDEnabledKeybind);
+
+
             baseMenu.pageTitles.Add("Core Features");
             baseMenu.pageTitles.Add("Visual Features");
             baseMenu.pageTitles.Add("UI Color Changing");
             baseMenu.pageTitles.Add("Nameplate Color Changing");
             baseMenu.pageTitles.Add("Disable VRChat Buttons");
+            baseMenu.pageTitles.Add("Keybinds");
         }
         public static void RefreshMenu()
         {
@@ -506,6 +568,14 @@ namespace emmVRC.Menus
                 DisablePlaylists.SetToggleState(Configuration.JSONConfig.DisablePlaylistsButton);
                 DisableAvatarStats.SetToggleState(Configuration.JSONConfig.DisableAvatarStatsButton);
                 DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);
+
+                FlightKeybind.Name = "Flight:\n"+(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "")+(KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));
+                NoclipKeybind.Name = "Noclip:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0])));
+                SpeedKeybind.Name = "Speed:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0])));
+                ThirdPersonKeybind.Name = "Third\nPerson:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0])));
+                ToggleHUDEnabledKeybind.Name = "Toggle HUD\nEnabled:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0])));
+
+
 
             } catch (Exception ex)
             {

@@ -127,6 +127,7 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
+    <Compile Include="Hacks\AvatarMenu.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />
     <Compile Include="Hacks\CustomAvatarFavorites.cs" />
     <Compile Include="Hacks\FOV.cs" />
@@ -139,9 +140,12 @@
     <Compile Include="Hacks\Nameplates.cs" />
     <Compile Include="Hacks\ShortcutMenuButtons.cs" />
     <Compile Include="Hacks\SocialMenuFunctions.cs" />
+    <Compile Include="Hacks\WorldMenuFunctions.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Libraries\InputUtilities.cs" />
+    <Compile Include="Libraries\KeybindChanger.cs" />
+    <Compile Include="Libraries\KeyCodeConversion.cs" />
     <Compile Include="Libraries\MainMenuUtils.cs" />
     <Compile Include="Libraries\PaginatedMenu.cs" />
     <Compile Include="Libraries\PopupManagerUtils.cs" />

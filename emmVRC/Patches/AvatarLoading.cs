@@ -9,6 +9,9 @@ using Il2CppSystem.Reflection;
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
 using Il2CppSystem;
+using NET_SDK;
+using NET_SDK.Reflection;
+using NET_SDK.Harmony;
 
 namespace emmVRC.Patches
 {
@@ -18,6 +21,13 @@ namespace emmVRC.Patches
         public static void Apply()
         {
             
+            //var HarmonyInstance = NET_SDK.Harmony.Manager.CreateInstance("emmVRC Patching");
+            //var VRCAvatarManager = NET_SDK.SDK.GetClass("VRCAvatarManager");
+            //IL2CPP_Method[] methods = VRCAvatarManager.GetMethods(x => (x.HasFlag(NET_SDK.Reflection.IL2CPP_BindingFlags.METHOD_PUBLIC) && (x.GetParameterCount() == 1) && x.GetParameters()[0].));
+            //for (int i = 0; i < methods.Length; i++)
+            //{
+            //    HarmonyInstance.Patch(methods[i], AccessTools.Method(typeof(AvatarLoading), "AvatarLoadingPatch"));
+            //}
             /*NET_SDK.Harmony.Instance instance = NET_SDK.Harmony.Manager.CreateInstance("AvatarLoadingPatcher");
             NET_SDK.Reflection.IL2CPP_Method methIsBadMkay = null;
             foreach (NET_SDK.Reflection.IL2CPP_Method method in NET_SDK.SDK.GetClass("VRCAvatarManager").GetMethods(NET_SDK.Reflection.IL2CPP_BindingFlags.METHOD_PRIVATE))
@@ -32,7 +42,13 @@ namespace emmVRC.Patches
             }
             if (methIsBadMkay != null)
                 avatarLoadingPatch = instance.Patch(methIsBadMkay, typeof(AvatarLoading).GetMethod("ApplyAvatarFeaturePermissions"));*/
+
+        }
+        public bool AvatarLoadingPatch(UnityEngine.GameObject _1, VRCAvatarManager _instance)
+        {
             
+            emmVRCLoader.Logger.Log("I did it!");
+            return true;
         }
         public void ApplyAvatarFeaturePermissions(System.IntPtr @this)
         {
