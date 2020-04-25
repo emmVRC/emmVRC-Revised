@@ -24,7 +24,7 @@ namespace emmVRC
         public static Texture2D uiMaximized;
 
         // Gradient texture and material, for use in custom colors for the loading screen
-        public static Texture2D blankGradient;
+        public static Texture2D blankGradient = new Texture2D(16, 16);
         public static Material gradientMaterial = new Material(Shader.Find("Skybox/6 Sided"));
 
         // Icons, for use in notifications, the logo, and nameplate textures
@@ -79,12 +79,19 @@ namespace emmVRC
             dlBundle.add_completed(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action<AsyncOperation>>((System.Action<AsyncOperation>)((AsyncOperation op) => {
                 AssetBundle newBundle = dlBundle.assetBundle;
                 offlineSprite = newBundle.LoadAssetAsync("Assets/Offline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+                while (offlineSprite == null) ;
                 onlineSprite = newBundle.LoadAssetAsync("Assets/Online.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+                while (onlineSprite == null) ;
                 owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+                while (owonlineSprite == null) ;
                 alertSprite = newBundle.LoadAssetAsync("Assets/Alert.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+                while (alertSprite == null) ;
                 errorSprite = newBundle.LoadAssetAsync("Assets/Error.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+                while (errorSprite == null) ;
                 messageSprite = newBundle.LoadAssetAsync("Assets/Message.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+                while (messageSprite == null) ;
                 crownSprite = newBundle.LoadAssetAsync("Assets/Crown.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+                while (crownSprite == null) ;
 
                 // Some sprite operations are done here, because the other objects would be initialized by the time this happened
                 Hacks.ShortcutMenuButtons.logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
@@ -125,18 +132,6 @@ namespace emmVRC
             // Load the texture textures :catShrug:
             WWW PanelTextureWWW = new WWW(string.Format("file://{0}", resourcePath + "/Textures/Panel.png").Replace(@"\", "/"));
             panelTexture = PanelTextureWWW.texture;
-
-            // Load the loading screen gradient from a B64 string, so that it can be embedded into emmVRC and not need to download from a server
-            /*ImageConversion.LoadImage(blankGradient, Convert.FromBase64String(B64Textures.Gradient));
-
-            // Construct the skybox for the loading screen from the gradient texture
-            gradientMaterial.SetTexture("_LeftTex", blankGradient);
-            gradientMaterial.SetTexture("_FrontTex", blankGradient);
-            gradientMaterial.SetTexture("_RightTex", blankGradient);
-            gradientMaterial.SetTexture("_UpTex", blankGradient);
-            gradientMaterial.SetTexture("_BackTex", blankGradient);
-            gradientMaterial.SetTexture("_DownTex", blankGradient);
-            */
         }
     }
 }

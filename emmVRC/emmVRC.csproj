@@ -141,6 +141,7 @@
     <Compile Include="Hacks\Nameplates.cs" />
     <Compile Include="Hacks\ShortcutMenuButtons.cs" />
     <Compile Include="Hacks\SocialMenuFunctions.cs" />
+    <Compile Include="Hacks\Speed.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />

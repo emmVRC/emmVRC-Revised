@@ -66,6 +66,9 @@ namespace emmVRC
             // Initialize the Flight and Noclip module for Risky Functions
             Hacks.Flight.Initialize();
 
+            // Initialize the Speed module for Risky Functions
+            Hacks.Speed.Initialize();
+
             // Initialize the Avatar Menu hacks
             Hacks.AvatarMenu.Initialize();
 
@@ -86,6 +89,8 @@ namespace emmVRC
             
             // Start the Avatar Favorite system
             Hacks.CustomAvatarFavorites.Initialize();
+
+
 
             Patches.AvatarLoading.Apply();
 
@@ -142,11 +147,8 @@ namespace emmVRC
             }
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                Hacks.Flight.FlightEnabled = !Hacks.Flight.FlightEnabled;
-            }
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Hacks.Flight.NoclipEnabled = !Hacks.Flight.NoclipEnabled;
+                Hacks.Speed.SpeedModified = true;
+                Hacks.Speed.Modifier += 2f;
             }
             Hacks.CustomAvatarFavorites.OnUpdate();            
         }

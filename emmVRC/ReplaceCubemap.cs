@@ -62,7 +62,7 @@ namespace emmVRC
                 c.SetPixels(CubeMapColors, (CubemapFace)i);
             }
             // we set the cubemap from the texture pixel by pixel
-            c.Apply();
+            //c.Apply();
             return c;
         }
         private static Color[] CreateCubemapTexture(int resolution, CubemapFace face)
@@ -87,7 +87,7 @@ namespace emmVRC
                     texelX += texelX_Step;
                     texelY += texelY_Step;
                 }
-                texture.SetPixels(0, y, resolution, 1, cols);
+                texture.SetPixels(0, y, resolution, 1, cols, 0);
                 texelIndex += texelSize;
             }
             texture.wrapMode = TextureWrapMode.Clamp;
@@ -101,13 +101,13 @@ namespace emmVRC
 
         private static Color Project(Vector3 direction)
         {
-            float theta = Mathf.Atan2(direction.z, direction.x) + Mathf.PI / 180.0f;
+            float theta = Mathf.Atan2(direction.z, direction.x) + 3.14159274f / 180.0f;
             float phi = Mathf.Acos(direction.y);
 
-            int texelX = (int)(((theta / Mathf.PI) * 0.5f + 0.5f) * source.width);
+            int texelX = (int)(((theta / 3.14159274f) * 0.5f + 0.5f) * source.width);
             if (texelX < 0) texelX = 0;
             if (texelX >= source.width) texelX = source.width - 1;
-            int texelY = (int)((phi / Mathf.PI) * source.height);
+            int texelY = (int)((phi / 3.14159274f) * source.height);
             if (texelY < 0) texelY = 0;
             if (texelY >= source.height) texelY = source.height - 1;
 
