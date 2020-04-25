@@ -12,6 +12,7 @@ namespace emmVRC.Hacks
     public class MasterCrown
     {
         private static GameObject masterIconObj;
+        public static Sprite crownSprite;
         public static void Initialize()
         {
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -20,23 +21,28 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-                    if (RoomManager.field_ApiWorld_0 != null && Configuration.JSONConfig.MasterIconEnabled && Resources.crownSprite != null)
-                    {
-                        if (PlayerManager.Method_Public_10().Count > 1)
-                            foreach (Player player in PlayerManager.Method_Public_10().ToArray())
+                /*if (RoomManager.field_ApiWorld_0 != null && Configuration.JSONConfig.MasterIconEnabled)
+                {
+                    if (PlayerManager.Method_Public_10().Count > 1)
+                        foreach (Player player in PlayerManager.Method_Public_10().ToArray())
+                        {
+                            if (masterIconObj == null && player.prop_VRCPlayerApi_0.isMaster && player.field_APIUser_0.id != APIUser.CurrentUser.id)
                             {
-                                if (masterIconObj == null && player.prop_VRCPlayerApi_0.isMaster && player.field_APIUser_0.id != APIUser.CurrentUser.id)
-                                {
-                                    masterIconObj = GameObject.Instantiate(player.field_VRCPlayer_0.friendSprite.gameObject, player.field_VRCPlayer_0.friendSprite.transform.parent);
-                                    masterIconObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(768f, 0f);
-                                    masterIconObj.GetComponent<Image>().sprite = Resources.crownSprite;
-                                    if (Configuration.JSONConfig.NameplatesVisible)
-                                        masterIconObj.SetActive(true);
-                                    else
-                                        masterIconObj.SetActive(false);
-                                }
+                                masterIconObj = GameObject.Instantiate(player.field_VRCPlayer_0.friendSprite.gameObject, player.field_VRCPlayer_0.friendSprite.transform.parent);
+                                masterIconObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(768f, 0f);
+                                masterIconObj.GetComponent<Image>().sprite = crownSprite;
+                                if (Configuration.JSONConfig.NameplatesVisible)
+                                    masterIconObj.SetActive(true);
+                                else
+                                    masterIconObj.SetActive(false);
                             }
+                        }
+                    else
+                    {
+                        GameObject.Destroy(masterIconObj);
+                        masterIconObj = null;
                     }
+                }*/
                 yield return new WaitForSeconds(0.25f);
             }
         }

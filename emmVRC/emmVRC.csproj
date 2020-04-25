@@ -138,11 +138,13 @@
     <Compile Include="Hacks\InfoBarClock.cs" />
     <Compile Include="Hacks\InfoBarStatus.cs" />
     <Compile Include="Hacks\MasterCrown.cs" />
+    <Compile Include="Hacks\MirrorTweaks.cs" />
     <Compile Include="Hacks\Nameplates.cs" />
     <Compile Include="Hacks\ShortcutMenuButtons.cs" />
     <Compile Include="Hacks\SocialMenuFunctions.cs" />
     <Compile Include="Hacks\Speed.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
+    <Compile Include="Libraries\AssetBundles.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Libraries\InputUtilities.cs" />
@@ -170,7 +172,10 @@
     <Compile Include="Menus\DisabledButtonMenu.cs" />
     <Compile Include="Menus\FunctionsMenu.cs" />
     <Compile Include="Menus\InstanceHistory.cs" />
+    <Compile Include="Menus\LoadingScreenMenu.cs" />
+    <Compile Include="Menus\PlayerTweaksMenu.cs" />
     <Compile Include="Menus\SettingsMenu.cs" />
+    <Compile Include="Menus\WorldTweaksMenu.cs" />
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
     <Compile Include="Objects\HistInstance.cs" />

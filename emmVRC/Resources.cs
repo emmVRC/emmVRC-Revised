@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,7 +41,7 @@ namespace emmVRC
         public static Texture panelTexture;
 
         // Main function for loading in all the resources from the web and locally
-        public static void LoadResources()
+        public static IEnumerator LoadResources()
         {
             // If the path to the emmVRC Resources directory doesn't exist, make it exist
             if (!Directory.Exists(resourcePath))
@@ -73,30 +74,41 @@ namespace emmVRC
             // Fetch the resources asset bundle, for things like sprites.
             UnityWebRequest assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
             assetBundleRequest.SendWebRequest();
-            while (!assetBundleRequest.isDone) ;
+            while (!assetBundleRequest.isDone)
+                yield return new WaitForSeconds(0.1f);
 
             AssetBundleCreateRequest dlBundle = AssetBundle.LoadFromMemoryAsync(assetBundleRequest.downloadHandler.data);
-            dlBundle.add_completed(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action<AsyncOperation>>((System.Action<AsyncOperation>)((AsyncOperation op) => {
-                AssetBundle newBundle = dlBundle.assetBundle;
-                offlineSprite = newBundle.LoadAssetAsync("Assets/Offline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
-                while (offlineSprite == null) ;
-                onlineSprite = newBundle.LoadAssetAsync("Assets/Online.png", Sprite.Il2CppType).asset.Cast<Sprite>();
-                while (onlineSprite == null) ;
-                owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
-                while (owonlineSprite == null) ;
-                alertSprite = newBundle.LoadAssetAsync("Assets/Alert.png", Sprite.Il2CppType).asset.Cast<Sprite>();
-                while (alertSprite == null) ;
-                errorSprite = newBundle.LoadAssetAsync("Assets/Error.png", Sprite.Il2CppType).asset.Cast<Sprite>();
-                while (errorSprite == null) ;
-                messageSprite = newBundle.LoadAssetAsync("Assets/Message.png", Sprite.Il2CppType).asset.Cast<Sprite>();
-                while (messageSprite == null) ;
-                crownSprite = newBundle.LoadAssetAsync("Assets/Crown.png", Sprite.Il2CppType).asset.Cast<Sprite>();
-                while (crownSprite == null) ;
+            while (!dlBundle.isDone)
+                yield return new WaitForSeconds(0.1f);
 
-                // Some sprite operations are done here, because the other objects would be initialized by the time this happened
-                Hacks.ShortcutMenuButtons.logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
-            })));
+            AssetBundle newBundle = dlBundle.assetBundle;
+            offlineSprite = newBundle.LoadAssetAsync("Assets/Offline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
+            while (offlineSprite == null)
+                yield return new WaitForSeconds(0.1f);
+            onlineSprite = newBundle.LoadAssetAsync("Assets/Online.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+
+            while (onlineSprite == null) yield return new WaitForSeconds(0.1f);
+            owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+
+            while (owonlineSprite == null) yield return new WaitForSeconds(0.1f);
+            alertSprite = newBundle.LoadAssetAsync("Assets/Alert.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+
+            while (alertSprite == null) yield return new WaitForSeconds(0.1f);
+            errorSprite = newBundle.LoadAssetAsync("Assets/Error.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+
+            while (errorSprite == null) yield return new WaitForSeconds(0.1f);
+            messageSprite = newBundle.LoadAssetAsync("Assets/Message.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+
+            while (messageSprite == null) yield return new WaitForSeconds(0.1f);
+            crownSprite = newBundle.LoadAssetAsync("Assets/Crown.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+
+            while (crownSprite == null) yield return new WaitForSeconds(0.1f);
+
+            // Some sprite operations are done here, because the other objects would be initialized by the time this happened
+            Hacks.ShortcutMenuButtons.logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
+
+            Hacks.MasterCrown.crownSprite = crownSprite;
             // Fetch the texture textures... nani?
             if (true)
             {

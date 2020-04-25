@@ -135,7 +135,6 @@ namespace emmVRC.Libraries
             pageTransform.gameObject.SetActive(true);
 
             currentPageGetter.SetValue(quickmenu, pageTransform.gameObject);
-
             if (pagename == "ShortcutMenu")
             {
                 SetIndex(0);

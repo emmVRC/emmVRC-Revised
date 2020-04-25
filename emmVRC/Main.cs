@@ -33,11 +33,18 @@ namespace emmVRC
         {
             emmVRCLoader.Logger.Log("UI manager initialized");
             // Load resources for emmVRC, including downloading them if needed
-            Resources.LoadResources();
+            //Resources.LoadResources();
+            MelonLoader.MelonCoroutines.Start(Resources.LoadResources());
 
             // Initialize the "Functions" menu
             emmVRCLoader.Logger.LogDebug("Initializing functions menu...");
             Menus.FunctionsMenu.Initialize();
+
+            // Initialize the "World Tweaks" menu
+            Menus.WorldTweaksMenu.Initialize();
+
+            // Initialize the "Player Tweaks" menu
+            Menus.PlayerTweaksMenu.Initialize();
 
             // Initialize the "Disabled Buttons" menu
             emmVRCLoader.Logger.LogDebug("Initializing Disabled Buttons menu...");
@@ -46,6 +53,9 @@ namespace emmVRC
             // Initialize the "Settings" menu
             emmVRCLoader.Logger.LogDebug("Initializing Settings menu...");
             Menus.SettingsMenu.Initialize();
+
+            // Initialize the "Loading Screen Functions" menu
+            Menus.LoadingScreenMenu.Initialize();
 
             // Initialize the Keybind Changing UI
             Libraries.KeybindChanger.Initialize();
@@ -90,7 +100,10 @@ namespace emmVRC
             // Start the Avatar Favorite system
             Hacks.CustomAvatarFavorites.Initialize();
 
-
+            // Applying some quick commands on OnSceneLoaded
+            UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) => {
+                Hacks.MirrorTweaks.FetchMirrors();
+            })));
 
             Patches.AvatarLoading.Apply();
 
@@ -116,9 +129,9 @@ namespace emmVRC
             {
                 // Reset the instance clock when you switch instances
                 if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
-                    Hacks.InfoBarClock.instanceTime = 0;
-                
+                    Hacks.InfoBarClock.instanceTime = 0;   
             }
+
             
         }
         public static void OnLevelWasInitialized(int level)
@@ -131,6 +144,7 @@ namespace emmVRC
             {
                 Exception ex2 = ex;
             }
+            Hacks.MirrorTweaks.FetchMirrors();
         }
         public static void OnUpdate()
         {
@@ -147,8 +161,7 @@ namespace emmVRC
             }
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                Hacks.Speed.SpeedModified = true;
-                Hacks.Speed.Modifier += 2f;
+                Hacks.MirrorTweaks.Optimize();
             }
             Hacks.CustomAvatarFavorites.OnUpdate();            
         }

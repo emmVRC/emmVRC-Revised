@@ -28,7 +28,7 @@ namespace emmVRCLoader
             if (Bootstrapper.mod != null)
             Bootstrapper.mod.OnLevelWasLoaded(level);
             // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnLevelWasLoaded");
+            MelonModLogger.Log("OnLevelWasLoaded");
         }
 
         public override void OnLevelWasInitialized(int level)
@@ -36,7 +36,7 @@ namespace emmVRCLoader
             if (Bootstrapper.mod != null)
                 Bootstrapper.mod.OnLevelWasInitialized(level);
             // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnLevelWasInitialized");
+            MelonModLogger.Log("OnLevelWasInitialized");
         }
 
         private bool is_pressed = false;

@@ -7,7 +7,7 @@ using UnityEngine;
 using emmVRC.Libraries;
 namespace emmVRC.Objects
 {
-    class Slider
+    public class Slider
     {
         public QMSingleButton basePosition;
         public GameObject slider = null;
