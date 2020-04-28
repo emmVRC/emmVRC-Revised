@@ -154,36 +154,73 @@ namespace emmVRC.Hacks
                         quickMenu = GameObject.Find("QuickMenu");
                         foreach (Button btn in quickMenu.GetComponentsInChildren<Button>(true))
                         {
-                            if (btn.gameObject.name != "ColorPickPreviewButton" && btn.transform.parent.name != "SocialNotifications" && btn.gameObject.name != ShortcutMenuButtons.logoButton.getGameObject().name && btn.transform.parent.parent.name != "EmojiMenu")
+                            if (btn.gameObject.name != "rColorButton" && btn.gameObject.name != "gColorButton" && btn.gameObject.name != "bColorButton" && btn.gameObject.name != "ColorPickPreviewButton" && btn.transform.parent.name != "SocialNotifications" && btn.gameObject.name != ShortcutMenuButtons.logoButton.getGameObject().name && btn.transform.parent.parent.name != "EmojiMenu")
                                 btn.colors = buttonTheme;
                         };
-                        foreach (UiToggleButton tglbtn in quickMenu.GetComponentsInChildren<UiToggleButton>(true)){
+                        foreach (UiToggleButton tglbtn in quickMenu.GetComponentsInChildren<UiToggleButton>(true))
+                        {
                             foreach (Image img in tglbtn.GetComponentsInChildren<Image>(true))
                             {
                                 img.color = color;
                             }
                         };
-                    } catch (Exception ex)
-                {
-                    emmVRCLoader.Logger.LogError(ex.ToString());
-                }
-                    emmVRCLoader.Logger.LogDebug("d");
-                    try
-                    {
-                        //quickMenu.transform.Find("Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked").GetComponent<MeshRenderer>().material.SetTexture("_Tex", /*ReplaceCubemap.BuildCubemap(Resources.blankGradient*/ new Cubemap(128, TextureFormat.Alpha8, false));
-                        quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Panel_Backdrop").GetComponent<Image>().color = color;
-                        quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Decoration_Left").GetComponent<Image>().color = color;
-                        quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Decoration_Right").GetComponent<Image>().color = color;
-                        quickMenu.transform.Find("Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked").GetComponent<MeshRenderer>().material = Resources.gradientMaterial;
-                        quickMenu.transform.Find("Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked").GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
-                    } catch (Exception ex)
+                        foreach (Slider sldr in quickMenu.GetComponentsInChildren<Slider>(true))
+                        {
+                            sldr.colors = theme;
+                            foreach (Image img in sldr.GetComponentsInChildren<Image>(true))
+                            {
+                                img.color = color;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
+                    emmVRCLoader.Logger.LogDebug("d");
+                    try
+                    {
+                        Resources.blankGradient = new Texture2D(16, 16);
+                        Libraries.Extensions.UnityEngine.ImageConversion.LoadImage(Resources.blankGradient, Convert.FromBase64String(B64Textures.Gradient), false);
+                        quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent;
+                        quickMenu.transform.Find("Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked").GetComponent<MeshRenderer>().material.SetTexture("_Tex", ReplaceCubemap.BuildCubemap(Resources.blankGradient)) ;
+                        quickMenu.transform.Find("Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked").GetComponentInChildren<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
+                        GameObject.Find("LoadingBackground_TealGradient_Music/SkyCube_Baked").GetComponent<MeshRenderer>().material.SetTexture("_Tex", ReplaceCubemap.BuildCubemap(Resources.blankGradient));
+                        GameObject.Find("LoadingBackground_TealGradient_Music/SkyCube_Baked").GetComponentInChildren<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
+                        quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Panel_Backdrop").GetComponentInChildren<Image>().color = color;
+                        quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Decoration_Left").GetComponentInChildren<Image>().color = color;
+                        quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Decoration_Right").GetComponentInChildren<Image>().color = color;
+                        //quickMenu.transform.Find("Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked").GetComponentInChildren<MeshRenderer>().material = Resources.gradientMaterial;
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
+                    emmVRCLoader.Logger.LogDebug("e");
+                    try
+                    {
+                        /*VRCUiCursorManager.field_VRCUiCursorManager_0.mouseCursor.InteractiveColor = color * 1.5f;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.mouseCursor.UiColor = color * 1.5f;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.mouseCursor.FloorColor = color * 1.5f;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.gazeCursor.InteractiveColor = color;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.gazeCursor.UiColor = color;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.gazeCursor.FloorColor = color;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.navigationCursor.InteractiveColor = color;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.navigationCursor.UiColor = color;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.navigationCursor.FloorColor = color;*/
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.mouseCursor.UiColor = color;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.handRightCursor.UiColor = color;
+                        VRCUiCursorManager.field_VRCUiCursorManager_0.handLeftCursor.UiColor = color;
+                    }
+                    catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
+                }
             }
+
         }
 
     }
-
-}
 }

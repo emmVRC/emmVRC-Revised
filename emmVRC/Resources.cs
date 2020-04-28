@@ -37,6 +37,8 @@ namespace emmVRC
         public static Sprite messageSprite;
         public static Sprite crownSprite;
 
+        public static AudioClip customLoadingMusic;
+
         // Texture for use on the emmVRC Network panel
         public static Texture panelTexture;
 
@@ -70,6 +72,7 @@ namespace emmVRC
                 File.WriteAllBytes(Path.Combine(resourcePath, "HUD/UIMinimized.png"), UIMinimizedData);
                 File.WriteAllBytes(Path.Combine(resourcePath, "HUD/UIMaximized.png"), UIMaximizedData);
             }
+            
 
             // Fetch the resources asset bundle, for things like sprites.
             UnityWebRequest assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
@@ -143,6 +146,8 @@ namespace emmVRC
 
             // Load the texture textures :catShrug:
             WWW PanelTextureWWW = new WWW(string.Format("file://{0}", resourcePath + "/Textures/Panel.png").Replace(@"\", "/"));
+
+            
             panelTexture = PanelTextureWWW.texture;
         }
     }

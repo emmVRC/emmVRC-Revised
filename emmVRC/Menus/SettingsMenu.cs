@@ -85,8 +85,6 @@ namespace emmVRC.Menus
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 1024, 768, "Settings", "The base menu for the settings menu", null);
             baseMenu.menuEntryButton.DestroyMe();
 
-
-
             OpenBeta = new PageItem("Open Beta", () =>
             {
                 Configuration.JSONConfig.OpenBetaEnabled = true;
@@ -98,20 +96,43 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the emmVRC Open Beta. Requires a restart to take affect");
-            UnlimitedFPS = new PageItem("Unlimited FPS", () => {
+            UnlimitedFPS = new PageItem("Unlimited FPS", () =>
+            {
                 Configuration.JSONConfig.UnlimitedFPSEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.UnlimitedFPSEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the FPS unlimiter, in desktop only.");
-            RiskyFunctions = new PageItem("Risky Functions", () => {
-                Configuration.JSONConfig.RiskyFunctionsEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () => {
+            RiskyFunctions = new PageItem("Risky Functions", () =>
+            {
+                if (!Configuration.JSONConfig.RiskyFunctionsWarningShown)
+                    VRCUiPopupManager.field_VRCUiPopupManager_0.ShowStandardPopup("Risky Functions", "By enabling these functions, you accept the risk that these functions could be detected by VRChat, and you agree to not use them for malicious or harassment purposes.", "Agree", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+                {
+                    VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup();
+                    Configuration.JSONConfig.RiskyFunctionsEnabled = true;
+                    Configuration.JSONConfig.RiskyFunctionsWarningShown = true;
+                    Configuration.SaveConfig();
+                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
+                    RefreshMenu();
+                })), "Decline", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+                {
+                    VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup();
+                    RiskyFunctions.SetToggleState(false);
+                    RefreshMenu();
+                })));
+                else
+                {
+                    Configuration.JSONConfig.RiskyFunctionsEnabled = true;
+                    Configuration.SaveConfig();
+                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
+                    RefreshMenu();
+                }
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.RiskyFunctionsEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -300,11 +321,13 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.UIColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.UIColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
             }, "TOGGLE: Enables the color changing module, which affects UI, ESP, and loading");
             UIColorChangePicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1001, 1000, "UI Color", "Select the color for the UI", (UnityEngine.Color newColor) =>
             {
@@ -396,7 +419,8 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.ShortcutMenuButtons.Process();
-            }, "Enabled", () => {
+            }, "Enabled", () =>
+            {
                 Configuration.JSONConfig.DisableReportWorldButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -408,18 +432,21 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.ShortcutMenuButtons.Process();
-            }, "Enabled", () => {
+            }, "Enabled", () =>
+            {
                 Configuration.JSONConfig.DisableEmojiButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.ShortcutMenuButtons.Process();
             }, "TOGGLE: Disables the 'Emoji' button in the Quick Menu. Its functionality can be found in the Disabled Buttons menu");
-            DisableRankToggle = new PageItem("Disable\nRank Toggle", () => {
+            DisableRankToggle = new PageItem("Disable\nRank Toggle", () =>
+            {
                 Configuration.JSONConfig.DisableRankToggleButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.ShortcutMenuButtons.Process();
-            }, "Enabled", () => {
+            }, "Enabled", () =>
+            {
                 Configuration.JSONConfig.DisableRankToggleButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -529,52 +556,68 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(PageItem.Space());
 
 
-            FlightKeybind = new PageItem("Flight\nKeybind:\nLeftCTRL + F", () => { 
-                KeybindChanger.Show("Please press a keybind for Flight:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
-                Configuration.JSONConfig.FlightKeybind[0] = (int)mainKey;
-                Configuration.JSONConfig.FlightKeybind[1] = (int)modifier;
-                Configuration.SaveConfig();
-                LoadMenu();
-            }, () => {
-                LoadMenu();
-            }); }, "Change the keybind for flying (Default is LeftCTRL + F");
-            NoclipKeybind = new PageItem("Noclip\nKeybind:\nLeftCTRL + M", () => {
-                KeybindChanger.Show("Please press a keybind for Noclip:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+            FlightKeybind = new PageItem("Flight\nKeybind:\nLeftCTRL + F", () =>
+            {
+                KeybindChanger.Show("Please press a keybind for Flight:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
+                {
+                    Configuration.JSONConfig.FlightKeybind[0] = (int)mainKey;
+                    Configuration.JSONConfig.FlightKeybind[1] = (int)modifier;
+                    Configuration.SaveConfig();
+                    LoadMenu();
+                }, () =>
+                {
+                    LoadMenu();
+                });
+            }, "Change the keybind for flying (Default is LeftCTRL + F");
+            NoclipKeybind = new PageItem("Noclip\nKeybind:\nLeftCTRL + M", () =>
+            {
+                KeybindChanger.Show("Please press a keybind for Noclip:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
+                {
                     Configuration.JSONConfig.NoclipKeybind[0] = (int)mainKey;
                     Configuration.JSONConfig.NoclipKeybind[1] = (int)modifier;
                     Configuration.SaveConfig();
                     LoadMenu();
-                }, () => {
+                }, () =>
+                {
                     LoadMenu();
                 });
             }, "Change the keybind for noclip (Default is LeftCTRL + M");
-            SpeedKeybind = new PageItem("Speed\nKeybind:\nLeftCTRL + G", () => {
-                KeybindChanger.Show("Please press a keybind for Speed:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+            SpeedKeybind = new PageItem("Speed\nKeybind:\nLeftCTRL + G", () =>
+            {
+                KeybindChanger.Show("Please press a keybind for Speed:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
+                {
                     Configuration.JSONConfig.SpeedKeybind[0] = (int)mainKey;
                     Configuration.JSONConfig.SpeedKeybind[1] = (int)modifier;
                     Configuration.SaveConfig();
                     LoadMenu();
-                }, () => {
+                }, () =>
+                {
                     LoadMenu();
                 });
             }, "Change the keybind for speed (Default is LeftCTRL + G");
-            ThirdPersonKeybind = new PageItem("Third\nPerson\nKeybind:\nLeftCTRL + T", () => {
-                KeybindChanger.Show("Please press a keybind for Third Person:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+            ThirdPersonKeybind = new PageItem("Third\nPerson\nKeybind:\nLeftCTRL + T", () =>
+            {
+                KeybindChanger.Show("Please press a keybind for Third Person:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
+                {
                     Configuration.JSONConfig.ThirdPersonKeybind[0] = (int)mainKey;
                     Configuration.JSONConfig.ThirdPersonKeybind[1] = (int)modifier;
                     Configuration.SaveConfig();
                     LoadMenu();
-                }, () => {
+                }, () =>
+                {
                     LoadMenu();
                 });
             }, "Change the keybind for third person (Default is LeftCTRL + T");
-            ToggleHUDEnabledKeybind = new PageItem("Toggle HUD\nEnabled\nKeybind:\nLeftCTRL + J", () => {
-                KeybindChanger.Show("Please press a keybind for toggling the HUD:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) => {
+            ToggleHUDEnabledKeybind = new PageItem("Toggle HUD\nEnabled\nKeybind:\nLeftCTRL + J", () =>
+            {
+                KeybindChanger.Show("Please press a keybind for toggling the HUD:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
+                {
                     Configuration.JSONConfig.ToggleHUDEnabledKeybind[0] = (int)mainKey;
                     Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] = (int)modifier;
                     Configuration.SaveConfig();
                     LoadMenu();
-                }, () => {
+                }, () =>
+                {
                     LoadMenu();
                 });
             }, "Change the keybind for toggling the HUD on and off (Default is LeftCTRL + J");
@@ -631,7 +674,7 @@ namespace emmVRC.Menus
                 DisableAvatarLegacyList.SetToggleState(Configuration.JSONConfig.DisableAvatarLegacy);
                 DisableAvatarPublicList.SetToggleState(Configuration.JSONConfig.DisableAvatarPublic);
 
-                FlightKeybind.Name = "Flight:\n"+(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "")+(KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));
+                FlightKeybind.Name = "Flight:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));
                 NoclipKeybind.Name = "Noclip:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0])));
                 SpeedKeybind.Name = "Speed:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0])));
                 ThirdPersonKeybind.Name = "Third\nPerson:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0])));
@@ -639,7 +682,8 @@ namespace emmVRC.Menus
 
 
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
             }

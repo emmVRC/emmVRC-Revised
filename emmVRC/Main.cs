@@ -32,9 +32,16 @@ namespace emmVRC
         public static void OnUIManagerInit()
         {
             emmVRCLoader.Logger.Log("UI manager initialized");
+
+            // Start trying to set up the menu music
+            MelonLoader.MelonCoroutines.Start(Hacks.CustomMenuMusic.Initialize());
+
             // Load resources for emmVRC, including downloading them if needed
             //Resources.LoadResources();
             MelonLoader.MelonCoroutines.Start(Resources.LoadResources());
+
+            // Initialize the "UI Elements" replacement buttons
+            MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
 
             // Initialize the "Functions" menu
             emmVRCLoader.Logger.LogDebug("Initializing functions menu...");
@@ -53,6 +60,9 @@ namespace emmVRC
             // Initialize the "Settings" menu
             emmVRCLoader.Logger.LogDebug("Initializing Settings menu...");
             Menus.SettingsMenu.Initialize();
+
+            // Initialize the "Supporters" menu
+            Menus.SupporterMenu.Initialize();
 
             // Initialize the "Loading Screen Functions" menu
             Menus.LoadingScreenMenu.Initialize();
@@ -79,6 +89,15 @@ namespace emmVRC
             // Initialize the Speed module for Risky Functions
             Hacks.Speed.Initialize();
 
+            // Initialize the ESP module for Risky Functions
+            Hacks.ESP.Initialize();
+
+            // Initialize the Risky Functions manager
+            Managers.RiskyFunctionsManager.Initialize();
+
+            // Initialize the Waypoint menu for Risky Functions
+            Menus.WaypointsMenu.Initialize();
+
             // Initialize the Avatar Menu hacks
             Hacks.AvatarMenu.Initialize();
 
@@ -94,6 +113,15 @@ namespace emmVRC
             // Change the target FPS to 200
             Hacks.FPS.Initialize();
 
+            // Initialize the Third Person mode
+            try
+            {
+                Hacks.ThirdPerson.Initialize();
+            } catch (Exception ex)
+            {
+                emmVRCLoader.Logger.LogError(ex.ToString());
+            }
+
             // Start the Master Icon Crown
             Hacks.MasterCrown.Initialize();
             
@@ -103,6 +131,18 @@ namespace emmVRC
             // Applying some quick commands on OnSceneLoaded
             UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) => {
                 Hacks.MirrorTweaks.FetchMirrors();
+                Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(false, true);
+                Menus.PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
+                Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(false, true);
+                Menus.PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
+
+                MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
+                // Ensure that everything through here is after the game has loaded
+                    // Reset the instance clock when you switch instances
+                    if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
+                        Hacks.InfoBarClock.instanceTime = 0;
+                MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
+                MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
             })));
 
             Patches.AvatarLoading.Apply();
@@ -121,31 +161,6 @@ namespace emmVRC
                 Exception ex2 = ex;
             }
         }
-        public static void OnLevelWasLoaded(int level)
-        {
-            emmVRCLoader.Logger.Log("Level was loaded: " + level);
-            // Ensure that everything through here is after the game has loaded
-            if (level == -1)
-            {
-                // Reset the instance clock when you switch instances
-                if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
-                    Hacks.InfoBarClock.instanceTime = 0;   
-            }
-
-            
-        }
-        public static void OnLevelWasInitialized(int level)
-        {
-            // Apply color changes, if applicable
-            try
-            {
-                Hacks.ColorChanger.ApplyIfApplicable();
-            } catch (Exception ex)
-            {
-                Exception ex2 = ex;
-            }
-            Hacks.MirrorTweaks.FetchMirrors();
-        }
         public static void OnUpdate()
         {
             // Check if resources have finished initializing
@@ -158,15 +173,8 @@ namespace emmVRC
                     Configuration.JSONConfig.WelcomeMessageShown = true;
                     Configuration.SaveConfig();
                 }
-            }
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                Hacks.MirrorTweaks.Optimize();
-            }
+            }   
             Hacks.CustomAvatarFavorites.OnUpdate();            
         }
-        
-
-        // OnApplicationQuit is called when the game is trying to quit.
     }
 }

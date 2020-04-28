@@ -38,8 +38,11 @@ namespace emmVRC.Libraries
             cancelButton = new QMSingleButton(baseMenu, 4, 2, "Cancel", () => { cancel.Invoke(); }, "Cancels the color changes");
 
             rButton = new QMSingleButton(baseMenu, 1, 0, "R\n1f", null, "Float value for Red", UnityEngine.Color.red);
+            rButton.getGameObject().name = "rColorButton";
             gButton = new QMSingleButton(baseMenu, 1, 1, "G\n1f", null, "Float value for Green", UnityEngine.Color.green);
+            gButton.getGameObject().name = "gColorButton";
             bButton = new QMSingleButton(baseMenu, 1, 2, "B\n1f", null, "Float value for Blue", UnityEngine.Color.blue);
+            bButton.getGameObject().name = "bColorButton";
 
             r = new Objects.Slider(baseMenu.getMenuName(), 2, 0, (float val) => 
             {

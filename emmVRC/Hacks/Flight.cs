@@ -58,8 +58,8 @@ namespace emmVRC.Hacks
                                 localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y + 1f * Time.deltaTime, localPlayer.transform.position.z);
 
                             if (localPlayer.GetComponent<VRCMotionState>().field_CharacterController_0 != null)
-                            localPlayer.GetComponent<VRCMotionState>().field_CharacterController_0.enabled = !NoclipEnabled;
-                            
+                                localPlayer.GetComponent<VRCMotionState>().field_CharacterController_0.enabled = !NoclipEnabled;
+
                             if (Input.GetAxis("Vertical") != 0)
                                 localPlayer.transform.position += cameraRotation.transform.forward * (.05f * (1)) * Input.GetAxis("Vertical");
                             if (Input.GetAxis("Horizontal") != 0)

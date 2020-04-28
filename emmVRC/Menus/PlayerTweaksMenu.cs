@@ -14,6 +14,7 @@ namespace emmVRC.Menus
         public static QMNestedButton baseMenu;
         public static GameObject SpeedText;
         public static QMSingleButton UnloadDynamicBonesButton;
+        public static QMSingleButton EnableJumpButton;
         public static QMSingleButton WaypointMenu;
         public static QMToggleButton AvatarClone;
         public static QMToggleButton FlightToggle;
@@ -38,10 +39,42 @@ namespace emmVRC.Menus
                 foreach (DynamicBoneCollider coll in UnityEngine.Resources.FindObjectsOfTypeAll<DynamicBoneCollider>())
                     GameObject.Destroy(coll);
             }, "Unload all the current dynamic bones in the instance");
-            WaypointMenu = new QMSingleButton(baseMenu, 1, 1, "Waypoints", () => { }, "Allows you to teleport to pre-defined waypoints. Requires Risky Functions");
-            FlightToggle = new QMToggleButton(baseMenu, 2, 1, "Flight", () => { Hacks.Flight.FlightEnabled = true; }, "Disabled", () => { Hacks.Flight.FlightEnabled = false; if (Hacks.Flight.NoclipEnabled) { Hacks.Flight.NoclipEnabled = false; NoclipToggle.setToggleState(false); } }, "TOGGLE: Enables flight. Requires Risky Functions");
-            NoclipToggle = new QMToggleButton(baseMenu, 3, 1, "Noclip", () => { Hacks.Flight.NoclipEnabled = true; if (!Hacks.Flight.FlightEnabled) { Hacks.Flight.FlightEnabled = true; FlightToggle.setToggleState(true); } }, "Disabled", () => { Hacks.Flight.NoclipEnabled = false; }, "TOGGLE: Enables NoClip. Requires Risky Functions");
-            ESPToggle = new QMToggleButton(baseMenu, 4, 1, "ESP On", () => { }, "ESP Off", () => { }, "TOGGLE: Enables ESP for all the players in the instance. Requires Risky Functions");
+
+            EnableJumpButton = new QMSingleButton(baseMenu, 4, 0, "Enable\nJumping", () =>
+            {
+                if (VRCPlayer.field_VRCPlayer_0.gameObject.GetComponent<PlayerModComponentJump>() == null)
+                    VRCPlayer.field_VRCPlayer_0.gameObject.AddComponent<PlayerModComponentJump>();
+                EnableJumpButton.getGameObject().GetComponent<Button>().enabled = false;
+            }, "Enables jumping for this world. Requires Risky Functions");
+
+            WaypointMenu = new QMSingleButton(baseMenu, 1, 1, "Waypoints", () => {
+                WaypointsMenu.LoadWaypointList();
+            }, "Allows you to teleport to pre-defined waypoints. Requires Risky Functions");
+            
+            FlightToggle = new QMToggleButton(baseMenu, 2, 1, "Flight", () => { 
+                Hacks.Flight.FlightEnabled = true;
+            }, "Disabled", () => { 
+                Hacks.Flight.FlightEnabled = false;
+                if (Hacks.Flight.NoclipEnabled) { Hacks.Flight.NoclipEnabled = false; 
+                    NoclipToggle.setToggleState(false); 
+                } 
+            }, "TOGGLE: Enables flight. Requires Risky Functions");
+            
+            NoclipToggle = new QMToggleButton(baseMenu, 3, 1, "Noclip", () => { 
+                Hacks.Flight.NoclipEnabled = true; 
+                if (!Hacks.Flight.FlightEnabled) {
+                    Hacks.Flight.FlightEnabled = true; 
+                    FlightToggle.setToggleState(true); 
+                } 
+            }, "Disabled", () => { 
+                Hacks.Flight.NoclipEnabled = false; 
+            }, "TOGGLE: Enables NoClip. Requires Risky Functions");
+            
+            ESPToggle = new QMToggleButton(baseMenu, 4, 1, "ESP On", () => {
+                Hacks.ESP.ESPEnabled = true;
+            }, "ESP Off", () => {
+                Hacks.ESP.ESPEnabled = false;
+            }, "TOGGLE: Enables ESP for all the players in the instance. Requires Risky Functions");
 
             SpeedToggle = new QMToggleButton(baseMenu, 4, 2, "Speed On", () =>
             {
@@ -106,6 +139,37 @@ namespace emmVRC.Menus
             SpeedText.GetComponent<UnityEngine.UI.Text>().fontStyle = FontStyle.Normal;
             SpeedText.GetComponent<UnityEngine.UI.Text>().text = "Speed: Disabled";
             SpeedText.GetComponent<RectTransform>().anchoredPosition = SpeedMinusButton.getGameObject().GetComponent<RectTransform>().anchoredPosition + new Vector2(192f, 192f);
+        }
+        public static void SetRiskyFunctions(bool state)
+        {
+            if (state)
+            {
+                WaypointMenu.getGameObject().GetComponent<Button>().enabled = true;
+                FlightToggle.getGameObject().GetComponent<Button>().enabled = true;
+                NoclipToggle.getGameObject().GetComponent<Button>().enabled = true;
+                SpeedToggle.getGameObject().GetComponent<Button>().enabled = true;
+                ESPToggle.getGameObject().GetComponent<Button>().enabled = true;
+                SpeedMinusButton.getGameObject().GetComponent<Button>().enabled = true;
+                SpeedPlusButton.getGameObject().GetComponent<Button>().enabled = true;
+                SpeedReset.getGameObject().GetComponent<Button>().enabled = true;
+                SpeedSlider.slider.GetComponent<Slider>().enabled = true;
+                SpeedText.GetComponent<Text>().text = "Speed: Disabled";
+                EnableJumpButton.getGameObject().GetComponent<Button>().enabled = true;
+            }
+            else
+            {
+                WaypointMenu.getGameObject().GetComponent<Button>().enabled = false;
+                FlightToggle.getGameObject().GetComponent<Button>().enabled = false;
+                NoclipToggle.getGameObject().GetComponent<Button>().enabled = false;
+                SpeedToggle.getGameObject().GetComponent<Button>().enabled = false;
+                ESPToggle.getGameObject().GetComponent<Button>().enabled = false;
+                SpeedMinusButton.getGameObject().GetComponent<Button>().enabled = false;
+                SpeedPlusButton.getGameObject().GetComponent<Button>().enabled = false;
+                SpeedReset.getGameObject().GetComponent<Button>().enabled = false;
+                SpeedSlider.slider.GetComponent<Slider>().enabled = false;
+                SpeedText.GetComponent<Text>().text = (Configuration.JSONConfig.RiskyFunctionsEnabled ? "     Risky Functions\n        Not allowed" : "     Risky Functions\n        Not enabled");
+                EnableJumpButton.getGameObject().GetComponent<Button>().enabled = false;
+            }
         }
     }
 }

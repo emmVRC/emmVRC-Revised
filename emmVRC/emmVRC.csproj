@@ -119,6 +119,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRCCore-Standalone.dll</HintPath>
     </Reference>
+    <Reference Include="VRCSDK3, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRCSDK3.dll</HintPath>
+    </Reference>
     <Reference Include="VRCSDKBase, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRCSDKBase.dll</HintPath>
@@ -130,6 +134,9 @@
     <Compile Include="Hacks\AvatarMenu.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />
     <Compile Include="Hacks\CustomAvatarFavorites.cs" />
+    <Compile Include="Hacks\CustomMenuMusic.cs" />
+    <Compile Include="Hacks\CustomWorldObjects.cs" />
+    <Compile Include="Hacks\ESP.cs" />
     <Compile Include="Hacks\Flight.cs" />
     <Compile Include="Hacks\FOV.cs" />
     <Compile Include="Hacks\FPS.cs" />
@@ -143,10 +150,15 @@
     <Compile Include="Hacks\ShortcutMenuButtons.cs" />
     <Compile Include="Hacks\SocialMenuFunctions.cs" />
     <Compile Include="Hacks\Speed.cs" />
+    <Compile Include="Hacks\ThirdPerson.cs" />
+    <Compile Include="Hacks\UIElementsMenu.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
     <Compile Include="Libraries\AssetBundles.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
+    <Compile Include="Libraries\Extensions\UnityEngine\Cubemap.cs" />
+    <Compile Include="Libraries\Extensions\UnityEngine\ImageConversion.cs" />
+    <Compile Include="Libraries\Extensions\UnityEngine\Sprite.cs" />
     <Compile Include="Libraries\InputUtilities.cs" />
     <Compile Include="Libraries\KeybindChanger.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
@@ -169,12 +181,15 @@
     <Compile Include="Libraries\UserInterfaceUtils.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
+    <Compile Include="Managers\RiskyFunctionsManager.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
     <Compile Include="Menus\FunctionsMenu.cs" />
     <Compile Include="Menus\InstanceHistory.cs" />
     <Compile Include="Menus\LoadingScreenMenu.cs" />
     <Compile Include="Menus\PlayerTweaksMenu.cs" />
     <Compile Include="Menus\SettingsMenu.cs" />
+    <Compile Include="Menus\SupporterMenu.cs" />
+    <Compile Include="Menus\WaypointsMenu.cs" />
     <Compile Include="Menus\WorldTweaksMenu.cs" />
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
@@ -196,6 +211,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\TinyJSON\TinyJSON.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

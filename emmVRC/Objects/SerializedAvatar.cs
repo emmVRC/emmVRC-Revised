@@ -2,11 +2,11 @@
 {
     public class SerializedAvatar
     {
-        public string name = "";
-        public string id = "";
-        public string assetUrl = "";
-        public string thumbnailImageUrl = "";
-        public string authorId = "";
-        public VRC.Core.ApiModel.SupportedPlatforms supportedPlatforms = VRC.Core.ApiModel.SupportedPlatforms.All;
+        public string avatar_name = "";
+        public string avatar_id = "";
+        public string avatar_asset_url = "";
+        public string avatar_thumbnail_image_url = "";
+        public string avatar_author_id = "";
+        public VRC.Core.ApiModel.SupportedPlatforms avatar_supported_platforms = VRC.Core.ApiModel.SupportedPlatforms.All;
     }
 }

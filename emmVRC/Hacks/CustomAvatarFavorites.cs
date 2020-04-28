@@ -108,12 +108,12 @@ namespace emmVRC.Hacks
             LoadedAvatars.Insert(0, avtr);
             Objects.SerializedAvatar serAvtr = new Objects.SerializedAvatar
             {
-                name = avtr.name,
-                id = avtr.id,
-                assetUrl = avtr.assetUrl,
-                thumbnailImageUrl = avtr.thumbnailImageUrl,
-                authorId = avtr.authorId,
-                supportedPlatforms = avtr.supportedPlatforms
+                avatar_name = avtr.name,
+                avatar_id = avtr.id,
+                avatar_asset_url = avtr.assetUrl,
+                avatar_thumbnail_image_url = avtr.thumbnailImageUrl,
+                avatar_author_id = avtr.authorId,
+                avatar_supported_platforms = avtr.supportedPlatforms
             };
             LoadedSerializedAvatars.Insert(0, serAvtr);
             avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
@@ -124,7 +124,7 @@ namespace emmVRC.Hacks
                 LoadedAvatars.Remove(avtr);
             for (int i=0; i < LoadedSerializedAvatars.Count; i++)
             {
-                if (LoadedSerializedAvatars[0].id == avtr.id)
+                if (LoadedSerializedAvatars[0].avatar_id == avtr.id)
                     LoadedSerializedAvatars.RemoveAt(i);
             }
             avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
@@ -135,12 +135,12 @@ namespace emmVRC.Hacks
             {
                 ApiAvatar item = new ApiAvatar
                 {
-                    name = avatar.name,
-                    id = avatar.id,
-                    assetUrl = avatar.assetUrl,
-                    thumbnailImageUrl = avatar.thumbnailImageUrl,
-                    authorId = avatar.authorId,
-                    supportedPlatforms = avatar.supportedPlatforms,
+                    name = avatar.avatar_name,
+                    id = avatar.avatar_id,
+                    assetUrl = avatar.avatar_asset_url,
+                    thumbnailImageUrl = avatar.avatar_thumbnail_image_url,
+                    authorId = avatar.avatar_author_id,
+                    supportedPlatforms = avatar.avatar_supported_platforms,
                     releaseStatus = "public"
                 };
                 LoadedAvatars.Insert(0, item);
@@ -170,12 +170,12 @@ namespace emmVRC.Hacks
                 foreach (ApiAvatar avatar in LoadedAvatars)
                 {
                     Objects.SerializedAvatar avtr = new Objects.SerializedAvatar();
-                    avtr.name = Convert.ToBase64String(Encoding.UTF8.GetBytes(avatar.name));
-                    avtr.id = avatar.id;
-                    avtr.assetUrl = avatar.assetUrl;
-                    avtr.thumbnailImageUrl = avatar.thumbnailImageUrl;
-                    avtr.authorId = avatar.authorId;
-                    avtr.supportedPlatforms = avatar.supportedPlatforms;
+                    avtr.avatar_name = Convert.ToBase64String(Encoding.UTF8.GetBytes(avatar.name));
+                    avtr.avatar_id = avatar.id;
+                    avtr.avatar_asset_url = avatar.assetUrl;
+                    avtr.avatar_thumbnail_image_url = avatar.thumbnailImageUrl;
+                    avtr.avatar_author_id = avatar.authorId;
+                    avtr.avatar_supported_platforms = avatar.supportedPlatforms;
                     avtrs.Add(avtr);
                 }
             }
