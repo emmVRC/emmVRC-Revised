@@ -90,7 +90,7 @@ namespace emmVRC.Menus
             } else
             {
                 worldWaypoints = new List<Waypoint> { new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint() };
-                File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints/"+currentWorldID+".json"), TinyJSON.Encoder.Encode(worldWaypoints));
+                //File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints/"+currentWorldID+".json"), TinyJSON.Encoder.Encode(worldWaypoints));
             }
         }
 

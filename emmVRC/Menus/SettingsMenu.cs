@@ -285,6 +285,11 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables the Force Restart button on the loading screen, to help free you from softlocks");
             InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
             {
+                if (Configuration.JSONConfig.InfoHidingEnabled)
+                {
+                    InfoHiding.SetToggleState(false, true);
+                    RefreshMenu();
+                }
                 Configuration.JSONConfig.InfoSpoofingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -293,10 +298,32 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.InfoSpoofingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+
+                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<UnityEngine.UI.Text>())
+                {
+                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    {
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                    }
+                }
+                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
+                {
+                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    {
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                    }
+                }
             }, "TOGGLE: Enables local info spoofing, which can protect your identity in screenshots, recordings, and streams");
             //InfoSpooferNamePicker = new PageItem("")
             InfoHiding = new PageItem("Local\nInfo Hiding", () =>
             {
+                if (Configuration.JSONConfig.InfoSpoofingEnabled)
+                {
+                    InfoSpoofing.SetToggleState(false, true);
+                    RefreshMenu();
+                }
                 Configuration.JSONConfig.InfoHidingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -305,7 +332,52 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.InfoHidingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+
+                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<UnityEngine.UI.Text>())
+                {
+                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    {
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                    }
+                }
+                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
+                {
+                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    {
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                    }
+                }
             }, "TOGGLE: Enables local info hiding, which can protect your identity in screenshots, recordings, and streams");
+            InfoSpooferNamePicker = new PageItem("F", () =>
+            {
+                Libraries.InputUtilities.OpenInputBox("Enter your spoof name (or none for random)", "Accept", (name) =>
+                {
+                    if (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled)
+                    {
+                        foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<UnityEngine.UI.Text>())
+                        {
+                            if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                            {
+                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                            }
+                        }
+                        foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
+                        {
+                            if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                            {
+                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                            }
+                        }
+                    }
+                    Configuration.JSONConfig.InfoSpoofingName = name;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                });
+            }, "Allows you to change your spoofed name to one that never changes");
             baseMenu.pageItems.Add(InfoBar);
             baseMenu.pageItems.Add(Clock);
             baseMenu.pageItems.Add(MasterIcon);
@@ -314,7 +386,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(ForceRestart);
             baseMenu.pageItems.Add(InfoSpoofing);
             baseMenu.pageItems.Add(InfoHiding);
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(InfoSpooferNamePicker);
 
             UIColorChanging = new PageItem("UI Color\nChange", () =>
             {
@@ -657,6 +729,7 @@ namespace emmVRC.Menus
                 ForceRestart.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
                 InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
                 InfoHiding.SetToggleState(Configuration.JSONConfig.InfoHidingEnabled);
+                InfoSpooferNamePicker.Name = "Set\nSpoofed\nName";
 
                 UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
 

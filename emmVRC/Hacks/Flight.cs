@@ -40,30 +40,33 @@ namespace emmVRC.Hacks
                             originalGravity = Vector3.zero;
                         }
                         if (!FlightEnabled && NoclipEnabled)
+                        {
                             NoclipEnabled = false;
+                        }
                         if (FlightEnabled)
                         {
                             var cameraRotation = Camera.main.transform;
+
                             if (Input.GetKey(KeyCode.W))
-                                localPlayer.transform.position += cameraRotation.transform.forward * (.05f * (1));
+                                localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
                             if (Input.GetKey(KeyCode.S))
-                                localPlayer.transform.position -= cameraRotation.transform.forward * (.05f * (1));
+                                localPlayer.transform.position -= cameraRotation.transform.forward * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
                             if (Input.GetKey(KeyCode.A))
-                                localPlayer.transform.position -= cameraRotation.transform.right * (.05f * (1));
+                                localPlayer.transform.position -= cameraRotation.transform.right * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
                             if (Input.GetKey(KeyCode.D))
-                                localPlayer.transform.position += cameraRotation.transform.right * (.05f * (1));
+                                localPlayer.transform.position += cameraRotation.transform.right * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
                             if (Input.GetKey(KeyCode.Q))
-                                localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y - 1f * Time.deltaTime, localPlayer.transform.position.z);
+                                localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y - (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), localPlayer.transform.position.z);
                             if (Input.GetKey(KeyCode.E))
-                                localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y + 1f * Time.deltaTime, localPlayer.transform.position.z);
+                                localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y + (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), localPlayer.transform.position.z);
 
                             if (localPlayer.GetComponent<VRCMotionState>().field_CharacterController_0 != null)
                                 localPlayer.GetComponent<VRCMotionState>().field_CharacterController_0.enabled = !NoclipEnabled;
 
                             if (Input.GetAxis("Vertical") != 0)
-                                localPlayer.transform.position += cameraRotation.transform.forward * (.05f * (1)) * Input.GetAxis("Vertical");
+                                localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical");
                             if (Input.GetAxis("Horizontal") != 0)
-                                localPlayer.transform.position += cameraRotation.transform.right * (.05f * (1)) * Input.GetAxis("Horizontal");
+                                localPlayer.transform.position += cameraRotation.transform.right * (Time.deltaTime) * Input.GetAxis("Horizontal");
 
                             //VRCPlayer.field_VRCPlayer_0.Method_Public_Vector3_Quaternion_0(localPlayer.transform.position, localPlayer.transform.rotation);
                             if (NoclipEnabled)
@@ -78,7 +81,7 @@ namespace emmVRC.Hacks
                         }
                     }
                 }
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForFixedUpdate();
 
             }
         }

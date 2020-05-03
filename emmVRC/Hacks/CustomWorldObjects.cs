@@ -46,15 +46,16 @@ namespace emmVRC.Hacks
         {
             while (RoomManager.field_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
-            foreach (var gameObj in GameObject.FindObjectsOfType<GameObject>())
+            GameObject[] allObjects = UnityEngine.Resources.FindObjectsOfTypeAll<GameObject>();
+            foreach (GameObject obj in allObjects)
             {
-                if (gameObj.name == "eVRCDisable")
+                if (obj.name == "eVRCDisable")
                 {
-                    gameObj.SetActive(false);
+                    obj.SetActive(false);
                 }
-                else if (gameObj.name == "eVRCEnable")
+                else if (obj.name == "eVRCEnable")
                 {
-                    gameObj.SetActive(true);
+                    obj.SetActive(true);
                 }
             }
         }

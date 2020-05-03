@@ -15,6 +15,7 @@ namespace emmVRC.Menus
         private static PageItem playerTweaksButton;
         private static PageItem instanceHistoryButton;
         private static PageItem disabledButtonsButton;
+        private static PageItem programsButton;
         private static PageItem settingsButton;
         private static PageItem supporterButton;
         private static PageItem forceQuitButton;
@@ -36,12 +37,16 @@ namespace emmVRC.Menus
             disabledButtonsButton = new PageItem("Disabled\nButtons", () => { DisabledButtonMenu.LoadMenu(); }, "Contains buttons from the Quick Menu that were disabled by emmVRC");
             baseMenu.pageItems.Add(disabledButtonsButton);
 
+            // Add the Programs button
+            programsButton = new PageItem("Programs", () => { ProgramMenu.baseMenu.OpenMenu(); }, "Lets you launch external programs from within VRChat.");
+            baseMenu.pageItems.Add(programsButton);
+
             // Add the Settings button
             settingsButton = new PageItem("Settings", () => {
                 SettingsMenu.LoadMenu();
             }, "Access the Settings for emmVRC, including Risky Functions, color changes, etc.");
             baseMenu.pageItems.Add(settingsButton);
-            for (int i=0; i <= 11; i++)
+            for (int i=0; i <= 9; i++)
             {
                 baseMenu.pageItems.Add(PageItem.Space());
             }

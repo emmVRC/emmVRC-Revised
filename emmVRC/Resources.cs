@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.IO;
+using BestHTTP.SocketIO;
 
 namespace emmVRC
 {
@@ -65,14 +66,18 @@ namespace emmVRC
             if (!File.Exists(Path.Combine(resourcePath, "HUD/UIMinimized.png")) || !File.Exists(Path.Combine(resourcePath, "HUD/UIMaximized.png")))
             {
                 // Fetch the byte[] streams of data from Emilia's servers
-                byte[] UIMinimizedData = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png").bytes;
-                byte[] UIMaximizedData = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png").bytes;
+                WWW UIMinimizedDataWWW = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png");
+                byte[] UIMinimizedData = UIMinimizedDataWWW.bytes;
+                while (!UIMinimizedDataWWW.isDone || UIMinimizedData == null) ;
+
+                WWW UIMaximizedDataWWW = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png");
+                byte[] UIMaximizedData = UIMinimizedDataWWW.bytes;
+                while (!UIMaximizedDataWWW.isDone || UIMaximizedData == null) ;
 
                 // Write out the byte[] streams of data to the resource directories
                 File.WriteAllBytes(Path.Combine(resourcePath, "HUD/UIMinimized.png"), UIMinimizedData);
                 File.WriteAllBytes(Path.Combine(resourcePath, "HUD/UIMaximized.png"), UIMaximizedData);
             }
-            
 
             // Fetch the resources asset bundle, for things like sprites.
             UnityWebRequest assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
@@ -83,41 +88,50 @@ namespace emmVRC
             AssetBundleCreateRequest dlBundle = AssetBundle.LoadFromMemoryAsync(assetBundleRequest.downloadHandler.data);
             while (!dlBundle.isDone)
                 yield return new WaitForSeconds(0.1f);
-
             AssetBundle newBundle = dlBundle.assetBundle;
-            offlineSprite = newBundle.LoadAssetAsync("Assets/Offline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
-            while (offlineSprite == null)
-                yield return new WaitForSeconds(0.1f);
-            onlineSprite = newBundle.LoadAssetAsync("Assets/Online.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            offlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Offline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
+            while (offlineSprite == null) yield return new WaitForSeconds(0.1f);
+            offlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
+            onlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Online.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            
             while (onlineSprite == null) yield return new WaitForSeconds(0.1f);
+            onlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
             owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
             while (owonlineSprite == null) yield return new WaitForSeconds(0.1f);
-            alertSprite = newBundle.LoadAssetAsync("Assets/Alert.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            owonlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
+            alertSprite = newBundle.LoadAssetAsync_Internal("Assets/Alert.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
             while (alertSprite == null) yield return new WaitForSeconds(0.1f);
-            errorSprite = newBundle.LoadAssetAsync("Assets/Error.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            alertSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
+            errorSprite = newBundle.LoadAssetAsync_Internal("Assets/Error.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
             while (errorSprite == null) yield return new WaitForSeconds(0.1f);
-            messageSprite = newBundle.LoadAssetAsync("Assets/Message.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            errorSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
+            messageSprite = newBundle.LoadAssetAsync_Internal("Assets/Message.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
             while (messageSprite == null) yield return new WaitForSeconds(0.1f);
-            crownSprite = newBundle.LoadAssetAsync("Assets/Crown.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            messageSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
+            crownSprite = newBundle.LoadAssetAsync_Internal("Assets/Crown.png", Sprite.Il2CppType).asset.Cast<Sprite>();
 
             while (crownSprite == null) yield return new WaitForSeconds(0.1f);
+            crownSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            // Some sprite operations are done here, because the other objects would be initialized by the time this happened
-            Hacks.ShortcutMenuButtons.logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
-
-            Hacks.MasterCrown.crownSprite = crownSprite;
             // Fetch the texture textures... nani?
             if (true)
             {
                 // Fetch the byte[] stream of data from Emilia's servers
-                byte[] PanelTextureData = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/Textures/Panel.png").bytes;
-
+                WWW PanelTextureDataWWW = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/Textures/Panel.png");
+                byte[] PanelTextureData = PanelTextureDataWWW.bytes;
+                while (!PanelTextureDataWWW.isDone || PanelTextureData == null) ;
                 // Write out all the byte[] stream of data to the resource directory
                 File.WriteAllBytes(Path.Combine(resourcePath, "Textures/Panel.png"), PanelTextureData);
             }
@@ -126,29 +140,17 @@ namespace emmVRC
             WWW UIMinimizedWWW = new WWW(string.Format("file://{0}", resourcePath + "/HUD/UIMinimized.png").Replace(@"\", "/"));
             WWW UIMaximizedWWW = new WWW(string.Format("file://{0}", resourcePath + "/HUD/UIMaximized.png").Replace(@"\", "/"));
             uiMinimized = UIMinimizedWWW.texture;
+            while (!UIMinimizedWWW.isDone || uiMinimized == null) ;
+            uiMinimized.hideFlags |= HideFlags.DontUnloadUnusedAsset;
             uiMaximized = UIMaximizedWWW.texture;
-
-            // Load the sprite textures
-            WWW OfflineSpriteWWW = new WWW(string.Format("file://{0}", resourcePath + "/Sprites/Offline.png").Replace(@"\", "/"));
-            WWW OnlineSpriteWWW = new WWW(string.Format("file://{0}", resourcePath + "/Sprites/Online.png").Replace(@"\", "/"));
-            WWW OwOnlineSpriteWWW = new WWW(string.Format("file://{0}", resourcePath + "/Sprites/OwOnline.png").Replace(@"\", "/"));
-            WWW AlertSpriteWWW = new WWW(string.Format("file://{0}", resourcePath + "/Sprites/Alert.png").Replace(@"\", "/"));
-            WWW ErrorSpriteWWW = new WWW(string.Format("file://{0}", resourcePath + "/Sprites/Error.png").Replace(@"\", "/"));
-            WWW MessageSpriteWWW = new WWW(string.Format("file://{0}", resourcePath + "/Sprites/Message.png").Replace(@"\", "/"));
-            WWW CrownSpriteWWW = new WWW(string.Format("file://{0}", resourcePath + "/Sprites/Crown.png").Replace(@"\", "/"));
-            /*offlineSprite = Sprite.Create(OfflineSpriteWWW.texture, new Rect(0, 0, OfflineSpriteWWW.texture.width, OfflineSpriteWWW.texture.height), new Vector2(0, 0));
-            onlineSprite = Sprite.Create(OnlineSpriteWWW.texture, new Rect(0, 0, OnlineSpriteWWW.texture.width, OnlineSpriteWWW.texture.height), new Vector2(0, 0));
-            owonlineSprite = Sprite.Create(OwOnlineSpriteWWW.texture, new Rect(0, 0, OwOnlineSpriteWWW.texture.width, OwOnlineSpriteWWW.texture.height), new Vector2(0, 0));
-            alertSprite = Sprite.Create(AlertSpriteWWW.texture, new Rect(0, 0, AlertSpriteWWW.texture.width, AlertSpriteWWW.texture.height), new Vector2(0, 0));
-            errorSprite = Sprite.Create(ErrorSpriteWWW.texture, new Rect(0, 0, ErrorSpriteWWW.texture.width, ErrorSpriteWWW.texture.height), new Vector2(0, 0));
-            messageSprite = Sprite.Create(MessageSpriteWWW.texture, new Rect(0, 0, MessageSpriteWWW.texture.width, MessageSpriteWWW.texture.height), new Vector2(0, 0));
-            crownSprite = Sprite.Create(CrownSpriteWWW.texture, new Rect(0, 0, CrownSpriteWWW.texture.width, CrownSpriteWWW.texture.height), new Vector2(0, 0));*/
+            while (!UIMaximizedWWW.isDone || uiMinimized == null) ;
+            uiMaximized.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
             // Load the texture textures :catShrug:
             WWW PanelTextureWWW = new WWW(string.Format("file://{0}", resourcePath + "/Textures/Panel.png").Replace(@"\", "/"));
-
-            
             panelTexture = PanelTextureWWW.texture;
+            while (!PanelTextureWWW.isDone || panelTexture == null) ;
+            panelTexture.hideFlags |= HideFlags.DontUnloadUnusedAsset;
         }
     }
 }

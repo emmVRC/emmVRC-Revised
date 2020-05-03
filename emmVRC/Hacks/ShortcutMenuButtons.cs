@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,12 +17,13 @@ namespace emmVRC.Hacks
         public static GameObject emojiButton;
         public static GameObject reportWorldButton;
         public static GameObject trustRankButton;
-        public static void Process()
+        public static IEnumerator Process()
         {
             if (logoButton == null)
             {
                 logoButton = new QMSingleButton("ShortcutMenu", Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY, "", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
-
+                while (Resources.onlineSprite == null) yield return null;
+                logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
             }
             logoButton.setActive(Configuration.JSONConfig.LogoButtonEnabled);
             emojiButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmojiButton").gameObject;

@@ -8,7 +8,7 @@ using UnityEngine.Events;
 using VRC;
 using VRC.Core;
 using emmVRC.Libraries;
-
+using NET_SDK.Harmony;
 
 namespace emmVRC
 {
@@ -24,14 +24,15 @@ namespace emmVRC
 
             // Load the config for emmVRC
             Configuration.Initialize();
-
-            
         }
 
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
-            emmVRCLoader.Logger.Log("UI manager initialized");
+            // Initialize the Debug manager
+            Managers.DebugManager.Initialize();
+
+            emmVRCLoader.Logger.LogDebug("UI manager initialized");
 
             // Start trying to set up the menu music
             MelonLoader.MelonCoroutines.Start(Hacks.CustomMenuMusic.Initialize());
@@ -57,9 +58,14 @@ namespace emmVRC
             emmVRCLoader.Logger.LogDebug("Initializing Disabled Buttons menu...");
             Menus.DisabledButtonMenu.Initialize();
 
+            // Initialize the "Programs" menu
+            emmVRCLoader.Logger.LogDebug("Initializing Programs menu...");
+            Menus.ProgramMenu.Initialize();
+
             // Initialize the "Settings" menu
             emmVRCLoader.Logger.LogDebug("Initializing Settings menu...");
             Menus.SettingsMenu.Initialize();
+
 
             // Initialize the "Supporters" menu
             Menus.SupporterMenu.Initialize();
@@ -75,7 +81,7 @@ namespace emmVRC
             Managers.NotificationManager.Initialize();
 
             // Process the "Hacks" for the Shortcut Menu
-            Hacks.ShortcutMenuButtons.Process();
+            MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
 
             // Initialize the Quick Menu clock
             Hacks.InfoBarClock.Initialize();
@@ -102,7 +108,7 @@ namespace emmVRC
             Hacks.AvatarMenu.Initialize();
 
             // Initialize the Info Spoof/Hider
-            // Hacks.InfoSpoofing.Initialize();
+            Hacks.InfoSpoofing.Initialize();
 
             // Initialize the Nameplate color changer
             Hacks.Nameplates.Initialize();
@@ -152,14 +158,7 @@ namespace emmVRC
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
 
             // As a last-ditch effort, try changing colors
-            try
-            {
                 Hacks.ColorChanger.ApplyIfApplicable();
-            }
-            catch (Exception ex)
-            {
-                Exception ex2 = ex;
-            }
         }
         public static void OnUpdate()
         {

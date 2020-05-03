@@ -174,27 +174,9 @@ namespace emmVRC.Hacks
     public class InfoSpoofing
     {
         private static bool Enabled = true;
-        private static GameObject nameText;
-        private static GameObject spoofedNameText;
-        private static GameObject worldText;
-        private static GameObject spoofedWorldText;
-        private static GameObject avatarImage;
-        private static GameObject spoofedAvatarImage;
-        private static int spoofedWorldID = 294756;
 
         public static void Initialize()
         {
-            nameText = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/NameText").gameObject;
-            worldText = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/WorldText").gameObject;
-            avatarImage = QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_CONTEXT/QM_Context_User_Hover/AvatarImage/Text").gameObject;
-            if (nameText == null || worldText == null || avatarImage == null)
-                emmVRCLoader.Logger.LogError("Info spoofing is going to fail, because one or more of the required elements was null!");
-            spoofedNameText = GameObject.Instantiate(nameText, nameText.transform.parent);
-            GameObject.Destroy(spoofedNameText.GetComponent<VRC.UI.UsernameDisplay>());
-            spoofedWorldText = GameObject.Instantiate(worldText, worldText.transform.parent);
-            GameObject.Destroy(spoofedWorldText.GetComponent<VRC.UI.DebugDisplayText>());
-            spoofedAvatarImage = GameObject.Instantiate(avatarImage, avatarImage.transform.parent);
-
             NameSpoofGenerator.GenerateNewName();
             MelonLoader.MelonCoroutines.Start(Loop());
         }
@@ -202,47 +184,29 @@ namespace emmVRC.Hacks
         {
             while (Enabled)
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return null;
                 try
                 {
-                    if (Configuration.JSONConfig.InfoHidingEnabled /*|| Configuration.JSONConfig.InfoSpoofingEnabled*/)
+                    if (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled)
                     {
                         if (RoomManager.field_ApiWorld_0 != null)
                         {
-                            nameText.SetActive(false);
-                            worldText.SetActive(false);
-                            avatarImage.SetActive(false);
-                        }
-                    }
-                    if (Configuration.JSONConfig.InfoSpoofingEnabled)
-                    {
-                        if (RoomManager.field_ApiWorld_0 != null)
-                        {
-                            spoofedNameText.SetActive(true);
-                            spoofedWorldText.SetActive(true);
-                            spoofedAvatarImage.SetActive(true);
-                            spoofedNameText.GetComponent<Text>().text = "Hi, " + NameSpoofGenerator.spoofedName;
-                            spoofedAvatarImage.GetComponentInChildren<Text>().text = NameSpoofGenerator.spoofedName;
-
-                            spoofedWorldText.GetComponent<Text>().text = "Text";// RoomManager.field_ApiWorldInstance_0.instanceWorld.name + ":" + spoofedWorldID.ToString() + "invite";
 
                             if (QuickMenuUtils.GetVRCUiMInstance().menuContent.activeInHierarchy)
                             {
                                 foreach (Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<Text>())
                                 {
                                     if (text.text.Contains((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName)))
-                                        text.text = text.text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), NameSpoofGenerator.spoofedName);
+                                        text.text = text.text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                                 }
                             }
-                        }
-                    }
-                    if (!Configuration.JSONConfig.InfoSpoofingEnabled)
-                    {
-                        if (QuickMenuUtils.GetVRCUiMInstance().menuContent.activeInHierarchy && RoomManager.field_ApiWorld_0 != null)
-                        {
-                            foreach (Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<Text>())
+                            if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy)
                             {
-                                text.text = text.text.Replace(NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<Text>())
+                                {
+                                    if (text.text.Contains((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName)))
+                                        text.text = text.text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
+                                }
                             }
                         }
                     }
@@ -250,12 +214,29 @@ namespace emmVRC.Hacks
                     {
                         if (RoomManager.field_ApiWorld_0 != null)
                         {
-                            spoofedNameText.SetActive(false);
-                            spoofedWorldText.SetActive(false);
-                            spoofedAvatarImage.SetActive(false);
-                            nameText.SetActive(true);
-                            worldText.SetActive(true);
-                            avatarImage.SetActive(true);
+
+                            if (QuickMenuUtils.GetVRCUiMInstance().menuContent.activeInHierarchy)
+                            {
+                                foreach (Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<Text>())
+                                {
+                                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(NameSpoofGenerator.spoofedName))
+                                    {
+                                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                        text.text = text.text.Replace(NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                    }
+                                }
+                            }
+                            if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy)
+                            {
+                                foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<Text>())
+                                {
+                                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(NameSpoofGenerator.spoofedName))
+                                    {
+                                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                        text.text = text.text.Replace(NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -67,7 +67,6 @@ namespace emmVRC.Libraries
                 OnAction.Invoke();
             else if (!ToggleState)
                 OffAction.Invoke();
-
         }
     }
     public class PaginatedMenu
@@ -109,7 +108,7 @@ namespace emmVRC.Libraries
             menuBase.getMainButton().DestroyMe();
 
 
-            menuEntryButton = new QMSingleButton(parentPath, x, y, menuName, () => { this.OpenMenu(); }, menuTooltip, buttonColor);
+            menuEntryButton = new QMSingleButton(parentPath, x, y, menuName,  this.OpenMenu, menuTooltip, buttonColor);
 
             previousPageButton = new QMSingleButton(menuBase, 4, 0, "", () =>
             {
@@ -154,56 +153,7 @@ namespace emmVRC.Libraries
             toggleItem9 = new QMToggleButton(menuBase, 3, 2, "", null, "", null, "", buttonColor);
         }
 
-        public PaginatedMenu(QMNestedButton menuButton, int x, int y, string menuName, string menuTooltip, Color? buttonColor)
-        {
-            menuBase = new QMNestedButton(menuButton, x, y, menuName, "");
-            menuBase.getMainButton().DestroyMe();
-
-            menuEntryButton = new QMSingleButton(menuButton, x, y, menuName, () =>
-            {
-                this.OpenMenu();
-            }, menuTooltip, buttonColor);
-
-            previousPageButton = new QMSingleButton(menuBase, 4, 0, "", () =>
-            {
-                currentPage--;
-                UpdateMenu();
-            }, "Move to the previous page", buttonColor);
-            menuTitle = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EarlyAccessText").gameObject, this.menuBase.getBackButton().getGameObject().transform.parent);
-            menuTitle.GetComponent<Text>().fontStyle = FontStyle.Normal;
-            menuTitle.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
-            menuTitle.GetComponent<Text>().text = "";
-            menuTitle.GetComponent<RectTransform>().anchoredPosition += new Vector2(580f, -440f);
-            previousPageButton.getGameObject().GetComponent<Image>().sprite = QuickMenuUtils.GetQuickMenuInstance().transform.Find("EmojiMenu/PageUp").GetComponent<Image>().sprite;
-            pageCount = new QMSingleButton(menuBase, 4, 1, "Page\n0/0", null, "Indicates the page you are on");
-            GameObject.DestroyObject(pageCount.getGameObject().GetComponentInChildren<ButtonReaction>());
-            GameObject.DestroyObject(pageCount.getGameObject().GetComponentInChildren<UiTooltip>());
-            GameObject.DestroyObject(pageCount.getGameObject().GetComponentInChildren<Image>());
-            nextPageButton = new QMSingleButton(menuBase, 4, 2, "", () =>
-            {
-                currentPage++;
-                UpdateMenu();
-            }, "Move to the next page", buttonColor);
-            nextPageButton.getGameObject().GetComponent<Image>().sprite = QuickMenuUtils.GetQuickMenuInstance().transform.Find("EmojiMenu/PageDown").GetComponent<Image>().sprite;
-            item1 = new QMSingleButton(menuBase, 1, 0, "", null, "", buttonColor);
-            item2 = new QMSingleButton(menuBase, 2, 0, "", null, "", buttonColor);
-            item3 = new QMSingleButton(menuBase, 3, 0, "", null, "", buttonColor);
-            item4 = new QMSingleButton(menuBase, 1, 1, "", null, "", buttonColor);
-            item5 = new QMSingleButton(menuBase, 2, 1, "", null, "", buttonColor);
-            item6 = new QMSingleButton(menuBase, 3, 1, "", null, "", buttonColor);
-            item7 = new QMSingleButton(menuBase, 1, 2, "", null, "", buttonColor);
-            item8 = new QMSingleButton(menuBase, 2, 2, "", null, "", buttonColor);
-            item9 = new QMSingleButton(menuBase, 3, 2, "", null, "", buttonColor);
-            toggleItem1 = new QMToggleButton(menuBase, 1, 0, "", null, "", null, "", buttonColor);
-            toggleItem2 = new QMToggleButton(menuBase, 2, 0, "", null, "", null, "", buttonColor);
-            toggleItem3 = new QMToggleButton(menuBase, 3, 0, "", null, "", null, "", buttonColor);
-            toggleItem4 = new QMToggleButton(menuBase, 1, 1, "", null, "", null, "", buttonColor);
-            toggleItem5 = new QMToggleButton(menuBase, 2, 1, "", null, "", null, "", buttonColor);
-            toggleItem6 = new QMToggleButton(menuBase, 3, 1, "", null, "", null, "", buttonColor);
-            toggleItem7 = new QMToggleButton(menuBase, 1, 2, "", null, "", null, "", buttonColor);
-            toggleItem8 = new QMToggleButton(menuBase, 2, 2, "", null, "", null, "", buttonColor);
-            toggleItem9 = new QMToggleButton(menuBase, 3, 2, "", null, "", null, "", buttonColor);
-        }
+        public PaginatedMenu(QMNestedButton menuButton, int x, int y, string menuName, string menuTooltip, Color? buttonColor) : this(menuButton.getMenuName(), x, y, menuName, menuTooltip, buttonColor) { }
         public void OpenMenu()
         {
             currentPage = 0;

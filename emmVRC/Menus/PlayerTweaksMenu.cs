@@ -14,6 +14,8 @@ namespace emmVRC.Menus
         public static QMNestedButton baseMenu;
         public static GameObject SpeedText;
         public static QMSingleButton UnloadDynamicBonesButton;
+        public static QMSingleButton SelectCurrentUserButton;
+        public static QMSingleButton ReloadAllAvatars;
         public static QMSingleButton EnableJumpButton;
         public static QMSingleButton WaypointMenu;
         public static QMToggleButton AvatarClone;
@@ -34,12 +36,21 @@ namespace emmVRC.Menus
 
             UnloadDynamicBonesButton = new QMSingleButton(baseMenu, 1, 0, "Remove\nLoaded\nDynamic\nBones", () =>
             {
-                foreach (DynamicBone bone in UnityEngine.Resources.FindObjectsOfTypeAll<DynamicBone>())
+                foreach (DynamicBone bone in GameObject.FindObjectsOfType<DynamicBone>())
                     GameObject.Destroy(bone);
-                foreach (DynamicBoneCollider coll in UnityEngine.Resources.FindObjectsOfTypeAll<DynamicBoneCollider>())
+                foreach (DynamicBoneCollider coll in GameObject.FindObjectsOfType<DynamicBoneCollider>())
                     GameObject.Destroy(coll);
             }, "Unload all the current dynamic bones in the instance");
 
+            ReloadAllAvatars = new QMSingleButton(baseMenu, 2, 0, "Reload\nAll\nAvatars", () =>
+            {
+                VRCPlayer.field_VRCPlayer_0.Method_Public_Boolean_0(false);
+            }, "Reloads all the current avatars in the room");
+
+            SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
+            {
+                QuickMenuUtils.GetQuickMenuInstance().Method_Public_VRCPlayer_0(VRCPlayer.field_VRCPlayer_0);
+            }, "Selects you as the current user");
             EnableJumpButton = new QMSingleButton(baseMenu, 4, 0, "Enable\nJumping", () =>
             {
                 if (VRCPlayer.field_VRCPlayer_0.gameObject.GetComponent<PlayerModComponentJump>() == null)
@@ -56,7 +67,8 @@ namespace emmVRC.Menus
             }, "Disabled", () => { 
                 Hacks.Flight.FlightEnabled = false;
                 if (Hacks.Flight.NoclipEnabled) { Hacks.Flight.NoclipEnabled = false; 
-                    NoclipToggle.setToggleState(false); 
+                    NoclipToggle.setToggleState(false);
+                    VRCPlayer.field_VRCPlayer_0.GetComponent<VRCMotionState>().field_CharacterController_0.enabled = true;
                 } 
             }, "TOGGLE: Enables flight. Requires Risky Functions");
             
@@ -67,7 +79,7 @@ namespace emmVRC.Menus
                     FlightToggle.setToggleState(true); 
                 } 
             }, "Disabled", () => { 
-                Hacks.Flight.NoclipEnabled = false; 
+                Hacks.Flight.NoclipEnabled = false;
             }, "TOGGLE: Enables NoClip. Requires Risky Functions");
             
             ESPToggle = new QMToggleButton(baseMenu, 4, 1, "ESP On", () => {

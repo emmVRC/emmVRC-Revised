@@ -14,6 +14,7 @@ namespace emmVRC.Menus
         public static QMSingleButton OptimizeMirrorsButton;
         public static QMSingleButton BeautifyMirrorsButton;
         public static QMSingleButton RevertMirrorsButton;
+        public static QMToggleButton PortalBlockToggle;
         public static void Initialize()
         {
             baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 192384, 129302, "World\nTweaks", "");

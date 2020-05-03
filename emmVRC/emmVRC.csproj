@@ -180,6 +180,7 @@
     <Compile Include="Libraries\TinyJSON\Types\Variant.cs" />
     <Compile Include="Libraries\UserInterfaceUtils.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Managers\DebugManager.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Menus\InstanceHistory.cs" />
     <Compile Include="Menus\LoadingScreenMenu.cs" />
     <Compile Include="Menus\PlayerTweaksMenu.cs" />
+    <Compile Include="Menus\ProgramMenu.cs" />
     <Compile Include="Menus\SettingsMenu.cs" />
     <Compile Include="Menus\SupporterMenu.cs" />
     <Compile Include="Menus\WaypointsMenu.cs" />
