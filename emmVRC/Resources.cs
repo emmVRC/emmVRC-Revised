@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,17 +67,11 @@ namespace emmVRC
             if (!File.Exists(Path.Combine(resourcePath, "HUD/UIMinimized.png")) || !File.Exists(Path.Combine(resourcePath, "HUD/UIMaximized.png")))
             {
                 // Fetch the byte[] streams of data from Emilia's servers
-                WWW UIMinimizedDataWWW = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png");
-                byte[] UIMinimizedData = UIMinimizedDataWWW.bytes;
-                while (!UIMinimizedDataWWW.isDone || UIMinimizedData == null) ;
-
-                WWW UIMaximizedDataWWW = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png");
-                byte[] UIMaximizedData = UIMinimizedDataWWW.bytes;
-                while (!UIMaximizedDataWWW.isDone || UIMaximizedData == null) ;
-
-                // Write out the byte[] streams of data to the resource directories
-                File.WriteAllBytes(Path.Combine(resourcePath, "HUD/UIMinimized.png"), UIMinimizedData);
-                File.WriteAllBytes(Path.Combine(resourcePath, "HUD/UIMaximized.png"), UIMaximizedData);
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png", Path.Combine(resourcePath, "HUD/UIMinimized.png"));
+                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png", Path.Combine(resourcePath, "HUD/UIMaximized.png"));
+                }
             }
 
             // Fetch the resources asset bundle, for things like sprites.
@@ -129,11 +124,10 @@ namespace emmVRC
             if (true)
             {
                 // Fetch the byte[] stream of data from Emilia's servers
-                WWW PanelTextureDataWWW = new WWW("https://thetrueyoshifan.com/downloads/emmvrcresources/Textures/Panel.png");
-                byte[] PanelTextureData = PanelTextureDataWWW.bytes;
-                while (!PanelTextureDataWWW.isDone || PanelTextureData == null) ;
-                // Write out all the byte[] stream of data to the resource directory
-                File.WriteAllBytes(Path.Combine(resourcePath, "Textures/Panel.png"), PanelTextureData);
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/emmvrcresources/Textures/Panel.png", Path.Combine(resourcePath, "Textures/Panel.png"));
+                }
             }
 
             // Load the HUD textures

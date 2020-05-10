@@ -12,6 +12,8 @@ namespace emmVRC.Managers
     {
         public static bool RiskyFunctionsAllowed { get; private set; } = false;
         public static bool RiskyFunctionsChecked = false;
+        public static Il2CppSystem.Action<string> worldTagsCheck = null;
+        private static bool keyFlag;
         public static void Initialize()
         {
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -30,9 +32,11 @@ namespace emmVRC.Managers
                         if (RiskyFunctionsAllowed)
                         {
                             Menus.PlayerTweaksMenu.SetRiskyFunctions(true);
+                            Menus.UserTweaksMenu.SetRiskyFunctions(true);
                         } else
                         {
                             Menus.PlayerTweaksMenu.SetRiskyFunctions(false);
+                            Menus.UserTweaksMenu.SetRiskyFunctions(false);
                         }
                         RiskyFunctionsChecked = true;
 
@@ -42,19 +46,24 @@ namespace emmVRC.Managers
                     if (RiskyFunctionsAllowed)
                     {
                         // If the flight keybind is pressed...
-                        if (Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) && Input.GetKeyDown((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])){
+                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) || (KeyCode)Configuration.JSONConfig.FlightKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !keyFlag){
                             Menus.PlayerTweaksMenu.FlightToggle.setToggleState(!Hacks.Flight.FlightEnabled, true);
+                            keyFlag = true;
                         }
                         // If the noclip keybind is pressed...
-                        if (Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1]) && Input.GetKeyDown((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]))
+                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1]) || (KeyCode)Configuration.JSONConfig.NoclipKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !keyFlag)
                         {
                             Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(!Hacks.Flight.NoclipEnabled, true);
+                            keyFlag = true;
                         }
                         // If the Speed keybind is pressed...
-                        if (Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1]) && Input.GetKeyDown((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]))
+                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1]) || (KeyCode)Configuration.JSONConfig.SpeedKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !keyFlag)
                         {
                             Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(!Hacks.Speed.SpeedModified, true);
+                            keyFlag = true;
                         }
+                        if (!Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && keyFlag)
+                            keyFlag = false;
                     }
 
                 }
@@ -110,11 +119,17 @@ namespace emmVRC.Managers
                 }
                 // If the temp flag isn't set, perform the tag check
                 if (!temp)
-                    foreach (string tag in RoomManager.field_ApiWorld_0.tags)
+                {
+                    if (RoomManager.field_ApiWorld_0.tags.IndexOf("author_tag_game") != -1 || RoomManager.field_ApiWorld_0.tags.IndexOf("admin_game") != -1)
                     {
-                        if (tag == "author_tag_game" || tag == "admin_game")
-                            RiskyFunctionsAllowed = false;
+                        RiskyFunctionsAllowed = false;
                     }
+                    else
+                    {
+                        RiskyFunctionsAllowed = true;
+                    }
+                }
+                
 
                 // Now have Risky Functions reprocess based on this result
                 RiskyFunctionsChecked = false;

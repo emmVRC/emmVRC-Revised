@@ -13,7 +13,7 @@ namespace emmVRCLoader
         {
             get
             {
-                byte[] input = Convert.FromBase64String("aHR0cDovL3RoZXRydWV5b3NoaWZhbi5jb20vZW1tdnJjdXBkYXRlLnBocA==");
+                byte[] input = Convert.FromBase64String("aHR0cDovL3RoZXRydWV5b3NoaWZhbi5jb20vZW1tVlJDVXBkYXRlLnBocA==");
                 return Encoding.ASCII.GetString(input);
             }
         }
@@ -32,9 +32,13 @@ namespace emmVRCLoader
             if (!HasCheckedUpdate)
             {
                 string configpath = null;
-                configpath = Path.Combine(Environment.CurrentDirectory, "UserData\\emmVRC\\config.json");
+                configpath = Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/config.json");
                 /*if (File.Exists(configpath))
-                    IsBeta = ((JObject)JsonConvert.DeserializeObject(File.ReadAllText(configpath)))["openBeta"].Value<bool>();*/
+                   IsBeta = ((JObject)JsonConvert.DeserializeObject(File.ReadAllText(configpath)))["openBeta"].Value<bool>();*/
+                   if (File.Exists(configpath))
+                {
+                    IsBeta = TinyJSON.Decoder.Decode(File.ReadAllText(configpath))["OpenBetaEnabled"];
+                }
 
                 Logger.Log("[emmVRCLoader] Downloading emmVRC...");
                 DownloadLib();
@@ -77,70 +81,68 @@ namespace emmVRCLoader
 
         public static void DownloadLib()
         {
-            //if (Application.platform == RuntimePlatform.WindowsPlayer)
-            //{
             if (!Environment.CommandLine.Contains("--emmvrc.devmode"))
             {
-                WebClient client = new WebClient();
-                client.DownloadDataAsync(new Uri(WebsiteURL + (IsBeta ? "?beta&libdownload" : "?libdownload")));
-                client.DownloadDataCompleted += delegate (object sender, DownloadDataCompletedEventArgs e)
+                try
                 {
-                    if (e.Error != null || e.Cancelled)
+                    /*WebClient client = new WebClient();
+                    client.DownloadData(new Uri(WebsiteURL + (IsBeta ? "?beta&libdownload" : "?libdownload")));
+                    client.DownloadDataCompleted += delegate (object sender, DownloadDataCompletedEventArgs e)
                     {
-                        Logger.LogError("[emmVRCLoader] Error occured while fetching lib: " + (e.Error != null ? e.Error.ToString() : "download cancelled..."));
+                        if (e.Error != null || e.Cancelled)
+                        {
+                            Logger.LogError("[emmVRCLoader] Error occured while fetching lib: " + (e.Error != null ? e.Error.ToString() : "download cancelled..."));
+                        }
+                        else
+                        {
+                            string resultString = Encoding.Default.GetString(e.Result);
+                            downloadedLib = Convert.FromBase64String(resultString);
+                        }
+                    };*/
+                    WebRequest request = WebRequest.Create(WebsiteURL + (IsBeta ? "?beta&libdownload" : "?libdownload"));
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Logger.LogError("[emmVRCLoader] Error occured while fetching emmVRC: " + response.StatusDescription);
                     }
                     else
                     {
-                        string resultString = Encoding.Default.GetString(e.Result);
+                        StreamReader reader = new StreamReader(response.GetResponseStream());
+                        string resultString = reader.ReadToEnd();
                         downloadedLib = Convert.FromBase64String(resultString);
                     }
-                };
+
+                } catch (Exception ex)
+                {
+                    Logger.LogError(ex.ToString());
+                }
 
             }
-            //}
             else if (Environment.CommandLine.Contains("--emmvrc.devmode"))
             {
                 downloadedLib = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"));
             }
-            //}
-            /*else if (Application.platform == RuntimePlatform.Android)
-            {
-                WebRequest = new WWW(WebsiteURL + (IsBeta ? "?beta&libdownload" : "?libdownload"));
-                while (!WebRequest.isDone) ;
-                ResponseCode = Bootstrapper.GetWWWResponseCode(WebRequest);
-                if (ResponseCode == 200)
-                {
-                    downloadedLib = Convert.FromBase64String(WebRequest.text);
-                }
-                else
-                {
-                    Logger.LogError("[emmVRCLoader] [Debug] Response code was: " + ResponseCode.ToString());
-                    Logger.LogError("[emmVRCLoader] Failed to load emmVRC!");
-                }
-            }*/
         }
         public static bool ShouldLoadLib()
         {
             if (!HasCheckedLoadLib)
             {
                 Logger.Log("[emmVRCLoader] Checking if emmVRC can Load...");
-                WebClient client = new WebClient();
-                client.DownloadDataAsync(new Uri(WebsiteURL + (IsBeta ? "?beta&shouldload" : "?shouldload")));
 
-                client.DownloadDataCompleted += delegate (object sender, DownloadDataCompletedEventArgs e)
+                WebRequest request = WebRequest.Create(WebsiteURL + (IsBeta ? "?beta&shouldload" : "?shouldload"));
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    if (e.Error == null && !e.Cancelled)
+                    StreamReader reader = new StreamReader(response.GetResponseStream());
+                    string resultString = reader.ReadToEnd();
+                    if (resultString != "true")
                     {
-                        string resultString = Encoding.Default.GetString(e.Result);
-                        if (resultString != "true")
-                        {
-                            Logger.LogError("[emmVRCLoader] emmVRC can't be loaded...");
-                            LoadLibCheck = false;
-                        }
-                        else
-                            Logger.Log("[emmVRCLoader] emmVRC can be loaded!");
+                        Logger.LogError("[emmVRCLoader] emmVRC can't be loaded...");
+                        LoadLibCheck = false;
                     }
-                };
+                    else
+                        Logger.Log("[emmVRCLoader] emmVRC can be loaded!");
+                }
                 /*WebRequest = new WWW(WebsiteURL + (IsBeta ? "?beta&shouldload" : "?shouldload"));
                 while (!WebRequest.isDone) ;
                 ResponseCode = Bootstrapper.GetWWWResponseCode(WebRequest);

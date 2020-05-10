@@ -94,8 +94,6 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
-
-                    emmVRCLoader.Logger.LogDebug("a");
                     try
                     {
                         var inputHolder = quickMenu.transform.Find("Popups/InputPopup");
@@ -113,8 +111,6 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
-
-                    emmVRCLoader.Logger.LogDebug("b");
                     try
                     {
                         applyColorOfTypeIfExists(quickMenu, "Panel_Header", color, color.a);
@@ -126,8 +122,6 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
-
-                    emmVRCLoader.Logger.LogDebug("c");
                     try
                     {
                         ColorBlock theme = new ColorBlock()
@@ -177,7 +171,6 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
-                    emmVRCLoader.Logger.LogDebug("d");
                     try
                     {
                         Resources.blankGradient = new Texture2D(16, 16);
@@ -197,7 +190,6 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
-                    emmVRCLoader.Logger.LogDebug("e");
                     try
                     {
                         /*VRCUiCursorManager.field_VRCUiCursorManager_0.mouseCursor.InteractiveColor = color * 1.5f;

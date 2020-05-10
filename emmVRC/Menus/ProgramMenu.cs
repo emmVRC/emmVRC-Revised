@@ -28,7 +28,7 @@ namespace emmVRC.Menus
                 exampleProgram.programPath = "C:\\Windows\\notepad.exe";
                 exampleProgram.toolTip = "Example program: Launch Notepad. See programs.json for usage";
                 programs.Add(exampleProgram);
-                File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/programs.json"), TinyJSON.Encoder.Encode(programs, TinyJSON.EncodeOptions.PrettyPrint));
+                File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/programs.json"), TinyJSON.Encoder.Encode(programs, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
             }
             else
             {

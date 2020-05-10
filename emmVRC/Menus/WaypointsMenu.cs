@@ -38,6 +38,7 @@ namespace emmVRC.Menus
         private static QMSingleButton teleportButton;
         private static QMSingleButton renameButton;
         private static QMSingleButton setLocationButton;
+        private static QMSingleButton removeButton;
 
         private static int selectedWaypoint = 0;
         private static string currentWorldID = "";
@@ -71,8 +72,15 @@ namespace emmVRC.Menus
                 SaveWaypoints();
                 teleportButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = true;
                 renameButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = true;
+                removeButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = true;
             }, "Set the waypoint location");
-        
+            removeButton = new QMSingleButton(selectedWaypointMenu, 4, 0, "Remove", () => {
+                worldWaypoints[selectedWaypoint] = new Waypoint();
+                SaveWaypoints();
+                teleportButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = false;
+                renameButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = false;
+            }, "Remove this waypoint");
+            UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => { doStuff(); }));
         }
 
         public static IEnumerator LoadWorld()

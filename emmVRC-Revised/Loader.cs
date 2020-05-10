@@ -18,7 +18,7 @@ namespace emmVRCLoader
     {
         public override void OnApplicationStart()
         {
-            MelonModLogger.Log("OnApplicationStart");
+            //MelonModLogger.Log("OnApplicationStart");
             //MelonModLogger.Log(Directory.GetCurrentDirectory());
             Bootstrapper.Start();
         }
@@ -28,7 +28,7 @@ namespace emmVRCLoader
             if (Bootstrapper.mod != null)
             Bootstrapper.mod.OnLevelWasLoaded(level);
             // Currently only works in MUPOT Mode
-            MelonModLogger.Log("OnLevelWasLoaded");
+            //MelonModLogger.Log("OnLevelWasLoaded");
         }
 
         public override void OnLevelWasInitialized(int level)
@@ -36,7 +36,7 @@ namespace emmVRCLoader
             if (Bootstrapper.mod != null)
                 Bootstrapper.mod.OnLevelWasInitialized(level);
             // Currently only works in MUPOT Mode
-            MelonModLogger.Log("OnLevelWasInitialized");
+            //MelonModLogger.Log("OnLevelWasInitialized");
         }
 
         private bool is_pressed = false;
@@ -81,7 +81,7 @@ namespace emmVRCLoader
 
         public override void OnModSettingsApplied()
         {
-            MelonModLogger.Log("OnModSettingsApplied");
+            //MelonModLogger.Log("OnModSettingsApplied");
         }
         public override void VRChat_OnUiManagerInit()
         {

@@ -44,7 +44,7 @@ namespace emmVRC.Menus
 
             ReloadAllAvatars = new QMSingleButton(baseMenu, 2, 0, "Reload\nAll\nAvatars", () =>
             {
-                VRCPlayer.field_VRCPlayer_0.Method_Public_Boolean_0(false);
+                VRCPlayer.field_VRCPlayer_0.Method_Public_Boolean_3(false);
             }, "Reloads all the current avatars in the room");
 
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
@@ -161,9 +161,6 @@ namespace emmVRC.Menus
                 NoclipToggle.getGameObject().GetComponent<Button>().enabled = true;
                 SpeedToggle.getGameObject().GetComponent<Button>().enabled = true;
                 ESPToggle.getGameObject().GetComponent<Button>().enabled = true;
-                SpeedMinusButton.getGameObject().GetComponent<Button>().enabled = true;
-                SpeedPlusButton.getGameObject().GetComponent<Button>().enabled = true;
-                SpeedReset.getGameObject().GetComponent<Button>().enabled = true;
                 SpeedSlider.slider.GetComponent<Slider>().enabled = true;
                 SpeedText.GetComponent<Text>().text = "Speed: Disabled";
                 EnableJumpButton.getGameObject().GetComponent<Button>().enabled = true;

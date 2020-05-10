@@ -21,28 +21,32 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-                /*if (RoomManager.field_ApiWorld_0 != null && Configuration.JSONConfig.MasterIconEnabled)
+                if (RoomManager.field_ApiWorld_0 != null && Configuration.JSONConfig.MasterIconEnabled && masterIconObj == null)
                 {
-                    if (PlayerManager.Method_Public_10().Count > 1)
-                        foreach (Player player in PlayerManager.Method_Public_10().ToArray())
+                    if (PlayerManager.field_PlayerManager_0.field_List_1_Player_0.Count > 1)
+                        Libraries.PlayerUtils.GetEachPlayer((Player player) =>
                         {
                             if (masterIconObj == null && player.prop_VRCPlayerApi_0.isMaster && player.field_APIUser_0.id != APIUser.CurrentUser.id)
                             {
                                 masterIconObj = GameObject.Instantiate(player.field_VRCPlayer_0.friendSprite.gameObject, player.field_VRCPlayer_0.friendSprite.transform.parent);
                                 masterIconObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(768f, 0f);
-                                masterIconObj.GetComponent<Image>().sprite = crownSprite;
+                                masterIconObj.GetComponent<Image>().sprite = Resources.crownSprite;
+
+                            }
+                            else
+                            {
                                 if (Configuration.JSONConfig.NameplatesVisible)
                                     masterIconObj.SetActive(true);
                                 else
                                     masterIconObj.SetActive(false);
                             }
-                        }
+                        });
                     else
                     {
                         GameObject.Destroy(masterIconObj);
                         masterIconObj = null;
                     }
-                }*/
+                }
                 yield return new WaitForSeconds(0.25f);
             }
         }

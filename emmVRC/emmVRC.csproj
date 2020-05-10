@@ -147,11 +147,15 @@
     <Compile Include="Hacks\MasterCrown.cs" />
     <Compile Include="Hacks\MirrorTweaks.cs" />
     <Compile Include="Hacks\Nameplates.cs" />
+    <Compile Include="Hacks\UserInteractMenuButtons.cs" />
+    <Compile Include="Hacks\WorldNotes.cs" />
+    <Compile Include="Hacks\PlayerNotes.cs" />
     <Compile Include="Hacks\ShortcutMenuButtons.cs" />
     <Compile Include="Hacks\SocialMenuFunctions.cs" />
     <Compile Include="Hacks\Speed.cs" />
     <Compile Include="Hacks\ThirdPerson.cs" />
     <Compile Include="Hacks\UIElementsMenu.cs" />
+    <Compile Include="Hacks\WorldFunctions.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
     <Compile Include="Libraries\AssetBundles.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
@@ -164,33 +168,26 @@
     <Compile Include="Libraries\KeyCodeConversion.cs" />
     <Compile Include="Libraries\MainMenuUtils.cs" />
     <Compile Include="Libraries\PaginatedMenu.cs" />
+    <Compile Include="Libraries\PlayerUtils.cs" />
     <Compile Include="Libraries\PopupManagerUtils.cs" />
     <Compile Include="Libraries\QuickMenuUtils.cs" />
     <Compile Include="Libraries\RubyButtonAPI.cs" />
-    <Compile Include="Libraries\TinyJSON\Decoder.cs" />
-    <Compile Include="Libraries\TinyJSON\EncodeOptions.cs" />
-    <Compile Include="Libraries\TinyJSON\Encoder.cs" />
-    <Compile Include="Libraries\TinyJSON\Extensions.cs" />
-    <Compile Include="Libraries\TinyJSON\JSON.cs" />
-    <Compile Include="Libraries\TinyJSON\Types\ProxyArray.cs" />
-    <Compile Include="Libraries\TinyJSON\Types\ProxyBoolean.cs" />
-    <Compile Include="Libraries\TinyJSON\Types\ProxyNumber.cs" />
-    <Compile Include="Libraries\TinyJSON\Types\ProxyObject.cs" />
-    <Compile Include="Libraries\TinyJSON\Types\ProxyString.cs" />
-    <Compile Include="Libraries\TinyJSON\Types\Variant.cs" />
     <Compile Include="Libraries\UserInterfaceUtils.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\DebugManager.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
+    <Compile Include="Menus\DesktopHUD.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
     <Compile Include="Menus\FunctionsMenu.cs" />
     <Compile Include="Menus\InstanceHistory.cs" />
     <Compile Include="Menus\LoadingScreenMenu.cs" />
     <Compile Include="Menus\PlayerTweaksMenu.cs" />
+    <Compile Include="Menus\InstanceHistoryMenu.cs" />
     <Compile Include="Menus\ProgramMenu.cs" />
     <Compile Include="Menus\SettingsMenu.cs" />
     <Compile Include="Menus\SupporterMenu.cs" />
+    <Compile Include="Menus\UserTweaksMenu.cs" />
     <Compile Include="Menus\WaypointsMenu.cs" />
     <Compile Include="Menus\WorldTweaksMenu.cs" />
     <Compile Include="Objects\Attributes.cs" />
@@ -199,6 +196,7 @@
     <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Program.cs" />
     <Compile Include="Objects\SerializedAvatar.cs" />
+    <Compile Include="Objects\SerializedWorld.cs" />
     <Compile Include="Objects\Slider.cs" />
     <Compile Include="Patches\AvatarLoading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -210,9 +208,6 @@
       <Project>{76f297c1-576d-45bb-8a1c-f50c13b7a3c9}</Project>
       <Name>emmVRCLoader</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Libraries\TinyJSON\TinyJSON.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
