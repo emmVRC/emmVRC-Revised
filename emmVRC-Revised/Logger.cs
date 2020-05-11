@@ -188,6 +188,7 @@ namespace emmVRCLoader
         }
         public static void LogDebug(string s)
         {
+            if (!Environment.CommandLine.Contains("--emmvrc.debug")) return;
             var normalConsoleColor = Console.ForegroundColor;
             var timestamp = GetTimestamp();
             Console.Write("[");
@@ -208,6 +209,7 @@ namespace emmVRCLoader
 
         public static void LogDebug(string s, params object[] args)
         {
+            if (!Environment.CommandLine.Contains("--emmvrc.debug")) return;
             var normalConsoleColor = Console.ForegroundColor;
             var timestamp = GetTimestamp();
             var formatted = string.Format(s, args);

@@ -9,6 +9,9 @@ using VRC;
 using VRC.Core;
 using emmVRC.Libraries;
 using NET_SDK.Harmony;
+using emmVRC.Managers;
+using Il2CppSystem.IO;
+using emmVRC.Objects;
 
 namespace emmVRC
 {
@@ -48,6 +51,10 @@ namespace emmVRC
             emmVRCLoader.Logger.LogDebug("Initializing functions menu...");
             Menus.FunctionsMenu.Initialize();
 
+            // Initialize the "User Interact Actions" menu
+            emmVRCLoader.Logger.LogDebug("Initializing user interact menu...");
+            Menus.UserTweaksMenu.Initialize();
+
             // Initialize the "World Tweaks" menu
             Menus.WorldTweaksMenu.Initialize();
 
@@ -62,13 +69,27 @@ namespace emmVRC
             emmVRCLoader.Logger.LogDebug("Initializing Programs menu...");
             Menus.ProgramMenu.Initialize();
 
+            // Initialize the World Instance History menu
+            //Menus.InstanceHistoryMenu.Initialize();
+
             // Initialize the "Settings" menu
             emmVRCLoader.Logger.LogDebug("Initializing Settings menu...");
             Menus.SettingsMenu.Initialize();
 
-
             // Initialize the "Supporters" menu
             Menus.SupporterMenu.Initialize();
+
+            // Initialize the "Social Menu Functions" menu
+            Hacks.SocialMenuFunctions.Initialize();
+
+            // Initialize the "World Functions" menu
+            Hacks.WorldFunctions.Initialize();
+
+            // Initialize Player Notes
+            Hacks.PlayerNotes.Initialize();
+
+            // Initialize World Notes
+            Hacks.WorldNotes.Initialize();
 
             // Initialize the "Loading Screen Functions" menu
             Menus.LoadingScreenMenu.Initialize();
@@ -119,23 +140,28 @@ namespace emmVRC
             // Change the target FPS to 200
             Hacks.FPS.Initialize();
 
+            // Initialize the emmVRC HUD
+            Menus.DesktopHUD.Initialize();
+
             // Initialize the Third Person mode
             try
             {
                 Hacks.ThirdPerson.Initialize();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
 
             // Start the Master Icon Crown
             Hacks.MasterCrown.Initialize();
-            
+
             // Start the Avatar Favorite system
             Hacks.CustomAvatarFavorites.Initialize();
 
             // Applying some quick commands on OnSceneLoaded
-            UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) => {
+            UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) =>
+            {
                 Hacks.MirrorTweaks.FetchMirrors();
                 Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(false, true);
                 Menus.PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
@@ -144,9 +170,9 @@ namespace emmVRC
 
                 MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
                 // Ensure that everything through here is after the game has loaded
-                    // Reset the instance clock when you switch instances
-                    if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
-                        Hacks.InfoBarClock.instanceTime = 0;
+                // Reset the instance clock when you switch instances
+                if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
+                    Hacks.InfoBarClock.instanceTime = 0;
                 MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
                 MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
             })));
@@ -158,7 +184,7 @@ namespace emmVRC
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
 
             // As a last-ditch effort, try changing colors
-                Hacks.ColorChanger.ApplyIfApplicable();
+            Hacks.ColorChanger.ApplyIfApplicable();
         }
         public static void OnUpdate()
         {
@@ -168,12 +194,12 @@ namespace emmVRC
                 // If the user is new to emmVRC, present the emmVRC Welcome message
                 if (!Configuration.JSONConfig.WelcomeMessageShown)
                 {
-                    Managers.NotificationManager.AddNotification("Welcome to the new emmVRC! For updates regarding the client, teasers for new features, and bug reports and support, join the Discord!", "Open\nDiscord", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); Managers.NotificationManager.DismissCurrentNotification(); }, "Dismiss",() => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite);
+                    Managers.NotificationManager.AddNotification("Welcome to the new emmVRC! For updates regarding the client, teasers for new features, and bug reports and support, join the Discord!", "Open\nDiscord", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); Managers.NotificationManager.DismissCurrentNotification(); }, "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite);
                     Configuration.JSONConfig.WelcomeMessageShown = true;
                     Configuration.SaveConfig();
                 }
-            }   
-            Hacks.CustomAvatarFavorites.OnUpdate();            
+            }
+            Hacks.CustomAvatarFavorites.OnUpdate();
         }
     }
 }

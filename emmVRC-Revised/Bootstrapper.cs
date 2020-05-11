@@ -14,7 +14,7 @@ namespace emmVRCLoader
         public static void Start()
         {
             Logger.Init();
-            if (!Environment.CommandLine.Contains("--noemmvrc") || UpdateManager.ShouldLoadLib())
+            if ((!Environment.CommandLine.Contains("--noemmvrc") && UpdateManager.ShouldLoadLib()) || Environment.CommandLine.Contains("--emmvrc.devmode"))
             {
                 try
                 {

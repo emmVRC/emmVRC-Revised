@@ -136,6 +136,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.RiskyFunctionsEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                PlayerTweaksMenu.SetRiskyFunctions(false);
             }, "TOGGLE: Enables the Risky Functions, which contains functions that shouldn't be used in public worlds. This includes flight, noclip, speed, and teleporting/waypoints");
             GlobalDynamicBones = new PageItem("Global\nDynamic Bones", () =>
             {
@@ -147,7 +148,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the Global Dynamic Bones system");
+            }, "TOGGLE: Enables the Global Dynamic Bones system", false); // TODO: Remove false at the end when Dynamic Bones is working
             EveryoneGlobalDynamicBones = new PageItem("Everybody Global\nDynamic Bones", () =>
             {
                 Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = true;
@@ -158,7 +159,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances");
+            }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances", false); // TODO: Remove false at the end when Dynamic Bones is ready
             emmVRCNetwork = new PageItem("emmVRC Network\nEnabled", () =>
             {
                 Configuration.JSONConfig.emmVRCNetworkEnabled = true;
@@ -169,7 +170,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.emmVRCNetworkEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
+            }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging", false); // TODO: Remove false at the end when emmVRC Network is ready
             GlobalChat = new PageItem("Global Chat", () =>
             {
                 Configuration.JSONConfig.GlobalChatEnabled = true;
@@ -180,7 +181,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.GlobalChatEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network");
+            }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
             AutoInviteMessage = new PageItem("Automatic\nInvite Messages", () =>
             {
                 Configuration.JSONConfig.AutoInviteMessage = true;
@@ -191,7 +192,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.AutoInviteMessage = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: When a message fails to send through the emmVRC Network, sends it immediately through an invite message instead");
+            }, "TOGGLE: When a message fails to send through the emmVRC Network, sends it immediately through an invite message instead", false); // TODO: Remove false at the end when emmVRC Network is ready
             AvatarFavoriteList = new PageItem("emmVRC\nFavorite List", () =>
             {
                 Configuration.JSONConfig.AvatarFavoritesEnabled = true;
@@ -202,7 +203,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.AvatarFavoritesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network");
+            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
             baseMenu.pageItems.Add(OpenBeta);
             baseMenu.pageItems.Add(UnlimitedFPS);
             baseMenu.pageItems.Add(RiskyFunctions);
@@ -261,17 +262,15 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables the emmVRC Logo on your Quick Menu, that takes you to the Discord.");
             HUD = new PageItem("HUD", () =>
             {
-                emmVRCLoader.Logger.Log("Beep");
                 Configuration.JSONConfig.HUDEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "Disabled", () =>
             {
-                emmVRCLoader.Logger.Log("Beep");
                 Configuration.JSONConfig.HUDEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the HUD, which shows players in the room and instance information in Desktop and VR");
+            }, "TOGGLE: Enables the HUD, which shows players in the room and instance information in Desktop");
             ForceRestart = new PageItem("Force Restart\non Loading Screen", () =>
             {
                 Configuration.JSONConfig.ForceRestartButtonEnabled = true;
@@ -427,47 +426,55 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.FriendNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, () => { LoadMenu(); });
             VisitorNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1001, "Visitor Nameplate Color", "Select the color for Visitor Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.VisitorNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, () => { LoadMenu(); });
             NewUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1002, "New User Nameplate Color", "Select the color for New User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.NewUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, () => { LoadMenu(); });
             UserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1003, "User Nameplate Color", "Select the color for User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.UserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, () => { LoadMenu(); });
             KnownUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1004, "Known User Nameplate Color", "Select the color for Known User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.KnownUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, () => { LoadMenu(); });
             TrustedUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1005, "Trusted User Nameplate Color", "Select the color for Trusted User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.TrustedUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, () => { LoadMenu(); });
             NameplateColorChanging = new PageItem("Nameplate\nColor Changing", () =>
             {
                 Configuration.JSONConfig.NameplateColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.NameplateColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                Hacks.Nameplates.colorChanged = true;
             }, "TOGGLE: Enables the nameplate color changing module, which changes the colors of the various trust ranks in nameplates and the UI");
             FriendNameplateColorPickerButton = new PageItem("Friend\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(FriendNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Friend Nameplate colors");
             VisitorNameplateColorPickerButton = new PageItem("Visitor\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(VisitorNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Visitor Nameplate colors");
@@ -490,79 +497,79 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.DisableReportWorldButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableReportWorldButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "TOGGLE: Disables the 'Report World' button in the Quick Menu. Its functionality can be found in the Worlds menu, and the Disabled Buttons menu");
             DisableEmoji = new PageItem("Disable\nEmoji", () =>
             {
                 Configuration.JSONConfig.DisableEmojiButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableEmojiButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "TOGGLE: Disables the 'Emoji' button in the Quick Menu. Its functionality can be found in the Disabled Buttons menu");
             DisableRankToggle = new PageItem("Disable\nRank Toggle", () =>
             {
                 Configuration.JSONConfig.DisableRankToggleButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableRankToggleButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "TOGGLE: Disables the 'Rank Toggle' switch in the Quick Menu. Its functionality can be found in the Disabled Buttons menu");
             DisableReportUser = new PageItem("Disable\nReport User", () =>
             {
                 Configuration.JSONConfig.DisableReportUserButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableReportUserButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
-            }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu");
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu", false); // TODO: Remove false at the end when this is done
             DisablePlaylists = new PageItem("Disable\nPlaylists", () =>
             {
                 Configuration.JSONConfig.DisablePlaylistsButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisablePlaylistsButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
-            }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu");
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu", false); // TODO: Remove false at the end when this is done
             DisableAvatarStats = new PageItem("Disable\nAvatar Stats", () =>
             {
                 Configuration.JSONConfig.DisableAvatarStatsButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableAvatarStatsButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
-            }, "TOGGLE: Disables the 'Avatar Stats' button in the User Interact Menu.");
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "TOGGLE: Disables the 'Avatar Stats' button in the User Interact Menu.", false); // TODO: Remove false at the end when this is done
             baseMenu.pageItems.Add(DisableReportWorld);
             baseMenu.pageItems.Add(DisableEmoji);
             baseMenu.pageItems.Add(DisableRankToggle);
@@ -712,6 +719,7 @@ namespace emmVRC.Menus
         {
             try
             {
+                OpenBeta.SetToggleState(Configuration.JSONConfig.OpenBetaEnabled);
                 UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
                 RiskyFunctions.SetToggleState(Configuration.JSONConfig.RiskyFunctionsEnabled);
                 GlobalDynamicBones.SetToggleState(Configuration.JSONConfig.GlobalDynamicBonesEnabled);
@@ -747,11 +755,11 @@ namespace emmVRC.Menus
                 DisableAvatarLegacyList.SetToggleState(Configuration.JSONConfig.DisableAvatarLegacy);
                 DisableAvatarPublicList.SetToggleState(Configuration.JSONConfig.DisableAvatarPublic);
 
-                FlightKeybind.Name = "Flight:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));
-                NoclipKeybind.Name = "Noclip:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0])));
-                SpeedKeybind.Name = "Speed:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0])));
-                ThirdPersonKeybind.Name = "Third\nPerson:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0])));
-                ToggleHUDEnabledKeybind.Name = "Toggle HUD\nEnabled:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0])));
+                FlightKeybind.Name = "Flight:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));
+                NoclipKeybind.Name = "Noclip:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0])));
+                SpeedKeybind.Name = "Speed:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0])));
+                ThirdPersonKeybind.Name = "Third\nPerson:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0])));
+                ToggleHUDEnabledKeybind.Name = "Toggle HUD\nEnabled:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0])));
 
 
 

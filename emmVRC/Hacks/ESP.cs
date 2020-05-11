@@ -11,6 +11,7 @@ namespace emmVRC.Hacks
     public class ESP
     {
         public static bool ESPEnabled;
+        private static bool wasEnabled;
         public static void Initialize()
         {
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -29,8 +30,9 @@ namespace emmVRC.Hacks
                             HighlightsFX.prop_HighlightsFX_0.Method_Public_Renderer_Boolean_1(obj.transform.Find("SelectRegion").GetComponent<Renderer>(), true);
                         }
                     }
+                    wasEnabled = true;
                 }
-                else
+                else if (!ESPEnabled && wasEnabled)
                 {
                     foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
                     {
@@ -39,6 +41,7 @@ namespace emmVRC.Hacks
                             HighlightsFX.prop_HighlightsFX_0.Method_Public_Renderer_Boolean_1(obj.transform.Find("SelectRegion").GetComponent<Renderer>(), false);
                         }
                     }
+                    wasEnabled = false;
                 }
             }
         }

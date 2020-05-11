@@ -71,8 +71,8 @@ namespace emmVRC.Hacks
                             //VRCPlayer.field_VRCPlayer_0.Method_Public_Vector3_Quaternion_0(localPlayer.transform.position, localPlayer.transform.rotation);
                             if (NoclipEnabled)
                             {
-                                Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_21();
-                                Quaternion thing2 = localPlayer.transform.rotation * Quaternion.Inverse(VRCTrackingManager.Method_Public_16());
+                                Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_20();
+                                Quaternion thing2 = localPlayer.transform.rotation * Quaternion.Inverse(VRCTrackingManager.Method_Public_14());
                                 VRCTrackingManager.Method_Public_Vector3_Quaternion_0(thing, thing2);
                             }
                             if (localPlayer.GetComponent<InputStateController>() != null)

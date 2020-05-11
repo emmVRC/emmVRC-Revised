@@ -33,6 +33,10 @@ namespace emmVRC.Menus
             playerTweaksButton = new PageItem("Player\nTweaks", () => { QuickMenuUtils.ShowQuickmenuPage(PlayerTweaksMenu.baseMenu.getMenuName()); }, "Contains tweaks to affect your movement, as well as the players around you");
             baseMenu.pageItems.Add(playerTweaksButton);
 
+            // Add the Instance History button
+            //instanceHistoryButton = new PageItem("Instance\nHistory", () => { InstanceHistoryMenu.baseMenu.OpenMenu(); }, "Allows you to join an instance you were previously in, so long as you have not been kicked from it");
+            //baseMenu.pageItems.Add(instanceHistoryButton);
+
             // Add the Disabled Buttons button
             disabledButtonsButton = new PageItem("Disabled\nButtons", () => { DisabledButtonMenu.LoadMenu(); }, "Contains buttons from the Quick Menu that were disabled by emmVRC");
             baseMenu.pageItems.Add(disabledButtonsButton);
