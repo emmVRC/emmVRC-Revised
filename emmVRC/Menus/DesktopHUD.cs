@@ -1,4 +1,5 @@
-﻿using emmVRC.Libraries;
+﻿using emmVRC.Hacks;
+using emmVRC.Libraries;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using VRC.Core;
 
 namespace emmVRC.Menus
 {
@@ -97,18 +99,18 @@ namespace emmVRC.Menus
                         string userList = "";
                         string worldinfo = "";
                         //string emmVRCUserList = "";
-                        if (RoomManager.field_ApiWorld_0 != null)
+                        if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                         {
                             PlayerUtils.GetEachPlayer((VRC.Player plr) => {
-                                userList += plr.field_APIUser_0.displayName + "\n";
+                                userList += plr.field_Private_APIUser_0.displayName + "\n";
                             });
-                            worldinfo += "\nWorld name:\n" + RoomManager.field_ApiWorld_0.name;
-                            worldinfo += "\n\nWorld creator:\n" + RoomManager.field_ApiWorld_0.authorName;
-                            if (VRCPlayer.field_VRCPlayer_0 != null)
+                            worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
+                            worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
+                            if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
                             {
-                                positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
-                                positionstr += "<b><color=lime>Y: " + (Mathf.Floor(VRCPlayer.field_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.y * 10)) / 10 + "</color></b>  ";
-                                positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
+                                positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
+                                positionstr += "<b><color=lime>Y: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.y * 10)) / 10 + "</color></b>  ";
+                                positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
                             }
                         }
                         TextObject.GetComponent<Text>().text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
@@ -123,6 +125,8 @@ namespace emmVRC.Menus
                             "\n" + worldinfo +
                             "\n" +
                             "\n";
+                        if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
+                            TextObject.GetComponent<Text>().text = TextObject.GetComponent<Text>().text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                     }
                     else if (!UIExpanded)
                     {
@@ -134,7 +138,7 @@ namespace emmVRC.Menus
         }
         private static string GetPlayerColored(VRC.Player p)
         {
-            VRC.Core.APIUser apiuser = p.field_APIUser_0;
+            VRC.Core.APIUser apiuser = p.field_Private_APIUser_0;
             string result;
             if (apiuser == VRC.Core.APIUser.CurrentUser)
             {

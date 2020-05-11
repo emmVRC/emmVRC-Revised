@@ -66,7 +66,7 @@ namespace emmVRC.Hacks
                     clockText.gameObject.SetActive(true);
                     var timeString = DateTime.Now.ToShortTimeString();
                     string instanceTimeString = "00:00:00";
-                    if (RoomManager.field_ApiWorld_0 != null)
+                    if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                     {
                         var instanceTimeSpan = TimeSpan.FromSeconds(instanceTime);
                         instanceTimeString = string.Format("{0:D2}:{1:D2}:{2:D2}", instanceTimeSpan.Hours, instanceTimeSpan.Minutes, instanceTimeSpan.Seconds);

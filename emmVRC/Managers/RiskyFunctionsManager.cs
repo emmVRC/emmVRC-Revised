@@ -24,7 +24,7 @@ namespace emmVRC.Managers
             while (true)
             {
                 // Check if we are in a world; if not, we need to wait until we are.
-                if (RoomManager.field_ApiWorld_0 != null)
+                if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
                     // Check if we have processed what the status of Risky Functions should be
                     if (!RiskyFunctionsChecked)
@@ -73,7 +73,7 @@ namespace emmVRC.Managers
         public static IEnumerator CheckWorld()
         {
             // Wait for the room manager to become available, meaning the player is in the world
-            while (RoomManager.field_ApiWorld_0 == null)
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
 
             // Check if we are in a VRCSDK3 world, or if Risky Functions are even on; Risky Functions are (currently) not compatible with VRCSDK3 worlds, so we will not enable risky functions if this is the case
@@ -83,7 +83,7 @@ namespace emmVRC.Managers
                 bool temp = false;
 
                 // Sets up the UnityWebRequest to the remote server. TODO: Make this HTTPS://
-                UnityWebRequest req = UnityWebRequest.Get("http://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" + VRC.Core.APIUser.CurrentUser.id + "&worldid=" + RoomManager.field_ApiWorld_0.id);
+                UnityWebRequest req = UnityWebRequest.Get("http://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" + VRC.Core.APIUser.CurrentUser.id + "&worldid=" + RoomManager.field_Internal_Static_ApiWorld_0.id);
                 
                 // Sends the web request async
                 req.SendWebRequest();
@@ -120,7 +120,7 @@ namespace emmVRC.Managers
                 // If the temp flag isn't set, perform the tag check
                 if (!temp)
                 {
-                    if (RoomManager.field_ApiWorld_0.tags.IndexOf("author_tag_game") != -1 || RoomManager.field_ApiWorld_0.tags.IndexOf("admin_game") != -1)
+                    if (RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_game") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("admin_game") != -1)
                     {
                         RiskyFunctionsAllowed = false;
                     }

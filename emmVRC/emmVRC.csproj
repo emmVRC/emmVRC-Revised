@@ -177,6 +177,7 @@
     <Compile Include="Managers\DebugManager.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
+    <Compile Include="Menus\CreditsMenu.cs" />
     <Compile Include="Menus\DesktopHUD.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
     <Compile Include="Menus\FunctionsMenu.cs" />

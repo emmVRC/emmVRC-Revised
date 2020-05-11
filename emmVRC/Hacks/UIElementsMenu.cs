@@ -36,7 +36,7 @@ namespace emmVRC.Hacks
             }, "TOGGLE: Select to Turn the Nameplates On/Off");
             ToggleHUD.setToggleState(Configuration.JSONConfig.UIVisible);
             ToggleNameplates.setToggleState(Configuration.JSONConfig.NameplatesVisible);
-            while (RoomManager.field_ApiWorld_0 == null)
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new UnityEngine.WaitForSeconds(0.1f);
             UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => {
                 if (!Configuration.JSONConfig.UIVisible)

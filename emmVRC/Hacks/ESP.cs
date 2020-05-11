@@ -27,7 +27,7 @@ namespace emmVRC.Hacks
                     {
                         if (obj.transform.Find("SelectRegion"))
                         {
-                            HighlightsFX.prop_HighlightsFX_0.Method_Public_Renderer_Boolean_1(obj.transform.Find("SelectRegion").GetComponent<Renderer>(), true);
+                            HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(obj.transform.Find("SelectRegion").GetComponent<Renderer>(), true);
                         }
                     }
                     wasEnabled = true;
@@ -38,7 +38,7 @@ namespace emmVRC.Hacks
                     {
                         if (obj.transform.Find("SelectRegion"))
                         {
-                            HighlightsFX.prop_HighlightsFX_0.Method_Public_Renderer_Boolean_1(obj.transform.Find("SelectRegion").GetComponent<Renderer>(), false);
+                            HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(obj.transform.Find("SelectRegion").GetComponent<Renderer>(), false);
                         }
                     }
                     wasEnabled = false;

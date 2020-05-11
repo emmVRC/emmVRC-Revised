@@ -33,22 +33,23 @@ namespace emmVRC.Hacks
 
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
         {
-            uivrclist.Method_Protected_List_1_T_Int32_Boolean_1<ApiAvatar>(AvatarList, 0, true);
+            uivrclist.Method_Protected_Void_List_1_T_Int32_Boolean_0<ApiAvatar>(AvatarList, 0, true);
+            //uivrclist.Method_Protected_List_1_T_Int32_Boolean_1<ApiAvatar>(AvatarList, 0, true);
         }
-        internal static void Initialize()
+        internal static void Initialize() //TODO: FIX THIS SHIT GOD DAMNIT
         {
-            pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
+            /*pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
             FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Favorite Button").gameObject;
             FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
             FavoriteButtonNew.GetComponent<Button>().onClick.RemoveAllListeners();
             FavoriteButtonNew.GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() =>
             {
 
-                ApiAvatar apiAvatar = pageAvatar.GetComponent<PageAvatar>().avatar.field_ApiAvatar_0;
+                ApiAvatar apiAvatar = pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0;
                 bool flag = false;
                 for (int i=0; i < LoadedAvatars.Count; i++)
                 {
-                    if (LoadedAvatars.get_Item(i).id == apiAvatar.id)
+                    if (LoadedAvatars[i].id == apiAvatar.id)
                         flag = true;
                 }
                 if (!flag)
@@ -62,21 +63,21 @@ namespace emmVRC.Hacks
                         else
                         {
                             emmVRCLoader.Logger.LogError("Could not favorite avatar because you have reached the maximum favorites");
-                            VRCUiPopupManager.field_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You have reached the maximum emmVRC favorites size.", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => { VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup(); })));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You have reached the maximum emmVRC favorites size.", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); })));
                         }
                     }
                     else
                     {
-                        VRCUiPopupManager.field_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot favorite this avatar (it is private!)", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => { VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup(); })));
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot favorite this avatar (it is private!)", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); })));
                     }
                 }
                 else
                 {
-                    VRCUiPopupManager.field_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Are you sure you want to unfavorite the avatar \"" + apiAvatar.name+"\"?", "Yes", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Are you sure you want to unfavorite the avatar \"" + apiAvatar.name+"\"?", "Yes", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => {
                         UnfavoriteAvatar(apiAvatar);
-                        VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     })), "No", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => {
-                        VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     })));
                 }
             })));
@@ -86,7 +87,7 @@ namespace emmVRC.Hacks
             oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
             PublicAvatarList.name = "emmVRC Avatar List";
-            PublicAvatarList.GetComponent<UiAvatarList>().category = UiAvatarList.Nested0.SpecificList;
+            PublicAvatarList.GetComponent<UiAvatarList>().category = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
             PublicAvatarList.transform.SetAsFirstSibling();
             ChangeButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Change Button").gameObject;
             baseChooseEvent = ChangeButton.GetComponent<Button>().onClick;
@@ -101,7 +102,7 @@ namespace emmVRC.Hacks
             avText.GetComponentInChildren<Text>().text = "(0) emmVRC Favorites";
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
 
-            
+            */
         }
         public static void FavoriteAvatar(ApiAvatar avtr)
         {
@@ -212,7 +213,7 @@ namespace emmVRC.Hacks
                     bool flag = false;
                     for (int i=0; i < LoadedAvatars.Count; i++)
                     {
-                        if (LoadedAvatars.get_Item(i).id == currPageAvatar.avatar.field_ApiAvatar_0.id)
+                        if (LoadedAvatars[i].id == currPageAvatar.avatar.field_Internal_ApiAvatar_0.id)
                         {
                             flag = true;
                         }

@@ -169,7 +169,7 @@ namespace emmVRC.Hacks
                     }
                     catch (Exception ex)
                     {
-                        emmVRCLoader.Logger.LogError(ex.ToString());
+                        //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
                     try
                     {
@@ -188,7 +188,7 @@ namespace emmVRC.Hacks
                     }
                     catch (Exception ex)
                     {
-                        emmVRCLoader.Logger.LogError(ex.ToString());
+                        //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
                     try
                     {
@@ -201,13 +201,13 @@ namespace emmVRC.Hacks
                         VRCUiCursorManager.field_VRCUiCursorManager_0.navigationCursor.InteractiveColor = color;
                         VRCUiCursorManager.field_VRCUiCursorManager_0.navigationCursor.UiColor = color;
                         VRCUiCursorManager.field_VRCUiCursorManager_0.navigationCursor.FloorColor = color;*/
-                        VRCUiCursorManager.field_VRCUiCursorManager_0.mouseCursor.UiColor = color;
-                        VRCUiCursorManager.field_VRCUiCursorManager_0.handRightCursor.UiColor = color;
-                        VRCUiCursorManager.field_VRCUiCursorManager_0.handLeftCursor.UiColor = color;
+                        VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.mouseCursor.UiColor = color;
+                        VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handRightCursor.UiColor = color;
+                        VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handLeftCursor.UiColor = color;
                     }
                     catch (Exception ex)
                     {
-                        emmVRCLoader.Logger.LogError(ex.ToString());
+                        //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
                 }
             }

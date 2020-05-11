@@ -22,7 +22,7 @@ namespace emmVRC.Hacks
             WorldNotesButton.SetActive(true);
             WorldNotesButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
             WorldNotesButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
-                WorldNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageWorldInfo>().field_ApiWorld_0.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageWorldInfo>().field_ApiWorld_0.name);
+                WorldNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageWorldInfo>().field_Private_ApiWorld_0.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageWorldInfo>().field_Private_ApiWorld_0.name);
             })));
         }
     }

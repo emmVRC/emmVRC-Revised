@@ -23,10 +23,10 @@ namespace emmVRC.Hacks
             while (true)
             {
                 
-                if (RoomManager.field_ApiWorld_0 != null)
+                if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
-                    if (localPlayer == null && VRCPlayer.field_VRCPlayer_0 != null && VRCPlayer.field_VRCPlayer_0.gameObject != null)
-                        localPlayer = VRCPlayer.field_VRCPlayer_0.gameObject;
+                    if (localPlayer == null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject != null)
+                        localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject;
                     else
                     {
                         if (FlightEnabled && originalGravity == Vector3.zero)
@@ -60,23 +60,23 @@ namespace emmVRC.Hacks
                             if (Input.GetKey(KeyCode.E))
                                 localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y + (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), localPlayer.transform.position.z);
 
-                            if (localPlayer.GetComponent<VRCMotionState>().field_CharacterController_0 != null)
-                                localPlayer.GetComponent<VRCMotionState>().field_CharacterController_0.enabled = !NoclipEnabled;
+                            if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
+                                localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = !NoclipEnabled;
 
                             if (Input.GetAxis("Vertical") != 0)
                                 localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical");
                             if (Input.GetAxis("Horizontal") != 0)
                                 localPlayer.transform.position += cameraRotation.transform.right * (Time.deltaTime) * Input.GetAxis("Horizontal");
 
-                            //VRCPlayer.field_VRCPlayer_0.Method_Public_Vector3_Quaternion_0(localPlayer.transform.position, localPlayer.transform.rotation);
+                            //VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Vector3_Quaternion_0(localPlayer.transform.position, localPlayer.transform.rotation);
                             if (NoclipEnabled)
                             {
-                                Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_20();
-                                Quaternion thing2 = localPlayer.transform.rotation * Quaternion.Inverse(VRCTrackingManager.Method_Public_14());
-                                VRCTrackingManager.Method_Public_Vector3_Quaternion_0(thing, thing2);
+                                Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_Static_Vector3_1();
+                                Quaternion thing2 = localPlayer.transform.rotation * Quaternion.Inverse(VRCTrackingManager.Method_Public_Static_Quaternion_0());
+                                VRCTrackingManager.Method_Public_Static_Void_Vector3_Quaternion_0(thing, thing2);
                             }
                             if (localPlayer.GetComponent<InputStateController>() != null)
-                                localPlayer.GetComponent<InputStateController>().Method_Public_2();
+                                localPlayer.GetComponent<InputStateController>().Method_Public_Void_0();
 
                         }
                     }

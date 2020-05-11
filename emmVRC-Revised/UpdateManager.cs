@@ -37,7 +37,10 @@ namespace emmVRCLoader
                    IsBeta = ((JObject)JsonConvert.DeserializeObject(File.ReadAllText(configpath)))["openBeta"].Value<bool>();*/
                    if (File.Exists(configpath))
                 {
-                    IsBeta = TinyJSON.Decoder.Decode(File.ReadAllText(configpath))["OpenBetaEnabled"];
+                    if (TinyJSON.Decoder.Decode(File.ReadAllText(configpath)) != null && File.ReadAllText(configpath).Contains("OpenBetaEnabled"))
+                        IsBeta = TinyJSON.Decoder.Decode(File.ReadAllText(configpath))["OpenBetaEnabled"];
+                    else
+                        File.Delete(configpath);
                 }
 
                 Logger.Log("[emmVRCLoader] Downloading emmVRC...");

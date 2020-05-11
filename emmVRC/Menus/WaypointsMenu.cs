@@ -59,16 +59,16 @@ namespace emmVRC.Menus
 
             selectedWaypointMenu = new QMNestedButton(baseMenu, 1024, 768, "Selected Waypoint", "");
             selectedWaypointMenu.getMainButton().DestroyMe();
-            teleportButton = new QMSingleButton(selectedWaypointMenu, 1, 0, "Teleport", () => { VRCPlayer.field_VRCPlayer_0.transform.position = new Vector3(worldWaypoints[selectedWaypoint].x, worldWaypoints[selectedWaypoint].y, worldWaypoints[selectedWaypoint].z); VRCPlayer.field_VRCPlayer_0.transform.rotation = new Quaternion(worldWaypoints[selectedWaypoint].rx, worldWaypoints[selectedWaypoint].ry, worldWaypoints[selectedWaypoint].rz, worldWaypoints[selectedWaypoint].rw); }, "Teleport to this waypoint");
+            teleportButton = new QMSingleButton(selectedWaypointMenu, 1, 0, "Teleport", () => { VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(worldWaypoints[selectedWaypoint].x, worldWaypoints[selectedWaypoint].y, worldWaypoints[selectedWaypoint].z); VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation = new Quaternion(worldWaypoints[selectedWaypoint].rx, worldWaypoints[selectedWaypoint].ry, worldWaypoints[selectedWaypoint].rz, worldWaypoints[selectedWaypoint].rw); }, "Teleport to this waypoint");
             renameButton = new QMSingleButton(selectedWaypointMenu, 2, 0, "Rename", () => { InputUtilities.OpenInputBox("Type a name (or none for default)", "Accept", (string name) => { worldWaypoints[selectedWaypoint].Name = name; SaveWaypoints(); }); }, "Rename this waypoint (currently unnamed)");
             setLocationButton = new QMSingleButton(selectedWaypointMenu, 3, 0, "Set\nLocation", () => { 
-                worldWaypoints[selectedWaypoint].x = VRCPlayer.field_VRCPlayer_0.transform.position.x; 
-                worldWaypoints[selectedWaypoint].y = VRCPlayer.field_VRCPlayer_0.transform.position.y; 
-                worldWaypoints[selectedWaypoint].z = VRCPlayer.field_VRCPlayer_0.transform.position.z;
-                worldWaypoints[selectedWaypoint].rx = VRCPlayer.field_VRCPlayer_0.transform.rotation.x;
-                worldWaypoints[selectedWaypoint].ry = VRCPlayer.field_VRCPlayer_0.transform.rotation.y;
-                worldWaypoints[selectedWaypoint].rz = VRCPlayer.field_VRCPlayer_0.transform.rotation.z;
-                worldWaypoints[selectedWaypoint].rw = VRCPlayer.field_VRCPlayer_0.transform.rotation.w;
+                worldWaypoints[selectedWaypoint].x = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.x; 
+                worldWaypoints[selectedWaypoint].y = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.y; 
+                worldWaypoints[selectedWaypoint].z = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.z;
+                worldWaypoints[selectedWaypoint].rx = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation.x;
+                worldWaypoints[selectedWaypoint].ry = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation.y;
+                worldWaypoints[selectedWaypoint].rz = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation.z;
+                worldWaypoints[selectedWaypoint].rw = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation.w;
                 SaveWaypoints();
                 teleportButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = true;
                 renameButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = true;
@@ -80,14 +80,13 @@ namespace emmVRC.Menus
                 teleportButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = false;
                 renameButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = false;
             }, "Remove this waypoint");
-            UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => { doStuff(); }));
         }
 
         public static IEnumerator LoadWorld()
         {
-            while (RoomManager.field_ApiWorld_0 == null)
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
-            currentWorldID = RoomManager.field_ApiWorld_0.id;
+            currentWorldID = RoomManager.field_Internal_Static_ApiWorld_0.id;
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints")))
             {
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints"));

@@ -11,16 +11,16 @@ namespace emmVRC.Libraries
     {
         public static void HideCurrentPopup(this VRCUiPopupManager vrcUiPopupManager)
         {
-            VRCUiManager.field_VRCUiManager_0.HideScreen("POPUP"); // Old code from build 864
+            VRCUiManager.field_Protected_Static_VRCUiManager_0.HideScreen("POPUP"); // Old code from build 864
         }
 
         public static void ShowStandardPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string content, Action<VRCUiPopup> onCreated = null) =>
-            vrcUiPopupManager.Method_Public_String_String_Action_1_VRCUiPopup_0(title, content, onCreated);
+            vrcUiPopupManager.Method_Public_Void_String_String_Action_1_VRCUiPopup_0(title, content, onCreated);
 
         public static void ShowStandardPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string content, string buttonText, Action buttonAction, Action<VRCUiPopup> onCreated = null) =>
-            vrcUiPopupManager.Method_Public_String_String_String_Action_Action_1_VRCUiPopup_2(title, content, buttonText, buttonAction, onCreated);
+            vrcUiPopupManager.Method_Public_Void_String_String_String_Action_Action_1_VRCUiPopup_2(title, content, buttonText, buttonAction, onCreated);
 
         public static void ShowStandardPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string content, string button1Text, Action button1Action, string button2Text, Action button2Action, Action<VRCUiPopup> onCreated = null) =>
-            vrcUiPopupManager.Method_Public_String_String_String_Action_String_Action_Action_1_VRCUiPopup_0(title, content, button1Text, button1Action, button2Text, button2Action, onCreated);
+            vrcUiPopupManager.Method_Public_Void_String_String_String_Action_String_Action_Action_1_VRCUiPopup_0(title, content, button1Text, button1Action, button2Text, button2Action, onCreated);
     }
 }

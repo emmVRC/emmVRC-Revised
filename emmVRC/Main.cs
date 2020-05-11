@@ -12,6 +12,7 @@ using NET_SDK.Harmony;
 using emmVRC.Managers;
 using Il2CppSystem.IO;
 using emmVRC.Objects;
+using emmVRC.Hacks;
 
 namespace emmVRC
 {
@@ -68,6 +69,9 @@ namespace emmVRC
             // Initialize the "Programs" menu
             emmVRCLoader.Logger.LogDebug("Initializing Programs menu...");
             Menus.ProgramMenu.Initialize();
+
+            // Initialize the "Credits" menu
+            Menus.CreditsMenu.Initialize();
 
             // Initialize the World Instance History menu
             //Menus.InstanceHistoryMenu.Initialize();
@@ -183,6 +187,8 @@ namespace emmVRC
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
 
+            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha1, ActionAction = () => { VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(true); } });
+            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha2, ActionAction = () => { VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_1(true); } });
             // As a last-ditch effort, try changing colors
             Hacks.ColorChanger.ApplyIfApplicable();
         }

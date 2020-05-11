@@ -48,7 +48,7 @@ namespace emmVRC.Menus
                 }
                 baseMenu.pageItems.Add(new PageItem(pastInstance.WorldName+"\n"+pastInstance.WorldOwner, () =>
                 {
-                    new PortalInternal().Method_Private_String_String_0(pastInstance.WorldID, pastInstance.WorldTags);
+                    new PortalInternal().Method_Private_Void_String_String_0(pastInstance.WorldID, pastInstance.WorldTags);
                 }, pastInstance.WorldName+", hosted by "+pastInstance.WorldOwner+", last joined "+pastInstance.loggedDateTime.ToShortDateString()+" "+pastInstance.loggedDateTime.ToShortTimeString()+"\nSelect to join"));
             }
             if (previousInstances.Count == 0)
@@ -60,16 +60,16 @@ namespace emmVRC.Menus
         }
         public static IEnumerator EnteredWorld()
         {
-            while (RoomManager.field_ApiWorld_0 == null || RoomManager.field_ApiWorldInstance_0 == null)
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null || RoomManager.field_Internal_Static_ApiWorldInstance_0 == null)
                 yield return new WaitForEndOfFrame();
             SerializedWorld world = new SerializedWorld
             {
-                WorldID = RoomManager.field_ApiWorld_0.id,
-                WorldTags = RoomManager.field_ApiWorldInstance_0.idWithTags,
-                WorldOwner = RoomManager.field_ApiWorldInstance_0.GetInstanceCreator(),
-                WorldType = RoomManager.field_ApiWorldInstance_0.InstanceType.ToString(),
-                WorldName = RoomManager.field_ApiWorld_0.name,
-                WorldImageURL = RoomManager.field_ApiWorld_0.thumbnailImageUrl,
+                WorldID = RoomManager.field_Internal_Static_ApiWorld_0.id,
+                WorldTags = RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags,
+                WorldOwner = RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator(),
+                WorldType = RoomManager.field_Internal_Static_ApiWorldInstance_0.InstanceType.ToString(),
+                WorldName = RoomManager.field_Internal_Static_ApiWorld_0.name,
+                WorldImageURL = RoomManager.field_Internal_Static_ApiWorld_0.thumbnailImageUrl,
                 loggedDateTime = DateTime.Now
             };
             /*for (int i=0; i < previousInstances.Count; i++)
@@ -81,7 +81,7 @@ namespace emmVRC.Menus
             SaveInstances();
             baseMenu.pageItems.Add(new PageItem(world.WorldName+"\n"+world.WorldTags.Substring(0, world.WorldTags.IndexOf('~')), () =>
             {
-                new PortalInternal().Method_Private_String_String_0(world.WorldID, world.WorldTags);
+                new PortalInternal().Method_Private_Void_String_String_0(world.WorldID, world.WorldTags);
             }, world.WorldName + ", last joined " + world.loggedDateTime.ToShortDateString() + " " + world.loggedDateTime.ToShortTimeString() + "\nSelect to join"));
         }
     }

@@ -47,7 +47,7 @@ namespace emmVRC.Managers
             // Set up the entering menu action
             NotificationMenu.getMainButton().setAction(() => { 
                 QuickMenuUtils.ShowQuickmenuPage(NotificationMenu.getMenuName());
-                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Nested0_APIUser_String_0(QuickMenuContextualDisplay.Nested0.Notification, null, Notifications[0].Message);
+                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.Notification, null, Notifications[0].Message);
                 if (Notifications[0].Button1Action != null)
                 {
                     NotificationButton1.setButtonText(Notifications[0].Button1Text);
@@ -79,7 +79,7 @@ namespace emmVRC.Managers
             while (Enabled)
             {
                 Thread.Sleep(1000);
-                if (RoomManagerBase.field_ApiWorld_0 != null)
+                if (RoomManagerBase.field_Internal_Static_ApiWorld_0 != null)
                 {
                     try
                     {
@@ -148,7 +148,7 @@ namespace emmVRC.Managers
             if (Notifications.Count > 0)
                 Notifications.Remove(Notifications[0]);
             QuickMenuUtils.ShowQuickmenuPage("ShortcutMenu");
-            QuickMenuUtils.GetQuickMenuInstance().Method_Public_Nested0_APIUser_String_0(QuickMenuContextualDisplay.Nested0.NoSelection);
+            QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
         }
     }
 }

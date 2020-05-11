@@ -19,7 +19,7 @@ namespace emmVRC.Libraries
                     requestedAction.Invoke(plr);
                 }));
             requestedAction = act;
-            PlayerManager.field_PlayerManager_0.field_List_1_Player_0.ForEach(getAllPlayersCache);
+            PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ForEach(getAllPlayersCache);
         }
     }
 }

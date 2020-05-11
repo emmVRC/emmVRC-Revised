@@ -1,4 +1,5 @@
-﻿using System;
+﻿using emmVRC.Libraries;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,22 +22,22 @@ namespace emmVRC.Hacks
             {
                 if (colorChanged && Configuration.JSONConfig.NameplateColorChangingEnabled)
                 {
-                    VRCPlayer.field_Color_1 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex);
-                    VRCPlayer.field_Color_2 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VisitorNamePlateColorHex);
-                    VRCPlayer.field_Color_3 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex);
-                    VRCPlayer.field_Color_4 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex);
-                    VRCPlayer.field_Color_5 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex);
-                    VRCPlayer.field_Color_6 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex);
+                    VRCPlayer.field_Internal_Static_Color_1 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex);
+                    VRCPlayer.field_Internal_Static_Color_2 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VisitorNamePlateColorHex);
+                    VRCPlayer.field_Internal_Static_Color_3 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex);
+                    VRCPlayer.field_Internal_Static_Color_4 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex);
+                    VRCPlayer.field_Internal_Static_Color_5 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex);
+                    VRCPlayer.field_Internal_Static_Color_6 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex);
                     colorChanged = false;
                 }
                 else if (colorChanged && !Configuration.JSONConfig.NameplateColorChangingEnabled)
                 {
-                    VRCPlayer.field_Color_1 = Libraries.ColorConversion.HexToColor("#FFFF00");
-                    VRCPlayer.field_Color_2 = Libraries.ColorConversion.HexToColor("#CCCCCC");
-                    VRCPlayer.field_Color_3 = Libraries.ColorConversion.HexToColor("#1778FF");
-                    VRCPlayer.field_Color_4 = Libraries.ColorConversion.HexToColor("#2BCE5C");
-                    VRCPlayer.field_Color_5 = Libraries.ColorConversion.HexToColor("#FF7B42");
-                    VRCPlayer.field_Color_6 = Libraries.ColorConversion.HexToColor("#8143E6");
+                    VRCPlayer.field_Internal_Static_Color_1 = Libraries.ColorConversion.HexToColor("#FFFF00");
+                    VRCPlayer.field_Internal_Static_Color_2 = Libraries.ColorConversion.HexToColor("#CCCCCC");
+                    VRCPlayer.field_Internal_Static_Color_3 = Libraries.ColorConversion.HexToColor("#1778FF");
+                    VRCPlayer.field_Internal_Static_Color_4 = Libraries.ColorConversion.HexToColor("#2BCE5C");
+                    VRCPlayer.field_Internal_Static_Color_5 = Libraries.ColorConversion.HexToColor("#FF7B42");
+                    VRCPlayer.field_Internal_Static_Color_6 = Libraries.ColorConversion.HexToColor("#8143E6");
                     colorChanged = false;
                 }
                 yield return new WaitForSeconds(0.5f);

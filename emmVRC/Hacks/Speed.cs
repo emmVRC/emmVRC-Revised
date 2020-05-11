@@ -30,8 +30,8 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
                 if (locomotionController == null)
                 {
-                    if (VRCPlayer.field_VRCPlayer_0 != null)
-                        locomotionController = VRCPlayer.field_VRCPlayer_0.GetComponent<LocomotionInputController>();
+                    if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
+                        locomotionController = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<LocomotionInputController>();
                 }
                 if (locomotionController != null && SpeedModified && (originalRunSpeed == 0f || originalWalkSpeed == 0f || originalStrafeSpeed == 0f))
                 {

@@ -44,7 +44,7 @@ namespace emmVRC.Hacks
         }
         public static IEnumerator OnRoomEnter()
         {
-            while (RoomManager.field_ApiWorld_0 == null)
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
             GameObject[] allObjects = UnityEngine.Resources.FindObjectsOfTypeAll<GameObject>();
             foreach (GameObject obj in allObjects)

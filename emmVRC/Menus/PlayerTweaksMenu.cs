@@ -44,17 +44,17 @@ namespace emmVRC.Menus
 
             ReloadAllAvatars = new QMSingleButton(baseMenu, 2, 0, "Reload\nAll\nAvatars", () =>
             {
-                VRCPlayer.field_VRCPlayer_0.Method_Public_Boolean_3(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_1(false);
             }, "Reloads all the current avatars in the room");
 
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
             {
-                QuickMenuUtils.GetQuickMenuInstance().Method_Public_VRCPlayer_0(VRCPlayer.field_VRCPlayer_0);
+                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_VRCPlayer_0(VRCPlayer.field_Internal_Static_VRCPlayer_0);
             }, "Selects you as the current user");
             EnableJumpButton = new QMSingleButton(baseMenu, 4, 0, "Enable\nJumping", () =>
             {
-                if (VRCPlayer.field_VRCPlayer_0.gameObject.GetComponent<PlayerModComponentJump>() == null)
-                    VRCPlayer.field_VRCPlayer_0.gameObject.AddComponent<PlayerModComponentJump>();
+                if (VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<PlayerModComponentJump>() == null)
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.AddComponent<PlayerModComponentJump>();
                 EnableJumpButton.getGameObject().GetComponent<Button>().enabled = false;
             }, "Enables jumping for this world. Requires Risky Functions");
 
@@ -68,7 +68,7 @@ namespace emmVRC.Menus
                 Hacks.Flight.FlightEnabled = false;
                 if (Hacks.Flight.NoclipEnabled) { Hacks.Flight.NoclipEnabled = false; 
                     NoclipToggle.setToggleState(false);
-                    VRCPlayer.field_VRCPlayer_0.GetComponent<VRCMotionState>().field_CharacterController_0.enabled = true;
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = true;
                 } 
             }, "TOGGLE: Enables flight. Requires Risky Functions");
             

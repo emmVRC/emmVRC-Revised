@@ -79,7 +79,7 @@ namespace emmVRC.Libraries
         {
             if (vrcuimInstance == null)
             {
-                vrcuimInstance = VRCUiManager.field_VRCUiManager_0;
+                vrcuimInstance = VRCUiManager.field_Protected_Static_VRCUiManager_0;
             }
             return vrcuimInstance;
         }
@@ -129,8 +129,9 @@ namespace emmVRC.Libraries
             GameObject infoBar = GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar").gameObject;
             infoBar.SetActive(pagename == "ShortcutMenu");
 
-            QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance().field_QuickMenuContextualDisplay_0;
-            quickmenuContextualDisplay.Method_Public_Nested0_0(QuickMenuContextualDisplay.Nested0.NoSelection);
+            QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance().field_Private_QuickMenuContextualDisplay_0;
+            quickmenuContextualDisplay.Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
+            //quickmenuContextualDisplay.Method_Public_Nested0_0(QuickMenuContextualDisplay.Nested0.NoSelection);
 
             pageTransform.gameObject.SetActive(true);
 
@@ -164,7 +165,7 @@ namespace emmVRC.Libraries
             }
 
             _CurrentIndex.SetValue(GetQuickMenuInstance(), index);*/
-            GetQuickMenuInstance().field_Int32_0 = index;
+            GetQuickMenuInstance().field_Private_Int32_0 = index;
         }
     }
 }

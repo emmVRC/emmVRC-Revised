@@ -110,9 +110,9 @@ namespace emmVRC.Menus
             RiskyFunctions = new PageItem("Risky Functions", () =>
             {
                 if (!Configuration.JSONConfig.RiskyFunctionsWarningShown)
-                    VRCUiPopupManager.field_VRCUiPopupManager_0.ShowStandardPopup("Risky Functions", "By enabling these functions, you accept the risk that these functions could be detected by VRChat, and you agree to not use them for malicious or harassment purposes.", "Agree", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Risky Functions", "By enabling these functions, you accept the risk that these functions could be detected by VRChat, and you agree to not use them for malicious or harassment purposes.", "Agree", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
                 {
-                    VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup();
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
                     Configuration.JSONConfig.RiskyFunctionsWarningShown = true;
                     Configuration.SaveConfig();
@@ -120,7 +120,7 @@ namespace emmVRC.Menus
                     RefreshMenu();
                 })), "Decline", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
                 {
-                    VRCUiPopupManager.field_VRCUiPopupManager_0.HideCurrentPopup();
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     RiskyFunctions.SetToggleState(false);
                     RefreshMenu();
                 })));
@@ -252,13 +252,13 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.LogoButtonEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.LogoButtonEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ShortcutMenuButtons.Process();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "TOGGLE: Enables the emmVRC Logo on your Quick Menu, that takes you to the Discord.");
             HUD = new PageItem("HUD", () =>
             {
@@ -448,6 +448,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_1(false);
             }, () => { LoadMenu(); });
             KnownUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1004, "Known User Nameplate Color", "Select the color for Known User Nameplate colors", (UnityEngine.Color newColor) =>
             {

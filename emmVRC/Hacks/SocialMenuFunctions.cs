@@ -77,12 +77,12 @@ namespace emmVRC.Hacks
                 {
                     Player plrToTP = null;
                     Libraries.PlayerUtils.GetEachPlayer((Player plr) => {
-                        if (plr.field_APIUser_0.id == QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id)
+                        if (plr.field_Private_APIUser_0.id == QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id)
                             plrToTP = plr;
                     });
                     if (plrToTP != null)
                     {
-                        VRCPlayer.field_VRCPlayer_0.transform.position = plrToTP.field_VRCPlayer_0.transform.position;
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
                     }
                 }
             })));
@@ -94,7 +94,7 @@ namespace emmVRC.Hacks
             while (true)
             {
                 yield return new WaitForEndOfFrame();
-                if (RoomManager.field_ApiWorld_0 != null)
+                if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
                     if (!GameObject.Find("MenuContent/Screens/UserInfo").activeSelf)
                     {

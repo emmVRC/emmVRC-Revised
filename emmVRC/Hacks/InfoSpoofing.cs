@@ -184,12 +184,12 @@ namespace emmVRC.Hacks
         {
             while (Enabled)
             {
-                yield return null;
+                yield return new WaitForFixedUpdate();
                 try
                 {
                     if (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled)
                     {
-                        if (RoomManager.field_ApiWorld_0 != null)
+                        if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                         {
 
                             if (QuickMenuUtils.GetVRCUiMInstance().menuContent.activeInHierarchy)
@@ -212,7 +212,7 @@ namespace emmVRC.Hacks
                     }
                     if (!Configuration.JSONConfig.InfoSpoofingEnabled && !Configuration.JSONConfig.InfoHidingEnabled)
                     {
-                        if (RoomManager.field_ApiWorld_0 != null)
+                        if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                         {
 
                             if (QuickMenuUtils.GetVRCUiMInstance().menuContent.activeInHierarchy)

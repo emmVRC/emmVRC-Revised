@@ -27,7 +27,7 @@ namespace emmVRC.Menus
             BeautifyMirrorsButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
             BeautifyMirrorsButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
             RevertMirrorsButton = new QMSingleButton(baseMenu, 2, 0, "Revert\nMirrors", () => { Hacks.MirrorTweaks.Revert(); }, "Reverts the mirrors in the world to their default reflections");
-            ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { new PortalInternal().Method_Private_String_String_0(RoomManager.field_ApiWorld_0.id, RoomManager.field_ApiWorldInstance_0.idWithTags); }, "Loads the current instance again");
+            ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { new PortalInternal().Method_Private_Void_String_String_0(RoomManager.field_Internal_Static_ApiWorld_0.id, RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags); }, "Loads the current instance again");
         }
     }
 }
