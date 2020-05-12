@@ -44,8 +44,6 @@ namespace emmVRC.Network
                 requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
-            //TODO why not sending any body?!
-
             using (HttpResponseMessage responseMessage = NetworkClient.httpClient.SendAsync(requestMessage).Result)
             {
                 if (responseMessage.IsSuccessStatusCode)

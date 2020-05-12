@@ -14,6 +14,7 @@ namespace emmVRC.Network
     public static class NetworkClient
     {
         //TODO add caching
+        //TODO add sockets
         private static string BaseAddress = "127.0.0.1";
         private static int Port = 3000;
         private static string _authToken;
