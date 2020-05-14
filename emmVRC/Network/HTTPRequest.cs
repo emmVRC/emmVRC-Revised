@@ -13,7 +13,26 @@ namespace emmVRC.Network
 {
     public class HTTPRequest
     {
-        //                  make network models and make this a template where they have to pass a model
+        public static string get_sync(string url)
+        {
+            return request(HttpMethod.Get, url).Result;
+        }
+
+        public static string post_sync(string url, object obj)
+        {
+            return request(HttpMethod.Post, url, obj).Result;
+        }
+
+        public static string put_sync(string url, object obj)
+        {
+            return request(HttpMethod.Put, url, obj).Result;
+        }
+
+        public static string delete_sync(string url, object obj)
+        {
+            return request(HttpMethod.Delete, url, obj).Result;
+        }
+
         public static async Task<string> get(string url)
         {
             return await request(HttpMethod.Get, url);

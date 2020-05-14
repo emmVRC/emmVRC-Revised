@@ -12,6 +12,7 @@ using VRC.Core;
 using VRC;
 using VRC.UI;
 using emmVRC.Libraries;
+using emmVRC.Network;
 
 namespace emmVRC.Hacks
 {
@@ -29,7 +30,7 @@ namespace emmVRC.Hacks
         private static bool error = false;
         private static bool errorWarned;
         private static List<ApiAvatar> LoadedAvatars = new List<ApiAvatar>();
-        private static System.Collections.Generic.List<Objects.SerializedAvatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Objects.SerializedAvatar>();
+        private static System.Collections.Generic.List<Network.Objects.Avatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Network.Objects.Avatar>();
 
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
         {
@@ -38,6 +39,12 @@ namespace emmVRC.Hacks
         }
         internal static void Initialize() //TODO: FIX THIS SHIT GOD DAMNIT
         {
+            object responseobj = HTTPResponse.Serialize(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar"));
+            //GET all avatars and thow them into a list
+            //foreach(object obj in responseobj)
+            //{
+                
+            //}
             /*pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
             FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Favorite Button").gameObject;
             FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
@@ -107,7 +114,7 @@ namespace emmVRC.Hacks
         public static void FavoriteAvatar(ApiAvatar avtr)
         {
             LoadedAvatars.Insert(0, avtr);
-            Objects.SerializedAvatar serAvtr = new Objects.SerializedAvatar
+            Network.Objects.Avatar serAvtr = new Network.Objects.Avatar
             {
                 avatar_name = avtr.name,
                 avatar_id = avtr.id,
@@ -117,6 +124,13 @@ namespace emmVRC.Hacks
                 avatar_supported_platforms = avtr.supportedPlatforms
             };
             LoadedSerializedAvatars.Insert(0, serAvtr);
+            try
+            {
+                HTTPRequest.post_sync(NetworkClient.baseURL + "/api/avatar", serAvtr);
+            }catch (System.Exception e)
+            {
+                emmVRCLoader.Logger.LogError(e.Message);
+            }
             avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
         }
         public static void UnfavoriteAvatar(ApiAvatar avtr)
@@ -132,7 +146,7 @@ namespace emmVRC.Hacks
         }
         private static void PopulateList()
         {
-            foreach(Objects.SerializedAvatar avatar in LoadedSerializedAvatars)
+            foreach(Network.Objects.Avatar avatar in LoadedSerializedAvatars)
             {
                 ApiAvatar item = new ApiAvatar
                 {
@@ -167,10 +181,10 @@ namespace emmVRC.Hacks
             try
             {
                 avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
-                System.Collections.Generic.List<Objects.SerializedAvatar> avtrs = new System.Collections.Generic.List<Objects.SerializedAvatar>();
+                System.Collections.Generic.List<Network.Objects.Avatar> avtrs = new System.Collections.Generic.List<Network.Objects.Avatar>();
                 foreach (ApiAvatar avatar in LoadedAvatars)
                 {
-                    Objects.SerializedAvatar avtr = new Objects.SerializedAvatar();
+                    Network.Objects.Avatar avtr = new Network.Objects.Avatar();
                     avtr.avatar_name = Convert.ToBase64String(Encoding.UTF8.GetBytes(avatar.name));
                     avtr.avatar_id = avatar.id;
                     avtr.avatar_asset_url = avatar.assetUrl;

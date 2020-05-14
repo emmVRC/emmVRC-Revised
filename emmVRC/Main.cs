@@ -13,6 +13,7 @@ using emmVRC.Managers;
 using Il2CppSystem.IO;
 using emmVRC.Objects;
 using emmVRC.Hacks;
+using emmVRC.Network;
 
 namespace emmVRC
 {
@@ -28,11 +29,17 @@ namespace emmVRC
 
             // Load the config for emmVRC
             Configuration.Initialize();
+
         }
 
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
+
+            // Network connection
+            emmVRCLoader.Logger.Log("Initializing network...");
+            NetworkClient.InitializeClient();
+                
             // Initialize the Debug manager
             Managers.DebugManager.Initialize();
 

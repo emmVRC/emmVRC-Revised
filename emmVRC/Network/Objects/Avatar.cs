@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace emmVRC.Network.Objects
 {
-    public class Avatar
+    public class Avatar: SerializedObject
     {
         public string avatar_name = "";
         public string avatar_id = "";
