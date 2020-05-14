@@ -45,7 +45,7 @@ namespace emmVRC.Hacks
             //{
                 
             //}
-            /*pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
+            pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
             FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Favorite Button").gameObject;
             FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
             FavoriteButtonNew.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -109,7 +109,7 @@ namespace emmVRC.Hacks
             avText.GetComponentInChildren<Text>().text = "(0) emmVRC Favorites";
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
 
-            */
+            
         }
         public static void FavoriteAvatar(ApiAvatar avtr)
         {

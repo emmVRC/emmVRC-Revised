@@ -212,7 +212,7 @@ namespace emmVRC
             }
 
 
-            //Hacks.CustomAvatarFavorites.OnUpdate();
+            Hacks.CustomAvatarFavorites.OnUpdate();
         }
     }
 }

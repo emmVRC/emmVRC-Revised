@@ -71,14 +71,14 @@ namespace emmVRC.Network
                 }
                 else if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Console.WriteLine(responseMessage.Content.ToString());
-                    Console.WriteLine(await requestMessage.Content.ReadAsStringAsync());
+                    emmVRCLoader.Logger.Log(responseMessage.Content.ToString());
+                    emmVRCLoader.Logger.Log(await requestMessage.Content.ReadAsStringAsync());
                     //TODO: change to request token again
                     throw new Exception(responseMessage.ReasonPhrase);
                 }
                 else
                 {
-                    Console.WriteLine("Here {0}", responseMessage.StatusCode);
+                    emmVRCLoader.Logger.Log("Here {0}", responseMessage.StatusCode);
                     throw new Exception(responseMessage.ReasonPhrase);
                 }
             }

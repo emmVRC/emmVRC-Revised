@@ -17,7 +17,7 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "http://localhost";
+        private static string BaseAddress = "http://172.110.6.102";
         private static int Port = 3000;
         public static string baseURL{ get { return BaseAddress + ":" + Port; } }
         private static string _authToken;
