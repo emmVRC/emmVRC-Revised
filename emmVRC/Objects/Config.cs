@@ -34,6 +34,8 @@ namespace emmVRC.Objects
         public int UserInteractButtonY = 2;
         public int NotificationButtonPositionX = 0;
         public int NotificationButtonPositionY = -1;
+        public int PlayerActionsButtonX = 4;
+        public int PlayerActionsButtonY = 2;
 
         // Hack options
         // Sub section: Shortcut Menu

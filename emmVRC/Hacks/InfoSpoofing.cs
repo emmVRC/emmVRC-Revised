@@ -174,6 +174,8 @@ namespace emmVRC.Hacks
     public class InfoSpoofing
     {
         private static bool Enabled = true;
+        private static bool wasEnabled1 = false;
+        private static bool wasEnabled2 = false;
 
         public static void Initialize()
         {
@@ -199,6 +201,7 @@ namespace emmVRC.Hacks
                                     if (text.text.Contains((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName)))
                                         text.text = text.text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                                 }
+                                wasEnabled1 = true;
                             }
                             if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy)
                             {
@@ -207,15 +210,18 @@ namespace emmVRC.Hacks
                                     if (text.text.Contains((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName)))
                                         text.text = text.text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                                 }
+                                wasEnabled2 = true;
                             }
                         }
+                        
+                        
                     }
-                    if (!Configuration.JSONConfig.InfoSpoofingEnabled && !Configuration.JSONConfig.InfoHidingEnabled)
+                    if (!Configuration.JSONConfig.InfoSpoofingEnabled && !Configuration.JSONConfig.InfoHidingEnabled && (wasEnabled1 || wasEnabled2))
                     {
                         if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                         {
 
-                            if (QuickMenuUtils.GetVRCUiMInstance().menuContent.activeInHierarchy)
+                            if (QuickMenuUtils.GetVRCUiMInstance().menuContent.activeInHierarchy && wasEnabled1)
                             {
                                 foreach (Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<Text>())
                                 {
@@ -225,8 +231,9 @@ namespace emmVRC.Hacks
                                         text.text = text.text.Replace(NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
                                     }
                                 }
+                                wasEnabled1 = false;
                             }
-                            if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy)
+                            if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy && wasEnabled2)
                             {
                                 foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<Text>())
                                 {
@@ -236,6 +243,7 @@ namespace emmVRC.Hacks
                                         text.text = text.text.Replace(NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
                                     }
                                 }
+                                wasEnabled2 = false;
                             }
                         }
                     }

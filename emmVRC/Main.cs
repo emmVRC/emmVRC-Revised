@@ -187,8 +187,6 @@ namespace emmVRC
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
 
-            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha1, ActionAction = () => { VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(true); } });
-            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha2, ActionAction = () => { VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_1(true); } });
             // As a last-ditch effort, try changing colors
             Hacks.ColorChanger.ApplyIfApplicable();
         }
@@ -205,7 +203,9 @@ namespace emmVRC
                     Configuration.SaveConfig();
                 }
             }
-            Hacks.CustomAvatarFavorites.OnUpdate();
+
+
+            //Hacks.CustomAvatarFavorites.OnUpdate();
         }
     }
 }

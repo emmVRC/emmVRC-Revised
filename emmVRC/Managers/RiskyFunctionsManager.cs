@@ -77,7 +77,7 @@ namespace emmVRC.Managers
                 yield return new WaitForEndOfFrame();
 
             // Check if we are in a VRCSDK3 world, or if Risky Functions are even on; Risky Functions are (currently) not compatible with VRCSDK3 worlds, so we will not enable risky functions if this is the case
-            if (Transform.FindObjectOfType<VRC.SDK3.Components.VRCSceneDescriptor>() == null && Configuration.JSONConfig.RiskyFunctionsEnabled)
+            if (Configuration.JSONConfig.RiskyFunctionsEnabled)
             {
                 // Temporary boolean that we will set if the world is whitelisted or blacklisted, to disable our later check.
                 bool temp = false;

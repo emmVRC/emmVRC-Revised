@@ -4,6 +4,7 @@ using Il2CppSystem.Collections;
 using Il2CppSystem.Collections.Generic;
 using Il2CppSystem.Reflection;
 using UnityEngine;
+using UnhollowerRuntimeLib;
 
 namespace emmVRC.Libraries
 {
@@ -103,8 +104,8 @@ namespace emmVRC.Libraries
                 if (!shortcutMenu.activeInHierarchy)
                     shortcutMenu = quickmenu.transform.Find("UserInteractMenu").gameObject;
 
-                
-                FieldInfo[] fis = QuickMenu.Il2CppType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == GameObject.Il2CppType).ToArray();
+
+                FieldInfo[] fis = Il2CppTypeOf<QuickMenu>.Type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppTypeOf<GameObject>.Type).ToArray();
                 //emmVRCLoader.Logger.Log("[QuickMenuUtils] GameObject Fields in QuickMenu:");
                 int count = 0;
                 foreach (FieldInfo fi in fis)
@@ -153,18 +154,6 @@ namespace emmVRC.Libraries
         // Set the current Quick Menu index
         public static void SetIndex(int index)
         {
-            /*if (_CurrentIndex == null)
-            {
-                _CurrentIndex = typeof(QuickMenu).GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-                                                 .First(x => !x.IsStatic && (x.FieldType.Name == typeof(int).Name));
-                if (_CurrentIndex == null)
-                {
-                    Console.WriteLine("[QuickMenuUtils] Index reflection is null");
-                    return;
-                }
-            }
-
-            _CurrentIndex.SetValue(GetQuickMenuInstance(), index);*/
             GetQuickMenuInstance().field_Private_Int32_0 = index;
         }
     }

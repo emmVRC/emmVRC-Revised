@@ -84,6 +84,7 @@ namespace emmVRC.Hacks
                     {
                         VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
                     }
+                    VRCUiManager.prop_VRCUiManager_0.Method_Public_Boolean_3();
                 }
             })));
 

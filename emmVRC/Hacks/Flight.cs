@@ -22,7 +22,7 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-                
+
                 if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
                     if (localPlayer == null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject != null)
@@ -62,7 +62,8 @@ namespace emmVRC.Hacks
 
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
                                 localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = !NoclipEnabled;
-
+                            //if (localPlayer.GetComponent<VRCMotionState>() != null)
+                            //    localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_3();
                             if (Input.GetAxis("Vertical") != 0)
                                 localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical");
                             if (Input.GetAxis("Horizontal") != 0)
