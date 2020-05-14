@@ -9,8 +9,6 @@ namespace emmVRC.Network
 {
     public class HTTPResponse
     {
-        public Object Results { get; set; }
-
         public static TinyJSON.Variant Serialize(string httpContent)
         {
             return TinyJSON.Decoder.Decode(httpContent);

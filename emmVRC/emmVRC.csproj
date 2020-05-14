@@ -96,6 +96,13 @@
     <Compile Include="Network\HTTPResponse.cs" />
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\HTTPRequest.cs" />
+    <Compile Include="Network\Objects\Avatar.cs" />
+    <Compile Include="Network\Objects\Blocked.cs" />
+    <Compile Include="Network\Objects\Donor.cs" />
+    <Compile Include="Network\Objects\Message.cs" />
+    <Compile Include="Network\Objects\SerializedObject.cs" />
+    <Compile Include="Network\Objects\SerializedObjectExtensions.cs" />
+    <Compile Include="Network\Objects\User.cs" />
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
     <Compile Include="Objects\HistInstance.cs" />
