@@ -43,9 +43,18 @@ namespace emmVRC.Hacks
             //TODO test and finish
             TinyJSON.ProxyArray responseobj = (TinyJSON.ProxyArray)HTTPResponse.Serialize(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar"));
             //GET all avatars and thow them into a list
-            foreach (object obj in responseobj)
+            foreach (TinyJSON.ProxyObject obj in responseobj)
             {
-                emmVRCLoader.Logger.Log(obj.ToString());
+                ApiAvatar apiAvatar = new ApiAvatar();
+                apiAvatar.id = obj["avatar_id"];
+                apiAvatar.assetUrl = obj["avatar_asset_url"];
+                apiAvatar.thumbnailImageUrl = obj["avatar_thumbnail_image_url"];
+                apiAvatar.name = obj["avatar_name"];
+                apiAvatar.authorId = obj["avatar_author_id"];
+                apiAvatar.authorName = obj["avatar_author_name"];
+                apiAvatar.supportedPlatforms = (ApiModel.SupportedPlatforms)(int)obj["avatar_supported_platforms"];
+                LoadedAvatars.Add(apiAvatar);
+                
             }
             pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
             FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Favorite Button").gameObject;
@@ -116,15 +125,8 @@ namespace emmVRC.Hacks
         public static void FavoriteAvatar(ApiAvatar avtr)
         {
             LoadedAvatars.Insert(0, avtr);
-            Network.Objects.Avatar serAvtr = new Network.Objects.Avatar
-            {
-                avatar_name = avtr.name,
-                avatar_id = avtr.id,
-                avatar_asset_url = avtr.assetUrl,
-                avatar_thumbnail_image_url = avtr.thumbnailImageUrl,
-                avatar_author_id = avtr.authorId,
-                avatar_supported_platforms = avtr.supportedPlatforms
-            };
+            Network.Objects.Avatar serAvtr = new Network.Objects.Avatar(avtr);
+
             LoadedSerializedAvatars.Insert(0, serAvtr);
             try
             {
@@ -141,7 +143,7 @@ namespace emmVRC.Hacks
             if (LoadedAvatars.Contains(avtr))
             {
                 //TODO: test
-                HTTPRequest.delete_sync(NetworkClient.baseURL + "/api/avatar", avtr);
+                HTTPRequest.delete_sync(NetworkClient.baseURL + "/api/avatar", new Network.Objects.Avatar(avtr));
                 LoadedAvatars.Remove(avtr);
             }
                 
@@ -154,20 +156,35 @@ namespace emmVRC.Hacks
         }
         private static void PopulateList()
         {
-            foreach(Network.Objects.Avatar avatar in LoadedSerializedAvatars)
+            TinyJSON.ProxyArray responseobj = (TinyJSON.ProxyArray)HTTPResponse.Serialize(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar"));
+            //GET all avatars and thow them into a list
+            foreach (TinyJSON.ProxyObject obj in responseobj)
             {
-                ApiAvatar item = new ApiAvatar
-                {
-                    name = avatar.avatar_name,
-                    id = avatar.avatar_id,
-                    assetUrl = avatar.avatar_asset_url,
-                    thumbnailImageUrl = avatar.avatar_thumbnail_image_url,
-                    authorId = avatar.avatar_author_id,
-                    supportedPlatforms = avatar.avatar_supported_platforms,
-                    releaseStatus = "public"
-                };
-                LoadedAvatars.Insert(0, item);
+                ApiAvatar apiAvatar = new ApiAvatar();
+                apiAvatar.id = obj["avatar_id"];
+                apiAvatar.assetUrl = obj["avatar_asset_url"];
+                apiAvatar.thumbnailImageUrl = obj["avatar_thumbnail_image_url"];
+                apiAvatar.name = obj["avatar_name"];
+                apiAvatar.authorId = obj["avatar_author_id"];
+                apiAvatar.authorName = obj["avatar_author_name"];
+                apiAvatar.supportedPlatforms = (ApiModel.SupportedPlatforms)(int)obj["avatar_supported_platforms"];
+                LoadedAvatars.Add(apiAvatar);
             }
+
+            //foreach (Network.Objects.Avatar avatar in LoadedSerializedAvatars)
+            //{
+            //    ApiAvatar item = new ApiAvatar
+            //    {
+            //        name = avatar.avatar_name,
+            //        id = avatar.avatar_id,
+            //        assetUrl = avatar.avatar_asset_url,
+            //        thumbnailImageUrl = avatar.avatar_thumbnail_image_url,
+            //        authorId = avatar.avatar_author_id,
+            //        supportedPlatforms = (VRC.Core.ApiModel.SupportedPlatforms)avatar.avatar_supported_platforms,
+            //        releaseStatus = "public"
+            //    };
+            //    LoadedAvatars.Insert(0, item);
+            //}
             avText.GetComponent<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
         }
         internal static void LoadUnblobbedAvatars()
@@ -190,6 +207,21 @@ namespace emmVRC.Hacks
             {
                 //TODO finish
                 TinyJSON.ProxyArray responseobj = (TinyJSON.ProxyArray)HTTPResponse.Serialize(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar"));
+                //GET all avatars and thow them into a list
+                foreach (TinyJSON.ProxyObject obj in responseobj)
+                {
+                    ApiAvatar apiAvatar = new ApiAvatar();
+                    apiAvatar.id = obj["avatar_id"];
+                    apiAvatar.assetUrl = obj["avatar_asset_url"];
+                    apiAvatar.thumbnailImageUrl = obj["avatar_thumbnail_image_url"];
+                    apiAvatar.name = obj["avatar_name"];
+                    apiAvatar.authorId = obj["avatar_author_id"];
+                    apiAvatar.authorName = obj["avatar_author_name"];
+                    apiAvatar.supportedPlatforms = (ApiModel.SupportedPlatforms)(int)obj["avatar_supported_platforms"];
+                    LoadedAvatars.Add(apiAvatar);
+
+                }
+
                 avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                 System.Collections.Generic.List<Network.Objects.Avatar> avtrs = new System.Collections.Generic.List<Network.Objects.Avatar>();
                 foreach (ApiAvatar avatar in LoadedAvatars)
@@ -200,7 +232,7 @@ namespace emmVRC.Hacks
                     avtr.avatar_asset_url = avatar.assetUrl;
                     avtr.avatar_thumbnail_image_url = avatar.thumbnailImageUrl;
                     avtr.avatar_author_id = avatar.authorId;
-                    avtr.avatar_supported_platforms = avatar.supportedPlatforms;
+                    avtr.avatar_supported_platforms = (int)avatar.supportedPlatforms;
                     avtrs.Add(avtr);
                 }
             }

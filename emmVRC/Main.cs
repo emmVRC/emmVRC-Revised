@@ -206,6 +206,7 @@ namespace emmVRC
                 yield return new WaitForSeconds(1.5f);
             Hacks.CustomAvatarFavorites.Initialize();
         }
+
         public static void OnUpdate()
         {
             // Check if resources have finished initializing

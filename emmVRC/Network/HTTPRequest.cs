@@ -60,6 +60,8 @@ namespace emmVRC.Network
             if (obj != null)
             {
                 string json = TinyJSON.Encoder.Encode(obj);
+                //TODO: Remove
+                emmVRCLoader.Logger.Log(json);
                 requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
@@ -78,7 +80,7 @@ namespace emmVRC.Network
                 }
                 else
                 {
-                    emmVRCLoader.Logger.Log("Here {0}", responseMessage.StatusCode);
+                    emmVRCLoader.Logger.Log("{0}{1}", responseMessage.StatusCode, responseMessage.Content);
                     throw new Exception(responseMessage.ReasonPhrase);
                 }
             }
