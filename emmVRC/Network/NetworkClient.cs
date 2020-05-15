@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using UnityEngine;
 using System.Collections;
 using emmVRC.Network.Objects;
+using emmVRC.Objects;
 
 namespace emmVRC.Network
 {
@@ -38,7 +39,7 @@ namespace emmVRC.Network
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/)");
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/"+ Attributes.Version+")");
             login();
         }
 
