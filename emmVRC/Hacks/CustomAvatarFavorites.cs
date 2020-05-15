@@ -39,12 +39,14 @@ namespace emmVRC.Hacks
         }
         internal static void Initialize() //TODO: FIX THIS SHIT GOD DAMNIT
         {
-            object responseobj = HTTPResponse.Serialize(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar"));
+
+            //TODO test and finish
+            TinyJSON.ProxyArray responseobj = (TinyJSON.ProxyArray)HTTPResponse.Serialize(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar"));
             //GET all avatars and thow them into a list
-            //foreach(object obj in responseobj)
-            //{
-                
-            //}
+            foreach (object obj in responseobj)
+            {
+                emmVRCLoader.Logger.Log(obj.ToString());
+            }
             pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
             FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Favorite Button").gameObject;
             FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
@@ -126,6 +128,7 @@ namespace emmVRC.Hacks
             LoadedSerializedAvatars.Insert(0, serAvtr);
             try
             {
+                //TODO test
                 HTTPRequest.post_sync(NetworkClient.baseURL + "/api/avatar", serAvtr);
             }catch (System.Exception e)
             {
@@ -136,7 +139,12 @@ namespace emmVRC.Hacks
         public static void UnfavoriteAvatar(ApiAvatar avtr)
         {
             if (LoadedAvatars.Contains(avtr))
+            {
+                //TODO: test
+                HTTPRequest.delete_sync(NetworkClient.baseURL + "/api/avatar", avtr);
                 LoadedAvatars.Remove(avtr);
+            }
+                
             for (int i=0; i < LoadedSerializedAvatars.Count; i++)
             {
                 if (LoadedSerializedAvatars[0].avatar_id == avtr.id)
@@ -180,6 +188,8 @@ namespace emmVRC.Hacks
         {
             try
             {
+                //TODO finish
+                TinyJSON.ProxyArray responseobj = (TinyJSON.ProxyArray)HTTPResponse.Serialize(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar"));
                 avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                 System.Collections.Generic.List<Network.Objects.Avatar> avtrs = new System.Collections.Generic.List<Network.Objects.Avatar>();
                 foreach (ApiAvatar avatar in LoadedAvatars)
