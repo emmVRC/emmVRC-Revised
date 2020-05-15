@@ -28,6 +28,11 @@ namespace emmVRC.Network
             return request(HttpMethod.Put, url, obj).Result;
         }
 
+        public static string patch_sync(string url, object obj)
+        {
+            return request(new HttpMethod("PATCH"), url, obj).Result;
+        }
+
         public static string delete_sync(string url, object obj)
         {
             return request(HttpMethod.Delete, url, obj).Result;
@@ -38,7 +43,7 @@ namespace emmVRC.Network
             return await request(HttpMethod.Get, url);
         }
 
-        public static async Task<string> post(string url, object obj) 
+        public static async Task<string> post(string url, object obj)
         {
             return await request(HttpMethod.Post, url, obj);
         }
@@ -46,6 +51,11 @@ namespace emmVRC.Network
         public static async Task<string> put(string url, object obj)
         {
             return await request(HttpMethod.Put, url, obj);
+        }
+
+        public static async Task<string> patch(string url, object obj)
+        {
+            return await request(new HttpMethod("PATCH"), url, obj);
         }
 
         public static async Task<string> delete(string url, object obj)
