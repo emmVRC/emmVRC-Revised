@@ -166,11 +166,11 @@ namespace emmVRC
 
             // Start the Master Icon Crown
             Hacks.MasterCrown.Initialize();
-
-            MelonLoader.MelonCoroutines.Start(loadNetworked());
-
             // Start the Avatar Favorite system
-            //Hacks.CustomAvatarFavorites.Initialize();
+            Hacks.CustomAvatarFavorites.Initialize();
+
+            // Start the emmVRC Network client
+            MelonLoader.MelonCoroutines.Start(loadNetworked());
 
             // Applying some quick commands on OnSceneLoaded
             UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) =>
@@ -204,7 +204,7 @@ namespace emmVRC
         {
             while (NetworkClient.authToken == null)
                 yield return new WaitForSeconds(1.5f);
-            Hacks.CustomAvatarFavorites.Initialize();
+            CustomAvatarFavorites.PopulateList();
         }
 
         public static void OnUpdate()
@@ -223,6 +223,10 @@ namespace emmVRC
 
 
             Hacks.CustomAvatarFavorites.OnUpdate();
+        }
+        public static void OnApplicationQuit()
+        {
+
         }
     }
 }

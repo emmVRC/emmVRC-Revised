@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VRC.Core;
 
 namespace emmVRC.Network.Objects
 {
@@ -28,5 +29,18 @@ namespace emmVRC.Network.Objects
         public string avatar_category = "";
         public string avatar_author_name = "";
         public int avatar_supported_platforms = (int)VRC.Core.ApiModel.SupportedPlatforms.All;
+        public ApiAvatar apiAvatar()
+        {
+            ApiAvatar avtr = new ApiAvatar
+            {
+                name = Encoding.UTF8.GetString(Convert.FromBase64String(avatar_name)),
+                id = avatar_id,
+                assetUrl = avatar_asset_url,
+                thumbnailImageUrl = avatar_thumbnail_image_url,
+                authorId = avatar_author_id,
+                authorName = avatar_author_name
+            };
+            return avtr;
+        }
     }
 }

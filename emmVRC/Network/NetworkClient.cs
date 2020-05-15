@@ -54,5 +54,7 @@ namespace emmVRC.Network
                 yield return new WaitForEndOfFrame();
             NetworkClient.authToken = HTTPResponse.Serialize(HTTPRequest.post_sync(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName }))["token"];
         }
+
+
     }
 }
