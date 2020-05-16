@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.Events;
 using emmVRC.Libraries;
+using emmVRC.Hacks;
 
 namespace emmVRC.Menus
 {
@@ -170,7 +171,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.emmVRCNetworkEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging", false); // TODO: Remove false at the end when emmVRC Network is ready
+            }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
             GlobalChat = new PageItem("Global Chat", () =>
             {
                 Configuration.JSONConfig.GlobalChatEnabled = true;
@@ -203,7 +204,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.AvatarFavoritesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
+            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network"); 
             baseMenu.pageItems.Add(OpenBeta);
             baseMenu.pageItems.Add(UnlimitedFPS);
             baseMenu.pageItems.Add(RiskyFunctions);
@@ -537,40 +538,40 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.DisableReportUserButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                UserInteractMenuButtons.Initialize();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableReportUserButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu", false); // TODO: Remove false at the end when this is done
+                UserInteractMenuButtons.Initialize();
+            }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu"); 
             DisablePlaylists = new PageItem("Disable\nPlaylists", () =>
             {
                 Configuration.JSONConfig.DisablePlaylistsButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                UserInteractMenuButtons.Initialize();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisablePlaylistsButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu", false); // TODO: Remove false at the end when this is done
+                UserInteractMenuButtons.Initialize();
+            }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu"); 
             DisableAvatarStats = new PageItem("Disable\nAvatar Stats", () =>
             {
                 Configuration.JSONConfig.DisableAvatarStatsButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                UserInteractMenuButtons.Initialize();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableAvatarStatsButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "TOGGLE: Disables the 'Avatar Stats' button in the User Interact Menu.", false); // TODO: Remove false at the end when this is done
+                UserInteractMenuButtons.Initialize();
+            }, "TOGGLE: Disables the 'Avatar Stats' button in the User Interact Menu.");
             baseMenu.pageItems.Add(DisableReportWorld);
             baseMenu.pageItems.Add(DisableEmoji);
             baseMenu.pageItems.Add(DisableRankToggle);

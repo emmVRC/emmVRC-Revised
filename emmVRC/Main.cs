@@ -39,7 +39,7 @@ namespace emmVRC
 
             // Network connection
             emmVRCLoader.Logger.Log("Initializing network...");
-            NetworkClient.InitializeClient(null);
+            NetworkClient.InitializeClient();
                 
             // Initialize the Debug manager
             Managers.DebugManager.Initialize();
@@ -116,6 +116,9 @@ namespace emmVRC
             // Process the "Hacks" for the Shortcut Menu
             MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
 
+            // Process the "Hacks" for the User Interact Menu
+            UserInteractMenuButtons.Initialize();
+
             // Initialize the Quick Menu clock
             Hacks.InfoBarClock.Initialize();
 
@@ -153,7 +156,10 @@ namespace emmVRC
             Hacks.FPS.Initialize();
 
             // Initialize the emmVRC HUD
-            Menus.DesktopHUD.Initialize();
+            if (VRCTrackingManager.Method_Public_Static_Boolean_11())
+                Menus.VRHUD.Initialize(); 
+            else
+                Menus.DesktopHUD.Initialize();
 
             // Initialize the Third Person mode
             try

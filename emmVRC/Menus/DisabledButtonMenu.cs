@@ -32,7 +32,7 @@ namespace emmVRC.Menus
             {
                 QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
                 LoadMenu();
-            }, "TOGGLE: (Known or Higher Trust Rank): Display Your Trust Rank as User");
+            }, "TOGGLE: (Known or Higher Trust Rank): Display Your Trust Rank as User", null, null, false, true);
         }
         public static void LoadMenu()
         {

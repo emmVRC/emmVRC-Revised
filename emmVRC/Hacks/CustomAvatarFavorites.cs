@@ -30,6 +30,7 @@ namespace emmVRC.Hacks
         private static bool error = false;
         private static bool errorWarned;
         private static List<ApiAvatar> LoadedAvatars;
+        private static int frameTimer = 0;
         //private static System.Collections.Generic.List<Objects.SerializedAvatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Objects.SerializedAvatar>();
 
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
@@ -74,10 +75,12 @@ namespace emmVRC.Hacks
                 }
                 else
                 {
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Are you sure you want to unfavorite the avatar \"" + apiAvatar.name + "\"?", "Yes", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Are you sure you want to unfavorite the avatar \"" + apiAvatar.name + "\"?", "Yes", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() =>
+                    {
                         UnfavoriteAvatar(apiAvatar);
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    })), "No", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() => {
+                    })), "No", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Action>((System.Action)(() =>
+                    {
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     })));
                 }
@@ -101,6 +104,9 @@ namespace emmVRC.Hacks
             avText.GetComponentInChildren<Text>().text = "(0) emmVRC Favorites";
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
 
+            PublicAvatarList.GetComponent<UiAvatarList>().clearUnseenListOnCollapse = false;
+            
+
             LoadedAvatars = new List<ApiAvatar>();
 
         }
@@ -111,7 +117,8 @@ namespace emmVRC.Hacks
             try
             {
                 HTTPRequest.post_sync(NetworkClient.baseURL + "/api/avatar", serAvtr);
-            } catch (System.Exception ex)
+            }
+            catch (System.Exception ex)
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
@@ -121,9 +128,11 @@ namespace emmVRC.Hacks
         {
             if (LoadedAvatars.Contains(avtr))
                 LoadedAvatars.Remove(avtr);
-            try {
+            try
+            {
                 HTTPRequest.delete_sync(NetworkClient.baseURL + "/api/avatar", new Network.Objects.Avatar(avtr));
-            } catch (System.Exception ex)
+            }
+            catch (System.Exception ex)
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
@@ -171,9 +180,10 @@ namespace emmVRC.Hacks
             try
             {
                 avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
-            } catch (System.Exception ex)
+            }
+            catch (System.Exception ex)
             {
-                emmVRCLoader.Logger.LogError("Error occured while populating favorites: "+ex.ToString());
+                emmVRCLoader.Logger.LogError("Error occured while populating favorites: " + ex.ToString());
             }
         }
         /*internal static void UpdateAvatarList()
@@ -201,70 +211,61 @@ namespace emmVRC.Hacks
         }*/
         internal static void OnUpdate()
         {
-            try
+            if (PublicAvatarList == null || FavoriteButtonNew == null) return;
+            if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled)
             {
-                if (PublicAvatarList == null || FavoriteButtonNew == null) return;
-                if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled)
-                {
-                    try
-                    {
-                        PublicAvatarList.GetComponent<UiAvatarList>().collapsedCount = 500;
-                        PublicAvatarList.GetComponent<UiAvatarList>().expandedCount = 500;
-                        if (PublicAvatarList.GetComponent<UiAvatarList>().pickers.Count < LoadedAvatars.Count)
-                        {
-                            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
-                        }
-                        else
-                        {
-                            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
-                        }
-                        PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        emmVRCLoader.Logger.LogError("[emmVRC] An error occured manipulating the avatar menu: " + ex.ToString());
-                    }
-                    if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
-                    {
-                        bool flag = false;
-                        for (int i = 0; i < LoadedAvatars.Count; i++)
-                        {
-                            if (LoadedAvatars[i].id == currPageAvatar.avatar.field_Internal_ApiAvatar_0.id)
-                            {
-                                flag = true;
-                            }
-                        }
+                PublicAvatarList.GetComponent<UiAvatarList>().collapsedCount = 500;
+                PublicAvatarList.GetComponent<UiAvatarList>().expandedCount = 500;
 
-                        if (!flag)
+                if (PublicAvatarList.GetComponent<UiAvatarList>().pickers.Count < LoadedAvatars.Count || PublicAvatarList.GetComponent<UiAvatarList>().content.childCount <= 0)
+                {
+                    PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
+
+                }
+                else
+                {
+                    PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
+                }
+                    PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
+
+                
+                if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
+                {
+                    bool flag = false;
+                    for (int i = 0; i < LoadedAvatars.Count; i++)
+                    {
+                        if (LoadedAvatars[i].id == currPageAvatar.avatar.field_Internal_ApiAvatar_0.id)
                         {
-                            FavoriteButtonNew.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Favorite";
-                        }
-                        else
-                        {
-                            FavoriteButtonNew.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Unfavorite";
+                            flag = true;
                         }
                     }
+
+                    if (!flag)
+                    {
+                        FavoriteButtonNew.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Favorite";
+                    }
+                    else
+                    {
+                        FavoriteButtonNew.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Unfavorite";
+                    }
                 }
-                if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled) && PublicAvatarList.activeSelf && FavoriteButtonNew.activeSelf)
-                {
-                    PublicAvatarList.SetActive(false);
-                    if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled)
-                        FavoriteButtonNew.SetActive(false);
-                }
-                else if (!PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled)
-                {
-                    if (LoadedAvatars.Count > 0)
-                        PublicAvatarList.SetActive(true);
-                    FavoriteButtonNew.SetActive(true);
-                }
-                if (error && !errorWarned)
-                {
-                    Managers.NotificationManager.AddNotification("Your emmVRC avatars could not be loaded. Please contact yoshifan#9550 to resolve this.", "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, "", null, Resources.errorSprite, -1);
-                    errorWarned = true;
-                }
-            } catch (System.Exception ex)
+            }
+            if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled) && PublicAvatarList.activeSelf && FavoriteButtonNew.activeSelf)
             {
-                emmVRCLoader.Logger.LogError(ex.ToString());
+                PublicAvatarList.SetActive(false);
+                if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled)
+                    FavoriteButtonNew.SetActive(false);
+            }
+            else if (!PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled)
+            {
+                if (LoadedAvatars.Count > 0)
+                    PublicAvatarList.SetActive(true);
+                FavoriteButtonNew.SetActive(true);
+            }
+            if (error && !errorWarned)
+            {
+                Managers.NotificationManager.AddNotification("Your emmVRC avatars could not be loaded. Please contact yoshifan#9550 to resolve this.", "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, "", null, Resources.errorSprite, -1);
+                errorWarned = true;
             }
         }
         internal static void Hide()
