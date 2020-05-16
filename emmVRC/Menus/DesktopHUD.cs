@@ -1,5 +1,6 @@
 ﻿using emmVRC.Hacks;
 using emmVRC.Libraries;
+using emmVRC.Network;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -124,6 +125,9 @@ namespace emmVRC.Menus
                             "\n" +
                             "\n" + worldinfo +
                             "\n" +
+                            "\n" +
+                            "\n" +
+                            (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "")+
                             "\n";
                         if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
                             TextObject.GetComponent<Text>().text = TextObject.GetComponent<Text>().text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));

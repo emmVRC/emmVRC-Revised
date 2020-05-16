@@ -140,6 +140,7 @@ namespace emmVRC.Hacks
         }
         public static void PopulateList()
         {
+            LoadedAvatars = new List<ApiAvatar>();
             Network.Objects.Avatar[] avatarArray = null;
             try
             {
@@ -212,7 +213,7 @@ namespace emmVRC.Hacks
         internal static void OnUpdate()
         {
             if (PublicAvatarList == null || FavoriteButtonNew == null) return;
-            if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled)
+            if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
             {
                 PublicAvatarList.GetComponent<UiAvatarList>().collapsedCount = 500;
                 PublicAvatarList.GetComponent<UiAvatarList>().expandedCount = 500;
@@ -227,6 +228,7 @@ namespace emmVRC.Hacks
                     PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
                 }
                 PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
+
 
                 
                 if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
@@ -250,13 +252,13 @@ namespace emmVRC.Hacks
                     }
                 }
             }
-            if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled) && PublicAvatarList.activeSelf && FavoriteButtonNew.activeSelf)
+            if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null) && PublicAvatarList.activeSelf)
             {
                 PublicAvatarList.SetActive(false);
-                if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled)
+                if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null)
                     FavoriteButtonNew.SetActive(false);
             }
-            else if (!PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled)
+            else if (!PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled)
             {
                 if (LoadedAvatars.Count > 0)
                     PublicAvatarList.SetActive(true);
@@ -268,6 +270,18 @@ namespace emmVRC.Hacks
                 errorWarned = true;
             }
         }
+
+        private static System.Collections.IEnumerator SetAvatarListAfterDelay(UiAvatarList avatars, List<ApiAvatar> models)
+        {
+            if (models.Count == 0) yield break;
+
+            var tempLis = new List<ApiAvatar>();
+            tempLis.Add(models[0]);
+            avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(tempLis, 0, true);
+            yield return new WaitForSeconds(1f);
+            avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(models, 0, true);
+        }
+
         internal static void Hide()
         {
             PublicAvatarList.SetActive(false);

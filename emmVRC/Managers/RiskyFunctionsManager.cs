@@ -83,7 +83,7 @@ namespace emmVRC.Managers
                 bool temp = false;
 
                 // Sets up the UnityWebRequest to the remote server. TODO: Make this HTTPS://
-                UnityWebRequest req = UnityWebRequest.Get("http://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" + VRC.Core.APIUser.CurrentUser.id + "&worldid=" + RoomManager.field_Internal_Static_ApiWorld_0.id);
+                UnityWebRequest req = UnityWebRequest.Get("https://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" + VRC.Core.APIUser.CurrentUser.id + "&worldid=" + RoomManager.field_Internal_Static_ApiWorld_0.id);
                 
                 // Sends the web request async
                 req.SendWebRequest();

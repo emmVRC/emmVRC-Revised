@@ -166,11 +166,16 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.emmVRCNetworkEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                Network.NetworkClient.InitializeClient();
+                MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.emmVRCNetworkEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                if (Network.NetworkClient.authToken != null)
+                    Network.HTTPRequest.get_sync(Network.NetworkClient.baseURL + "/api/authentication/logout");
+                Network.NetworkClient.authToken = null;
             }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
             GlobalChat = new PageItem("Global Chat", () =>
             {

@@ -16,7 +16,7 @@ namespace emmVRC.Objects
         public bool AutoInviteMessage = false;
         public bool InfoBarDisplayEnabled = true;
         public bool ClockEnabled = true;
-        public bool AvatarFavoritesEnabled = false; // TODO: Set this to true when emmVRC Network is available
+        public bool AvatarFavoritesEnabled = true;
         public bool MasterIconEnabled = true;
         public bool LogoButtonEnabled = true;
         public bool HUDEnabled = true;

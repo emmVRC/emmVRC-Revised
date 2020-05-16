@@ -36,11 +36,12 @@ namespace emmVRC
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
-
-            // Network connection
-            emmVRCLoader.Logger.Log("Initializing network...");
-            NetworkClient.InitializeClient();
-                
+            if (Configuration.JSONConfig.emmVRCNetworkEnabled)
+            {
+                // Network connection
+                emmVRCLoader.Logger.Log("Initializing network...");
+                NetworkClient.InitializeClient();
+            }
             // Initialize the Debug manager
             Managers.DebugManager.Initialize();
 
@@ -176,8 +177,8 @@ namespace emmVRC
             // Start the Avatar Favorite system
             Hacks.CustomAvatarFavorites.Initialize();
 
-            // Start the emmVRC Network client
-            MelonLoader.MelonCoroutines.Start(loadNetworked());
+            if (Configuration.JSONConfig.emmVRCNetworkEnabled)
+                MelonLoader.MelonCoroutines.Start(loadNetworked());
 
             // Applying some quick commands on OnSceneLoaded
             UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) =>
