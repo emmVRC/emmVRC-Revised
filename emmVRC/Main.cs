@@ -14,6 +14,7 @@ using Il2CppSystem.IO;
 using emmVRC.Objects;
 using emmVRC.Hacks;
 using emmVRC.Network;
+using MS.Internal.Xml.XPath;
 
 namespace emmVRC
 {
@@ -38,7 +39,7 @@ namespace emmVRC
 
             // Network connection
             emmVRCLoader.Logger.Log("Initializing network...");
-            NetworkClient.InitializeClient();
+            NetworkClient.InitializeClient(null);
                 
             // Initialize the Debug manager
             Managers.DebugManager.Initialize();
@@ -226,7 +227,7 @@ namespace emmVRC
         }
         public static void OnApplicationQuit()
         {
-
+            HTTPRequest.get_sync(NetworkClient.baseURL + "api/authentication/logout");
         }
     }
 }

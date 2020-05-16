@@ -31,17 +31,17 @@ namespace emmVRC.Network
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
             }
         }
-
         public static HttpClient httpClient { get; set; }
-
-        public static T InitializeClient<T>(Func<T> callback = null)
+        //private static void voidFunc() { }
+        //public static T InitializeClient<T>(Func<T> callback = voidFunc())
+        public static void InitializeClient()
         {
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/"+ Attributes.Version+")");
             login();
-            return callback();
+            //return callback();
         }
 
         public static T DestroyClient<T>(Func<T> callback = null)
