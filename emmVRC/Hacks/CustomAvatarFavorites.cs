@@ -226,7 +226,7 @@ namespace emmVRC.Hacks
                 {
                     PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
                 }
-                    PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
+                PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
 
                 
                 if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
