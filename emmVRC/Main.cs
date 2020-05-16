@@ -233,7 +233,7 @@ namespace emmVRC
         }
         public static void OnApplicationQuit()
         {
-            HTTPRequest.get_sync(NetworkClient.baseURL + "api/authentication/logout");
+            HTTPRequest.get_sync(NetworkClient.baseURL + "/api/authentication/logout");
         }
     }
 }
