@@ -1,4 +1,5 @@
-﻿using emmVRC.Network;
+﻿using emmVRC.Hacks;
+using emmVRC.Network;
 using emmVRC.Network.Objects;
 using Il2CppSystem.Xml.Linq;
 using System;
@@ -34,10 +35,10 @@ namespace emmVRC.Managers
         {
             if (NetworkClient.authToken != null)
             {
-                SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId, icon = ""};
+                SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId};
                 try
                 {
-                    HTTPRequest.post_sync(NetworkClient.baseURL + "/api/message", TinyJSON.Encoder.Encode(msg, TinyJSON.EncodeOptions.NoTypeHints));
+                    HTTPRequest.post_sync(NetworkClient.baseURL + "/api/message", msg);
                 } catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError(ex.ToString());
@@ -71,17 +72,36 @@ namespace emmVRC.Managers
                 foreach (PendingMessage msg in pendingMessages)
                 {
                     if (!msg.read)
-                    NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + "\nSent " + msg.message.rest_message_created + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), "Go to\nMessages", () => { }, "Mark as\nRead", () => {
-                        if (NetworkClient.authToken != null)
+                    NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + "\nSent " + msg.message.rest_message_created + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), 
+                        "Show\nConversation", () => {
+                            if (NetworkClient.authToken == null)
+                                return;
                             try
                             {
+                                
+                                Message[] messageArray = TinyJSON.Decoder.Decode(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/message/conversation/"+ msg.message.rest_message_sender_id)).Make<Message[]>();
+                                SocialMessenger.OpenConversation(msg.message.rest_message_sender_id, msg.message.rest_message_sender_name, messageArray);
+                                //SocialMessenger.OpenText(msg.message.rest_message_sender_id, msg.message.rest_message_sender_name);
                                 HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
-                            } catch (Exception ex)
+                            }
+                            catch (Exception ex)
                             {
                                 emmVRCLoader.Logger.LogError(ex.ToString());
                             }
-                        NotificationManager.DismissCurrentNotification();
-                    }, Resources.messageSprite, -1);
+                            NotificationManager.DismissCurrentNotification();
+                        }, 
+                        "Mark as\nRead", () => {
+                            if (NetworkClient.authToken != null)
+                                try
+                                {
+                                    HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                    //HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message", new Dictionary<string, string>() { ["message_id"] = msg.message.rest_message_id });
+                                } catch (Exception ex)
+                                {
+                                    emmVRCLoader.Logger.LogError(ex.ToString());
+                                }
+                            NotificationManager.DismissCurrentNotification();
+                        }, Resources.messageSprite, -1);
                     msg.read = true;
                 }
                 yield return new WaitForSeconds(15f);

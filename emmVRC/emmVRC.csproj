@@ -49,6 +49,7 @@
     <Compile Include="Hacks\MasterCrown.cs" />
     <Compile Include="Hacks\MirrorTweaks.cs" />
     <Compile Include="Hacks\Nameplates.cs" />
+    <Compile Include="Hacks\SocialMessenger.cs" />
     <Compile Include="Hacks\UserInteractMenuButtons.cs" />
     <Compile Include="Hacks\WorldNotes.cs" />
     <Compile Include="Hacks\PlayerNotes.cs" />
