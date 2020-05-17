@@ -20,7 +20,7 @@ namespace emmVRC.Hacks
     {
         public static void Initialize() { }
 
-        public static void OpenText(string userID, string displayName) 
+        public static void OpenText(string userID, string displayName)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace emmVRC.Hacks
                 })));
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError("Failed to send message: " + ex.ToString());
             }
@@ -60,7 +60,7 @@ namespace emmVRC.Hacks
             string context = "";
 
             //TODO showing in wrong order UGH
-            foreach(Message message in convo)
+            foreach (Message message in convo)
             {
                 context += "[ " + message.rest_message_created + " ]" + spacer + Encoding.UTF8.GetString(Convert.FromBase64String(message.rest_message_sender_name)) + spacer + newLine + spacer + Encoding.UTF8.GetString(Convert.FromBase64String(message.rest_message_body)) + newLine;
             }

@@ -187,6 +187,7 @@ namespace emmVRC
             UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) =>
             {
                 Hacks.MirrorTweaks.FetchMirrors();
+                Hacks.PedestalTweaks.FetchPedestals();
                 Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(false, true);
                 Menus.PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
                 Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(false, true);
@@ -200,8 +201,14 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
                 MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
             })));
-
+            // Patch Avatar loading
             Patches.AvatarLoading.Apply();
+
+            // Initialize Avatar Permissions
+            AvatarPermissionManager.Initialize();
+
+            // Initialize User Permissions
+            UserPermissionManager.Initialize();
 
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
@@ -209,7 +216,8 @@ namespace emmVRC
 
             // As a last-ditch effort, try changing colors
             Hacks.ColorChanger.ApplyIfApplicable();
-            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => { MessageManager.SendMessage("Hello world", "usr_5cc8eda7-7a96-4a18-b710-c165918cb57b"); } });
+
+            Libraries.Hooking.Initialize();
         }
 
         public static System.Collections.IEnumerator loadNetworked()

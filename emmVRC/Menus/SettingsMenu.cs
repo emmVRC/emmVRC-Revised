@@ -144,23 +144,31 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the Global Dynamic Bones system", false); // TODO: Remove false at the end when Dynamic Bones is working
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+            }, "TOGGLE: Enables the Global Dynamic Bones system");
             EveryoneGlobalDynamicBones = new PageItem("Everybody Global\nDynamic Bones", () =>
             {
                 Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances", false); // TODO: Remove false at the end when Dynamic Bones is ready
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+            }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances");
             emmVRCNetwork = new PageItem("emmVRC Network\nEnabled", () =>
             {
                 Configuration.JSONConfig.emmVRCNetworkEnabled = true;
@@ -198,7 +206,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.AutoInviteMessage = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: When a message fails to send through the emmVRC Network, sends it immediately through an invite message instead", false); // TODO: Remove false at the end when emmVRC Network is ready
+            }, "TOGGLE: Sends messages through invites, instead of the emmVRC Network");
             AvatarFavoriteList = new PageItem("emmVRC\nFavorite List", () =>
             {
                 Configuration.JSONConfig.AvatarFavoritesEnabled = true;

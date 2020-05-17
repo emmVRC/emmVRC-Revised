@@ -12,8 +12,7 @@ using VRC.UI;
 using System.Collections;
 using emmVRC.Managers;
 using emmVRC.Libraries;
-using emmVRC.Network;
-using emmVRC.Network.Objects;
+using BestHTTP.ServerSentEvents;
 
 namespace emmVRC.Hacks
 {
@@ -21,7 +20,6 @@ namespace emmVRC.Hacks
     {
         private static GameObject SocialFunctionsButton;
         private static GameObject UserSendMessage;
-        private static GameObject OpenConversation;
         private static GameObject UserNotes;
         private static GameObject TeleportButton;
         private static GameObject ToggleBlockButton;
@@ -36,12 +34,7 @@ namespace emmVRC.Hacks
             SocialFunctionsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(50, 150);
             SocialFunctionsButton.GetComponent<RectTransform>().sizeDelta -= new Vector2(0, 25f);
 
-            OpenConversation = GameObject.Instantiate(SocialFunctionsButton, SocialFunctionsButton.transform.parent);
-            OpenConversation.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
-            OpenConversation.GetComponentInChildren<Text>().text = "Open Conversation";
-            OpenConversation.SetActive(false);
-
-            UserSendMessage = GameObject.Instantiate(OpenConversation, SocialFunctionsButton.transform.parent);
+            UserSendMessage = GameObject.Instantiate(SocialFunctionsButton, SocialFunctionsButton.transform.parent);
             UserSendMessage.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             UserSendMessage.GetComponentInChildren<Text>().text = "Send Message";
             UserSendMessage.SetActive(false);
@@ -62,7 +55,6 @@ namespace emmVRC.Hacks
             ToggleBlockButton.SetActive(false);
 
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
-                OpenConversation.SetActive(!OpenConversation.activeSelf);
                 UserSendMessage.SetActive(!UserSendMessage.activeSelf);
                 UserNotes.SetActive(!UserNotes.activeSelf);
                 //ToggleBlockButton.SetActive(!ToggleBlocklButton.activeSelf);
@@ -74,13 +66,10 @@ namespace emmVRC.Hacks
                 GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
             })));
 
-            //TODO fix, should open the exisiting convo with the buddy but the request is giving issue
-            OpenConversation.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
-                Hacks.SocialMessenger.OpenConversation(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName ,(Message[])TinyJSON.Decoder.Decode(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/message/conversation/" + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id)).Make<Message[]>());
-            })));
-
             UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
-                Hacks.SocialMessenger.OpenText(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName);
+                InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "Send", (string msg) => {
+                    MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id);
+                });
             })));
 
             UserNotes.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {

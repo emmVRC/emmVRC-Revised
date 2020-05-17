@@ -1,4 +1,4 @@
-﻿using emmVRC.Hacks;
+﻿using emmVRC.Libraries;
 using emmVRC.Network;
 using emmVRC.Network.Objects;
 using Il2CppSystem.Xml.Linq;
@@ -9,6 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VRC;
+using VRC.Core;
+using Transmtn;
+using Transmtn.DTO;
+
+
 
 namespace emmVRC.Managers
 {
@@ -33,9 +39,9 @@ namespace emmVRC.Managers
         }
         public static void SendMessage(string message, string targetId)
         {
-            if (NetworkClient.authToken != null)
+            if (NetworkClient.authToken != null && !Configuration.JSONConfig.AutoInviteMessage)
             {
-                SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId};
+                SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId, icon = "None" };
                 try
                 {
                     HTTPRequest.post_sync(NetworkClient.baseURL + "/api/message", msg);
@@ -43,6 +49,9 @@ namespace emmVRC.Managers
                 {
                     emmVRCLoader.Logger.LogError(ex.ToString());
                 }
+            } else
+            {
+                VRCWebSocketsManager.field_Private_Static_VRCWebSocketsManager_0.field_Private_Api_0.PostOffice.Send(Transmtn.DTO.Notifications.Invite.Create(targetId, "", new Location("", new Transmtn.DTO.Instance("", "", "", "", "", false)), "message from "+APIUser.CurrentUser.displayName+", sent "+DateTime.Now.ToShortDateString() + " " +  DateTime.Now.ToShortTimeString()+":\n"+message));
             }
         }
         public static IEnumerator CheckLoop()
@@ -72,16 +81,11 @@ namespace emmVRC.Managers
                 foreach (PendingMessage msg in pendingMessages)
                 {
                     if (!msg.read)
-                    NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + "\nSent " + msg.message.rest_message_created + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), 
-                        "Show\nConversation", () => {
-                            if (NetworkClient.authToken == null)
-                                return;
+                    NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ", sent " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortDateString() + " " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortTimeString() + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), "Go to\nMessages", () => {
+                        if (NetworkClient.authToken != null)
+                        {
                             try
                             {
-                                
-                                Message[] messageArray = TinyJSON.Decoder.Decode(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/message/conversation/"+ msg.message.rest_message_sender_id)).Make<Message[]>();
-                                SocialMessenger.OpenConversation(msg.message.rest_message_sender_id, msg.message.rest_message_sender_name, messageArray);
-                                //SocialMessenger.OpenText(msg.message.rest_message_sender_id, msg.message.rest_message_sender_name);
                                 HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
                             }
                             catch (Exception ex)
@@ -89,19 +93,21 @@ namespace emmVRC.Managers
                                 emmVRCLoader.Logger.LogError(ex.ToString());
                             }
                             NotificationManager.DismissCurrentNotification();
-                        }, 
-                        "Mark as\nRead", () => {
-                            if (NetworkClient.authToken != null)
-                                try
-                                {
-                                    HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
-                                    //HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message", new Dictionary<string, string>() { ["message_id"] = msg.message.rest_message_id });
-                                } catch (Exception ex)
-                                {
-                                    emmVRCLoader.Logger.LogError(ex.ToString());
-                                }
-                            NotificationManager.DismissCurrentNotification();
-                        }, Resources.messageSprite, -1);
+                            InputUtilities.OpenInputBox("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)), "Send", (string msg2) => {
+                                SendMessage(msg2, msg.message.rest_message_sender_id);
+                            });
+                        }
+                    }, "Mark as\nRead", () => {
+                        if (NetworkClient.authToken != null)
+                            try
+                            {
+                                HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                            } catch (Exception ex)
+                            {
+                                emmVRCLoader.Logger.LogError(ex.ToString());
+                            }
+                        NotificationManager.DismissCurrentNotification();
+                    }, Resources.messageSprite, -1);
                     msg.read = true;
                 }
                 yield return new WaitForSeconds(15f);
