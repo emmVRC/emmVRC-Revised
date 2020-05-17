@@ -12,6 +12,7 @@ using VRC.UI;
 using System.Collections;
 using emmVRC.Managers;
 using emmVRC.Libraries;
+using BestHTTP.ServerSentEvents;
 
 namespace emmVRC.Hacks
 {
@@ -54,7 +55,7 @@ namespace emmVRC.Hacks
             ToggleBlockButton.SetActive(false);
 
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
-                //UserSendMessage.SetActive(!UserSendMessage.activeSelf);
+                UserSendMessage.SetActive(!UserSendMessage.activeSelf);
                 UserNotes.SetActive(!UserNotes.activeSelf);
                 //ToggleBlockButton.SetActive(!ToggleBlocklButton.activeSelf);
                 if (RiskyFunctionsManager.RiskyFunctionsAllowed)
@@ -65,8 +66,10 @@ namespace emmVRC.Hacks
                 GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
             })));
 
-            UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => { 
-
+            UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+                InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "Send", (string msg) => {
+                    MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id);
+                });
             })));
 
             UserNotes.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {

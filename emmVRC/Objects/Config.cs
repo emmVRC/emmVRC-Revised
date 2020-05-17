@@ -9,7 +9,7 @@ namespace emmVRC.Objects
         public bool OpenBetaEnabled = false;
         public bool UnlimitedFPSEnabled = false;
         public bool RiskyFunctionsEnabled = false;
-        public bool GlobalDynamicBonesEnabled = false;
+        public bool GlobalDynamicBonesEnabled = true;
         public bool EveryoneGlobalDynamicBonesEnabled = false;
         public bool emmVRCNetworkEnabled = true;
         public bool GlobalChatEnabled = true;

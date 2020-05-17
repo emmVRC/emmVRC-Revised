@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
@@ -42,13 +44,16 @@
     <Compile Include="Hacks\Flight.cs" />
     <Compile Include="Hacks\FOV.cs" />
     <Compile Include="Hacks\FPS.cs" />
+    <Compile Include="Hacks\GlobalDynamicBones.cs" />
     <Compile Include="Hacks\Hook.cs" />
     <Compile Include="Hacks\InfoSpoofing.cs" />
     <Compile Include="Hacks\InfoBarClock.cs" />
     <Compile Include="Hacks\InfoBarStatus.cs" />
     <Compile Include="Hacks\MasterCrown.cs" />
+    <Compile Include="Hacks\PedestalTweaks.cs" />
     <Compile Include="Hacks\MirrorTweaks.cs" />
     <Compile Include="Hacks\Nameplates.cs" />
+    <Compile Include="Hacks\SocialMessenger.cs" />
     <Compile Include="Hacks\UserInteractMenuButtons.cs" />
     <Compile Include="Hacks\WorldNotes.cs" />
     <Compile Include="Hacks\PlayerNotes.cs" />
@@ -65,6 +70,7 @@
     <Compile Include="Libraries\Extensions\UnityEngine\Cubemap.cs" />
     <Compile Include="Libraries\Extensions\UnityEngine\ImageConversion.cs" />
     <Compile Include="Libraries\Extensions\UnityEngine\Sprite.cs" />
+    <Compile Include="Libraries\Hooking.cs" />
     <Compile Include="Libraries\InputUtilities.cs" />
     <Compile Include="Libraries\KeybindChanger.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
@@ -76,6 +82,8 @@
     <Compile Include="Libraries\RubyButtonAPI.cs" />
     <Compile Include="Libraries\UserInterfaceUtils.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Managers\UserPermissionManager.cs" />
+    <Compile Include="Managers\AvatarPermissionManager.cs" />
     <Compile Include="Managers\DebugManager.cs" />
     <Compile Include="Managers\MessageManager.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
@@ -173,6 +181,10 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="Transmtn, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\Transmtn.dll</HintPath>
+    </Reference>
     <Reference Include="UnhollowerBaseLib, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>

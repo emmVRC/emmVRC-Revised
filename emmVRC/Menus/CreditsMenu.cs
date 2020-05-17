@@ -21,7 +21,9 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("Emilia", null, "Main developer of emmVRC"));
             baseMenu.pageItems.Add(new PageItem("Hordini", null, "Supporter, community manager, and major cutie"));
             baseMenu.pageItems.Add(new PageItem("Herp\nDerpinstine", null, "Major coding help, developer of MelonLoader"));
+            baseMenu.pageItems.Add(new PageItem("knah", null, "Developer of the Unhollower, the most essential part of IL2CPP modding"));
             baseMenu.pageItems.Add(new PageItem("DubyaDude", null, "Developer of the Ruby Button API"));
+            baseMenu.pageItems.Add(new PageItem("DltDat", null, "Developer of the hooking method used for various functions across emmVRC"));
             baseMenu.pageItems.Add(new PageItem("Kitsune\nof\nNight", null, "Major supporter, and major cutie"));
             baseMenu.pageItems.Add(new PageItem("Xhail", null, "Network developer"));
             baseMenu.pageItems.Add(new PageItem("mrgw98", null, "Supporter and tester"));

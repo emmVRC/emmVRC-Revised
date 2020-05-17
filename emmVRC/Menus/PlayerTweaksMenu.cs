@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
+using emmVRC.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ namespace emmVRC.Menus
         public static QMSingleButton UnloadDynamicBonesButton;
         public static QMSingleButton SelectCurrentUserButton;
         public static QMSingleButton ReloadAllAvatars;
+        public static QMSingleButton AvatarOptionsMenu;
         public static QMSingleButton EnableJumpButton;
         public static QMSingleButton WaypointMenu;
         public static QMToggleButton AvatarClone;
@@ -44,24 +46,34 @@ namespace emmVRC.Menus
 
             ReloadAllAvatars = new QMSingleButton(baseMenu, 2, 0, "Reload\nAll\nAvatars", () =>
             {
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_1(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
             }, "Reloads all the current avatars in the room");
 
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
             {
                 QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_VRCPlayer_0(VRCPlayer.field_Internal_Static_VRCPlayer_0);
             }, "Selects you as the current user");
-            EnableJumpButton = new QMSingleButton(baseMenu, 4, 0, "Enable\nJumping", () =>
+
+            AvatarOptionsMenu = new QMSingleButton(baseMenu, 4, 0, "Avatar\nOptions", () => {
+                AvatarPermissionManager.OpenMenu(VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id);
+            }, "Allows you to configure permissions for this user's avatar, which includes dynamic bone settings");
+
+            EnableJumpButton = new QMSingleButton(baseMenu, 1, 1, "Jumping", () =>
             {
                 if (VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<PlayerModComponentJump>() == null)
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.AddComponent<PlayerModComponentJump>();
                 EnableJumpButton.getGameObject().GetComponent<Button>().enabled = false;
             }, "Enables jumping for this world. Requires Risky Functions");
+            EnableJumpButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
+            EnableJumpButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
 
             WaypointMenu = new QMSingleButton(baseMenu, 1, 1, "Waypoints", () => {
                 WaypointsMenu.LoadWaypointList();
             }, "Allows you to teleport to pre-defined waypoints. Requires Risky Functions");
-            
+            WaypointMenu.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
+            WaypointMenu.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 96f);
+
             FlightToggle = new QMToggleButton(baseMenu, 2, 1, "Flight", () => { 
                 Hacks.Flight.FlightEnabled = true;
             }, "Disabled", () => { 
