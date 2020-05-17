@@ -35,7 +35,13 @@ namespace emmVRC.Managers
             if (NetworkClient.authToken != null)
             {
                 SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId, icon = ""};
-                HTTPRequest.post_sync(NetworkClient.baseURL + "/api/message", TinyJSON.Encoder.Encode(msg, TinyJSON.EncodeOptions.NoTypeHints));
+                try
+                {
+                    HTTPRequest.post_sync(NetworkClient.baseURL + "/api/message", TinyJSON.Encoder.Encode(msg, TinyJSON.EncodeOptions.NoTypeHints));
+                } catch (Exception ex)
+                {
+                    emmVRCLoader.Logger.LogError(ex.ToString());
+                }
             }
         }
         public static IEnumerator CheckLoop()
@@ -67,7 +73,13 @@ namespace emmVRC.Managers
                     if (!msg.read)
                     NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + "\nSent " + msg.message.rest_message_created + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), "Go to\nMessages", () => { }, "Mark as\nRead", () => {
                         if (NetworkClient.authToken != null)
-                            HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                            try
+                            {
+                                HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                            } catch (Exception ex)
+                            {
+                                emmVRCLoader.Logger.LogError(ex.ToString());
+                            }
                         NotificationManager.DismissCurrentNotification();
                     }, Resources.messageSprite, -1);
                     msg.read = true;
