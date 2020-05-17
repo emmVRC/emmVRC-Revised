@@ -102,8 +102,14 @@ namespace emmVRC.Menus
                         //string emmVRCUserList = "";
                         if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                         {
-                            PlayerUtils.GetEachPlayer((VRC.Player plr) => {
-                                userList += plr.field_Private_APIUser_0.displayName + "\n";
+                            int tempCount = 0;
+                            PlayerUtils.GetEachPlayer((VRC.Player plr) =>
+                            {
+                                if (tempCount != 22)
+                                {
+                                    userList += plr.field_Private_APIUser_0.displayName + "\n";
+                                    tempCount++;
+                                }
                             });
                             worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
                             worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;

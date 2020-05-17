@@ -16,21 +16,21 @@ namespace emmVRC.Hacks
         public string worldID;
         public string NoteText;
     }
-    [ObsoleteAttribute("This class only remains for compatibility. Please use WorldNote.", false)]
+    /*[ObsoleteAttribute("This class only remains for compatibility. Please use WorldNote.", false)]
     public class LegacyWorldNote
     {
         
         public string worldId;
         public string worldName;
         public string noteText;
-    }
+    }*/
     public class WorldNotes
     {
         public static void Initialize()
         {
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/worldNotes")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/worldNotes"));
-            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/worldNotes.json"))){
+            /*if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/worldNotes.json"))){
                 List<LegacyWorldNote> legacyNotes = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/worldNotes.json"))).Make<List<LegacyWorldNote>>();
                 foreach (LegacyWorldNote note in legacyNotes)
                 {
@@ -38,7 +38,7 @@ namespace emmVRC.Hacks
                     SaveNote(convertedNote);
                 }
                 File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/worldNotes.json"));
-            }
+            }*/
         }
         public static void LoadNote(string worldID, string displayName)
         {

@@ -16,21 +16,21 @@ namespace emmVRC.Hacks
         public string UserID;
         public string NoteText;
     }
-    [ObsoleteAttribute("This class only remains for compatibility. Please use PlayerNote.", false)]
+    /*[ObsoleteAttribute("This class only remains for compatibility. Please use PlayerNote.", false)]
     public class LegacyPlayerNote
     {
         
         public string userId;
         public string userName;
         public string noteText;
-    }
+    }*/
     public class PlayerNotes
     {
         public static void Initialize()
         {
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserNotes")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserNotes"));
-            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/userNotes.json"))){
+            /*if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/userNotes.json"))){
                 List<LegacyPlayerNote> legacyNotes = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/userNotes.json"))).Make<List<LegacyPlayerNote>>();
                 foreach (LegacyPlayerNote note in legacyNotes)
                 {
@@ -38,7 +38,7 @@ namespace emmVRC.Hacks
                     SaveNote(convertedNote);
                 }
                 File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/userNotes.json"));
-            }
+            }*/
         }
         public static void LoadNote(string userID, string displayName)
         {

@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.IO;
 using BestHTTP.SocketIO;
+using UnhollowerRuntimeLib;
 
 namespace emmVRC
 {
@@ -85,37 +86,37 @@ namespace emmVRC
                 yield return new WaitForSeconds(0.1f);
             AssetBundle newBundle = dlBundle.assetBundle;
 
-            offlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Offline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            offlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Offline.png", Il2CppTypeOf<Sprite>.Type).asset.Cast<Sprite>();
 
             while (offlineSprite == null) yield return new WaitForSeconds(0.1f);
             offlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            onlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Online.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            onlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Online.png", Il2CppTypeOf<Sprite>.Type).asset.Cast<Sprite>();
             
             while (onlineSprite == null) yield return new WaitForSeconds(0.1f);
             onlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Il2CppTypeOf<Sprite>.Type).asset.Cast<Sprite>();
 
             while (owonlineSprite == null) yield return new WaitForSeconds(0.1f);
             owonlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            alertSprite = newBundle.LoadAssetAsync_Internal("Assets/Alert.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            alertSprite = newBundle.LoadAssetAsync_Internal("Assets/Alert.png", Il2CppTypeOf<Sprite>.Type).asset.Cast<Sprite>();
 
             while (alertSprite == null) yield return new WaitForSeconds(0.1f);
             alertSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            errorSprite = newBundle.LoadAssetAsync_Internal("Assets/Error.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            errorSprite = newBundle.LoadAssetAsync_Internal("Assets/Error.png", Il2CppTypeOf<Sprite>.Type).asset.Cast<Sprite>();
 
             while (errorSprite == null) yield return new WaitForSeconds(0.1f);
             errorSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            messageSprite = newBundle.LoadAssetAsync_Internal("Assets/Message.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            messageSprite = newBundle.LoadAssetAsync_Internal("Assets/Message.png", Il2CppTypeOf<Sprite>.Type).asset.Cast<Sprite>();
 
             while (messageSprite == null) yield return new WaitForSeconds(0.1f);
             messageSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            crownSprite = newBundle.LoadAssetAsync_Internal("Assets/Crown.png", Sprite.Il2CppType).asset.Cast<Sprite>();
+            crownSprite = newBundle.LoadAssetAsync_Internal("Assets/Crown.png", Il2CppTypeOf<Sprite>.Type).asset.Cast<Sprite>();
 
             while (crownSprite == null) yield return new WaitForSeconds(0.1f);
             crownSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;

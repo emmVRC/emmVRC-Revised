@@ -8,11 +8,11 @@ namespace emmVRC.Network.Objects
 {
     public class Message : SerializedObject
     {
-        string rest_message_id = "";
-        string rest_message_sender_name = "";
-        string rest_message_sender_id = "";
-        string rest_message_body = "";
-        string rest_message_icon = "";
-        string rest_message_created = "";
+        public string rest_message_id = "";
+        public string rest_message_sender_name = "";
+        public string rest_message_sender_id = "";
+        public string rest_message_body = "";
+        public string rest_message_icon = "";
+        public string rest_message_created = "";
     }
 }

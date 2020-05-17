@@ -27,6 +27,7 @@ namespace emmVRC.Hacks
         {
             SocialFunctionsButton = GameObject.Instantiate(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists/PlaylistsButton"), GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").transform);
             SocialFunctionsButton.transform.SetParent(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/").transform);
+            GameObject.Destroy(SocialFunctionsButton.transform.Find("Image/Icon_New"));
             SocialFunctionsButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Functions";
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
             SocialFunctionsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(50, 150);
@@ -84,7 +85,7 @@ namespace emmVRC.Hacks
                     {
                         VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
                     }
-                    VRCUiManager.prop_VRCUiManager_0.Method_Public_Boolean_3();
+                    QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_0();
                 }
             })));
 

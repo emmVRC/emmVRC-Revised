@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using UnhollowerRuntimeLib;
 using UnityEngine;
 
 namespace emmVRC.Libraries
@@ -56,12 +57,12 @@ namespace emmVRC.Libraries
 
         public UnityEngine.Object LoadAsset(string name)
         {
-            return LoadAsset(name, GameObject.Il2CppType.Pointer);
+            return LoadAsset(name, Il2CppTypeOf<GameObject>.Type.Pointer);
         }
 
         public UnityEngine.Sprite LoadAssetSprite(string name)
         {
-            return LoadAssetSprite(name, Sprite.Il2CppType.Pointer);
+            return LoadAssetSprite(name, Il2CppTypeOf<Sprite>.Type.Pointer);
         }
 
         private UnityEngine.Object LoadAsset(string name, IntPtr type)

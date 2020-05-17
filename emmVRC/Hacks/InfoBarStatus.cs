@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +22,7 @@ namespace emmVRC.Hacks
             Transform transform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/BuildNumText");
             if (transform != null)
             {
-                Transform transform2 = new GameObject("emmVRCStatus", new [] { RectTransform.Il2CppType, Text.Il2CppType }).transform;
+                Transform transform2 = new GameObject("emmVRCStatus", new [] { Il2CppTypeOf<RectTransform>.Type, Il2CppTypeOf<Text>.Type }).transform;
                 transform2.SetParent(transform.parent, false);
                 transform2.SetSiblingIndex(transform.GetSiblingIndex() + 1);
                 emmVRCStatusText = transform2.GetComponent<Text>();

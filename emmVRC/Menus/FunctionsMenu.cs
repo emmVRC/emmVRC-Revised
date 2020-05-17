@@ -13,7 +13,7 @@ namespace emmVRC.Menus
         public static PaginatedMenu baseMenu;
         private static PageItem worldTweaksButton;
         private static PageItem playerTweaksButton;
-        private static PageItem instanceHistoryButton;
+        //private static PageItem instanceHistoryButton;
         private static PageItem disabledButtonsButton;
         private static PageItem programsButton;
         private static PageItem settingsButton;

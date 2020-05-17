@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using VRC;
 using VRC.SDK;
 using VRC.SDKBase;
@@ -33,28 +34,32 @@ namespace emmVRC.Hacks
                     if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
                         locomotionController = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<LocomotionInputController>();
                 }
-                if (locomotionController != null && SpeedModified && (originalRunSpeed == 0f || originalWalkSpeed == 0f || originalStrafeSpeed == 0f))
+                else
                 {
-                    originalWalkSpeed = locomotionController.walkSpeed;
-                    originalRunSpeed = locomotionController.runSpeed;
-                    originalStrafeSpeed = locomotionController.strafeSpeed;
+                    if (SpeedModified && (originalRunSpeed == 0f || originalWalkSpeed == 0f || originalStrafeSpeed == 0f))
+                    {
+                        originalWalkSpeed = locomotionController.walkSpeed;
+                        originalRunSpeed = locomotionController.runSpeed;
+                        originalStrafeSpeed = locomotionController.strafeSpeed;
+                    }
+                    if (!SpeedModified && originalRunSpeed != 0f && originalWalkSpeed != 0f && originalStrafeSpeed != 0f)
+                    {
+                        locomotionController.walkSpeed = originalWalkSpeed;
+                        locomotionController.runSpeed = originalRunSpeed;
+                        locomotionController.strafeSpeed = originalStrafeSpeed;
+                        originalRunSpeed = 0f;
+                        originalWalkSpeed = 0f;
+                        originalStrafeSpeed = 0f;
+                        Modifier = 1f;
+                    }
+                    if (SpeedModified && originalWalkSpeed != 0f && originalRunSpeed != 0f && originalStrafeSpeed != 0f)
+                    {
+                        locomotionController.walkSpeed = (originalWalkSpeed * Modifier);
+                        locomotionController.runSpeed = (originalRunSpeed * Modifier);
+                        locomotionController.strafeSpeed = (originalStrafeSpeed * Modifier);
+                    }
                 }
-                if (locomotionController != null && !SpeedModified && originalRunSpeed != 0f && originalWalkSpeed != 0f && originalStrafeSpeed != 0f)
-                {
-                    locomotionController.walkSpeed = originalWalkSpeed;
-                    locomotionController.runSpeed = originalRunSpeed;
-                    locomotionController.strafeSpeed = originalStrafeSpeed;
-                    originalRunSpeed = 0f;
-                    originalWalkSpeed = 0f;
-                    originalStrafeSpeed = 0f;
-                    Modifier = 1f;
-                }
-                if (locomotionController != null && SpeedModified && originalWalkSpeed != 0f && originalRunSpeed != 0f && originalStrafeSpeed != 0f)
-                {
-                    locomotionController.walkSpeed = (originalWalkSpeed * Modifier);
-                    locomotionController.runSpeed = (originalRunSpeed * Modifier);
-                    locomotionController.strafeSpeed = (originalStrafeSpeed * Modifier);
-                }
+                
 
             }
         }

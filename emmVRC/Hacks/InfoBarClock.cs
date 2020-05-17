@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +23,7 @@ namespace emmVRC.Hacks
             Transform baseTextTransform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/PingText");
             if (baseTextTransform != null)
             {
-                Transform emmVRCTransform = new GameObject("emmVRCClock", new [] { RectTransform.Il2CppType, Text.Il2CppType }).transform;
+                Transform emmVRCTransform = new GameObject("emmVRCClock", new [] { Il2CppTypeOf<RectTransform>.Type, Il2CppTypeOf<Text>.Type }).transform;
                 emmVRCTransform.SetParent(baseTextTransform.parent, false);
                 emmVRCTransform.SetSiblingIndex(baseTextTransform.GetSiblingIndex() + 1);
                 clockText = emmVRCTransform.GetComponent<Text>();

@@ -30,7 +30,7 @@ namespace emmVRC.Hacks
         private static bool error = false;
         private static bool errorWarned;
         private static List<ApiAvatar> LoadedAvatars;
-        private static int frameTimer = 0;
+        private static bool menuJustActivated = false;
         //private static System.Collections.Generic.List<Objects.SerializedAvatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Objects.SerializedAvatar>();
 
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
@@ -210,6 +210,13 @@ namespace emmVRC.Hacks
                 emmVRCLoader.Logger.LogError("[emmVRC] Unable to save favorited avatars: " + ex.ToString());
             }
         }*/
+        public static System.Collections.IEnumerator RefreshMenu()
+        {
+            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
+            yield return new WaitForSeconds(1f);
+            PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
+            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
+        }
         internal static void OnUpdate()
         {
             if (PublicAvatarList == null || FavoriteButtonNew == null) return;
@@ -218,19 +225,25 @@ namespace emmVRC.Hacks
                 PublicAvatarList.GetComponent<UiAvatarList>().collapsedCount = 500;
                 PublicAvatarList.GetComponent<UiAvatarList>().expandedCount = 500;
 
-                if (PublicAvatarList.GetComponent<UiAvatarList>().pickers.Count < LoadedAvatars.Count || PublicAvatarList.GetComponent<UiAvatarList>().content.childCount <= 0)
+                /*if (!PublicAvatarList.activeInHierarchy)
                 {
-                    PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
-
+                    menuJustActivated = false;
+                    menuWasActivated = false;
                 }
-                else
+                if (PublicAvatarList.activeInHierarchy && !menuWasActivated && !menuJustActivated)
+                    menuJustActivated = true;*/
+                if (!menuJustActivated)
                 {
-                    PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
+                    MelonLoader.MelonCoroutines.Start(RefreshMenu());
+                    menuJustActivated = true;
                 }
-                PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
-
-
-                
+                if (menuJustActivated && (PublicAvatarList.GetComponent<UiAvatarList>().pickers.Count < LoadedAvatars.Count || PublicAvatarList.GetComponent<UiAvatarList>().isOffScreen))
+                    menuJustActivated = false;
+                PublicAvatarList.GetComponent<UiAvatarList>().clearUnseenListOnCollapse = false;
+                PublicAvatarList.GetComponent<UiAvatarList>().deferInitialFetch = true;
+                PublicAvatarList.GetComponent<UiAvatarList>().hideElementsWhenContracted = false;
+                PublicAvatarList.GetComponent<UiAvatarList>().hideWhenEmpty = false;
+                PublicAvatarList.GetComponent<UiAvatarList>().usePagination = false;
                 if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
                 {
                     bool flag = false;
@@ -252,13 +265,13 @@ namespace emmVRC.Hacks
                     }
                 }
             }
-            if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null) && PublicAvatarList.activeSelf)
+            if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null) && (PublicAvatarList.activeSelf || FavoriteButtonNew.activeSelf))
             {
                 PublicAvatarList.SetActive(false);
                 if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null)
                     FavoriteButtonNew.SetActive(false);
             }
-            else if (!PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled)
+            else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled)
             {
                 if (LoadedAvatars.Count > 0)
                     PublicAvatarList.SetActive(true);

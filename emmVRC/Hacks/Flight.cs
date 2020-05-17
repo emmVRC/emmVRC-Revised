@@ -46,28 +46,34 @@ namespace emmVRC.Hacks
                         if (FlightEnabled)
                         {
                             var cameraRotation = Camera.main.transform;
-
-                            if (Input.GetKey(KeyCode.W))
-                                localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
-                            if (Input.GetKey(KeyCode.S))
-                                localPlayer.transform.position -= cameraRotation.transform.forward * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
-                            if (Input.GetKey(KeyCode.A))
-                                localPlayer.transform.position -= cameraRotation.transform.right * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
-                            if (Input.GetKey(KeyCode.D))
-                                localPlayer.transform.position += cameraRotation.transform.right * (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 2f : 1f));
-                            if (Input.GetKey(KeyCode.Q))
-                                localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y - (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), localPlayer.transform.position.z);
-                            if (Input.GetKey(KeyCode.E))
-                                localPlayer.transform.position = new Vector3(localPlayer.transform.position.x, localPlayer.transform.position.y + (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), localPlayer.transform.position.z);
+                            if (VRCTrackingManager.Method_Public_Static_Boolean_11()) // VR is enabled
+                            {
+                                if (Input.GetAxis("Vertical") != 0)
+                                    localPlayer.transform.position += localPlayer.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f;
+                                if (Input.GetAxis("Horizontal") != 0)
+                                    localPlayer.transform.position += localPlayer.transform.right * (Time.deltaTime) * Input.GetAxis("Horizontal") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f;
+                                if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") != 0)
+                                    localPlayer.transform.position += new Vector3(0f, Time.deltaTime * Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f);
+                            }
+                            else
+                            {
+                                if (Input.GetAxis("Vertical") != 0)
+                                    localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f);
+                                if (Input.GetAxis("Horizontal") != 0)
+                                    localPlayer.transform.position += cameraRotation.transform.right * (Time.deltaTime) * Input.GetAxis("Horizontal") * (Speed.SpeedModified ? Speed.Modifier : 1f) * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f);
+                                if (Input.GetKey(KeyCode.Q))
+                                    localPlayer.transform.position -= new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), 0f);
+                                if (Input.GetKey(KeyCode.E))
+                                    localPlayer.transform.position += new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), 0f);
+                            }
+                                
 
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
                                 localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = !NoclipEnabled;
                             //if (localPlayer.GetComponent<VRCMotionState>() != null)
                             //    localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_3();
-                            if (Input.GetAxis("Vertical") != 0)
-                                localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical");
-                            if (Input.GetAxis("Horizontal") != 0)
-                                localPlayer.transform.position += cameraRotation.transform.right * (Time.deltaTime) * Input.GetAxis("Horizontal");
+                            
+                            
 
                             //VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Vector3_Quaternion_0(localPlayer.transform.position, localPlayer.transform.rotation);
                             if (NoclipEnabled)

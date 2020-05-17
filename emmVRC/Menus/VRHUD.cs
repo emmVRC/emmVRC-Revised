@@ -19,7 +19,6 @@ namespace emmVRC.Menus
         private static GameObject BackgroundObject;
         private static GameObject TextObject;
         private static Transform ShortcutMenu;
-        private static bool keyFlag;
         public static void Initialize()
         {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing HUD canvas");
@@ -64,39 +63,45 @@ namespace emmVRC.Menus
                 if (BackgroundObject != null && TextObject != null && TextObject.GetComponent<Text>() != null)
                 {
                     BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMaximized;
-                        string positionstr = "";
-                        string userList = "";
-                        string worldinfo = "";
-                        if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
+                    string positionstr = "";
+                    string userList = "";
+                    string worldinfo = "";
+                    if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
+                    {
+                        int tempCount = 0;
+                        PlayerUtils.GetEachPlayer((VRC.Player plr) =>
                         {
-                            PlayerUtils.GetEachPlayer((VRC.Player plr) => {
-                                userList += plr.field_Private_APIUser_0.displayName + "\n";
-                            });
-                            worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
-                            worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
-                            if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
+                            if (tempCount != 22)
                             {
-                                positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
-                                positionstr += "<b><color=lime>Y: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.y * 10)) / 10 + "</color></b>  ";
-                                positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
+                                userList += plr.field_Private_APIUser_0.displayName + "\n";
+                                tempCount++;
                             }
+                        });
+                        worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
+                        worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
+                        if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
+                        {
+                            positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
+                            positionstr += "<b><color=lime>Y: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.y * 10)) / 10 + "</color></b>  ";
+                            positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
                         }
-                        TextObject.GetComponent<Text>().text = "\n            <color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version +
-                            "\n" +
-                            "\n" +
-                            "\nUsers in room:\n" + userList + "" +
-                            "\n" +
-                            "\n" +
-                            "\nPosition in world:\n" + positionstr +
-                            "\n" +
-                            "\n" + worldinfo +
-                            "\n" +
-                            "\n" +
-                            "\n" +
-                            (Configuration.JSONConfig.emmVRCNetworkEnabled ? (Network.NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
-                            "\n";
-                        if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
-                            TextObject.GetComponent<Text>().text = TextObject.GetComponent<Text>().text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
+                    }
+                    TextObject.GetComponent<Text>().text = "\n            <color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version +
+                        "\n" +
+                        "\n" +
+                        "\nUsers in room:\n" + userList + "" +
+                        "\n" +
+                        "\n" +
+                        "\nPosition in world:\n" + positionstr +
+                        "\n" +
+                        "\n" + worldinfo +
+                        "\n" +
+                        "\n" +
+                        "\n" +
+                        (Configuration.JSONConfig.emmVRCNetworkEnabled ? (Network.NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
+                        "\n";
+                    if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
+                        TextObject.GetComponent<Text>().text = TextObject.GetComponent<Text>().text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                 }
             }
         }

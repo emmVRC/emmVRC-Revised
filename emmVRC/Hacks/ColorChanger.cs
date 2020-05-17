@@ -89,6 +89,16 @@ namespace emmVRC.Hacks
                         quickMenu.transform.Find("Popups/PerformanceSettingsPopup/Popup/Panel").GetComponent<Image>().color = color;
                         quickMenu.transform.Find("Popups/PerformanceSettingsPopup/Popup/BorderImage").GetComponent<Image>().color = darker;
                         quickMenu.transform.Find("Popups/AlertPopup/Lighter").GetComponent<Image>().color = color;
+                        quickMenu.transform.Find("Popups/RoomInstancePopup/Popup/Panel").GetComponent<Image>().color = color;
+                        quickMenu.transform.Find("Popups/RoomInstancePopup/Popup/BorderImage").GetComponent<Image>().color = darker;
+                        quickMenu.transform.Find("Popups/RoomInstancePopup/Popup/BorderImage (1)").GetComponent<Image>().color = darker;
+                        quickMenu.transform.Find("Popups/ReportWorldPopup/Popup/Panel").GetComponent<Image>().color = color;
+                        quickMenu.transform.Find("Popups/ReportWorldPopup/Popup/BorderImage").GetComponent<Image>().color = darker;
+                        quickMenu.transform.Find("Popups/ReportUserPopup/Popup/Panel").GetComponent<Image>().color = color;
+                        quickMenu.transform.Find("Popups/ReportUserPopup/Popup/BorderImage").GetComponent<Image>().color = darker;
+                        quickMenu.transform.Find("Popups/SearchOptionsPopup/Popup/Panel (1)").GetComponent<Image>().color = color;
+                        quickMenu.transform.Find("Popups/SearchOptionsPopup/Popup/BorderImage").GetComponent<Image>().color = darker;
+
                     }
                     catch (Exception ex)
                     {
@@ -166,6 +176,14 @@ namespace emmVRC.Hacks
                                 img.color = color;
                             }
                         }
+                        foreach (Toggle tgle in quickMenu.GetComponentsInChildren<Toggle>(true))
+                        {
+                            tgle.colors = theme;
+                            foreach (Image img in tgle.GetComponentsInChildren<Image>(true))
+                            {
+                                img.color = color;
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -209,6 +227,14 @@ namespace emmVRC.Hacks
                     {
                         //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
+                    /*
+                    try
+                    {
+                        VRLoadingOverlay.field_Private_Static_VRLoadingOverlay_0.field_Private_AbstractVRLoadingOverlay_0.field_Protected_Material_0.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
+                    } catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }*/
                 }
             }
 

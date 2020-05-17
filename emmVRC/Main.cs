@@ -156,6 +156,9 @@ namespace emmVRC
             // Change the target FPS to 200
             Hacks.FPS.Initialize();
 
+            // Initialize the message system
+            Managers.MessageManager.Initialize();
+
             // Initialize the emmVRC HUD
             if (VRCTrackingManager.Method_Public_Static_Boolean_11())
                 Menus.VRHUD.Initialize(); 
@@ -206,6 +209,7 @@ namespace emmVRC
 
             // As a last-ditch effort, try changing colors
             Hacks.ColorChanger.ApplyIfApplicable();
+            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => { MessageManager.SendMessage("Hello world", "usr_5cc8eda7-7a96-4a18-b710-c165918cb57b"); } });
         }
 
         public static System.Collections.IEnumerator loadNetworked()
@@ -234,7 +238,8 @@ namespace emmVRC
         }
         public static void OnApplicationQuit()
         {
-            HTTPRequest.get_sync(NetworkClient.baseURL + "/api/authentication/logout");
+            if (NetworkClient.authToken != null)
+                HTTPRequest.get_sync(NetworkClient.baseURL + "/api/authentication/logout");
         }
     }
 }
