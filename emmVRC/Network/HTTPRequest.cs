@@ -13,8 +13,6 @@ namespace emmVRC.Network
 {
     public class HTTPRequest
     {
-        public bool isCompleted;
-        public static string ResultMessage;
         public static string get_sync(string url)
         {
             return request(HttpMethod.Get, url).Result;
@@ -67,7 +65,6 @@ namespace emmVRC.Network
 
         private static async Task<string> request(HttpMethod method, string url, object obj = null)
         {
-            ResultMessage = null;
             HttpRequestMessage requestMessage = new HttpRequestMessage(method, url);
 
             if (obj != null)
