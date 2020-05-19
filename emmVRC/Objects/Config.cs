@@ -1,4 +1,6 @@
 ﻿
+using UnityEngine;
+
 namespace emmVRC.Objects
 {
     public class Config
@@ -46,6 +48,8 @@ namespace emmVRC.Objects
         public bool DisablePlaylistsButton = false;
         public bool DisableAvatarStatsButton = false;
         public bool DisableReportUserButton = false;
+        public bool MinimalWarnKickButton = false;
+
         // Sub section: Avatar Menu
         public bool DisableAvatarHotWorlds = false;
         public bool DisableAvatarRandomWorlds = false;
@@ -83,5 +87,7 @@ namespace emmVRC.Objects
         public int[] SpeedKeybind = new int[2] {  103, 306 };
         public int[] ThirdPersonKeybind = new int[2] {  116, 306 };
         public int[] ToggleHUDEnabledKeybind = new int[2] {  106, 306 };
+        public int[] RespawnKeybind = new int[2] { 121, 306 };
+        public int[] GoHomeKeybind = new int[2] { 117, 306 };
     }
 }

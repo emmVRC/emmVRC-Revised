@@ -65,6 +65,7 @@ namespace emmVRC.Menus
         private static PageItem DisablePlaylists;
         private static PageItem DisableAvatarStats;
         private static PageItem DisableReportUser;
+        private static PageItem MinimalWarnKick;
 
         // Page 7
         private static PageItem DisableAvatarHotWorlds;
@@ -78,6 +79,8 @@ namespace emmVRC.Menus
         private static PageItem SpeedKeybind;
         private static PageItem ThirdPersonKeybind;
         private static PageItem ToggleHUDEnabledKeybind;
+        private static PageItem RespawnKeybind;
+        private static PageItem GoHomeKeybind;
 
 
         public static void Initialize()
@@ -107,7 +110,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.UnlimitedFPSEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the FPS unlimiter, in desktop only.");
+            }, "TOGGLE: Changes the VRChat FPS limit to 144, in desktop only.");
             RiskyFunctions = new PageItem("Risky Functions", () =>
             {
                 if (!Configuration.JSONConfig.RiskyFunctionsWarningShown)
@@ -585,13 +588,26 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 UserInteractMenuButtons.Initialize();
             }, "TOGGLE: Disables the 'Avatar Stats' button in the User Interact Menu.");
+            MinimalWarnKick = new PageItem("Minimal Warn\nKick Button", () =>
+            {
+                Configuration.JSONConfig.MinimalWarnKickButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                UserInteractMenuButtons.Initialize();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.MinimalWarnKickButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                UserInteractMenuButtons.Initialize();
+            }, "TOGGLE: Combines the Warn and Kick buttons into one space, to make room for more buttons");
             baseMenu.pageItems.Add(DisableReportWorld);
             baseMenu.pageItems.Add(DisableEmoji);
             baseMenu.pageItems.Add(DisableRankToggle);
             baseMenu.pageItems.Add(DisablePlaylists);
             baseMenu.pageItems.Add(DisableReportUser);
             baseMenu.pageItems.Add(DisableAvatarStats);
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(MinimalWarnKick);
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageItems.Add(PageItem.Space());
 
@@ -715,11 +731,39 @@ namespace emmVRC.Menus
                     LoadMenu();
                 });
             }, "Change the keybind for toggling the HUD on and off (Default is LeftCTRL + J");
+            RespawnKeybind = new PageItem("Respawn\nKeybind:\nLeftCTRL + Y", () =>
+            {
+                KeybindChanger.Show("Please press a keybind for respawning:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
+                {
+                    Configuration.JSONConfig.RespawnKeybind[0] = (int)mainKey;
+                    Configuration.JSONConfig.RespawnKeybind[1] = (int)modifier;
+                    Configuration.SaveConfig();
+                    LoadMenu();
+                }, () =>
+                {
+                    LoadMenu();
+                });
+            }, "Change the keybind for respawning (Default is LeftCTRL + Y");
+            GoHomeKeybind = new PageItem("Go Home\nKeybind:\nLeftCTRL + U", () =>
+            {
+                KeybindChanger.Show("Please press a keybind for going home:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
+                {
+                    Configuration.JSONConfig.GoHomeKeybind[0] = (int)mainKey;
+                    Configuration.JSONConfig.GoHomeKeybind[1] = (int)modifier;
+                    Configuration.SaveConfig();
+                    LoadMenu();
+                }, () =>
+                {
+                    LoadMenu();
+                });
+            }, "Change the keybind for going to your home world (Default is LeftCTRL + U");
             baseMenu.pageItems.Add(FlightKeybind);
             baseMenu.pageItems.Add(NoclipKeybind);
             baseMenu.pageItems.Add(SpeedKeybind);
             baseMenu.pageItems.Add(ThirdPersonKeybind);
             baseMenu.pageItems.Add(ToggleHUDEnabledKeybind);
+            baseMenu.pageItems.Add(RespawnKeybind);
+            baseMenu.pageItems.Add(GoHomeKeybind);
 
 
             baseMenu.pageTitles.Add("Core Features");
@@ -764,6 +808,7 @@ namespace emmVRC.Menus
                 DisablePlaylists.SetToggleState(Configuration.JSONConfig.DisablePlaylistsButton);
                 DisableAvatarStats.SetToggleState(Configuration.JSONConfig.DisableAvatarStatsButton);
                 DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);
+                MinimalWarnKick.SetToggleState(Configuration.JSONConfig.MinimalWarnKickButton);
 
                 DisableAvatarHotWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarHotWorlds);
                 DisableAvatarRandomWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarRandomWorlds);
@@ -775,7 +820,8 @@ namespace emmVRC.Menus
                 SpeedKeybind.Name = "Speed:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0])));
                 ThirdPersonKeybind.Name = "Third\nPerson:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0])));
                 ToggleHUDEnabledKeybind.Name = "Toggle HUD\nEnabled:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0])));
-
+                RespawnKeybind.Name = "Respawn:\n"+ (((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[0])));
+                GoHomeKeybind.Name = "Go Home:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[0])));
 
 
             }

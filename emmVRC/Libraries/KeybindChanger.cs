@@ -23,6 +23,7 @@ namespace emmVRC.Libraries
         private static bool fetchingKeys = false;
         private static List<KeyCode> allowedKeyCodes = new List<KeyCode> { KeyCode.Q, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L, KeyCode.Z, KeyCode.X, KeyCode.B, KeyCode.N, KeyCode.M, KeyCode.Alpha0, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9, KeyCode.Tilde, KeyCode.Minus, KeyCode.Plus, KeyCode.Backslash, KeyCode.Slash, KeyCode.Period, KeyCode.Comma, KeyCode.F1, KeyCode.F2, KeyCode.F3, KeyCode.F4, KeyCode.F5, KeyCode.F6, KeyCode.F7, KeyCode.F8, KeyCode.F9, KeyCode.F10, KeyCode.F11, KeyCode.F12 };
         private static List<KeyCode> allowedKeyModifiers = new List<KeyCode> { KeyCode.LeftControl, KeyCode.LeftCommand, KeyCode.LeftAlt, KeyCode.LeftShift, KeyCode.RightControl, KeyCode.RightCommand, KeyCode.RightAlt, KeyCode.RightShift };
+        public static bool InMenu = false;
         public static void Initialize()
         {
             baseMenu = new QMNestedButton(Menus.SettingsMenu.baseMenu.menuBase, 10293, 10239, "a02k3212", "");

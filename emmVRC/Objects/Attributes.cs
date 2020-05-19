@@ -8,7 +8,7 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "1.0.4";
+        public static string Version = "1.0.6";
         public static bool Debug = false;
     }
 }

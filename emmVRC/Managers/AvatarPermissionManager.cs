@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 using VRC.Core;
 
 namespace emmVRC.Managers
@@ -15,7 +17,7 @@ namespace emmVRC.Managers
     public class AvatarPermissions
     {
         public string AvatarId;
-        public bool HandColliders;
+        public bool HandColliders = true;
         public bool FeetColliders;
         public bool HeadBones;
         public bool ChestBones;
@@ -57,6 +59,10 @@ namespace emmVRC.Managers
         public static PageItem HeadBonesToggle;
         public static PageItem ChestBonesToggle;
         public static PageItem HipBonesToggle;
+
+        public static bool UserInteractMenu = false;
+
+        public static UnityAction originalBackAction;
 
         public static AvatarPermissions selectedAvatarPermissions;
         public static void Initialize()
@@ -144,6 +150,14 @@ namespace emmVRC.Managers
 
             baseMenu.pageTitles.Add("Avatar Features");
             baseMenu.pageTitles.Add("Exclusive Global Dynamic Bone Colliders");
+            baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
+            baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+                if (UserInteractMenu)
+                    QuickMenuUtils.ShowQuickmenuPage("UserInteractMenu");
+                else
+                    QuickMenuUtils.ShowQuickmenuPage(PlayerTweaksMenu.baseMenu.getMenuName());
+            })));
+
         }
         public static void ReloadAvatars()
         {
@@ -152,8 +166,9 @@ namespace emmVRC.Managers
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.Method_Private_Void_Boolean_1(false);
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.Method_Private_Void_Boolean_2(false);
         }
-        public static void OpenMenu(string avatarId)
+        public static void OpenMenu(string avatarId, bool inUserInteractMenu = false)
         {
+            UserInteractMenu = inUserInteractMenu;
             selectedAvatarPermissions = AvatarPermissions.GetAvatarPermissions(avatarId);
             DynamicBonesEnabledToggle.SetToggleState(selectedAvatarPermissions.DynamicBonesEnabled);
             ParticleSystemsEnabledToggle.SetToggleState(selectedAvatarPermissions.ParticleSystemsEnabled);

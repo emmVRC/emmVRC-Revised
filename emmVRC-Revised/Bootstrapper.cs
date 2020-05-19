@@ -14,6 +14,8 @@ namespace emmVRCLoader
         public static void Start()
         {
             Logger.Init();
+            if (Environment.CurrentDirectory.Contains("oculus") || Environment.CurrentDirectory.Contains("Oculus"))
+                Logger.LogError("[emmVRCLoader] We suspect you are using emmVRC on the Oculus build of VRChat. This is not supported, and errors reported with the Oculus version can not be fixed. Please install and run VRChat through Steam to use emmVRC and other VRChat mods.");
             if ((!Environment.CommandLine.Contains("--noemmvrc") && UpdateManager.ShouldLoadLib()) || Environment.CommandLine.Contains("--emmvrc.devmode"))
             {
                 try

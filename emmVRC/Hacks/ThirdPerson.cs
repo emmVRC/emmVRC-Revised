@@ -111,28 +111,6 @@ namespace emmVRC.Hacks
                             TPCameraBack.GetComponent<Camera>().enabled = false;
                             TPCameraFront.GetComponent<Camera>().enabled = true;
                         }
-                        if (Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !keyTriggered)
-                        {
-                            if (CameraSetup != 2)
-                            {
-                                CameraSetup++;
-                                TPCameraBack.transform.position -= TPCameraBack.transform.forward * zoomOffset;
-                                TPCameraFront.transform.position += TPCameraBack.transform.forward * zoomOffset;
-                                zoomOffset = 0f;
-                            }
-                            else
-                            {
-                                CameraSetup = 0;
-                                TPCameraBack.transform.position -= TPCameraBack.transform.forward * zoomOffset;
-                                TPCameraFront.transform.position += TPCameraBack.transform.forward * zoomOffset;
-                                zoomOffset = 0f;
-                            }
-                            keyTriggered = true;
-                        }
-                        else if (!Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && keyTriggered)
-                        {
-                            keyTriggered = false;
-                        }
                         if (CameraSetup != 0)
                         {
                             if (Input.GetKeyDown(KeyCode.Escape))

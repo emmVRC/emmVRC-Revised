@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
-using VRC;
-using VRC.Core;
-using emmVRC.Libraries;
-using NET_SDK.Harmony;
 using emmVRC.Managers;
-using Il2CppSystem.IO;
-using emmVRC.Objects;
 using emmVRC.Hacks;
 using emmVRC.Network;
-using MS.Internal.Xml.XPath;
+using emmVRC.Menus;
+using emmVRC.Libraries;
+using VRC;
+using VRC.Core;
+using VRC.SDKBase;
+using VRCSDK2;
 
 namespace emmVRC
 {
@@ -24,9 +19,12 @@ namespace emmVRC
         private static void OnApplicationStart()
         {
             // A little throwback to the first ever mod I worked on, YoshiMod
-            emmVRCLoader.Logger.Log("Hello world!");
-            emmVRCLoader.Logger.Log("This is the beginning of a new beginning!");
-            emmVRCLoader.Logger.Log("Wait... have I said that before?");
+            if (Environment.CommandLine.Contains("--emmvrc.anniversarymode"))
+            {
+                emmVRCLoader.Logger.Log("Hello world!");
+                emmVRCLoader.Logger.Log("This is the beginning of a new beginning!");
+                emmVRCLoader.Logger.Log("Wait... have I said that before?");
+            }
 
             // Load the config for emmVRC
             Configuration.Initialize();
@@ -83,7 +81,7 @@ namespace emmVRC
             Menus.CreditsMenu.Initialize();
 
             // Initialize the World Instance History menu
-            //Menus.InstanceHistoryMenu.Initialize();
+            Menus.InstanceHistoryMenu.Initialize();
 
             // Initialize the "Settings" menu
             emmVRCLoader.Logger.LogDebug("Initializing Settings menu...");
@@ -109,6 +107,9 @@ namespace emmVRC
 
             // Initialize the Keybind Changing UI
             Libraries.KeybindChanger.Initialize();
+
+            // Initialize the Keybind system
+            Managers.KeybindManager.Initialize();
 
             // Start the Notification manager
             emmVRCLoader.Logger.LogDebug("Initializing Notification manager...");
@@ -161,7 +162,7 @@ namespace emmVRC
 
             // Initialize the emmVRC HUD
             if (VRCTrackingManager.Method_Public_Static_Boolean_11())
-                Menus.VRHUD.Initialize(); 
+                Menus.VRHUD.Initialize();
             else
                 Menus.DesktopHUD.Initialize();
 
@@ -196,6 +197,7 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
                 // Ensure that everything through here is after the game has loaded
                 // Reset the instance clock when you switch instances
+                MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
                 if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
                     Hacks.InfoBarClock.instanceTime = 0;
                 MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
@@ -210,21 +212,22 @@ namespace emmVRC
             // Initialize User Permissions
             UserPermissionManager.Initialize();
 
+            // Apply color changing
+            Hacks.ColorChanger.ApplyIfApplicable();
+
+            // Initialize hooking, for things such as Global Dynamic Bones
+            Libraries.Hooking.Initialize();
+
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
-
-            // As a last-ditch effort, try changing colors
-            Hacks.ColorChanger.ApplyIfApplicable();
-
-            Libraries.Hooking.Initialize();
         }
 
         public static System.Collections.IEnumerator loadNetworked()
         {
             while (NetworkClient.authToken == null)
                 yield return new WaitForSeconds(1.5f);
-            CustomAvatarFavorites.PopulateList();
+            MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.PopulateList());
         }
 
         public static void OnUpdate()
@@ -247,7 +250,7 @@ namespace emmVRC
         public static void OnApplicationQuit()
         {
             if (NetworkClient.authToken != null)
-                HTTPRequest.get_sync(NetworkClient.baseURL + "/api/authentication/logout");
+                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
         }
     }
 }

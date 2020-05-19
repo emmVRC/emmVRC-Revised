@@ -20,7 +20,7 @@ namespace emmVRC
         {
             if (NetworkClient.authToken != null)
                 HTTPRequest.get_sync(NetworkClient.baseURL + "/api/authentication/logout");
-            try { Process.Start(@Environment.CurrentDirectory + "\\VRChat.exe", Environment.CommandLine.ToString()); } catch (Exception ex) { ex = new Exception(); }
+                try { Process.Start(@Environment.CurrentDirectory + "\\VRChat.exe", Environment.CommandLine.ToString()); } catch (Exception ex) { ex = new Exception(); }
             Process.GetCurrentProcess().Kill();
         }
     }

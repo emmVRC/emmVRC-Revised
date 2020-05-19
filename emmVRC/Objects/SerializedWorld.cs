@@ -1,4 +1,5 @@
-﻿using System;
+﻿using emmVRC.Libraries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,6 @@ namespace emmVRC.Objects
         public string WorldType;
         public string WorldName;
         public string WorldImageURL;
-        public DateTime loggedDateTime;
+        public string loggedDateTime = UnixTime.FromDateTime(DateTime.Now).ToString();
     }
 }

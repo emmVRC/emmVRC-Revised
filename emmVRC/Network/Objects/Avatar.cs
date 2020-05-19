@@ -38,7 +38,8 @@ namespace emmVRC.Network.Objects
                 assetUrl = avatar_asset_url,
                 thumbnailImageUrl = avatar_thumbnail_image_url,
                 authorId = avatar_author_id,
-                authorName = avatar_author_name
+                authorName = avatar_author_name,
+                releaseStatus = "public"
             };
             return avtr;
         }

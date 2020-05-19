@@ -13,7 +13,7 @@ namespace emmVRC.Menus
         public static PaginatedMenu baseMenu;
         private static PageItem worldTweaksButton;
         private static PageItem playerTweaksButton;
-        //private static PageItem instanceHistoryButton;
+        private static PageItem instanceHistoryButton;
         private static PageItem disabledButtonsButton;
         private static PageItem programsButton;
         private static PageItem settingsButton;
@@ -35,8 +35,8 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(playerTweaksButton);
 
             // Add the Instance History button
-            //instanceHistoryButton = new PageItem("Instance\nHistory", () => { InstanceHistoryMenu.baseMenu.OpenMenu(); }, "Allows you to join an instance you were previously in, so long as you have not been kicked from it");
-            //baseMenu.pageItems.Add(instanceHistoryButton);
+            instanceHistoryButton = new PageItem("Instance\nHistory", () => { InstanceHistoryMenu.baseMenu.OpenMenu(); InstanceHistoryMenu.LoadMenu(); }, "Allows you to join an instance you were previously in, so long as you have not been kicked from it");
+            baseMenu.pageItems.Add(instanceHistoryButton);
 
             // Add the Disabled Buttons button
             disabledButtonsButton = new PageItem("Disabled\nButtons", () => { DisabledButtonMenu.LoadMenu(); }, "Contains buttons from the Quick Menu that were disabled by emmVRC");
@@ -51,7 +51,7 @@ namespace emmVRC.Menus
                 SettingsMenu.LoadMenu();
             }, "Access the Settings for emmVRC, including Risky Functions, color changes, etc.");
             baseMenu.pageItems.Add(settingsButton);
-            for (int i=0; i <= 6; i++)
+            for (int i=0; i <= 5; i++)
             {
                 baseMenu.pageItems.Add(PageItem.Space());
             }

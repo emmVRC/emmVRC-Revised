@@ -33,26 +33,56 @@ namespace emmVRC.Menus
                 try
                 {
                     previousInstances = TinyJSON.Decoder.Decode(input).Make<List<SerializedWorld>>();
-                } catch (Exception ex)
+                    SerializedWorld removeable = null;
+                    foreach (SerializedWorld pastInstance in previousInstances)
+                    {
+                        if (UnixTime.ToDateTime(pastInstance.loggedDateTime) < DateTime.Now.AddDays(-1))
+                        {
+                            removeable = pastInstance;
+                        }
+                    }
+
+                    if (removeable != null)
+                    {
+                        previousInstances.Remove(removeable);
+                        SaveInstances();
+                    }
+
+                }
+                catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError("Your instance history file is invalid. It will be wiped.");
                     File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/instancehistory.emm"));
                     previousInstances = new List<SerializedWorld>();
                 }
             }
-            foreach (SerializedWorld pastInstance in previousInstances)
-            {
-                if ((pastInstance.loggedDateTime - DateTime.Now).TotalDays > 1)
-                {
-                    previousInstances.Remove(pastInstance);
-                }
-                baseMenu.pageItems.Add(new PageItem(pastInstance.WorldName+"\n"+pastInstance.WorldOwner, () =>
+
+        }
+        public static void LoadMenu()
+        {
+            baseMenu.pageItems.Clear();
+            foreach (SerializedWorld pastInstance in previousInstances) { 
+                baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags), () =>
                 {
                     new PortalInternal().Method_Private_Void_String_String_0(pastInstance.WorldID, pastInstance.WorldTags);
-                }, pastInstance.WorldName+", hosted by "+pastInstance.WorldOwner+", last joined "+pastInstance.loggedDateTime.ToShortDateString()+" "+pastInstance.loggedDateTime.ToShortTimeString()+"\nSelect to join"));
+                }, pastInstance.WorldName + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
             }
-            if (previousInstances.Count == 0)
+
+
+            if (previousInstances.Count != 0)
+            {
                 baseMenu.pageItems.Add(PageItem.Space());
+                baseMenu.pageItems.Add(new PageItem("<color=#FFCCBB>Clear\nInstances</color>", () => {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Instance History", "Are you sure you want to clear the instance history? All previously joined instances will be lost!", "Yes", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => {
+                        previousInstances.Clear();
+                        SaveInstances();
+                        LoadMenu();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                    })), "No", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => {
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                    })));
+                }, "Clears the instance history of all previous instances"));
+            }
         }
         public static void SaveInstances()
         {
@@ -62,27 +92,34 @@ namespace emmVRC.Menus
         {
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null || RoomManager.field_Internal_Static_ApiWorldInstance_0 == null)
                 yield return new WaitForEndOfFrame();
-            SerializedWorld world = new SerializedWorld
+            try
             {
-                WorldID = RoomManager.field_Internal_Static_ApiWorld_0.id,
-                WorldTags = RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags,
-                WorldOwner = RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator(),
-                WorldType = RoomManager.field_Internal_Static_ApiWorldInstance_0.InstanceType.ToString(),
-                WorldName = RoomManager.field_Internal_Static_ApiWorld_0.name,
-                WorldImageURL = RoomManager.field_Internal_Static_ApiWorld_0.thumbnailImageUrl,
-                loggedDateTime = DateTime.Now
-            };
-            /*for (int i=0; i < previousInstances.Count; i++)
+                SerializedWorld world = new SerializedWorld
+                {
+                    WorldID = RoomManager.field_Internal_Static_ApiWorld_0.id,
+                    WorldTags = RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags,
+                    WorldOwner = RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator(),
+                    WorldType = RoomManager.field_Internal_Static_ApiWorldInstance_0.InstanceType.ToString(),
+                    WorldName = RoomManager.field_Internal_Static_ApiWorld_0.name,
+                    WorldImageURL = RoomManager.field_Internal_Static_ApiWorld_0.thumbnailImageUrl
+                };
+                SerializedWorld removeable = null;
+                foreach (SerializedWorld previousInstance in previousInstances)
+                {
+                    if (previousInstance.WorldID == world.WorldID && InstanceIDUtilities.GetInstanceID(previousInstance.WorldTags) == InstanceIDUtilities.GetInstanceID(world.WorldTags))
+                    {
+                        removeable = previousInstance;
+                    }
+                }
+                if (removeable != null)
+                    previousInstances.Remove(removeable);
+                previousInstances.Add(world);
+                SaveInstances();
+                LoadMenu();
+            } catch (Exception ex)
             {
-                if (previousInstances[i].WorldID == world.WorldID && previousInstances[i].WorldTags == world.WorldTags)
-                    previousInstances.RemoveAt(i);
-            }*/
-            previousInstances.Add(world);
-            SaveInstances();
-            baseMenu.pageItems.Add(new PageItem(world.WorldName+"\n"+world.WorldTags.Substring(0, world.WorldTags.IndexOf('~')), () =>
-            {
-                new PortalInternal().Method_Private_Void_String_String_0(world.WorldID, world.WorldTags);
-            }, world.WorldName + ", last joined " + world.loggedDateTime.ToShortDateString() + " " + world.loggedDateTime.ToShortTimeString() + "\nSelect to join"));
+                emmVRCLoader.Logger.LogError(ex.ToString());
+            }
         }
     }
 }

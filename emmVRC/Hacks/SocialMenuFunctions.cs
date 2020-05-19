@@ -68,7 +68,7 @@ namespace emmVRC.Hacks
 
             UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
                 InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "Send", (string msg) => {
-                    MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id);
+                    MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
                 });
             })));
 

@@ -28,8 +28,6 @@ namespace emmVRC.Libraries
         // Internal cache of the VRCUiManager
         private static VRCUiManager vrcuimInstance;
 
-
-
         // Fetch the background from the Quick Menu
         public static BoxCollider QuickMenuBackground()
         {

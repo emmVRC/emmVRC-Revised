@@ -76,8 +76,13 @@ namespace emmVRC
             }
 
             // Fetch the resources asset bundle, for things like sprites.
-            UnityWebRequest assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
-            assetBundleRequest.SendWebRequest();
+            UnityWebRequest assetBundleRequest;
+            if (Environment.CommandLine.Contains("--emmvrc.anniversarymode"))
+                assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Anniversary.emm");
+            else
+                assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
+            
+                assetBundleRequest.SendWebRequest();
             while (!assetBundleRequest.isDone)
                 yield return new WaitForSeconds(0.1f);
 

@@ -73,7 +73,7 @@ namespace emmVRC.Menus
                         {
                             if (tempCount != 22)
                             {
-                                userList += plr.field_Private_APIUser_0.displayName + "\n";
+                                userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + plr.field_Private_APIUser_0.displayName + "\n";
                                 tempCount++;
                             }
                         });

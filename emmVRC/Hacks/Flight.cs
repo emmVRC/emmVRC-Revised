@@ -1,10 +1,14 @@
-﻿using System;
+﻿using emmVRC.Libraries;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using VRC;
+using VRC.Core;
+using VRC.SDKBase;
 
 namespace emmVRC.Hacks
 {
@@ -13,6 +17,7 @@ namespace emmVRC.Hacks
         public static bool FlightEnabled = false;
         public static bool NoclipEnabled = false;
         private static GameObject localPlayer;
+        private static Player player;
         private static Vector3 originalGravity;
         public static void Initialize()
         {
@@ -27,6 +32,13 @@ namespace emmVRC.Hacks
                 {
                     if (localPlayer == null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject != null)
                         localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject;
+                    if (player == null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+                    {
+                        PlayerUtils.GetEachPlayer((Player plr) => {
+                            if (plr.field_Private_APIUser_0.id == APIUser.CurrentUser.id)
+                                player = plr;
+                        });
+                    }
                     else
                     {
                         if (FlightEnabled && originalGravity == Vector3.zero)
@@ -66,7 +78,8 @@ namespace emmVRC.Hacks
                                 if (Input.GetKey(KeyCode.E))
                                     localPlayer.transform.position += new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), 0f);
                             }
-                                
+
+                            
 
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
                                 localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = !NoclipEnabled;

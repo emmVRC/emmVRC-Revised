@@ -37,17 +37,19 @@ namespace emmVRC.Managers
         {
             MelonLoader.MelonCoroutines.Start(CheckLoop());
         }
-        public static void SendMessage(string message, string targetId)
+        public static IEnumerator SendMessage(string message, string targetId)
         {
-            if (NetworkClient.authToken != null && !Configuration.JSONConfig.AutoInviteMessage)
+            if (NetworkClient.authToken != null && !Configuration.JSONConfig.AutoInviteMessage && Configuration.JSONConfig.emmVRCNetworkEnabled)
             {
                 SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId, icon = "None" };
-                try
+                var request = HTTPRequest.post(NetworkClient.baseURL + "/api/message", msg);
+                while (!request.IsCompleted && !request.IsFaulted)
+                    yield return new WaitForEndOfFrame();
+
+                if (request.IsFaulted)
                 {
-                    HTTPRequest.post_sync(NetworkClient.baseURL + "/api/message", msg);
-                } catch (Exception ex)
-                {
-                    emmVRCLoader.Logger.LogError(ex.ToString());
+                    emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
+                    VRCWebSocketsManager.field_Private_Static_VRCWebSocketsManager_0.field_Private_Api_0.PostOffice.Send(Transmtn.DTO.Notifications.Invite.Create(targetId, "", new Location("", new Transmtn.DTO.Instance("", "", "", "", "", false)), "message from " + APIUser.CurrentUser.displayName + ", sent " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + ":\n" + message));
                 }
             } else
             {
@@ -61,21 +63,32 @@ namespace emmVRC.Managers
                 if (NetworkClient.authToken != null)
                 {
                     Message[] messageArray = null;
-                    try
+
+                    var thing = HTTPRequest.get(NetworkClient.baseURL + "/api/message");
+                    while (!thing.IsCompleted && !thing.IsFaulted)
+                        yield return new WaitForEndOfFrame();
+
+                    if (!thing.IsFaulted)
                     {
-                        messageArray = TinyJSON.Decoder.Decode(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/message")).Make<Message[]>();
-                    }
-                    catch (System.Exception ex)
-                    {
-                        emmVRCLoader.Logger.LogError(ex.ToString());
-                    }
-                    if (messageArray != null)
-                    {
-                        foreach (Message msg in messageArray)
+                        try
                         {
-                            if (pendingMessages.FindIndex(a => a.message.rest_message_id == msg.rest_message_id) == -1)
-                            pendingMessages.Add(new PendingMessage { message = msg, read = false });
+                            messageArray = TinyJSON.Decoder.Decode(thing.Result).Make<Message[]>();
                         }
+                        catch (System.Exception ex)
+                        {
+                            emmVRCLoader.Logger.LogError(ex.ToString());
+                        }
+                        if (messageArray != null)
+                        {
+                            foreach (Message msg in messageArray)
+                            {
+                                if (pendingMessages.FindIndex(a => a.message.rest_message_id == msg.rest_message_id) == -1)
+                                    pendingMessages.Add(new PendingMessage { message = msg, read = false });
+                            }
+                        }
+                    } else
+                    {
+                        emmVRCLoader.Logger.LogError("Asynchronous net request failed: " + thing.Exception);
                     }
                 }
                 foreach (PendingMessage msg in pendingMessages)
@@ -86,7 +99,8 @@ namespace emmVRC.Managers
                         {
                             try
                             {
-                                HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                //HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
                             }
                             catch (Exception ex)
                             {
@@ -101,7 +115,7 @@ namespace emmVRC.Managers
                         if (NetworkClient.authToken != null)
                             try
                             {
-                                HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
                             } catch (Exception ex)
                             {
                                 emmVRCLoader.Logger.LogError(ex.ToString());

@@ -13,7 +13,7 @@ namespace emmVRC.Managers
         public static bool RiskyFunctionsAllowed { get; private set; } = false;
         public static bool RiskyFunctionsChecked = false;
         public static Il2CppSystem.Action<string> worldTagsCheck = null;
-        private static bool keyFlag;
+
         public static void Initialize()
         {
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -41,31 +41,6 @@ namespace emmVRC.Managers
                         RiskyFunctionsChecked = true;
 
                     }
-
-                    // Now check for keyshortcuts, if Risky Functions is allowed
-                    if (RiskyFunctionsAllowed)
-                    {
-                        // If the flight keybind is pressed...
-                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) || (KeyCode)Configuration.JSONConfig.FlightKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !keyFlag){
-                            Menus.PlayerTweaksMenu.FlightToggle.setToggleState(!Hacks.Flight.FlightEnabled, true);
-                            keyFlag = true;
-                        }
-                        // If the noclip keybind is pressed...
-                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1]) || (KeyCode)Configuration.JSONConfig.NoclipKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !keyFlag)
-                        {
-                            Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(!Hacks.Flight.NoclipEnabled, true);
-                            keyFlag = true;
-                        }
-                        // If the Speed keybind is pressed...
-                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1]) || (KeyCode)Configuration.JSONConfig.SpeedKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !keyFlag)
-                        {
-                            Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(!Hacks.Speed.SpeedModified, true);
-                            keyFlag = true;
-                        }
-                        if (!Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && keyFlag)
-                            keyFlag = false;
-                    }
-
                 }
                 yield return new WaitForEndOfFrame();
             }
@@ -129,8 +104,6 @@ namespace emmVRC.Managers
                         RiskyFunctionsAllowed = true;
                     }
                 }
-                
-
                 // Now have Risky Functions reprocess based on this result
                 RiskyFunctionsChecked = false;
             }

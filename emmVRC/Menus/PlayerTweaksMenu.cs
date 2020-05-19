@@ -56,7 +56,7 @@ namespace emmVRC.Menus
             }, "Selects you as the current user");
 
             AvatarOptionsMenu = new QMSingleButton(baseMenu, 4, 0, "Avatar\nOptions", () => {
-                AvatarPermissionManager.OpenMenu(VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id);
+                AvatarPermissionManager.OpenMenu(VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id, false);
             }, "Allows you to configure permissions for this user's avatar, which includes dynamic bone settings");
 
             EnableJumpButton = new QMSingleButton(baseMenu, 1, 1, "Jumping", () =>
