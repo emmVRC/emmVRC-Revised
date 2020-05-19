@@ -60,7 +60,12 @@ namespace emmVRC.Network
         {
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
-            NetworkClient.authToken = HTTPResponse.Serialize(HTTPRequest.post_sync(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName }))["token"];
+            sendRequest();
+        }
+
+        private static async void sendRequest()
+        {
+            NetworkClient.authToken = HTTPResponse.Serialize(await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName }))["token"];
         }
 
 

@@ -13,6 +13,8 @@ namespace emmVRC.Network
 {
     public class HTTPRequest
     {
+        public bool isCompleted;
+        public static string ResultMessage;
         public static string get_sync(string url)
         {
             return request(HttpMethod.Get, url).Result;
@@ -65,6 +67,7 @@ namespace emmVRC.Network
 
         private static async Task<string> request(HttpMethod method, string url, object obj = null)
         {
+            ResultMessage = null;
             HttpRequestMessage requestMessage = new HttpRequestMessage(method, url);
 
             if (obj != null)
@@ -73,25 +76,28 @@ namespace emmVRC.Network
                 requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
-            using (HttpResponseMessage responseMessage = NetworkClient.httpClient.SendAsync(requestMessage).Result)
-            {
-                if (responseMessage.IsSuccessStatusCode)
+            return await Task.Run(() => {
+                using (HttpResponseMessage responseMessage = NetworkClient.httpClient.SendAsync(requestMessage).Result)
                 {
-                    return await responseMessage.Content.ReadAsStringAsync();
+                    if (responseMessage.IsSuccessStatusCode)
+                    {
+                        return responseMessage.Content.ReadAsStringAsync();
+                    }
+                    else if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        emmVRCLoader.Logger.Log(responseMessage.Content.ToString());
+                        emmVRCLoader.Logger.Log(requestMessage.Content.ReadAsStringAsync().Result);
+                        //TODO: change to request token again
+                        throw new Exception(responseMessage.ReasonPhrase);
+                    }
+                    else
+                    {
+                        emmVRCLoader.Logger.Log("{0}{1}", responseMessage.StatusCode, responseMessage.Content);
+                        throw new Exception(responseMessage.ReasonPhrase);
+                    }
                 }
-                else if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    emmVRCLoader.Logger.Log(responseMessage.Content.ToString());
-                    emmVRCLoader.Logger.Log(await requestMessage.Content.ReadAsStringAsync());
-                    //TODO: change to request token again
-                    throw new Exception(responseMessage.ReasonPhrase);
-                }
-                else
-                {
-                    emmVRCLoader.Logger.Log("{0}{1}", responseMessage.StatusCode, responseMessage.Content);
-                    throw new Exception(responseMessage.ReasonPhrase);
-                }
-            }
+            });
+            
         }
 
     }

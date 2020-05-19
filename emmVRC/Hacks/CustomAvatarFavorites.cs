@@ -8,6 +8,8 @@ using VRC.UI;
 using emmVRC.Libraries;
 using emmVRC.Network;
 using System.Collections;
+using Il2CppSystem.Threading.Tasks;
+using Il2CppSystem.Threading;
 
 namespace emmVRC.Hacks
 {
@@ -185,7 +187,7 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
             if (!request.IsFaulted)
             {
-                avatarArray = TinyJSON.Decoder.Decode(HTTPRequest.get_sync(NetworkClient.baseURL + "/api/avatar")).Make<Network.Objects.Avatar[]>();
+                avatarArray = TinyJSON.Decoder.Decode(HTTPRequest.get(NetworkClient.baseURL + "/api/avatar").Result).Make<Network.Objects.Avatar[]>();
                 if (avatarArray != null)
                 {
                     try
@@ -216,7 +218,7 @@ namespace emmVRC.Hacks
             {
                 avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                 System.Collections.Generic.List<Objects.SerializedAvatar> avtrs = new System.Collections.Generic.List<Objects.SerializedAvatar>();
-                foreach (ApiAvatar avatar in LoadedAvatars)
+                 foreach (ApiAvatar avatar in LoadedAvatars)
                 {
                     Objects.SerializedAvatar avtr = new Objects.SerializedAvatar();
                     avtr.name = Convert.ToBase64String(Encoding.UTF8.GetBytes(avatar.name));

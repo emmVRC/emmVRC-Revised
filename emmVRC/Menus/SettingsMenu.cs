@@ -185,7 +185,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 if (Network.NetworkClient.authToken != null)
-                    Network.HTTPRequest.get_sync(Network.NetworkClient.baseURL + "/api/authentication/logout");
+                    Network.HTTPRequest.get(Network.NetworkClient.baseURL + "/api/authentication/logout");
                 Network.NetworkClient.authToken = null;
             }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
             GlobalChat = new PageItem("Global Chat", () =>
