@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace emmVRCLoader.TinyJSON
+namespace TinyJSON
 {
 	[Obfuscation(Exclude = true)]
 	public sealed class ProxyArray : Variant, IEnumerable<Variant>

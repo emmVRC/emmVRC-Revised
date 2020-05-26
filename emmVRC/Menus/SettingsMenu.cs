@@ -16,8 +16,8 @@ namespace emmVRC.Menus
 
         // Page 1
         private static PageItem OpenBeta;
-        private static PageItem UnlimitedFPS;
         private static PageItem RiskyFunctions;
+        private static PageItem VRFlightControls;
         private static PageItem GlobalDynamicBones;
         private static PageItem EveryoneGlobalDynamicBones;
         private static PageItem emmVRCNetwork;
@@ -32,14 +32,15 @@ namespace emmVRC.Menus
         private static PageItem LogoButton;
         private static PageItem HUD;
         private static PageItem ForceRestart;
-        private static PageItem InfoSpoofing;
-        private static PageItem InfoHiding;
-        private static PageItem InfoSpooferNamePicker;
+        private static PageItem UnlimitedFPS;
 
         // Page 3
         private static PageItem UIColorChanging;
         private static PageItem UIColorChangePickerButton;
         private static ColorPicker UIColorChangePicker;
+        private static PageItem InfoSpoofing;
+        private static PageItem InfoHiding;
+        private static PageItem InfoSpooferNamePicker;
 
         // Page 4
         private static PageItem NameplateColorChanging;
@@ -100,17 +101,6 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the emmVRC Open Beta. Requires a restart to take affect");
-            UnlimitedFPS = new PageItem("Unlimited FPS", () =>
-            {
-                Configuration.JSONConfig.UnlimitedFPSEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.UnlimitedFPSEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "TOGGLE: Changes the VRChat FPS limit to 144, in desktop only.");
             RiskyFunctions = new PageItem("Risky Functions", () =>
             {
                 if (!Configuration.JSONConfig.RiskyFunctionsWarningShown)
@@ -142,6 +132,15 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 PlayerTweaksMenu.SetRiskyFunctions(false);
             }, "TOGGLE: Enables the Risky Functions, which contains functions that shouldn't be used in public worlds. This includes flight, noclip, speed, and teleporting/waypoints");
+            VRFlightControls = new PageItem("VR Flight\nControls", () =>
+            {
+                Configuration.JSONConfig.VRFlightControls = true;
+                Configuration.SaveConfig();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.VRFlightControls = false;
+                Configuration.SaveConfig();
+            }, "TOGGLE: Enables the enhanced VR flight controls. May not work on Windows Mixed Reality");
             GlobalDynamicBones = new PageItem("Global\nDynamic Bones", () =>
             {
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = true;
@@ -222,8 +221,8 @@ namespace emmVRC.Menus
                 RefreshMenu();
             }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network"); 
             baseMenu.pageItems.Add(OpenBeta);
-            baseMenu.pageItems.Add(UnlimitedFPS);
             baseMenu.pageItems.Add(RiskyFunctions);
+            baseMenu.pageItems.Add(VRFlightControls);
             baseMenu.pageItems.Add(GlobalDynamicBones);
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(emmVRCNetwork);
@@ -299,6 +298,52 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the Force Restart button on the loading screen, to help free you from softlocks");
+            UnlimitedFPS = new PageItem("Unlimited FPS", () =>
+            {
+                Configuration.JSONConfig.UnlimitedFPSEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.UnlimitedFPSEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Changes the VRChat FPS limit to 144, in desktop only.");
+           
+            baseMenu.pageItems.Add(InfoBar);
+            baseMenu.pageItems.Add(Clock);
+            baseMenu.pageItems.Add(MasterIcon);
+            baseMenu.pageItems.Add(LogoButton);
+            baseMenu.pageItems.Add(HUD);
+            baseMenu.pageItems.Add(ForceRestart);
+            baseMenu.pageItems.Add(UnlimitedFPS);
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
+
+            UIColorChanging = new PageItem("UI Color\nChange", () =>
+            {
+                Configuration.JSONConfig.UIColorChangingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.UIColorChangingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "TOGGLE: Enables the color changing module, which affects UI, ESP, and loading");
+            UIColorChangePicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1001, 1000, "UI Color", "Select the color for the UI", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.UIColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, () => { LoadMenu(); });
+            UIColorChangePickerButton = new PageItem("Select UI\nColor", () =>
+            {
+                QuickMenuUtils.ShowQuickmenuPage(UIColorChangePicker.baseMenu.getMenuName());
+            }, "Selects the color splashed across the rest of the UI");
             InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
             {
                 if (Configuration.JSONConfig.InfoHidingEnabled)
@@ -394,49 +439,15 @@ namespace emmVRC.Menus
                     RefreshMenu();
                 });
             }, "Allows you to change your spoofed name to one that never changes");
-            baseMenu.pageItems.Add(InfoBar);
-            baseMenu.pageItems.Add(Clock);
-            baseMenu.pageItems.Add(MasterIcon);
-            baseMenu.pageItems.Add(LogoButton);
-            baseMenu.pageItems.Add(HUD);
-            baseMenu.pageItems.Add(ForceRestart);
-            baseMenu.pageItems.Add(InfoSpoofing);
-            baseMenu.pageItems.Add(InfoHiding);
-            baseMenu.pageItems.Add(InfoSpooferNamePicker);
-
-            UIColorChanging = new PageItem("UI Color\nChange", () =>
-            {
-                Configuration.JSONConfig.UIColorChangingEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.UIColorChangingEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
-            }, "TOGGLE: Enables the color changing module, which affects UI, ESP, and loading");
-            UIColorChangePicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1001, 1000, "UI Color", "Select the color for the UI", (UnityEngine.Color newColor) =>
-            {
-                Configuration.JSONConfig.UIColorHex = ColorConversion.ColorToHex(newColor, true);
-                Configuration.SaveConfig();
-                LoadMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
-            }, () => { LoadMenu(); });
-            UIColorChangePickerButton = new PageItem("Select UI\nColor", () =>
-            {
-                QuickMenuUtils.ShowQuickmenuPage(UIColorChangePicker.baseMenu.getMenuName());
-            }, "Selects the color splashed across the rest of the UI");
             baseMenu.pageItems.Add(UIColorChanging);
             baseMenu.pageItems.Add(UIColorChangePickerButton);
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(InfoSpoofing);
+            baseMenu.pageItems.Add(InfoHiding);
+            baseMenu.pageItems.Add(InfoSpooferNamePicker);
 
             FriendNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1000, "Friend Nameplate Color", "Select the color for Friend Nameplate colors", (UnityEngine.Color newColor) =>
             {
@@ -768,7 +779,7 @@ namespace emmVRC.Menus
 
             baseMenu.pageTitles.Add("Core Features");
             baseMenu.pageTitles.Add("Visual Features");
-            baseMenu.pageTitles.Add("UI Color Changing");
+            baseMenu.pageTitles.Add("UI Changing");
             baseMenu.pageTitles.Add("Nameplate Color Changing");
             baseMenu.pageTitles.Add("Disable VRChat Buttons");
             baseMenu.pageTitles.Add("Disable Avatar Menu Lists");
@@ -779,8 +790,8 @@ namespace emmVRC.Menus
             try
             {
                 OpenBeta.SetToggleState(Configuration.JSONConfig.OpenBetaEnabled);
-                UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
                 RiskyFunctions.SetToggleState(Configuration.JSONConfig.RiskyFunctionsEnabled);
+                VRFlightControls.SetToggleState(Configuration.JSONConfig.VRFlightControls);
                 GlobalDynamicBones.SetToggleState(Configuration.JSONConfig.GlobalDynamicBonesEnabled);
                 EveryoneGlobalDynamicBones.SetToggleState(Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled);
                 emmVRCNetwork.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
@@ -794,11 +805,12 @@ namespace emmVRC.Menus
                 LogoButton.SetToggleState(Configuration.JSONConfig.LogoButtonEnabled);
                 HUD.SetToggleState(Configuration.JSONConfig.HUDEnabled);
                 ForceRestart.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
+                UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
+
+                UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
                 InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
                 InfoHiding.SetToggleState(Configuration.JSONConfig.InfoHidingEnabled);
                 InfoSpooferNamePicker.Name = "Set\nSpoofed\nName";
-
-                UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
 
                 NameplateColorChanging.SetToggleState(Configuration.JSONConfig.NameplateColorChangingEnabled);
 

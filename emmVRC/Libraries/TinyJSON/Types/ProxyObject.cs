@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
-namespace emmVRCLoader.TinyJSON
+namespace TinyJSON
 {
 	[Obfuscation(Exclude = true)]
 	public sealed class ProxyObject : Variant, IEnumerable<KeyValuePair<string, Variant>>

@@ -3,6 +3,7 @@ using System.Reflection;
 
 namespace emmVRCLoader
 {
+    [Obfuscation(Exclude = true)]
     public class ModController
     {
         private MethodInfo onApplicationStartMethod;

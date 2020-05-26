@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Loader.cs" />
+    <Compile Include="LoaderCheck.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ModController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

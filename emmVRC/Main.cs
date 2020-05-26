@@ -10,6 +10,7 @@ using VRC;
 using VRC.Core;
 using VRC.SDKBase;
 using VRCSDK2;
+using emmVRC.Objects;
 
 namespace emmVRC
 {
@@ -34,6 +35,7 @@ namespace emmVRC
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
+            if (emmVRCLoader.LoaderCheck.Check() == null || emmVRCLoader.LoaderCheck.Check() != Attributes.ValidLoaderHash) return;
             if (Configuration.JSONConfig.emmVRCNetworkEnabled)
             {
                 // Network connection
@@ -202,6 +204,8 @@ namespace emmVRC
                     Hacks.InfoBarClock.instanceTime = 0;
                 MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
                 MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
+                MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
+
             })));
             // Patch Avatar loading
             Patches.AvatarLoading.Apply();
@@ -221,6 +225,9 @@ namespace emmVRC
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
+            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha1, ActionAction = () => { emmVRCLoader.Logger.LogDebug(VRCPlayer.Method_Public_Static_Boolean_0().ToString()); } });
+            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha2, ActionAction = () => { emmVRCLoader.Logger.LogDebug(VRCPlayer.Method_Public_Static_Boolean_1().ToString()); } });
+            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha3, ActionAction = () => { emmVRCLoader.Logger.LogDebug(VRCPlayer.Method_Public_Static_Boolean_2().ToString()); } });
         }
 
         public static System.Collections.IEnumerator loadNetworked()

@@ -7,9 +7,7 @@ using VRC.Core;
 using VRC.UI;
 using emmVRC.Libraries;
 using emmVRC.Network;
-using System.Collections;
-using Il2CppSystem.Threading.Tasks;
-using Il2CppSystem.Threading;
+
 
 namespace emmVRC.Hacks
 {
@@ -121,8 +119,9 @@ namespace emmVRC.Hacks
             refreshButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
             refreshButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(325f, 110f);
 
-            LoadedAvatars = new List<ApiAvatar>();
+            pageAvatar.transform.Find("AvatarModel").transform.localPosition += new Vector3(0f, 60f, 0f);
 
+            LoadedAvatars = new List<ApiAvatar>();
         }
         public static void Refresh()
         {
@@ -257,6 +256,7 @@ namespace emmVRC.Hacks
                 }
                 if (PublicAvatarList.activeInHierarchy && !menuWasActivated && !menuJustActivated)
                     menuJustActivated = true;*/
+                
                 if (!menuJustActivated)
                 {
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(1f));

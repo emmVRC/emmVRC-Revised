@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace emmVRCLoader.TinyJSON
+namespace TinyJSON
 {
 	[Obfuscation(Exclude = true)]
 	public abstract class Variant : IConvertible

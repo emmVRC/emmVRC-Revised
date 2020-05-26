@@ -9,13 +9,14 @@ namespace emmVRC.Objects
 
         // Feature options
         public bool OpenBetaEnabled = false;
-        public bool UnlimitedFPSEnabled = false;
         public bool RiskyFunctionsEnabled = false;
         public bool GlobalDynamicBonesEnabled = true;
         public bool EveryoneGlobalDynamicBonesEnabled = false;
         public bool emmVRCNetworkEnabled = true;
         public bool GlobalChatEnabled = true;
         public bool AutoInviteMessage = false;
+        public bool VRFlightControls = true;
+        public bool UnlimitedFPSEnabled = false;
         public bool InfoBarDisplayEnabled = true;
         public bool ClockEnabled = true;
         public bool AvatarFavoritesEnabled = true;

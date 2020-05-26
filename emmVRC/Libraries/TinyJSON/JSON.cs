@@ -10,7 +10,7 @@ using UnityEngine.Scripting;
 #endif
 
 
-namespace emmVRCLoader.TinyJSON
+namespace TinyJSON
 {
 	/// <summary>
 	/// Mark members that should be included.

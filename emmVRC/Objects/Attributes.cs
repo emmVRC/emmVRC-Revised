@@ -8,7 +8,8 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "1.0.6";
+        public static string Version = "1.0.7";
         public static bool Debug = false;
+        public static string ValidLoaderHash { get { return "8o1t7DrcDNmUGIMmFhOYWw=="; } }
     }
 }

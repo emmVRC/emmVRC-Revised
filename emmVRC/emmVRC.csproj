@@ -83,6 +83,17 @@
     <Compile Include="Libraries\QuickMenuUtils.cs" />
     <Compile Include="Libraries\RubyButtonAPI.cs" />
     <Compile Include="Libraries\TextBoxer.cs" />
+    <Compile Include="Libraries\TinyJSON\Decoder.cs" />
+    <Compile Include="Libraries\TinyJSON\EncodeOptions.cs" />
+    <Compile Include="Libraries\TinyJSON\Encoder.cs" />
+    <Compile Include="Libraries\TinyJSON\Extensions.cs" />
+    <Compile Include="Libraries\TinyJSON\JSON.cs" />
+    <Compile Include="Libraries\TinyJSON\Types\ProxyArray.cs" />
+    <Compile Include="Libraries\TinyJSON\Types\ProxyBoolean.cs" />
+    <Compile Include="Libraries\TinyJSON\Types\ProxyNumber.cs" />
+    <Compile Include="Libraries\TinyJSON\Types\ProxyObject.cs" />
+    <Compile Include="Libraries\TinyJSON\Types\ProxyString.cs" />
+    <Compile Include="Libraries\TinyJSON\Types\Variant.cs" />
     <Compile Include="Libraries\UnixTime.cs" />
     <Compile Include="Libraries\UserInterfaceUtils.cs" />
     <Compile Include="Main.cs" />
@@ -131,12 +142,6 @@
     <Compile Include="Resources.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\emmVRC-Revised\emmVRCLoader.csproj">
-      <Project>{76f297c1-576d-45bb-8a1c-f50c13b7a3c9}</Project>
-      <Name>emmVRCLoader</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +151,10 @@
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="emmVRCLoader, Version=0.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\Mods\Confused\emmVRCLoader.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -383,6 +392,8 @@
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRCSDKBase.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Libraries\TinyJSON\TinyJSON.csproj" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

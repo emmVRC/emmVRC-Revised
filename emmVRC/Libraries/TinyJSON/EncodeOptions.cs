@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace emmVRCLoader.TinyJSON
+namespace TinyJSON
 {
 	[Obfuscation(Exclude = true)]
 	[Flags]

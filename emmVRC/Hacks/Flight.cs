@@ -58,7 +58,7 @@ namespace emmVRC.Hacks
                         if (FlightEnabled)
                         {
                             var cameraRotation = Camera.main.transform;
-                            if (VRCTrackingManager.Method_Public_Static_Boolean_11()) // VR is enabled
+                            if (VRCTrackingManager.Method_Public_Static_Boolean_11() && Configuration.JSONConfig.VRFlightControls) // VR is enabled
                             {
                                 if (Input.GetAxis("Vertical") != 0)
                                     localPlayer.transform.position += localPlayer.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f;
@@ -74,21 +74,16 @@ namespace emmVRC.Hacks
                                 if (Input.GetAxis("Horizontal") != 0)
                                     localPlayer.transform.position += cameraRotation.transform.right * (Time.deltaTime) * Input.GetAxis("Horizontal") * (Speed.SpeedModified ? Speed.Modifier : 1f) * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f);
                                 if (Input.GetKey(KeyCode.Q))
-                                    localPlayer.transform.position -= new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), 0f);
+                                    localPlayer.transform.position -= new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)) * (Speed.SpeedModified ? Speed.Modifier : 1f), 0f);
                                 if (Input.GetKey(KeyCode.E))
-                                    localPlayer.transform.position += new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)), 0f);
+                                    localPlayer.transform.position += new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)) * (Speed.SpeedModified ? Speed.Modifier : 1f), 0f);
                             }
-
-                            
+                            if (localPlayer.GetComponent<VRCMotionState>() != null)
+                                localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_3();
 
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
                                 localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = !NoclipEnabled;
-                            //if (localPlayer.GetComponent<VRCMotionState>() != null)
-                            //    localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_3();
-                            
-                            
 
-                            //VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Vector3_Quaternion_0(localPlayer.transform.position, localPlayer.transform.rotation);
                             if (NoclipEnabled)
                             {
                                 Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_Static_Vector3_1();
@@ -101,7 +96,7 @@ namespace emmVRC.Hacks
                         }
                     }
                 }
-                yield return new WaitForFixedUpdate();
+                yield return new WaitForEndOfFrame();
 
             }
         }

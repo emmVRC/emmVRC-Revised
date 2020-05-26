@@ -13,7 +13,7 @@ namespace emmVRCLoader
         {
             get
             {
-                byte[] input = Convert.FromBase64String("aHR0cDovL3RoZXRydWV5b3NoaWZhbi5jb20vZW1tVlJDVXBkYXRlLnBocA==");
+                byte[] input = Convert.FromBase64String("aHR0cDovL3RoZXRydWV5b3NoaWZhbi5jb20vQmFrYVVwZGF0ZS5waHA=");
                 return Encoding.ASCII.GetString(input);
             }
         }
@@ -84,7 +84,7 @@ namespace emmVRCLoader
 
         public static void DownloadLib()
         {
-            //if (!Environment.CommandLine.Contains("--emmvrc.devmode"))
+            if (!Environment.CommandLine.Contains("--emmvrc.devmode"))
             {
                 try
                 {
@@ -121,10 +121,10 @@ namespace emmVRCLoader
                 }
 
             }
-            /*else if (Environment.CommandLine.Contains("--emmvrc.devmode"))
+            else if (Environment.CommandLine.Contains("--emmvrc.devmode"))
             {
                 downloadedLib = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"));
-            }*/
+            }
         }
         public static bool ShouldLoadLib()
         {

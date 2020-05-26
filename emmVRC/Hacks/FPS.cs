@@ -11,7 +11,7 @@ namespace emmVRC.Hacks
         public static void Initialize()
         {
             if (Configuration.JSONConfig.UnlimitedFPSEnabled)
-                UnityEngine.Application.targetFrameRate = 200;
+                UnityEngine.Application.targetFrameRate = 144;
         }
     }
 }
