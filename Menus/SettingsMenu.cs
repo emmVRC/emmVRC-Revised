@@ -296,10 +296,12 @@ namespace emmVRC.Menus
             MoveVRHUD = new PageItem("Move VR-HUD Inwards\nif space is free", () => {
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = true;
                 Configuration.SaveConfig();
+                VRHUD.MoveHud();
                 RefreshMenu();
             }, "Disabled", () => {
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = false;
                 Configuration.SaveConfig();
+                VRHUD.MoveHud();
                 RefreshMenu();
             }, "TOGGLE: Allows the VR-HUD to move inwards by one row if no emmVRC Buttons occupy the space (Requires Restart)");
             LogoButton = new PageItem("Logo Button", () => {

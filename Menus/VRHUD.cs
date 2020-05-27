@@ -36,9 +36,7 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().anchorMin += new Vector2(.95f, .125f);
             BackgroundObject.transform.SetParent(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu"), false);
             BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
-            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && !Configuration.JSONConfig.LogoButtonEnabled && Configuration.JSONConfig.FunctionsButtonX != 5) {
-                BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
-            }
+            MoveHud();
             TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
@@ -52,6 +50,16 @@ namespace emmVRC.Menus
 
             Initialized = true;
             MelonLoader.MelonCoroutines.Start(Loop());
+        }
+
+        public static void MoveHud() {
+            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && !Configuration.JSONConfig.LogoButtonEnabled && Configuration.JSONConfig.FunctionsButtonX != 5) {
+                BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
+                Moved = true;
+            }
+            if (!Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Moved) {
+                BackgroundObject.GetComponent<RectTransform>().position += new Vector3(0.125f, 0f, 0f);
+            }
         }
 
         private static IEnumerator Loop()
