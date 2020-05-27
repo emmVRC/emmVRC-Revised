@@ -22,6 +22,8 @@ namespace emmVRC.Menus
         private static GameObject TextObject;
         private static bool keyFlag;
         public static bool UIExpanded = false;
+        public static bool Initialized = false;
+        public static bool enabled = true;
         public static void Initialize()
         {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing HUD canvas");
@@ -62,6 +64,7 @@ namespace emmVRC.Menus
 
             CanvasObject.SetActive(false);
 
+            Initialized = true;
             MelonLoader.MelonCoroutines.Start(Loop());
         }
 
@@ -69,7 +72,7 @@ namespace emmVRC.Menus
         {
             while (true)
             {
-                if (Configuration.JSONConfig.HUDEnabled && Resources.uiMinimized != null)
+                if (Configuration.JSONConfig.HUDEnabled && Resources.uiMinimized != null && enabled)
                 {
                     CanvasObject.SetActive(true);
                 }
@@ -152,7 +155,7 @@ namespace emmVRC.Menus
             string result;
             if (apiuser == VRC.Core.APIUser.CurrentUser)
             {
-                result = "<b><color=white>" + apiuser.displayName + "</color></b>";
+                result = "<b><color=aqua>" + apiuser.displayName + "</color></b>";
             }
             else if (apiuser.isFriend)
             {
@@ -164,7 +167,7 @@ namespace emmVRC.Menus
             }
             else
             {
-                result = "<b><color=cyan>" + apiuser.displayName + "</color></b>";
+                result = "<b><color=white>" + apiuser.displayName + "</color></b>";
             }
             return result;
         }

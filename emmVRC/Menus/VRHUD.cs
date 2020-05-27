@@ -19,6 +19,9 @@ namespace emmVRC.Menus
         private static GameObject BackgroundObject;
         private static GameObject TextObject;
         private static Transform ShortcutMenu;
+        public static bool Initialized = false;
+        public static bool enabled = true;
+        public static bool Moved = false;
         public static void Initialize()
         {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing HUD canvas");
@@ -33,6 +36,9 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().anchorMin += new Vector2(.95f, .125f);
             BackgroundObject.transform.SetParent(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu"), false);
             BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
+            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && !Configuration.JSONConfig.LogoButtonEnabled && Configuration.JSONConfig.FunctionsButtonX != 5) {
+                BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
+            }
             TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
@@ -44,6 +50,7 @@ namespace emmVRC.Menus
             TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
             ShortcutMenu = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu");
 
+            Initialized = true;
             MelonLoader.MelonCoroutines.Start(Loop());
         }
 
@@ -51,7 +58,7 @@ namespace emmVRC.Menus
         {
             while (true)
             {
-                if (Configuration.JSONConfig.HUDEnabled && Resources.uiMinimized != null)
+                if (Configuration.JSONConfig.HUDEnabled && Resources.uiMinimized != null && enabled)
                 {
                     BackgroundObject.SetActive(true);
                 }
@@ -111,7 +118,7 @@ namespace emmVRC.Menus
             string result;
             if (apiuser == VRC.Core.APIUser.CurrentUser)
             {
-                result = "<b><color=white>" + apiuser.displayName + "</color></b>";
+                result = "<b><color=aqua>" + apiuser.displayName + "</color></b>";
             }
             else if (apiuser.isFriend)
             {
@@ -123,7 +130,7 @@ namespace emmVRC.Menus
             }
             else
             {
-                result = "<b><color=cyan>" + apiuser.displayName + "</color></b>";
+                result = "<b><color=white>" + apiuser.displayName + "</color></b>";
             }
             return result;
         }
