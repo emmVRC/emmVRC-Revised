@@ -23,8 +23,6 @@ namespace emmVRC.Objects
         public bool MasterIconEnabled = true;
         public bool LogoButtonEnabled = true;
         public bool HUDEnabled = true;
-        public bool VRHUDInDesktop = false;
-        public bool MoveVRHUDIfSpaceFree = true;
         public bool ForceRestartButtonEnabled = true;
 
         // FOV value

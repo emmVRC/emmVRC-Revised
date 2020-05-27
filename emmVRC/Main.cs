@@ -163,7 +163,7 @@ namespace emmVRC
             Managers.MessageManager.Initialize();
 
             // Initialize the emmVRC HUD
-            if (Configuration.JSONConfig.VRHUDInDesktop || VRCTrackingManager.Method_Public_Static_Boolean_11())
+            if (VRCTrackingManager.Method_Public_Static_Boolean_11())
                 Menus.VRHUD.Initialize();
             else
                 Menus.DesktopHUD.Initialize();
