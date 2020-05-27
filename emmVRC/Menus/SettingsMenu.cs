@@ -31,6 +31,8 @@ namespace emmVRC.Menus
         private static PageItem MasterIcon;
         private static PageItem LogoButton;
         private static PageItem HUD;
+        private static PageItem ChooseHUD;
+        private static PageItem MoveVRHUD;
         private static PageItem ForceRestart;
         private static PageItem UnlimitedFPS;
 
@@ -263,30 +265,54 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the crown icon above the instance master");
-            LogoButton = new PageItem("Logo Button", () =>
-            {
+            HUD = new PageItem("HUD", () => {
+                Configuration.JSONConfig.HUDEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () => {
+                Configuration.JSONConfig.HUDEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the HUD, which shows players in the room and instance information");
+            ChooseHUD = new PageItem("Use the VR-HUD in\nDesktop Mode", () => {
+                if (!VRHUD.Initialized) {
+                    VRHUD.Initialize();
+                }
+                DesktopHUD.enabled = false;
+                VRHUD.enabled = true;
+                Configuration.JSONConfig.VRHUDInDesktop = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Use the Desktop-HUD", () => {
+                if (!DesktopHUD.Initialized) {
+                    DesktopHUD.Initialize();
+                }
+                VRHUD.enabled = false;
+                DesktopHUD.enabled = true;
+                Configuration.JSONConfig.VRHUDInDesktop = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Switch between the In-Menu VR-HUD or On-Screen Desktop-HUD while in Desktop Mode");
+            MoveVRHUD = new PageItem("Move VR-HUD Inwards\nif space is free", () => {
+                Configuration.JSONConfig.MoveVRHUDIfSpaceFree = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () => {
+                Configuration.JSONConfig.MoveVRHUDIfSpaceFree = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Allows the VR-HUD to move inwards by one row if no emmVRC Buttons occupy the space (Requires Restart)");
+            LogoButton = new PageItem("Logo Button", () => {
                 Configuration.JSONConfig.LogoButtonEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "Disabled", () =>
-            {
+            }, "Disabled", () => {
                 Configuration.JSONConfig.LogoButtonEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "TOGGLE: Enables the emmVRC Logo on your Quick Menu, that takes you to the Discord.");
-            HUD = new PageItem("HUD", () =>
-            {
-                Configuration.JSONConfig.HUDEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.HUDEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "TOGGLE: Enables the HUD, which shows players in the room and instance information in Desktop");
             ForceRestart = new PageItem("Force Restart\non Loading Screen", () =>
             {
                 Configuration.JSONConfig.ForceRestartButtonEnabled = true;
@@ -313,12 +339,12 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(InfoBar);
             baseMenu.pageItems.Add(Clock);
             baseMenu.pageItems.Add(MasterIcon);
-            baseMenu.pageItems.Add(LogoButton);
             baseMenu.pageItems.Add(HUD);
+            baseMenu.pageItems.Add(ChooseHUD);
+            baseMenu.pageItems.Add(MoveVRHUD);
+            baseMenu.pageItems.Add(LogoButton);
             baseMenu.pageItems.Add(ForceRestart);
             baseMenu.pageItems.Add(UnlimitedFPS);
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
 
             UIColorChanging = new PageItem("UI Color\nChange", () =>
             {
@@ -802,8 +828,10 @@ namespace emmVRC.Menus
                 InfoBar.SetToggleState(Configuration.JSONConfig.InfoBarDisplayEnabled);
                 Clock.SetToggleState(Configuration.JSONConfig.ClockEnabled);
                 MasterIcon.SetToggleState(Configuration.JSONConfig.MasterIconEnabled);
-                LogoButton.SetToggleState(Configuration.JSONConfig.LogoButtonEnabled);
                 HUD.SetToggleState(Configuration.JSONConfig.HUDEnabled);
+                ChooseHUD.SetToggleState(Configuration.JSONConfig.VRHUDInDesktop);
+                MoveVRHUD.SetToggleState(Configuration.JSONConfig.MoveVRHUDIfSpaceFree);
+                LogoButton.SetToggleState(Configuration.JSONConfig.LogoButtonEnabled);
                 ForceRestart.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
                 UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
 
