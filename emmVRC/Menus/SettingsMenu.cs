@@ -274,7 +274,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the HUD, which shows players in the room and instance information");
-            ChooseHUD = new PageItem("Use the VR-HUD in\nDesktop Mode", () => {
+            ChooseHUD = new PageItem("Show Quick Menu HUD\n in desktop", () => {
                 if (!VRHUD.Initialized) {
                     VRHUD.Initialize();
                 }
@@ -283,7 +283,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.VRHUDInDesktop = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "Use the Desktop-HUD", () => {
+            }, "Disabled", () => {
                 if (!DesktopHUD.Initialized) {
                     DesktopHUD.Initialize();
                 }
@@ -292,8 +292,8 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.VRHUDInDesktop = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Switch between the In-Menu VR-HUD or On-Screen Desktop-HUD while in Desktop Mode");
-            MoveVRHUD = new PageItem("Move VR-HUD Inwards\nif space is free", () => {
+            }, "TOGGLE: Switch between the Quick Menu HUD or normal HUD while in Desktop Mode");
+            MoveVRHUD = new PageItem("Closer Quick Menu\nHUD", () => {
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -301,7 +301,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Allows the VR-HUD to move inwards by one row if no emmVRC Buttons occupy the space (Requires Restart)");
+            }, "TOGGLE: Allows the Quick Menu HUD to move inwards by one row if no emmVRC Buttons occupy the space (requires restart)");
             LogoButton = new PageItem("Logo Button", () => {
                 Configuration.JSONConfig.LogoButtonEnabled = true;
                 Configuration.SaveConfig();

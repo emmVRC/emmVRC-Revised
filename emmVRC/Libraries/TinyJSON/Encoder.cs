@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 
 
-namespace TinyJSON
+namespace emmVRC.TinyJSON
 {
 	[Obfuscation(Exclude = true)]
 	public sealed class Encoder

@@ -103,7 +103,7 @@ namespace emmVRC.Libraries
                     shortcutMenu = quickmenu.transform.Find("UserInteractMenu").gameObject;
 
 
-                FieldInfo[] fis = Il2CppTypeOf<QuickMenu>.Type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppTypeOf<GameObject>.Type).ToArray();
+                FieldInfo[] fis = Il2CppType.Of<QuickMenu>().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppType.Of<GameObject>()).ToArray();
                 //emmVRCLoader.Logger.Log("[QuickMenuUtils] GameObject Fields in QuickMenu:");
                 int count = 0;
                 foreach (FieldInfo fi in fis)

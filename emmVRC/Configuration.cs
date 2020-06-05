@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TinyJSON;
 using emmVRC.Objects;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +33,7 @@ namespace emmVRC
         }
         public static void SaveConfig()
         {
-            File.WriteAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"), TinyJSON.Encoder.Encode(JSONConfig, EncodeOptions.PrettyPrint));
+            File.WriteAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"), TinyJSON.Encoder.Encode(JSONConfig, TinyJSON.EncodeOptions.PrettyPrint));
         }
         public static Color menuColor()
         {

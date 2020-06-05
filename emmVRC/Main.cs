@@ -35,12 +35,17 @@ namespace emmVRC
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
-            if (emmVRCLoader.LoaderCheck.Check() == null || emmVRCLoader.LoaderCheck.Check() != Attributes.ValidLoaderHash) return;
             if (Configuration.JSONConfig.emmVRCNetworkEnabled)
             {
                 // Network connection
                 emmVRCLoader.Logger.Log("Initializing network...");
-                NetworkClient.InitializeClient();
+                try
+                {
+                    NetworkClient.InitializeClient();
+                } catch (Exception ex)
+                {
+                    emmVRCLoader.Logger.LogError("Error occured while initializing network: " + ex.ToString());
+                }
             }
             // Initialize the Debug manager
             Managers.DebugManager.Initialize();
@@ -159,11 +164,14 @@ namespace emmVRC
             // Change the target FPS to 200
             Hacks.FPS.Initialize();
 
+            // Initialize the Volume hooker
+            Hacks.Volume.Initialize();
+
             // Initialize the message system
             Managers.MessageManager.Initialize();
 
             // Initialize the emmVRC HUD
-            if (Configuration.JSONConfig.VRHUDInDesktop || VRCTrackingManager.Method_Public_Static_Boolean_11())
+            if (Configuration.JSONConfig.VRHUDInDesktop || VRCTrackingManager.Method_Public_Static_Boolean_6())
                 Menus.VRHUD.Initialize();
             else
                 Menus.DesktopHUD.Initialize();
@@ -207,9 +215,7 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
 
             })));
-            // Patch Avatar loading
-            Patches.AvatarLoading.Apply();
-
+            
             // Initialize Avatar Permissions
             AvatarPermissionManager.Initialize();
 
@@ -225,9 +231,7 @@ namespace emmVRC
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
-            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha1, ActionAction = () => { emmVRCLoader.Logger.LogDebug(VRCPlayer.Method_Public_Static_Boolean_0().ToString()); } });
-            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha2, ActionAction = () => { emmVRCLoader.Logger.LogDebug(VRCPlayer.Method_Public_Static_Boolean_1().ToString()); } });
-            DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha3, ActionAction = () => { emmVRCLoader.Logger.LogDebug(VRCPlayer.Method_Public_Static_Boolean_2().ToString()); } });
+
         }
 
         public static System.Collections.IEnumerator loadNetworked()

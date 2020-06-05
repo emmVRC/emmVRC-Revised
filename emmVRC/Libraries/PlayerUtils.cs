@@ -1,5 +1,4 @@
-﻿using NET_SDK;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,12 +13,13 @@ namespace emmVRC.Libraries
         private static System.Action<Player> requestedAction;
         public static void GetEachPlayer(System.Action<Player> act)
         {
-            if (getAllPlayersCache == null)
-                getAllPlayersCache = UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action<Player>>((System.Action<Player>)((Player plr) => {
-                    requestedAction.Invoke(plr);
-                }));
+
             requestedAction = act;
-            PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ForEach(getAllPlayersCache);
+            foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
+            {
+                requestedAction.Invoke(plr);
+            }
+            //PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ForEach(getAllPlayersCache);
         }
     }
 }

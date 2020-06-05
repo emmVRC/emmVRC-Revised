@@ -3,7 +3,7 @@ using System.Text;
 using System;
 using System.Reflection;
 
-namespace TinyJSON
+namespace emmVRC.TinyJSON
 {
 	public sealed class Decoder : IDisposable
 	{

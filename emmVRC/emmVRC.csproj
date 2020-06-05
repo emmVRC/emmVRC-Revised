@@ -54,6 +54,7 @@
     <Compile Include="Hacks\Nameplates.cs" />
     <Compile Include="Hacks\SocialMessenger.cs" />
     <Compile Include="Hacks\UserInteractMenuButtons.cs" />
+    <Compile Include="Hacks\Volume.cs" />
     <Compile Include="Hacks\WorldNotes.cs" />
     <Compile Include="Hacks\PlayerNotes.cs" />
     <Compile Include="Hacks\ShortcutMenuButtons.cs" />
@@ -152,9 +153,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="emmVRCLoader, Version=0.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="emmVRCLoader, Version=0.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Steam Library\steamapps\common\VRChat\Mods\Confused\emmVRCLoader.dll</HintPath>
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\Mods\emmVRCLoader.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Reflection;
 using Il2CppSystem.Reflection;
-using NET_SDK.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using UnhollowerBaseLib;
-using NET_SDK;
 using MelonLoader;
 using UnityEngine;
 using UnhollowerRuntimeLib;
-using NET_SDK.Harmony;
 
 namespace emmVRC.Libraries
 {
@@ -20,22 +17,29 @@ namespace emmVRC.Libraries
     {
         private delegate void AvatarInstantiatedDelegate(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded);
         private static AvatarInstantiatedDelegate onAvatarInstantiatedDelegate;
+        private delegate void PortalEnteredDelegate(IntPtr instance);
+        private static PortalEnteredDelegate onPortalEnteredDelegate;
+        public static bool portalsBlocked = false;
 
-        private delegate void PlayerCanUseStationDelegate(IntPtr @this, IntPtr player, bool value);
-        private static PlayerCanUseStationDelegate onPlayerCanUseStationDelegate;
 
-
-        public static void Hook(IntPtr target, IntPtr detour)
+        /*public static void Hook(IntPtr target, IntPtr detour)
         {
             typeof(Imports).GetMethod("Hook", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).Invoke(null, new object[] { target, detour });
-        }
-        
+        }*/
+
         public unsafe static void Initialize()
         {
-            IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoObVoInBeInGaUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
-            Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
+            IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
+            Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
             onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
+
+            IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
+
+            var original = *(IntPtr*)funcToEnterPortal;
+            Imports.Hook((IntPtr)(&original), Marshal.GetFunctionPointerForDelegate(new Action<IntPtr>(OnPortalEntered)));
+            onPortalEnteredDelegate = Marshal.GetDelegateForFunctionPointer<PortalEnteredDelegate>(original);
         }
+        
         private static void OnAvatarInstantiated(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded)
         {
             onAvatarInstantiatedDelegate(@this, avatarPtr, avatarDescriptorPtr, loaded);
@@ -53,6 +57,13 @@ namespace emmVRC.Libraries
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
         }
-
+        private static void OnPortalEntered(IntPtr @this)
+        {
+            if (@this != IntPtr.Zero)
+            {
+                if (!portalsBlocked)
+                    onPortalEnteredDelegate(@this);
+            }
+        }
     }
 }

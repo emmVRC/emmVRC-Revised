@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using VRC;
 using VRC.Core;
 
 namespace emmVRC.Menus
@@ -106,14 +107,22 @@ namespace emmVRC.Menus
                         if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                         {
                             int tempCount = 0;
-                            PlayerUtils.GetEachPlayer((VRC.Player plr) =>
-                            {
-                                if (tempCount != 22)
+                            if (PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
+                                try
                                 {
-                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + plr.field_Private_APIUser_0.displayName + "\n";
-                                    tempCount++;
+                                    foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
+                                    {
+                                        if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
+                                            if (tempCount != 22)
+                                            {
+                                                userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + plr.field_Private_APIUser_0.displayName + "\n";
+                                                tempCount++;
+                                            }
+                                    }
+                                } catch (Exception ex)
+                                {
+                                    ex = new Exception();
                                 }
-                            });
                             worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
                             worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
                             if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)

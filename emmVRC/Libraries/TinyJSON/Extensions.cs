@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace TinyJSON
+namespace emmVRC.TinyJSON
 {
 
 	[Obfuscation(Exclude = true)]

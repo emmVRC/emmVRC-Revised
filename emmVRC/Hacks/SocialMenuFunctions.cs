@@ -5,7 +5,6 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using VRC.Social;
 using VRC;
 using VRC.Core;
 using VRC.UI;
@@ -23,12 +22,15 @@ namespace emmVRC.Hacks
         private static GameObject UserNotes;
         private static GameObject TeleportButton;
         private static GameObject ToggleBlockButton;
+        private static GameObject PortalToUserButton;
+
+        private static int PortalCooldownTimer = 0;
 
         public static void Initialize()
         {
             SocialFunctionsButton = GameObject.Instantiate(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists/PlaylistsButton"), GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").transform);
             SocialFunctionsButton.transform.SetParent(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/").transform);
-            GameObject.Destroy(SocialFunctionsButton.transform.Find("Image/Icon_New"));
+            GameObject.Destroy(SocialFunctionsButton.transform.Find("Image/Icon_New").gameObject);
             SocialFunctionsButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Functions";
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
             SocialFunctionsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(50, 150);
@@ -54,6 +56,11 @@ namespace emmVRC.Hacks
             ToggleBlockButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Block";
             ToggleBlockButton.SetActive(false);
 
+            PortalToUserButton = GameObject.Instantiate(TeleportButton, SocialFunctionsButton.transform.parent);
+            PortalToUserButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            PortalToUserButton.GetComponentInChildren<Text>().text = "Drop Portal";
+            PortalToUserButton.SetActive(false);
+
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
                 UserSendMessage.SetActive(!UserSendMessage.activeSelf);
                 UserNotes.SetActive(!UserNotes.activeSelf);
@@ -62,6 +69,10 @@ namespace emmVRC.Hacks
                     TeleportButton.SetActive(!TeleportButton.activeSelf);
                 else
                     TeleportButton.SetActive(false);
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
+                    PortalToUserButton.SetActive(!PortalToUserButton.activeSelf);
+                else
+                    PortalToUserButton.SetActive(false);
                 GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").activeSelf);
                 GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
             })));
@@ -88,11 +99,53 @@ namespace emmVRC.Hacks
                     {
                         VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
                     }
-                    QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_0();
+                    QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_2();
+                }
+            })));
+            PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
+                {try
+                    {
+                        if (PortalCooldownTimer == 0)
+                        {
+                            string[] instanceInfo = QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Split(':');
+                            emmVRCLoader.Logger.Log(instanceInfo[1]);
+                            GameObject portal = VRC.SDKBase.Networking.Instantiate(VRC.SDKBase.VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position + VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.forward * 2, VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation);
+                            VRC.SDKBase.Networking.RPC(VRC.SDKBase.RPC.Destination.AllBufferOne, portal, "ConfigurePortal", new Il2CppSystem.Object[]
+                            {
+                        (Il2CppSystem.String)instanceInfo[0],
+                        (Il2CppSystem.String)instanceInfo[1],
+                        new Il2CppSystem.Int32
+                        {
+                            m_value = 0
+                        }.BoxIl2CppObject()
+                            });
+                            PortalCooldownTimer = 5;
+                            MelonLoader.MelonCoroutines.Start(PortalCooldown());
+                        }
+                        else
+                        {
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait "+PortalCooldownTimer+" seconds before dropping another portal.", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); })));
+                        }
+                    } catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
+                }
+                else
+                {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You cannot drop a portal to this user.", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); })));
                 }
             })));
 
             MelonLoader.MelonCoroutines.Start(Loop());
+        }
+        public static IEnumerator PortalCooldown() { 
+        while (PortalCooldownTimer > 0)
+            {
+                yield return new WaitForSeconds(1f);
+                PortalCooldownTimer--;
+            }
         }
         private static IEnumerator Loop()
         {
@@ -107,6 +160,7 @@ namespace emmVRC.Hacks
                         UserNotes.SetActive(false);
                         TeleportButton.SetActive(false);
                         ToggleBlockButton.SetActive(false);
+                        PortalToUserButton.SetActive(false);
                         GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(true);
                         GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(true);
                     }

@@ -19,11 +19,11 @@ namespace emmVRC.Libraries.Extensions.UnityEngine
         public static void Apply(IntPtr instance, bool updateMipmaps = true, bool makeNoLongerReadable = false)
         {
             if (method_Apply_ptr == null)
-                method_Apply_ptr = NET_SDK.IL2CPP.il2cpp_resolve_icall(NET_SDK.IL2CPP.StringToIntPtr("UnityEngine.Cubemap::Apply(System.Boolean,System.Boolean)"));
+                method_Apply_ptr = UnhollowerBaseLib.IL2CPP.il2cpp_resolve_icall("UnityEngine.Cubemap::Apply(System.Boolean,System.Boolean)");
             if (method_Apply_ptr != IntPtr.Zero)
                 CubeMap_Apply = (CubeMap_Apply_Delegate)Marshal.GetDelegateForFunctionPointer(method_Apply_ptr, typeof(CubeMap_Apply_Delegate));
             if (CubeMap_Apply != null)
-                CubeMap_Apply(instance,updateMipmaps, makeNoLongerReadable);
+                CubeMap_Apply(instance, updateMipmaps, makeNoLongerReadable);
         }
     }
 }

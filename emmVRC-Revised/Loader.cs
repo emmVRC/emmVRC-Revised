@@ -1,7 +1,5 @@
 ﻿using MelonLoader;
 using System.IO;
-using NET_SDK;
-using NET_SDK.Reflection;
 using System.Reflection;
 
 namespace emmVRCLoader
@@ -12,7 +10,7 @@ namespace emmVRCLoader
         public const string Name = "emmVRCLoader";
         public const string Author = "The emmVRC Team";
         public const string Company = "emmVRC";
-        public const string Version = "0.0.4";
+        public const string Version = "0.0.5";
         public const string DownloadLink = "https://www.thetrueyoshifan.com/downloads/emmVRCLoader.dll";
     }
     [Obfuscation(Exclude = true)]

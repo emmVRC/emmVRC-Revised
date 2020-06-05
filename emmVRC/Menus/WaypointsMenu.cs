@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
 using UnityEngine;
-using TinyJSON;
 
 namespace emmVRC.Menus
 {

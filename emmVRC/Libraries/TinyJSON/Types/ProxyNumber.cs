@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace TinyJSON
+namespace emmVRC.TinyJSON
 {
 	[Obfuscation(Exclude = true)]
 	public sealed class ProxyNumber : Variant

@@ -1,5 +1,4 @@
-﻿using NET_SDK;
-using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -45,7 +44,6 @@ namespace emmVRC.Libraries
         private static AssetBundle LoadFromFile_Internal(string path, uint crc, ulong offset)
         {
             if (!init) Init();
-
             IntPtr r = method_LoadFromFile_internal(IL2CPP.StringToIntPtr(path), crc, offset);
             return r == IntPtr.Zero ? null : new AssetBundle(r);
         }
@@ -115,3 +113,4 @@ namespace emmVRC.Libraries
         }
     }
 }
+*/

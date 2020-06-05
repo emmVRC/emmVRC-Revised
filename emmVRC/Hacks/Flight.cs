@@ -32,12 +32,20 @@ namespace emmVRC.Hacks
                 {
                     if (localPlayer == null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject != null)
                         localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject;
-                    if (player == null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+                    if (player == null && RoomManager.field_Internal_Static_ApiWorld_0 != null && PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
                     {
-                        PlayerUtils.GetEachPlayer((Player plr) => {
-                            if (plr.field_Private_APIUser_0.id == APIUser.CurrentUser.id)
-                                player = plr;
-                        });
+                        try
+                        {
+                            foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
+                            {
+                                if (plr != null && plr.field_Private_APIUser_0 != null)
+                                    if (plr.field_Private_APIUser_0.id == APIUser.CurrentUser.id)
+                                        player = plr;
+                            }
+                        } catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
                     }
                     else
                     {
@@ -58,7 +66,7 @@ namespace emmVRC.Hacks
                         if (FlightEnabled)
                         {
                             var cameraRotation = Camera.main.transform;
-                            if (VRCTrackingManager.Method_Public_Static_Boolean_11() && Configuration.JSONConfig.VRFlightControls) // VR is enabled
+                            if (VRCTrackingManager.Method_Public_Static_Boolean_6() && Configuration.JSONConfig.VRFlightControls) // VR is enabled
                             {
                                 if (Input.GetAxis("Vertical") != 0)
                                     localPlayer.transform.position += localPlayer.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f;
@@ -86,8 +94,8 @@ namespace emmVRC.Hacks
 
                             if (NoclipEnabled)
                             {
-                                Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_Static_Vector3_1();
-                                Quaternion thing2 = localPlayer.transform.rotation * Quaternion.Inverse(VRCTrackingManager.Method_Public_Static_Quaternion_0());
+                                Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_Static_Vector3_2();
+                                Quaternion thing2 = localPlayer.transform.rotation * Quaternion.Inverse(VRCTrackingManager.Method_Public_Static_Quaternion_2());
                                 VRCTrackingManager.Method_Public_Static_Void_Vector3_Quaternion_0(thing, thing2);
                             }
                             if (localPlayer.GetComponent<InputStateController>() != null)

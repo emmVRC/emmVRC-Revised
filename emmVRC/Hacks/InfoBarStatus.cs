@@ -22,7 +22,7 @@ namespace emmVRC.Hacks
             Transform transform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/BuildNumText");
             if (transform != null)
             {
-                Transform transform2 = new GameObject("emmVRCStatus", new [] { Il2CppTypeOf<RectTransform>.Type, Il2CppTypeOf<Text>.Type }).transform;
+                Transform transform2 = new GameObject("emmVRCStatus", new [] { Il2CppType.Of<RectTransform>(), Il2CppType.Of<Text>() }).transform;
                 transform2.SetParent(transform.parent, false);
                 transform2.SetSiblingIndex(transform.GetSiblingIndex() + 1);
                 emmVRCStatusText = transform2.GetComponent<Text>();

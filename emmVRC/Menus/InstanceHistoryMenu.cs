@@ -15,12 +15,23 @@ namespace emmVRC.Menus
     public class InstanceHistoryMenu
     {
         public static PaginatedMenu baseMenu;
+        private static QMSingleButton clearInstances;
         private static List<SerializedWorld> previousInstances;
 
         public static void Initialize()
         {
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 201945, 104894, "Instance\nHistory", "", null);
             baseMenu.menuEntryButton.DestroyMe();
+            clearInstances = new QMSingleButton(baseMenu.menuBase, 5, 1, "<color=#FFCCBB>Clear\nInstances</color>", () => {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Instance History", "Are you sure you want to clear the instance history? All previously joined instances will be lost!", "Yes", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => {
+                    previousInstances.Clear();
+                    SaveInstances();
+                    LoadMenu();
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                })), "No", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                })));
+            }, "Clears the instance history of all previous instances");
             previousInstances = new List<SerializedWorld>();
             if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/instancehistory.emm")))
             {
@@ -66,22 +77,6 @@ namespace emmVRC.Menus
                 {
                     new PortalInternal().Method_Private_Void_String_String_0(pastInstance.WorldID, pastInstance.WorldTags);
                 }, pastInstance.WorldName + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
-            }
-
-
-            if (previousInstances.Count != 0)
-            {
-                baseMenu.pageItems.Add(PageItem.Space());
-                baseMenu.pageItems.Add(new PageItem("<color=#FFCCBB>Clear\nInstances</color>", () => {
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Instance History", "Are you sure you want to clear the instance history? All previously joined instances will be lost!", "Yes", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => {
-                        previousInstances.Clear();
-                        SaveInstances();
-                        LoadMenu();
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    })), "No", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    })));
-                }, "Clears the instance history of all previous instances"));
             }
         }
         public static void SaveInstances()

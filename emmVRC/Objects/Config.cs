@@ -85,6 +85,16 @@ namespace emmVRC.Objects
         public bool NameplatesVisible = true;
         public bool UIVisible = true;
 
+        // Hook-ins for the VRChat volume controls
+        public float UIVolume = 0f;
+        public bool UIVolumeMute = false;
+        public float WorldVolume = 0f;
+        public bool WorldVolumeMute = false;
+        public float VoiceVolume = 0f;
+        public bool VoiceVolumeMute = false;
+        public float AvatarVolume = 0f;
+        public bool AvatarVolumeMute = false;
+
         public int[] FlightKeybind = new int[2] {  102, 306 };
         public int[] NoclipKeybind = new int[2] {  109, 306 };
         public int[] SpeedKeybind = new int[2] {  103, 306 };
