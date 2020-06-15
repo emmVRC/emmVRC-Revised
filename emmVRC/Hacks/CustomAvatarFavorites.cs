@@ -15,11 +15,14 @@ namespace emmVRC.Hacks
     {
 
         internal static GameObject PublicAvatarList;
+        internal static UiAvatarList NewAvatarList;
         private static GameObject avText;
         private static GameObject ChangeButton;
         private static Button.ButtonClickedEvent baseChooseEvent;
         private static GameObject FavoriteButton;
         private static GameObject FavoriteButtonNew;
+        private static Button FavoriteButtonNewButton;
+        private static Text FavoriteButtonNewText;
         private static GameObject pageAvatar;
         private static PageAvatar currPageAvatar;
         private static bool error = false;
@@ -38,8 +41,9 @@ namespace emmVRC.Hacks
             pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
             FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Favorite Button").gameObject;
             FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
-            FavoriteButtonNew.GetComponent<Button>().onClick.RemoveAllListeners();
-            FavoriteButtonNew.GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() =>
+            FavoriteButtonNewButton = FavoriteButtonNew.GetComponent<Button>();
+            FavoriteButtonNewButton.onClick.RemoveAllListeners();
+            FavoriteButtonNewButton.onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() =>
             {
 
                 ApiAvatar apiAvatar = pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0;
@@ -82,6 +86,7 @@ namespace emmVRC.Hacks
             })));
 
             FavoriteButtonNew.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0, 165f);
+            FavoriteButtonNewText = FavoriteButtonNew.GetComponentInChildren<Text>();
             GameObject oldPublicAvatarList;
             oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
@@ -107,8 +112,8 @@ namespace emmVRC.Hacks
             avText = PublicAvatarList.transform.Find("Button").gameObject;
             avText.GetComponentInChildren<Text>().text = "(0) emmVRC Favorites";
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
-
-            PublicAvatarList.GetComponent<UiAvatarList>().clearUnseenListOnCollapse = false;
+            NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
+            NewAvatarList.clearUnseenListOnCollapse = false;
             GameObject refreshButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
             refreshButton.GetComponentInChildren<Text>().text = "↻";
             refreshButton.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -238,7 +243,7 @@ namespace emmVRC.Hacks
         {
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
             yield return new WaitForSeconds(delay);
-            PublicAvatarList.GetComponent<UiAvatarList>().RenderElement(LoadedAvatars);
+            NewAvatarList.RenderElement(LoadedAvatars);
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
         }
         internal static void OnUpdate()
@@ -246,8 +251,8 @@ namespace emmVRC.Hacks
             if (PublicAvatarList == null || FavoriteButtonNew == null) return;
             if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
             {
-                PublicAvatarList.GetComponent<UiAvatarList>().collapsedCount = 500;
-                PublicAvatarList.GetComponent<UiAvatarList>().expandedCount = 500;
+                NewAvatarList.collapsedCount = 500;
+                NewAvatarList.expandedCount = 500;
 
                 /*if (!PublicAvatarList.activeInHierarchy)
                 {
@@ -262,13 +267,13 @@ namespace emmVRC.Hacks
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(1f));
                     menuJustActivated = true;
                 }
-                if (menuJustActivated && (PublicAvatarList.GetComponent<UiAvatarList>().pickers.Count < LoadedAvatars.Count || PublicAvatarList.GetComponent<UiAvatarList>().isOffScreen))
+                if (menuJustActivated && (NewAvatarList.pickers.Count < LoadedAvatars.Count || NewAvatarList.isOffScreen))
                     menuJustActivated = false;
-                PublicAvatarList.GetComponent<UiAvatarList>().clearUnseenListOnCollapse = false;
-                PublicAvatarList.GetComponent<UiAvatarList>().deferInitialFetch = true;
-                PublicAvatarList.GetComponent<UiAvatarList>().hideElementsWhenContracted = false;
-                PublicAvatarList.GetComponent<UiAvatarList>().hideWhenEmpty = false;
-                PublicAvatarList.GetComponent<UiAvatarList>().usePagination = false;
+                NewAvatarList.clearUnseenListOnCollapse = false;
+                NewAvatarList.deferInitialFetch = true;
+                NewAvatarList.hideElementsWhenContracted = false;
+                NewAvatarList.hideWhenEmpty = false;
+                NewAvatarList.usePagination = false;
                 if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
                 {
                     bool flag = false;
@@ -282,11 +287,11 @@ namespace emmVRC.Hacks
 
                     if (!flag)
                     {
-                        FavoriteButtonNew.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Favorite";
+                        FavoriteButtonNewText.text = "<color=#FF69B4>emmVRC</color> Favorite";
                     }
                     else
                     {
-                        FavoriteButtonNew.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Unfavorite";
+                        FavoriteButtonNewText.text = "<color=#FF69B4>emmVRC</color> Unfavorite";
                     }
                 }
             }

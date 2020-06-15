@@ -16,6 +16,76 @@ using VRC.Core;
 
 namespace emmVRC.Menus
 {
+    public class CommonHUD
+    {
+        public static string RenderPlayerList()
+        {
+            string userList = "";
+            if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
+            {
+                int tempCount = 0;
+                if (PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
+                    try
+                    {
+                        foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
+                        {
+                            if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
+                                if (tempCount != 22)
+                                {
+                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + ColorUtility.ToHtmlStringRGB(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.displayName + "</color>\n";
+                                    tempCount++;
+                                }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex = new Exception();
+                    }
+            }
+            return userList;
+        }
+
+        public static string RenderWorldInfo()
+        {
+            string positionstr = "";
+            string worldinfo = "";
+            if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
+            {
+                worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
+                worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
+                if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
+                {
+                    positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
+                    positionstr += "<b><color=lime>Y: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.y * 10)) / 10 + "</color></b>  ";
+                    positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
+                }
+            }
+            return positionstr + "\n\n" + worldinfo;
+        }
+        public static GameObject[] InitializeHUD(Transform parent)
+        {
+            GameObject BackgroundObject = new GameObject("Background");
+
+            BackgroundObject.AddComponent<CanvasRenderer>();
+
+            BackgroundObject.AddComponent<RawImage>();
+            BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
+            BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
+            BackgroundObject.transform.SetParent(parent, false);
+            BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
+            GameObject TextObject = new GameObject("Text");
+            TextObject.AddComponent<CanvasRenderer>();
+            TextObject.transform.SetParent(BackgroundObject.transform, false);
+            Text text = TextObject.AddComponent<Text>();
+            //text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.fontSize = 15;
+            text.text = "            emmVRClient  fps: 90";
+            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
+            GameObject[] returnArr = { BackgroundObject, TextObject };
+            return returnArr;
+        }
+    }
     public class DesktopHUD
     {
         private static GameObject CanvasObject;
@@ -93,45 +163,15 @@ namespace emmVRC.Menus
                     Configuration.SaveConfig();
                     keyFlag = true;
                 }
-                    if (!Input.GetKey(KeyCode.E) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && keyFlag)
+                if (!Input.GetKey(KeyCode.E) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && keyFlag)
                     keyFlag = false;
                 if (BackgroundObject != null && TextObject != null && TextObject.GetComponent<Text>() != null)
                 {
                     BackgroundObject.GetComponent<RawImage>().texture = UIExpanded ? Resources.uiMaximized : Resources.uiMinimized;
                     if (UIExpanded)
                     {
-                        string positionstr = "";
                         string userList = "";
-                        string worldinfo = "";
-                        //string emmVRCUserList = "";
-                        if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
-                        {
-                            int tempCount = 0;
-                            if (PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
-                                try
-                                {
-                                    foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
-                                    {
-                                        if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
-                                            if (tempCount != 22)
-                                            {
-                                                userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + plr.field_Private_APIUser_0.displayName + "\n";
-                                                tempCount++;
-                                            }
-                                    }
-                                } catch (Exception ex)
-                                {
-                                    ex = new Exception();
-                                }
-                            worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
-                            worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
-                            if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
-                            {
-                                positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
-                                positionstr += "<b><color=lime>Y: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.y * 10)) / 10 + "</color></b>  ";
-                                positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
-                            }
-                        }
+                        userList = CommonHUD.RenderPlayerList();
                         TextObject.GetComponent<Text>().text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
                             "\n                  press 'CTRL+E' to close" +
                             "\n" +
@@ -139,13 +179,11 @@ namespace emmVRC.Menus
                             "\nUsers in room:\n" + userList + "" +
                             "\n" +
                             "\n" +
-                            "\nPosition in world:\n" + positionstr +
-                            "\n" +
-                            "\n" + worldinfo +
+                            "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
                             "\n" +
                             "\n" +
                             "\n" +
-                            (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "")+
+                            (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
                             "\n";
                         if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
                             TextObject.GetComponent<Text>().text = TextObject.GetComponent<Text>().text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
@@ -157,28 +195,6 @@ namespace emmVRC.Menus
                     }
                 }
             }
-        }
-        private static string GetPlayerColored(VRC.Player p)
-        {
-            VRC.Core.APIUser apiuser = p.field_Private_APIUser_0;
-            string result;
-            if (apiuser == VRC.Core.APIUser.CurrentUser)
-            {
-                result = "<b><color=aqua>" + apiuser.displayName + "</color></b>";
-            }
-            else if (apiuser.isFriend)
-            {
-                result = "<b><color=yellow>" + apiuser.displayName + "</color></b>";
-            }
-            else if (apiuser.hasSuperPowers)
-            {
-                result = "<b><color=red>" + apiuser.displayName + "</color></b> [Mod]";
-            }
-            else
-            {
-                result = "<b><color=white>" + apiuser.displayName + "</color></b>";
-            }
-            return result;
         }
     }
 }

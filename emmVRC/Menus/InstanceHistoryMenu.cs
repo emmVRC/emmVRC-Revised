@@ -62,6 +62,7 @@ namespace emmVRC.Menus
                 }
                 catch (Exception ex)
                 {
+                    ex = new Exception();
                     emmVRCLoader.Logger.LogError("Your instance history file is invalid. It will be wiped.");
                     File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/instancehistory.emm"));
                     previousInstances = new List<SerializedWorld>();

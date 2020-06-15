@@ -187,6 +187,7 @@ namespace emmVRC.Hacks
                     }
                     catch (Exception ex)
                     {
+                        ex = new Exception();
                         //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
                     try
@@ -206,6 +207,7 @@ namespace emmVRC.Hacks
                     }
                     catch (Exception ex)
                     {
+                        ex = new Exception();
                         //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
                     try
@@ -225,6 +227,7 @@ namespace emmVRC.Hacks
                     }
                     catch (Exception ex)
                     {
+                        ex = new Exception();
                         //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
                     /*

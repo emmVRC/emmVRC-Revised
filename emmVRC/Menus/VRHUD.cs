@@ -36,7 +36,8 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().anchorMin += new Vector2(.95f, .125f);
             BackgroundObject.transform.SetParent(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu"), false);
             BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
-            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && !Configuration.JSONConfig.LogoButtonEnabled && Configuration.JSONConfig.FunctionsButtonX != 5) {
+            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && !Configuration.JSONConfig.LogoButtonEnabled && Configuration.JSONConfig.FunctionsButtonX != 5)
+            {
                 BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
             }
             TextObject = new GameObject("Text");
@@ -49,6 +50,8 @@ namespace emmVRC.Menus
             text.text = "            emmVRClient  fps: 90";
             TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
             ShortcutMenu = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu");
+
+
 
             Initialized = true;
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -70,47 +73,14 @@ namespace emmVRC.Menus
                 if (BackgroundObject != null && TextObject != null && TextObject.GetComponent<Text>() != null)
                 {
                     BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMaximized;
-                    string positionstr = "";
-                    string userList = "";
-                    string worldinfo = "";
-                    if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
-                    {
-                        int tempCount = 0;
-                        if (PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
-                            try
-                            {
-                                foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
-                                {
-                                    if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
-                                        if (tempCount != 22)
-                                        {
-                                            userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + plr.field_Private_APIUser_0.displayName + "\n";
-                                            tempCount++;
-                                        }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                ex = new Exception();
-                            }
-                        worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
-                        worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
-                        if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
-                        {
-                            positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
-                            positionstr += "<b><color=lime>Y: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.y * 10)) / 10 + "</color></b>  ";
-                            positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
-                        }
-                    }
+                    string userList = CommonHUD.RenderPlayerList();
                     TextObject.GetComponent<Text>().text = "\n            <color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version +
                         "\n" +
                         "\n" +
                         "\nUsers in room:\n" + userList + "" +
                         "\n" +
                         "\n" +
-                        "\nPosition in world:\n" + positionstr +
-                        "\n" +
-                        "\n" + worldinfo +
+                        "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
                         "\n" +
                         "\n" +
                         "\n" +
