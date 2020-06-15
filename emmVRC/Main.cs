@@ -195,7 +195,7 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(loadNetworked());
 
             // Applying some quick commands on OnSceneLoaded
-            UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>>((System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>)((asa, asd) =>
+            UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(new System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>((asa, asd) =>
             {
                 Hacks.MirrorTweaks.FetchMirrors();
                 Hacks.PedestalTweaks.FetchPedestals();
@@ -214,7 +214,7 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
                 MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
 
-            })));
+            }));
             
             // Initialize Avatar Permissions
             AvatarPermissionManager.Initialize();

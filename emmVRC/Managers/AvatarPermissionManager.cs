@@ -151,12 +151,12 @@ namespace emmVRC.Managers
             baseMenu.pageTitles.Add("Avatar Features");
             baseMenu.pageTitles.Add("Exclusive Global Dynamic Bone Colliders");
             baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
-            baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+            baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick.AddListener(new System.Action(() => {
                 if (UserInteractMenu)
                     QuickMenuUtils.ShowQuickmenuPage("UserInteractMenu");
                 else
                     QuickMenuUtils.ShowQuickmenuPage(PlayerTweaksMenu.baseMenu.getMenuName());
-            })));
+            }));
 
         }
         public static void ReloadAvatars()

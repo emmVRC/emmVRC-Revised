@@ -106,7 +106,7 @@ namespace emmVRC.Menus
             RiskyFunctions = new PageItem("Risky Functions", () =>
             {
                 if (!Configuration.JSONConfig.RiskyFunctionsWarningShown)
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Risky Functions", "By enabling these functions, you accept the risk that these functions could be detected by VRChat, and you agree to not use them for malicious or harassment purposes.", "Agree", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Risky Functions", "By enabling these functions, you accept the risk that these functions could be detected by VRChat, and you agree to not use them for malicious or harassment purposes.", "Agree", new System.Action(() =>
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
@@ -114,12 +114,12 @@ namespace emmVRC.Menus
                     Configuration.SaveConfig();
                     MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
                     RefreshMenu();
-                })), "Decline", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+                }), "Decline", new System.Action(() =>
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     RiskyFunctions.SetToggleState(false);
                     RefreshMenu();
-                })));
+                }));
                 else
                 {
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;

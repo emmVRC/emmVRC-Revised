@@ -61,7 +61,7 @@ namespace emmVRC.Hacks
             PortalToUserButton.GetComponentInChildren<Text>().text = "Drop Portal";
             PortalToUserButton.SetActive(false);
 
-            SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+            SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 UserSendMessage.SetActive(!UserSendMessage.activeSelf);
                 UserNotes.SetActive(!UserNotes.activeSelf);
                 //ToggleBlockButton.SetActive(!ToggleBlocklButton.activeSelf);
@@ -75,19 +75,19 @@ namespace emmVRC.Hacks
                     PortalToUserButton.SetActive(false);
                 GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").activeSelf);
                 GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
-            })));
+            }));
 
-            UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+            UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "Send", (string msg) => {
                     MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
                 });
-            })));
+            }));
 
-            UserNotes.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+            UserNotes.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 Hacks.PlayerNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName);
-            })));
+            }));
 
-            TeleportButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+            TeleportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 if (RiskyFunctionsManager.RiskyFunctionsAllowed)
                 {
                     Player plrToTP = null;
@@ -101,8 +101,8 @@ namespace emmVRC.Hacks
                     }
                     QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_2();
                 }
-            })));
-            PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+            }));
+            PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
                 {try
                     {
@@ -125,7 +125,7 @@ namespace emmVRC.Hacks
                         }
                         else
                         {
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait "+PortalCooldownTimer+" seconds before dropping another portal.", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); })));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait "+PortalCooldownTimer+" seconds before dropping another portal.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         }
                     } catch (Exception ex)
                     {
@@ -134,9 +134,9 @@ namespace emmVRC.Hacks
                 }
                 else
                 {
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You cannot drop a portal to this user.", "Dismiss", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); })));
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You cannot drop a portal to this user.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                 }
-            })));
+            }));
 
             MelonLoader.MelonCoroutines.Start(Loop());
         }

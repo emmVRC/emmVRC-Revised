@@ -21,9 +21,9 @@ namespace emmVRC.Hacks
             WorldNotesButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 125f);
             WorldNotesButton.SetActive(true);
             WorldNotesButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-            WorldNotesButton.GetComponentInChildren<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() => {
+            WorldNotesButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 WorldNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageWorldInfo>().field_Private_ApiWorld_0.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageWorldInfo>().field_Private_ApiWorld_0.name);
-            })));
+            }));
         }
     }
 }
