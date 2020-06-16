@@ -43,13 +43,18 @@ namespace emmVRC.Hacks
             ToggleNameplates.setToggleState(Configuration.JSONConfig.NameplatesVisible);
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
                 yield return new UnityEngine.WaitForSeconds(0.1f);
-            UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
-            {
-                if (!Configuration.JSONConfig.UIVisible)
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").GetComponent<Button>().onClick.Invoke();
-                if (!Configuration.JSONConfig.NameplatesVisible)
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();
-            })).Invoke();
+            new System.Action(() =>
+            {try
+                {
+                    if (!Configuration.JSONConfig.UIVisible)
+                        QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").GetComponent<Button>().onClick.Invoke();
+                    if (!Configuration.JSONConfig.NameplatesVisible)
+                        QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();
+                } catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
+            }).Invoke();
 
             QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").gameObject.SetActive(false);
             QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").gameObject.SetActive(false);
@@ -59,16 +64,18 @@ namespace emmVRC.Hacks
         {
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
                 yield return new UnityEngine.WaitForSeconds(0.1f);
-            if (!Configuration.JSONConfig.NameplatesVisible && VRCPlayer.Method_Public_Static_Boolean_0())
-                UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+            if ((!Configuration.JSONConfig.NameplatesVisible && VRCPlayer.Method_Public_Static_Boolean_0()) || (Configuration.JSONConfig.NameplatesVisible && !VRCPlayer.Method_Public_Static_Boolean_0()))
+                new System.Action(() =>
                 {
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();
-                })).Invoke();
-            else if (Configuration.JSONConfig.NameplatesVisible && !VRCPlayer.Method_Public_Static_Boolean_0())
-                UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
-                {
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();
-                })).Invoke();
+                    try
+                    {
+                        QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();
+                    }
+                    catch (Exception ex)
+                    {
+                        ex = new Exception();
+                    }
+                }).Invoke();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using VRC.Core;
+using VRC.Udon.Wrapper.Modules;
 
 namespace emmVRC.Managers
 {
@@ -43,7 +44,7 @@ namespace emmVRC.Managers
                         keyFlag = true;
                     }
                 }
-                if (Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !keyFlag)
+                /*if (Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !keyFlag)
                 {
                     if (Hacks.ThirdPerson.CameraSetup != 2)
                     {
@@ -61,7 +62,7 @@ namespace emmVRC.Managers
                         Hacks.ThirdPerson.zoomOffset = 0f;
                         keyFlag = true;
                     }
-                }
+                }*/
                 if (Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
                 {
                     QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GoHomeButton").GetComponent<Button>().onClick.Invoke();

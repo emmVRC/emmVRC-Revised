@@ -17,7 +17,6 @@ namespace emmVRC.Hacks
         internal static float offsetX = 0f;
         internal static float offsetY = 0f;
         public static int CameraSetup = 0;
-        private static bool keyTriggered = false;
 
         // 0 = Vanilla
         // 1 = Back
