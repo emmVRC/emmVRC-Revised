@@ -36,7 +36,7 @@ namespace emmVRC.Menus
             BackgroundObject.transform.SetParent(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu"), false);
             BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
             if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && Configuration.JSONConfig.FunctionsButtonX != 5)
-                if (Configuration.JSONConfig.LogoButtonX != 5 && !Configuration.JSONConfig.LogoButtonEnabled)
+                if (!Configuration.JSONConfig.LogoButtonEnabled || Configuration.JSONConfig.LogoButtonX != 5)
                     BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
             TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
