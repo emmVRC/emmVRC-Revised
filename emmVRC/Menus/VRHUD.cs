@@ -22,8 +22,7 @@ namespace emmVRC.Menus
         private static Transform ShortcutMenu;
         public static bool Initialized = false;
         public static bool enabled = true;
-        public static void Initialize()
-        {
+        public static void Initialize() {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing HUD canvas");
             BackgroundObject = new GameObject("Background");
 
@@ -36,10 +35,9 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().anchorMin += new Vector2(.95f, .125f);
             BackgroundObject.transform.SetParent(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu"), false);
             BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
-            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && !Configuration.JSONConfig.LogoButtonEnabled && Configuration.JSONConfig.FunctionsButtonX != 5)
-            {
-                BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
-            }
+            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && Configuration.JSONConfig.FunctionsButtonX != 5)
+                if (Configuration.JSONConfig.LogoButtonX != 5 && !Configuration.JSONConfig.LogoButtonEnabled)
+                    BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
             TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
