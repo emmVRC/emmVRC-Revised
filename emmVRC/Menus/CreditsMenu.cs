@@ -26,6 +26,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("DltDat", null, "Developer of the hooking method used for various functions across emmVRC"));
             baseMenu.pageItems.Add(new PageItem("Kitsune\nof\nNight", null, "Major supporter, and major cutie"));
             baseMenu.pageItems.Add(new PageItem("Xhail", null, "Network developer"));
+            baseMenu.pageItems.Add(new PageItem("404", null, "Major helper and mod developer"));
             baseMenu.pageItems.Add(new PageItem("mrgw98", null, "Supporter and tester"));
             baseMenu.pageItems.Add(new PageItem("Janni9009", null, "Developer and supporter"));
             baseMenu.pageItems.Add(new PageItem("SupahMario", null, "Major supporter and moderator"));

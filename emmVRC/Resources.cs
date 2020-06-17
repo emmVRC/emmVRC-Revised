@@ -70,8 +70,8 @@ namespace emmVRC
                 // Fetch the byte[] streams of data from Emilia's servers
                 using (WebClient webClient = new WebClient())
                 {
-                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png", Path.Combine(resourcePath, "HUD/UIMinimized.png"));
-                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png", Path.Combine(resourcePath, "HUD/UIMaximized.png"));
+                    webClient.DownloadFile("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png", Path.Combine(resourcePath, "HUD/UIMinimized.png"));
+                    webClient.DownloadFile("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png", Path.Combine(resourcePath, "HUD/UIMaximized.png"));
                 }
             }
 
@@ -134,7 +134,7 @@ namespace emmVRC
                 // Fetch the byte[] stream of data from Emilia's servers
                 using (WebClient webClient = new WebClient())
                 {
-                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/emmvrcresources/Textures/Panel.png", Path.Combine(resourcePath, "Textures/Panel.png"));
+                    webClient.DownloadFile("https://thetrueyoshifan.com/downloads/emmvrcresources/Textures/Panel.png", Path.Combine(resourcePath, "Textures/Panel.png"));
                 }
             }
 

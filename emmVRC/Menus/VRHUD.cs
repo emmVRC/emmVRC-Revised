@@ -22,6 +22,7 @@ namespace emmVRC.Menus
         private static Transform ShortcutMenu;
         public static bool Initialized = false;
         public static bool enabled = true;
+        public static QMSingleButton ToggleHUDButton;
         public static void Initialize() {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing HUD canvas");
             BackgroundObject = new GameObject("Background");
@@ -52,6 +53,7 @@ namespace emmVRC.Menus
 
 
             Initialized = true;
+
             MelonLoader.MelonCoroutines.Start(Loop());
         }
 
@@ -59,6 +61,17 @@ namespace emmVRC.Menus
         {
             while (true)
             {
+                if (ToggleHUDButton == null)
+                {
+                    ToggleHUDButton = new QMSingleButton("ShortcutMenu", 4, -1, "", () => {
+                        Configuration.JSONConfig.HUDEnabled = !Configuration.JSONConfig.HUDEnabled;
+                        Configuration.SaveConfig();
+                    }, "Toggles the Quick Menu HUD", Color.white, Color.white);
+                    ToggleHUDButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(2.75f, 2.75f);
+                    ToggleHUDButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(120f, 120f);
+                    while (Resources.onlineSprite == null) yield return null;
+                    ToggleHUDButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
+                }
                 if (Configuration.JSONConfig.HUDEnabled && Resources.uiMinimized != null && enabled)
                 {
                     BackgroundObject.SetActive(true);
@@ -75,7 +88,7 @@ namespace emmVRC.Menus
                     TextObject.GetComponent<Text>().text = "\n            <color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version +
                         "\n" +
                         "\n" +
-                        "\nUsers in room:\n" + userList + "" +
+                        "\nUsers in room" + (RoomManager.field_Internal_Static_ApiWorldInstance_0 != null ? " (" + PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count + ")" : "") + ":\n" + userList + "" +
                         "\n" +
                         "\n" +
                         "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
@@ -88,28 +101,6 @@ namespace emmVRC.Menus
                         TextObject.GetComponent<Text>().text = TextObject.GetComponent<Text>().text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                 }
             }
-        }
-        private static string GetPlayerColored(VRC.Player p)
-        {
-            VRC.Core.APIUser apiuser = p.field_Private_APIUser_0;
-            string result;
-            if (apiuser == VRC.Core.APIUser.CurrentUser)
-            {
-                result = "<b><color=aqua>" + apiuser.displayName + "</color></b>";
-            }
-            else if (apiuser.isFriend)
-            {
-                result = "<b><color=yellow>" + apiuser.displayName + "</color></b>";
-            }
-            else if (apiuser.hasSuperPowers)
-            {
-                result = "<b><color=red>" + apiuser.displayName + "</color></b> [Mod]";
-            }
-            else
-            {
-                result = "<b><color=white>" + apiuser.displayName + "</color></b>";
-            }
-            return result;
         }
     }
 }
