@@ -87,7 +87,7 @@ namespace emmVRC.Hacks
                                     localPlayer.transform.position += new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)) * (Speed.SpeedModified ? Speed.Modifier : 1f), 0f);
                             }
                             if (localPlayer.GetComponent<VRCMotionState>() != null)
-                                localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_3();
+                                localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_2();
 
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
                                 localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = !NoclipEnabled;
