@@ -120,6 +120,7 @@
     <Compile Include="Menus\UserTweaksMenu.cs" />
     <Compile Include="Menus\WaypointsMenu.cs" />
     <Compile Include="Menus\WorldTweaksMenu.cs" />
+    <Compile Include="Network\Authentication\Authentication.cs" />
     <Compile Include="Network\HTTPResponse.cs" />
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\HTTPRequest.cs" />

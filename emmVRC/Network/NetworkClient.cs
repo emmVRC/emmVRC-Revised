@@ -22,6 +22,7 @@ namespace emmVRC.Network
         private static string BaseAddress = "http://thetrueyoshifan.com";
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
+        private static string LoginKey;
         private static string _authToken;
         public static string authToken {
             get { return _authToken; }
@@ -51,21 +52,37 @@ namespace emmVRC.Network
             return callback();
         }
 
-        public static void login()
+        public static void login(string password = null)
         {
-            MelonLoader.MelonCoroutines.Start(sendLogin());
+            MelonLoader.MelonCoroutines.Start(sendLogin(password));
         }
 
-        private static IEnumerator sendLogin()
+        private static IEnumerator sendLogin(string password)
         {
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
-            sendRequest();
+            sendRequest(password);
         }
 
-        private static async void sendRequest()
+        private static async void sendRequest(string password = null)
         {
-            NetworkClient.authToken = HTTPResponse.Serialize(await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName }))["token"];
+            if (password == null)
+                LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
+            else
+                LoginKey = password;
+
+            string createFile = "1";
+            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
+                createFile = "0";
+            
+            TinyJSON.Variant result = HTTPResponse.Serialize(await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName, ["password"] = LoginKey, ["loginKey"] = createFile }));
+            NetworkClient.authToken = result["token"];
+            if (createFile == "1")
+            {
+                Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
+                LoginKey = result["loginKey"];
+            }
+                
         }
 
 
