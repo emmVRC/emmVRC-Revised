@@ -47,6 +47,7 @@ namespace emmVRC.Hacks
                 gameObject.transform.position -= gameObject.transform.forward * 2f;
                 gameObject2.GetComponent<Camera>().enabled = false;
                 gameObject.GetComponent<Camera>().fieldOfView = 75f;
+                gameObject.GetComponent<Camera>().nearClipPlane /= 4;
                 TPCameraBack = gameObject;
                 GameObject gameObject3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 GameObject.Destroy(gameObject3.GetComponent<MeshRenderer>());
@@ -67,6 +68,7 @@ namespace emmVRC.Hacks
                 gameObject3.transform.position += -gameObject3.transform.forward * 2f;
                 gameObject2.GetComponent<Camera>().enabled = false;
                 gameObject3.GetComponent<Camera>().fieldOfView = 75f;
+                gameObject3.GetComponent<Camera>().nearClipPlane /= 4;
                 TPCameraFront = gameObject3;
                 TPCameraBack.GetComponent<Camera>().enabled = false;
                 TPCameraFront.GetComponent<Camera>().enabled = false;
@@ -88,50 +90,44 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-                try
+                if (TPCameraBack != null && TPCameraFront != null)
                 {
-                    if (TPCameraBack != null && TPCameraFront != null)
+                    if (CameraSetup == 0)
                     {
-                        if (CameraSetup == 0)
+                        //GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = true;
+                        TPCameraBack.GetComponent<Camera>().enabled = false;
+                        TPCameraFront.GetComponent<Camera>().enabled = false;
+                    }
+                    else if (CameraSetup == 1)
+                    {
+                        //GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = false;
+                        TPCameraBack.GetComponent<Camera>().enabled = true;
+                        TPCameraFront.GetComponent<Camera>().enabled = false;
+                    }
+                    else if (CameraSetup == 2)
+                    {
+                        //GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = false;
+                        TPCameraBack.GetComponent<Camera>().enabled = false;
+                        TPCameraFront.GetComponent<Camera>().enabled = true;
+                    }
+                    if (CameraSetup != 0)
+                    {
+                        if (Input.GetKeyDown(KeyCode.Escape))
+                            CameraSetup = 0;
+                        var d = Input.GetAxis("Mouse ScrollWheel");
+                        if (d > 0f)
                         {
-                            GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = true;
-                            TPCameraBack.GetComponent<Camera>().enabled = false;
-                            TPCameraFront.GetComponent<Camera>().enabled = false;
+                            TPCameraBack.transform.position += TPCameraBack.transform.forward * 0.1f;
+                            TPCameraFront.transform.position -= TPCameraBack.transform.forward * 0.1f;
+                            zoomOffset += 0.1f;
                         }
-                        else if (CameraSetup == 1)
+                        else if (d < 0f)
                         {
-                            GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = false;
-                            TPCameraBack.GetComponent<Camera>().enabled = true;
-                            TPCameraFront.GetComponent<Camera>().enabled = false;
-                        }
-                        else if (CameraSetup == 2)
-                        {
-                            GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = false;
-                            TPCameraBack.GetComponent<Camera>().enabled = false;
-                            TPCameraFront.GetComponent<Camera>().enabled = true;
-                        }
-                        if (CameraSetup != 0)
-                        {
-                            if (Input.GetKeyDown(KeyCode.Escape))
-                                CameraSetup = 0;
-                            var d = Input.GetAxis("Mouse ScrollWheel");
-                            if (d > 0f)
-                            {
-                                TPCameraBack.transform.position += TPCameraBack.transform.forward * 0.1f;
-                                TPCameraFront.transform.position -= TPCameraBack.transform.forward * 0.1f;
-                                zoomOffset += 0.1f;
-                            }
-                            else if (d < 0f)
-                            {
-                                TPCameraBack.transform.position -= TPCameraBack.transform.forward * 0.1f;
-                                TPCameraFront.transform.position += TPCameraBack.transform.forward * 0.1f;
-                                zoomOffset -= 0.1f;
-                            }
+                            TPCameraBack.transform.position -= TPCameraBack.transform.forward * 0.1f;
+                            TPCameraFront.transform.position += TPCameraBack.transform.forward * 0.1f;
+                            zoomOffset -= 0.1f;
                         }
                     }
-                } catch (Exception Ex)
-                {
-                    emmVRCLoader.Logger.Log(Ex.ToString()); 
                 }
                 yield return new WaitForEndOfFrame();
             }

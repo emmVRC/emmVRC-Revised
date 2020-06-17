@@ -21,12 +21,14 @@ namespace emmVRC.Libraries
         internal float rValue = 0f;
         internal float gValue = 0f;
         internal float bValue = 0f;
+        internal Color defaultColor;
 
         internal QMNestedButton baseMenu;
         internal QMSingleButton preview;
         internal QMSingleButton acceptButton;
+        internal QMSingleButton defaultButton;
         internal QMSingleButton cancelButton;
-        public ColorPicker(string parentMenu, int x, int y, string menuName, string menuTooltip, System.Action<UnityEngine.Color> accept, System.Action cancel, UnityEngine.Color? defaultColor = null)
+        public ColorPicker(string parentMenu, int x, int y, string menuName, string menuTooltip, System.Action<UnityEngine.Color> accept, System.Action cancel, UnityEngine.Color? currentColor = null, UnityEngine.Color? defaultColor = null)
         {
             baseMenu = new QMNestedButton(parentMenu, x, y, menuName, menuTooltip);
             baseMenu.getBackButton().DestroyMe();
@@ -35,7 +37,22 @@ namespace emmVRC.Libraries
             preview.getGameObject().name = "ColorPickPreviewButton";
 
             acceptButton = new QMSingleButton(baseMenu, 4, 1, "Accept", ()=> { accept.Invoke(new UnityEngine.Color(rValue, gValue, bValue)); }, "Accept the color changes");
+            defaultButton = new QMSingleButton(baseMenu, 4, 2, "Default", () => {
+                if (this.defaultColor != null)
+                {
+                    r.slider.GetComponent<Slider>().value = this.defaultColor.r;
+                    g.slider.GetComponent<Slider>().value = this.defaultColor.g;
+                    b.slider.GetComponent<Slider>().value = this.defaultColor.b;
+                }
+            }, "Set the color to the default value");
             cancelButton = new QMSingleButton(baseMenu, 4, 2, "Cancel", () => { cancel.Invoke(); }, "Cancels the color changes");
+
+            defaultButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
+            defaultButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 96f);
+
+            cancelButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
+            cancelButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
+
 
             rButton = new QMSingleButton(baseMenu, 1, 0, "R\n1f", null, "Float value for Red", UnityEngine.Color.red);
             rButton.getGameObject().name = "rColorButton";
@@ -71,7 +88,11 @@ namespace emmVRC.Libraries
                 gButton.setButtonText("G\n" + gValue.ToString("0.00"));
                 bButton.setButtonText("B\n" + bValue.ToString("0.00"));
             });
-
+            
+            if (defaultColor != null)
+            {
+                this.defaultColor = defaultColor.Value;
+            }
         }
     }
 }

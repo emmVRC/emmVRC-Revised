@@ -95,6 +95,9 @@ namespace emmVRC.Objects
         public float AvatarVolume = 0f;
         public bool AvatarVolumeMute = false;
 
+        // Extra options to configure, in case people want to mess with them
+        public float MaxSpeedIncrease = 5f;
+
         public int[] FlightKeybind = new int[2] {  102, 306 };
         public int[] NoclipKeybind = new int[2] {  109, 306 };
         public int[] SpeedKeybind = new int[2] {  103, 306 };

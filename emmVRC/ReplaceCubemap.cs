@@ -62,7 +62,7 @@ namespace emmVRC
                 c.SetPixels(CubeMapColors, (CubemapFace)i);
             }
             // we set the cubemap from the texture pixel by pixel
-            Libraries.Extensions.UnityEngine.Cubemap.Apply(c.Pointer);
+            c.Apply();
             return c;
         }
         private static Color[] CreateCubemapTexture(int resolution, CubemapFace face)

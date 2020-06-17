@@ -1,4 +1,5 @@
-﻿using System;
+﻿using emmVRC.Menus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -158,7 +159,7 @@ namespace emmVRC.Hacks
                         quickMenu = GameObject.Find("QuickMenu");
                         foreach (Button btn in quickMenu.GetComponentsInChildren<Button>(true))
                         {
-                            if (btn.gameObject.name != "rColorButton" && btn.gameObject.name != "gColorButton" && btn.gameObject.name != "bColorButton" && btn.gameObject.name != "ColorPickPreviewButton" && btn.transform.parent.name != "SocialNotifications" && btn.gameObject.name != ShortcutMenuButtons.logoButton.getGameObject().name && btn.transform.parent.parent.name != "EmojiMenu")
+                            if (btn.gameObject.name != "rColorButton" && btn.gameObject.name != "gColorButton" && btn.gameObject.name != "bColorButton" && btn.gameObject.name != "ColorPickPreviewButton" && btn.transform.parent.name != "SocialNotifications" && btn.gameObject.name != ShortcutMenuButtons.logoButton.getGameObject().name && (btn.gameObject.name != (VRHUD.ToggleHUDButton == null ? "" : VRHUD.ToggleHUDButton.getGameObject().name)) && btn.transform.parent.parent.name != "EmojiMenu")
                                 btn.colors = buttonTheme;
                         };
                         foreach (UiToggleButton tglbtn in quickMenu.GetComponentsInChildren<UiToggleButton>(true))

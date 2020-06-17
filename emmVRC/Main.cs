@@ -117,7 +117,7 @@ namespace emmVRC
 
             // Initialize the Keybind system
             Managers.KeybindManager.Initialize();
-
+            
             // Start the Notification manager
             emmVRCLoader.Logger.LogDebug("Initializing Notification manager...");
             Managers.NotificationManager.Initialize();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine.Events;
 using emmVRC.Libraries;
 using emmVRC.Hacks;
+using UnityEngine;
 
 namespace emmVRC.Menus
 {
@@ -13,6 +14,7 @@ namespace emmVRC.Menus
     {
         // Base menu for the Settings menu
         public static PaginatedMenu baseMenu;
+        public static QMSingleButton ResetSettingsButton;
 
         // Page 1
         private static PageItem OpenBeta;
@@ -91,6 +93,23 @@ namespace emmVRC.Menus
             // Initialize the Paginated Menu for the Settings menu.
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 1024, 768, "Settings", "The base menu for the settings menu", null);
             baseMenu.menuEntryButton.DestroyMe();
+
+            ResetSettingsButton = new QMSingleButton(baseMenu.menuBase, 5, 1, "<color=#FFCCBB>Revert to\ndefaults</color>", () =>
+            {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Are you sure you want to revert settings? You will lose your custom colors and custom button positions!", "Yes", new System.Action(() =>
+                {
+                    Configuration.JSONConfig = new Objects.Config { WelcomeMessageShown = true };
+                    Configuration.SaveConfig();
+                    ColorChanger.ApplyIfApplicable();
+                    Nameplates.colorChanged = true;
+                    ShortcutMenuButtons.Process();
+                    emmVRCLoader.Logger.Log("emmVRC settings have been reverted.");
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                }), "No", new System.Action(() => {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                }));
+            }, "Resets all emmVRC Settings to their default values. This requires a restart to fully take effect");
+
 
             OpenBeta = new PageItem("Open Beta", () =>
             {
@@ -365,7 +384,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.ColorChanger.ApplyIfApplicable();
-            }, () => { LoadMenu(); });
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UIColorHex), Libraries.ColorConversion.HexToColor("#0EA6AD"));
             UIColorChangePickerButton = new PageItem("Select UI\nColor", () =>
             {
                 QuickMenuUtils.ShowQuickmenuPage(UIColorChangePicker.baseMenu.getMenuName());
@@ -481,21 +500,21 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
-            }, () => { LoadMenu(); });
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex), Libraries.ColorConversion.HexToColor("#FFFF00"));
             VisitorNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1001, "Visitor Nameplate Color", "Select the color for Visitor Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.VisitorNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
-            }, () => { LoadMenu(); });
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VisitorNamePlateColorHex), Libraries.ColorConversion.HexToColor("#CCCCCC"));
             NewUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1002, "New User Nameplate Color", "Select the color for New User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.NewUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
-            }, () => { LoadMenu(); });
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#1778FF"));
             UserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1003, "User Nameplate Color", "Select the color for User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.UserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
@@ -503,21 +522,21 @@ namespace emmVRC.Menus
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_1(false);
-            }, () => { LoadMenu(); });
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#2BCE5C"));
             KnownUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1004, "Known User Nameplate Color", "Select the color for Known User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.KnownUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
-            }, () => { LoadMenu(); });
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#FF7B42"));
             TrustedUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1005, "Trusted User Nameplate Color", "Select the color for Trusted User Nameplate colors", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.TrustedUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
-            }, () => { LoadMenu(); });
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#8143E6"));
             NameplateColorChanging = new PageItem("Nameplate\nColor Changing", () =>
             {
                 Configuration.JSONConfig.NameplateColorChangingEnabled = true;

@@ -176,7 +176,7 @@ namespace emmVRC.Menus
                             "\n                  press 'CTRL+E' to close" +
                             "\n" +
                             "\n" +
-                            "\nUsers in room:\n" + userList + "" +
+                            "\nUsers in room"+(RoomManager.field_Internal_Static_ApiWorldInstance_0 != null ? " ("+PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count+")" : "")+":\n" + userList + "" +
                             "\n" +
                             "\n" +
                             "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
