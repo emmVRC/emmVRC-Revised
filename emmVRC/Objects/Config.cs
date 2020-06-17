@@ -95,6 +95,9 @@ namespace emmVRC.Objects
         public float AvatarVolume = 0f;
         public bool AvatarVolumeMute = false;
 
+        // Network
+        public bool UpdatedSecurity = false;
+
         // Extra options to configure, in case people want to mess with them
         public float MaxSpeedIncrease = 5f;
 

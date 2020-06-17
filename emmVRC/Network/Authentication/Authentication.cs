@@ -10,9 +10,9 @@ namespace emmVRC.Network.Authentication
 {
     public static class Authentication
     {
-        private static string path = "/";
-        private static string[] files = System.IO.Directory.GetFiles(path, "*.ema");
-        private static string extension = ".";
+        private static string path = Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/");
+        private static string[] files = System.IO.Directory.GetFiles(path, "*.ema.txt");
+        private static string extension = ".ema";
 
         public static bool Exists(string userID)
         {
@@ -23,10 +23,9 @@ namespace emmVRC.Network.Authentication
 
         public static string ReadTokenFile(string userID)
         {
-            if (!File.Exists(userID + extension))
-                return null;
-            File.Decrypt(userID + extension);
-            return System.IO.File.ReadAllText(userID + extension);
+            if (!File.Exists(path+userID + extension))
+                return "";
+            return System.IO.File.ReadAllText(path+userID + extension);
         }
 
         public static void RemoveTokenFile()
@@ -46,14 +45,10 @@ namespace emmVRC.Network.Authentication
             do
             {
                 RemoveTokenFile();
-            } while (File.Exists(fileName));
+            } while (File.Exists(path+fileName));
 
-            using (StreamWriter streamWriter = File.CreateText(fileName))
-            {
-                streamWriter.Write(data);
-            }
+            File.WriteAllBytes(path+fileName, Encoding.UTF8.GetBytes(data));
 
-            File.Encrypt(fileName);
             files.Append(fileName);
         }
     }

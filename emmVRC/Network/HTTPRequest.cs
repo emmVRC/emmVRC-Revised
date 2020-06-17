@@ -81,8 +81,8 @@ namespace emmVRC.Network
                     }
                     else if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        emmVRCLoader.Logger.Log(responseMessage.Content.ToString());
-                        emmVRCLoader.Logger.Log(requestMessage.Content.ReadAsStringAsync().Result);
+                        //emmVRCLoader.Logger.Log(responseMessage.Content.ToString());
+                        //emmVRCLoader.Logger.Log(requestMessage.Content.ReadAsStringAsync().Result);
                         //TODO: change to request token again
                         throw new Exception(responseMessage.ReasonPhrase);
                     }

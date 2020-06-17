@@ -12,6 +12,7 @@ using UnityEngine;
 using System.Collections;
 using emmVRC.Network.Objects;
 using emmVRC.Objects;
+using emmVRC.Libraries;
 
 namespace emmVRC.Network
 {
@@ -19,7 +20,7 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "http://thetrueyoshifan.com";
+        private static string BaseAddress = "http://localhost";
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         private static string LoginKey;
@@ -52,7 +53,7 @@ namespace emmVRC.Network
             return callback();
         }
 
-        public static void login(string password = null)
+        public static void login(string password = "")
         {
             MelonLoader.MelonCoroutines.Start(sendLogin(password));
         }
@@ -62,26 +63,47 @@ namespace emmVRC.Network
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
             sendRequest(password);
+            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
+            {
+                Managers.NotificationManager.AddNotification("Better protect your EmmVRC account by setting a pin", "Set\nPassword", () => { OpenPasswordPrompt(); }, "Maybe\nLater", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite, -1);
+            }
         }
 
-        private static async void sendRequest(string password = null)
+        private static void OpenPasswordPrompt()
         {
-            if (password == null)
+            InputUtilities.OpenHiddenBox("To login enter your password", "Login", (string password) => { 
+                login(password);
+                Configuration.JSONConfig.UpdatedSecurity = true;
+                Managers.NotificationManager.DismissCurrentNotification();  
+            });
+        }
+
+        private static async void sendRequest(string password = "")
+        {
+            if (password == "")
                 LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
             else
                 LoginKey = password;
 
-            string createFile = "1";
+            string createFile = "0";
             if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
-                createFile = "0";
-            
-            TinyJSON.Variant result = HTTPResponse.Serialize(await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName, ["password"] = LoginKey, ["loginKey"] = createFile }));
-            NetworkClient.authToken = result["token"];
-            if (createFile == "1")
+                createFile = "1";
+
+            try
             {
-                Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
-                LoginKey = result["loginKey"];
+                TinyJSON.Variant result = HTTPResponse.Serialize(await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName, ["password"] = LoginKey, ["loginKey"] = createFile }));
+                NetworkClient.authToken = result["token"];
+                if (createFile == "1")
+                {
+                    Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
+                    LoginKey = result["loginKey"];
+                }
             }
+            catch(Exception exception)
+            {
+                emmVRCLoader.Logger.LogError(exception.ToString());
+            }
+            
                 
         }
 
