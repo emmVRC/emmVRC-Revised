@@ -66,7 +66,7 @@ namespace emmVRC.Hacks
                         if (FlightEnabled)
                         {
                             var cameraRotation = Camera.main.transform;
-                            if (VRCTrackingManager.Method_Public_Static_Boolean_6() && Configuration.JSONConfig.VRFlightControls) // VR is enabled
+                            if (VRCTrackingManager.Method_Public_Static_Boolean_9() && Configuration.JSONConfig.VRFlightControls) // VR is enabled
                             {
                                 if (Input.GetAxis("Vertical") != 0)
                                     localPlayer.transform.position += localPlayer.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f;
@@ -75,7 +75,7 @@ namespace emmVRC.Hacks
                                 if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") != 0)
                                     localPlayer.transform.position += new Vector3(0f, Time.deltaTime * Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f);
                             }
-                            else
+                            else // VR is not enabled, or our check failed
                             {
                                 if (Input.GetAxis("Vertical") != 0)
                                     localPlayer.transform.position += cameraRotation.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f);
@@ -86,21 +86,19 @@ namespace emmVRC.Hacks
                                 if (Input.GetKey(KeyCode.E))
                                     localPlayer.transform.position += new Vector3(0f, (Time.deltaTime * (Input.GetKey(KeyCode.LeftShift) ? 4f : 2f)) * (Speed.SpeedModified ? Speed.Modifier : 1f), 0f);
                             }
+
+                            // Stops momentum from affecting the player during flight
                             if (localPlayer.GetComponent<VRCMotionState>() != null)
                                 localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_2();
 
+                            // Disable the character controller during noclip, in order to allow the character to pass through colliders
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
                                 localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = !NoclipEnabled;
 
-                            if (NoclipEnabled)
-                            {
-                                Vector3 thing = localPlayer.transform.position - VRCTrackingManager.Method_Public_Static_Vector3_2();
-                                Quaternion thing2 = localPlayer.transform.rotation * Quaternion.Inverse(VRCTrackingManager.Method_Public_Static_Quaternion_2());
-                                VRCTrackingManager.Method_Public_Static_Void_Vector3_Quaternion_0(thing, thing2);
-                            }
-                            if (localPlayer.GetComponent<InputStateController>() != null)
+                            // Locks the player's body into place when flying. Without the noclip check, this also leaves the player's body behind when in VR
+                            if (localPlayer.GetComponent<InputStateController>() != null && !NoclipEnabled)
                                 localPlayer.GetComponent<InputStateController>().Method_Public_Void_0();
-
+                            
                         }
                     }
                 }

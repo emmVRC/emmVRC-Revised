@@ -171,7 +171,7 @@ namespace emmVRC
             Managers.MessageManager.Initialize();
 
             // Initialize the emmVRC HUD
-            if (Configuration.JSONConfig.VRHUDInDesktop || VRCTrackingManager.Method_Public_Static_Boolean_6())
+            if (Configuration.JSONConfig.VRHUDInDesktop || VRCTrackingManager.Method_Public_Static_Boolean_9())
                 Menus.VRHUD.Initialize();
             else
                 Menus.DesktopHUD.Initialize();
@@ -231,7 +231,7 @@ namespace emmVRC
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
-
+            
         }
 
         public static System.Collections.IEnumerator loadNetworked()
