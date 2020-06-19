@@ -89,7 +89,7 @@ namespace emmVRC.Hacks
 
                             // Stops momentum from affecting the player during flight
                             if (localPlayer.GetComponent<VRCMotionState>() != null)
-                                localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_2();
+                                localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_5();
 
                             // Disable the character controller during noclip, in order to allow the character to pass through colliders
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)

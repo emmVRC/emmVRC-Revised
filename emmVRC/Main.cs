@@ -231,7 +231,6 @@ namespace emmVRC
             // At this point, if no errors have occured, emmVRC is done initializing
             emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
             emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
-            
         }
 
         public static System.Collections.IEnumerator loadNetworked()
