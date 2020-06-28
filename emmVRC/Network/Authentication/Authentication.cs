@@ -11,12 +11,12 @@ namespace emmVRC.Network.Authentication
     public static class Authentication
     {
         private static string path = Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/");
-        private static string[] files = System.IO.Directory.GetFiles(path, "*.ema.txt");
+        private static string[] files = System.IO.Directory.GetFiles(path, "*.ema");
         private static string extension = ".ema";
 
         public static bool Exists(string userID)
         {
-            if (File.Exists(userID + extension))
+            if (File.Exists(path+userID + extension))
                 return true;
             return false;
         }
@@ -44,7 +44,7 @@ namespace emmVRC.Network.Authentication
             string fileName = userID + extension;
             do
             {
-                RemoveTokenFile();
+                File.Delete(path+fileName);
             } while (File.Exists(path+fileName));
 
             File.WriteAllBytes(path+fileName, Encoding.UTF8.GetBytes(data));

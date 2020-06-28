@@ -9,6 +9,7 @@ using emmVRC.Libraries;
 using emmVRC.Network;
 
 
+
 namespace emmVRC.Hacks
 {
     public static class CustomAvatarFavorites
@@ -16,6 +17,7 @@ namespace emmVRC.Hacks
 
         internal static GameObject PublicAvatarList;
         internal static UiAvatarList NewAvatarList;
+        internal static UiAvatarList SearchAvatarList;
         private static GameObject avText;
         private static GameObject ChangeButton;
         private static Button.ButtonClickedEvent baseChooseEvent;
@@ -28,6 +30,7 @@ namespace emmVRC.Hacks
         private static bool error = false;
         private static bool errorWarned;
         private static List<ApiAvatar> LoadedAvatars;
+        private static List<ApiAvatar> SearchedAvatars;
         private static bool menuJustActivated = false;
         //private static System.Collections.Generic.List<Objects.SerializedAvatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Objects.SerializedAvatar>();
 
@@ -87,10 +90,12 @@ namespace emmVRC.Hacks
 
             FavoriteButtonNew.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0, 165f);
             FavoriteButtonNewText = FavoriteButtonNew.GetComponentInChildren<Text>();
+
             GameObject oldPublicAvatarList;
             oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
             PublicAvatarList.transform.SetAsFirstSibling();
+
             ChangeButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Change Button").gameObject;
             baseChooseEvent = ChangeButton.GetComponent<Button>().onClick;
             ChangeButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
@@ -111,15 +116,22 @@ namespace emmVRC.Hacks
 
             avText = PublicAvatarList.transform.Find("Button").gameObject;
             avText.GetComponentInChildren<Text>().text = "(0) emmVRC Favorites";
+
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
             NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             NewAvatarList.clearUnseenListOnCollapse = false;
+
+            SearchAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
+            SearchAvatarList.clearUnseenListOnCollapse = false;
+
+
             GameObject refreshButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
             refreshButton.GetComponentInChildren<Text>().text = "↻";
             refreshButton.GetComponent<Button>().onClick.RemoveAllListeners();
             refreshButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
             {
-                    MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
+                MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
+                avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
             }));
             refreshButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
             refreshButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(325f, 110f);
@@ -127,6 +139,22 @@ namespace emmVRC.Hacks
             pageAvatar.transform.Find("AvatarModel").transform.localPosition += new Vector3(0f, 60f, 0f);
 
             LoadedAvatars = new List<ApiAvatar>();
+
+            SearchedAvatars = new List<ApiAvatar>();
+
+            // Avatar Search
+
+            GameObject searchBar = GameObject.Instantiate(ChangeButton, avText.transform.parent);
+            searchBar.GetComponentInChildren<Text>().text = "\u2315 Search all emmVRC ...";
+
+            searchBar.GetComponent<Button>().onClick.RemoveAllListeners();
+            searchBar.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                OpenSearchBox();
+            }));
+            searchBar.GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 1f);
+            searchBar.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(100f, 110f);
+
         }
         public static void Refresh()
         {
@@ -191,7 +219,7 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
             if (!request.IsFaulted)
             {
-                avatarArray = TinyJSON.Decoder.Decode(HTTPRequest.get(NetworkClient.baseURL + "/api/avatar").Result).Make<Network.Objects.Avatar[]>();
+                avatarArray = TinyJSON.Decoder.Decode(request.Result).Make<Network.Objects.Avatar[]>();
                 if (avatarArray != null)
                 {
                     try
@@ -244,6 +272,52 @@ namespace emmVRC.Hacks
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
             yield return new WaitForSeconds(delay);
             NewAvatarList.RenderElement(LoadedAvatars);
+            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
+        }
+
+        public static void OpenSearchBox()
+        {
+            InputUtilities.OpenInputBox("\u2315 Search all emmVRC Favorites", "Search", (string query) => {
+                if (query == "")
+                    return;
+                MelonLoader.MelonCoroutines.Start(SearchAvatars(query));
+            });
+
+            
+        }
+        public static System.Collections.IEnumerator SearchAvatars(string query)
+        {
+            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            SearchedAvatars.Clear();
+            Network.Objects.Avatar[] avatarArray = null;
+
+            var request = HTTPRequest.post(NetworkClient.baseURL + "/api/avatar/search", new System.Collections.Generic.Dictionary<string, string> { ["query"] = query });
+            while (!request.IsCompleted && !request.IsFaulted)
+                yield return new WaitForEndOfFrame();
+            if (!request.IsFaulted)
+            {
+                avatarArray = TinyJSON.Decoder.Decode(request.Result).Make<Network.Objects.Avatar[]>();
+                if(avatarArray != null)
+                {
+                    foreach (Network.Objects.Avatar avatar in avatarArray)
+                    {
+                        SearchedAvatars.Add(avatar.apiAvatar());
+                    }
+                }
+                emmVRCLoader.Logger.LogDebug(request.Result);
+                avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Result(s): "+ query;
+            }
+            else
+            {
+                emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+            }
+            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
+            SearchAvatarList.RenderElement(SearchedAvatars);
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
         }
         internal static void OnUpdate()

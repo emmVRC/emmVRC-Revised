@@ -20,7 +20,7 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "http://localhost";
+        private static string BaseAddress = "http://172.110.6.102";
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         private static string LoginKey;
@@ -65,16 +65,21 @@ namespace emmVRC.Network
             sendRequest(password);
             if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
             {
-                Managers.NotificationManager.AddNotification("Better protect your EmmVRC account by setting a pin", "Set\nPassword", () => { OpenPasswordPrompt(); }, "Maybe\nLater", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite, -1);
+                Managers.NotificationManager.AddNotification("Better protect your EmmVRC account by setting a pin", "Set\nPassword", () => { PromptLogin(); Managers.NotificationManager.DismissCurrentNotification(); }, "Maybe\nLater", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite, -1);
             }
+        }
+
+        public static void PromptLogin()
+        {
+            if (Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
+                return;
+            OpenPasswordPrompt();
         }
 
         private static void OpenPasswordPrompt()
         {
-            InputUtilities.OpenHiddenBox("To login enter your password", "Login", (string password) => { 
+            InputUtilities.OpenNumberPad("To login enter your password", "Login", (string password) => { 
                 login(password);
-                Configuration.JSONConfig.UpdatedSecurity = true;
-                Managers.NotificationManager.DismissCurrentNotification();  
             });
         }
 
