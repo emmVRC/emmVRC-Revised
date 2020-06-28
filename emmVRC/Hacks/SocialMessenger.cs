@@ -41,10 +41,10 @@ namespace emmVRC.Hacks
             try
             {
                 //TODO change to use arrows to go up and down
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Conversation with " + Encoding.UTF8.GetString(Convert.FromBase64String(displayName)), messageConvo.Length == 0 ? "No messages with this user." : loadContext(messageConvo), "Send Message", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Conversation with " + Encoding.UTF8.GetString(Convert.FromBase64String(displayName)), messageConvo.Length == 0 ? "No messages with this user." : loadContext(messageConvo), "Send Message", () =>
                 {
                     OpenText(userID, Encoding.UTF8.GetString(Convert.FromBase64String(displayName)));
-                })));
+                });
 
             }
             catch (Exception ex)

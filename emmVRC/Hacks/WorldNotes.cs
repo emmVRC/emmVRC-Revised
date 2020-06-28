@@ -49,14 +49,14 @@ namespace emmVRC.Hacks
                     loadedNote = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/worldNotes/" + worldID + ".json"))).Make<WorldNote>();
                 else
                     loadedNote = new WorldNote { worldID = worldID, NoteText = "" };
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopupV2("Note for " + displayName, loadedNote.NoteText == "" ? "There is currently no note for this world." : loadedNote.NoteText, "Change Note", UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<Il2CppSystem.Action>((System.Action)(() =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopupV2("Note for " + displayName, loadedNote.NoteText == "" ? "There is currently no note for this world." : loadedNote.NoteText, "Change Note", () =>
                 {
                     InputUtilities.OpenInputBox("Enter a note for " + displayName + ":", "Accept", (string newNoteText) =>
                     {
                         WorldNote newNote = new WorldNote { worldID = worldID, NoteText = newNoteText };
                         SaveNote(newNote);
                     });
-                })));
+                });
             } catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError("Failed to load note: " + ex.ToString());
