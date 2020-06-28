@@ -134,7 +134,7 @@ namespace emmVRC.Libraries
         {
             button.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
             if (buttonAction != null)
-            button.GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>(buttonAction));
+                button.GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>(buttonAction));
         }
 
         public override void setBackgroundColor(Color buttonBackgroundColor, bool save = true)
@@ -261,16 +261,16 @@ namespace emmVRC.Libraries
 
             button.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
             button.GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() =>
-          {
-              if (btnOn.activeSelf)
-              {
-                  setToggleState(false, true);
-              }
-              else
-              {
-                  setToggleState(true, true);
-              }
-          })));
+            {
+                if (btnOn.activeSelf)
+                {
+                    setToggleState(false, true);
+                }
+                else
+                {
+                    setToggleState(true, true);
+                }
+            })));
         }
 
 
@@ -310,16 +310,20 @@ namespace emmVRC.Libraries
         {
             Text[] btnTextsOn = btnOn.GetComponentsInChildren<Text>();
             btnTextsOn[0].text = buttonOnText;
+            btnTextsOn[0].supportRichText = true;
             Text[] btnTextsOff = btnOff.GetComponentsInChildren<Text>();
             btnTextsOff[0].text = buttonOnText;
+            btnTextsOff[0].supportRichText = true;
         }
 
         public void setOffText(string buttonOffText)
         {
             Text[] btnTextsOn = btnOn.GetComponentsInChildren<Text>();
             btnTextsOn[1].text = buttonOffText;
+            btnTextsOn[1].supportRichText = true;
             Text[] btnTextsOff = btnOff.GetComponentsInChildren<Text>();
             btnTextsOff[1].text = buttonOffText;
+            btnTextsOff[1].supportRichText = true;
         }
 
     }

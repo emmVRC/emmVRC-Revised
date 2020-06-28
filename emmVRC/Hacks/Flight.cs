@@ -9,6 +9,7 @@ using UnityEngine;
 using VRC;
 using VRC.Core;
 using VRC.SDKBase;
+using UnhollowerRuntimeLib.XrefScans;
 
 namespace emmVRC.Hacks
 {
@@ -65,8 +66,9 @@ namespace emmVRC.Hacks
                         }
                         if (FlightEnabled)
                         {
+                            
                             var cameraRotation = Camera.main.transform;
-                            if (VRCTrackingManager.Method_Public_Static_Boolean_9() && Configuration.JSONConfig.VRFlightControls) // VR is enabled
+                            if (UnityEngine.XR.XRDevice.isPresent && Configuration.JSONConfig.VRFlightControls) // VR is enabled
                             {
                                 if (Input.GetAxis("Vertical") != 0)
                                     localPlayer.transform.position += localPlayer.transform.forward * (Time.deltaTime) * Input.GetAxis("Vertical") * (Speed.SpeedModified ? Speed.Modifier : 1f) * 2f;
@@ -89,7 +91,9 @@ namespace emmVRC.Hacks
 
                             // Stops momentum from affecting the player during flight
                             if (localPlayer.GetComponent<VRCMotionState>() != null)
+                            {
                                 localPlayer.GetComponent<VRCMotionState>().Method_Public_Void_5();
+                            }
 
                             // Disable the character controller during noclip, in order to allow the character to pass through colliders
                             if (localPlayer.GetComponent<VRCMotionState>().field_Private_CharacterController_0 != null)
@@ -105,6 +109,8 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
 
             }
+
         }
+        
     }
 }
