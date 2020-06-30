@@ -20,11 +20,12 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "http://172.110.6.102";
+        private static string BaseAddress = "http://thetrueyoshifan.com";
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         private static string LoginKey;
         private static string _authToken;
+        private static bool prompted = false;
         public static string authToken {
             get { return _authToken; }
             set
@@ -63,9 +64,11 @@ namespace emmVRC.Network
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
             sendRequest(password);
-            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
+
+            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && !prompted)
             {
-                Managers.NotificationManager.AddNotification("Better protect your EmmVRC account by setting a pin", "Set\nPassword", () => { PromptLogin(); Managers.NotificationManager.DismissCurrentNotification(); }, "Maybe\nLater", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite, -1);
+                prompted = true;
+                Managers.NotificationManager.AddNotification("Better protect your emmVRC account by setting a pin\n\nAlready have a pin? Login!", "Set\nPassword", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, Resources.alertSprite, -1);
             }
         }
 
@@ -106,12 +109,9 @@ namespace emmVRC.Network
             }
             catch(Exception exception)
             {
+                Managers.NotificationManager.AddNotification("Oops! we couldn't log you in!\nTry Again", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", () => { PromptLogin(); }, Resources.alertSprite, -1);
                 emmVRCLoader.Logger.LogError(exception.ToString());
-            }
-            
-                
+            }   
         }
-
-
     }
 }

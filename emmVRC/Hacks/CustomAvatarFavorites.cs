@@ -308,7 +308,6 @@ namespace emmVRC.Hacks
                         SearchedAvatars.Add(avatar.apiAvatar());
                     }
                 }
-                emmVRCLoader.Logger.LogDebug(request.Result);
                 avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Result(s): "+ query;
             }
             else
