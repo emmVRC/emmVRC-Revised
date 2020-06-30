@@ -154,7 +154,6 @@ namespace emmVRC.Hacks
             }));
             searchBar.GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 1f);
             searchBar.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(100f, 110f);
-
         }
         public static void Refresh()
         {
@@ -374,7 +373,7 @@ namespace emmVRC.Hacks
                 if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null)
                     FavoriteButtonNew.SetActive(false);
             }
-            else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled)
+            else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
             {
                 if (LoadedAvatars.Count > 0)
                     PublicAvatarList.SetActive(true);

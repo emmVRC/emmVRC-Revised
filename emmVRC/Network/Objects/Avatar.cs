@@ -20,6 +20,7 @@ namespace emmVRC.Network.Objects
             this.avatar_category = "";
             this.avatar_thumbnail_image_url = vrcAvatar.thumbnailImageUrl;
             this.avatar_supported_platforms = (int)vrcAvatar.supportedPlatforms;
+            this.avatar_public = (vrcAvatar.releaseStatus == "private" ? 0 : (vrcAvatar.releaseStatus == "public" ? 1 : 255));
         }
         public string avatar_name = "";
         public string avatar_id = "";
@@ -28,6 +29,7 @@ namespace emmVRC.Network.Objects
         public string avatar_author_id = "";
         public string avatar_category = "";
         public string avatar_author_name = "";
+        public int avatar_public = 1;
         public int avatar_supported_platforms = (int)VRC.Core.ApiModel.SupportedPlatforms.All;
         public ApiAvatar apiAvatar()
         {
@@ -39,7 +41,7 @@ namespace emmVRC.Network.Objects
                 thumbnailImageUrl = avatar_thumbnail_image_url,
                 authorId = avatar_author_id,
                 authorName = avatar_author_name,
-                releaseStatus = "public"
+                releaseStatus = (avatar_public == 0 ? "private" : (avatar_public == 1 ? "public" : "unavailable"))
             };
             return avtr;
         }

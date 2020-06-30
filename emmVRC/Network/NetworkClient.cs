@@ -81,7 +81,7 @@ namespace emmVRC.Network
 
         private static void OpenPasswordPrompt()
         {
-            InputUtilities.OpenNumberPad("To login enter your password", "Login", (string password) => { 
+            InputUtilities.OpenNumberPad("To login, please enter your password", "Login", (string password) => { 
                 login(password);
             });
         }
@@ -109,7 +109,7 @@ namespace emmVRC.Network
             }
             catch(Exception exception)
             {
-                Managers.NotificationManager.AddNotification("Oops! we couldn't log you in!\nTry Again", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", () => { PromptLogin(); }, Resources.alertSprite, -1);
+                Managers.NotificationManager.AddNotification("Oops! We couldn't log you in!\nTry Again", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite, -1);
                 emmVRCLoader.Logger.LogError(exception.ToString());
             }   
         }
