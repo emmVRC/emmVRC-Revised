@@ -120,6 +120,7 @@ namespace emmVRC.Hacks
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
             NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             NewAvatarList.clearUnseenListOnCollapse = false;
+            NewAvatarList.category = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
 
             SearchAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             SearchAvatarList.clearUnseenListOnCollapse = false;
@@ -134,7 +135,8 @@ namespace emmVRC.Hacks
                 avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
             }));
             refreshButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
-            refreshButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(325f, 110f);
+            refreshButton.transform.SetParent(avText.transform, true);
+            refreshButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(975f, 0f);
 
             pageAvatar.transform.Find("AvatarModel").transform.localPosition += new Vector3(0f, 60f, 0f);
 
@@ -153,7 +155,8 @@ namespace emmVRC.Hacks
                 OpenSearchBox();
             }));
             searchBar.GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 1f);
-            searchBar.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(100f, 110f);
+            searchBar.transform.SetParent(avText.transform, true);
+            searchBar.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(750f, 0f);
         }
         public static void Refresh()
         {
@@ -237,7 +240,7 @@ namespace emmVRC.Hacks
             } else
             {
                 emmVRCLoader.Logger.LogError("Asynchronous net get failed: " + request.Exception);
-                Managers.NotificationManager.AddNotification("emmVRC Avatar Favorites list failed to load. Please check your internet connection.", "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, "", null, Resources.errorSprite, -1);
+                Managers.NotificationManager.AddNotification("emmVRC Avatar Favorites list failed to load. Please check your internet connection.", "Dismiss",  Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
                 error = true;
                 errorWarned = true;
             }
@@ -277,7 +280,8 @@ namespace emmVRC.Hacks
         public static void OpenSearchBox()
         {
             InputUtilities.OpenInputBox("\u2315 Search all emmVRC Favorites", "Search", (string query) => {
-                if (query == "")
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                if (query == "" || query.Length < 2)
                     return;
                 MelonLoader.MelonCoroutines.Start(SearchAvatars(query));
             });
@@ -312,7 +316,7 @@ namespace emmVRC.Hacks
             else
             {
                 emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
             }
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
             SearchAvatarList.RenderElement(SearchedAvatars);

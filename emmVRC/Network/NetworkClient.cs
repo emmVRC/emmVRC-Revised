@@ -13,6 +13,7 @@ using System.Collections;
 using emmVRC.Network.Objects;
 using emmVRC.Objects;
 using emmVRC.Libraries;
+using VRC.Core;
 
 namespace emmVRC.Network
 {
@@ -20,7 +21,7 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "http://thetrueyoshifan.com";
+        private static string BaseAddress = "https://crreamhub.com" /*"https://thetrueyoshifan.com"*/;
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         private static string LoginKey;
@@ -65,11 +66,11 @@ namespace emmVRC.Network
                 yield return new WaitForEndOfFrame();
             sendRequest(password);
 
-            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && !prompted)
-            {
-                prompted = true;
-                Managers.NotificationManager.AddNotification("Better protect your emmVRC account by setting a pin\n\nAlready have a pin? Login!", "Set\nPassword", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, Resources.alertSprite, -1);
-            }
+            /*            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && !prompted)
+                        {
+                            prompted = true;
+                            Managers.NotificationManager.AddNotification("Better protect your emmVRC account by setting a pin\n\nAlready have a pin? Login!", "Set\nPassword", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, Resources.alertSprite, -1);
+                        }*/
         }
 
         public static void PromptLogin()
@@ -83,34 +84,73 @@ namespace emmVRC.Network
         {
             InputUtilities.OpenNumberPad("To login, please enter your password", "Login", (string password) => { 
                 login(password);
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+            });
+        }
+        private static void RequestNewPin()
+        {
+            InputUtilities.OpenNumberPad("Please enter your new pin:", "Set Pin", (string pin) => {
+                InputUtilities.OpenNumberPad("Please confirm your new pin:", "Confirm", (string pin2) =>
+                {
+                    if (pin == pin2)
+                    {
+                        MelonLoader.MelonCoroutines.Start(sendLogin(pin2));
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                    }
+                    else
+                    {
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "The pins you entered did not match. Please try again.", "Okay", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    }
+                });
             });
         }
 
         private static async void sendRequest(string password = "")
         {
-            if (password == "")
+            if (password == "" && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
                 LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
+            else if (password == "")
+                LoginKey = VRC.Core.APIUser.CurrentUser.id;
             else
                 LoginKey = password;
 
             string createFile = "0";
             if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
                 createFile = "1";
-
             try
             {
                 TinyJSON.Variant result = HTTPResponse.Serialize(await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName, ["password"] = LoginKey, ["loginKey"] = createFile }));
                 NetworkClient.authToken = result["token"];
-                if (createFile == "1")
+                if (result["reset"])
                 {
-                    Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
+                    Managers.NotificationManager.AddNotification("You need to set a pin to protect your emmVRC account.", "Set\nPin", () => {
+                        Managers.NotificationManager.DismissCurrentNotification();
+                        RequestNewPin();
+                    }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite);
+                }
+                if (createFile == "1" && LoginKey != APIUser.CurrentUser.id)
+                {
+                    try
+                    {
+                        Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
+                    } catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
                     LoginKey = result["loginKey"];
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                Managers.NotificationManager.AddNotification("Oops! We couldn't log you in!\nTry Again", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite, -1);
-                emmVRCLoader.Logger.LogError(exception.ToString());
+                if (exception.ToString().Contains("unauthorized"))
+                {
+                    Managers.NotificationManager.AddNotification("You need to log in to emmVRC.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                }
+                else
+                {
+                    Managers.NotificationManager.AddNotification("The emmVRC Network is currently unavailable. Please try again later.", "Reconnect", () => { }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.errorSprite, -1);
+                    emmVRCLoader.Logger.LogError(exception.ToString());
+                }
             }   
         }
     }

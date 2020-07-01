@@ -198,7 +198,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Network.NetworkClient.InitializeClient();
-                Network.NetworkClient.PromptLogin();
+                //Network.NetworkClient.PromptLogin();
                 MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
             }, "Disabled", () =>
             {

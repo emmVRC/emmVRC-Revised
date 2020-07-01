@@ -32,8 +32,8 @@ namespace emmVRC.Libraries
         public static void ShowStandardPopupV2(this VRCUiPopupManager vrcUiPopupManager, string title, string content, string button1Text, Action button1Action, string button2Text, Action button2Action, Action<VRCUiPopup> onCreated = null) =>
             ShowUiStandardPopupV22.Invoke(title, content, button1Text, button1Action, button2Text, button2Action, onCreated);
 
-        public static void ShowInputPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string preFilledText, UnityEngine.UI.InputField.InputType inputType, bool keypad, string buttonText, Il2CppSystem.Action<string, List<KeyCode>, UnityEngine.UI.Text> buttonAction, Il2CppSystem.Action cancelAction, string boxText = "Enter text....", bool catShrug = true, Action<VRCUiPopup> onCreated = null) =>
-            ShowUiInputPopup.Invoke(title, preFilledText, inputType, keypad, buttonText, buttonAction, cancelAction, boxText, catShrug, onCreated);
+        public static void ShowInputPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string preFilledText, UnityEngine.UI.InputField.InputType inputType, bool keypad, string buttonText, Il2CppSystem.Action<string, List<KeyCode>, UnityEngine.UI.Text> buttonAction, Il2CppSystem.Action cancelAction, string boxText = "Enter text....", bool closeOnAccept = true, Action<VRCUiPopup> onCreated = null) =>
+            ShowUiInputPopup.Invoke(title, preFilledText, inputType, keypad, buttonText, buttonAction, cancelAction, boxText, closeOnAccept, onCreated);
         public static void ShowAlert(this VRCUiPopupManager vrcUiPopupManager, string title, string content, float timeout) =>
             ShowUiAlertPopup.Invoke(title, content, timeout);
         #region Input Popup
