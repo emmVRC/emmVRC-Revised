@@ -42,10 +42,23 @@ namespace emmVRC
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
-            string[] oldVersions = { "0.1.0", "0.2.0", "0.2.1", "0.2.2" };
-            if (oldVersions.Contains(MelonLoader.BuildInfo.Version))
+            bool HarmonyPresent = false;
+            string[] ModsFolderFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Mods"));
+            foreach (string str in ModsFolderFiles)
             {
-                emmVRCLoader.Logger.LogError("You are using an incompatible version of MelonLoader: "+MelonLoader.BuildInfo.Version+". Please install v0.2.3, via the instructions in our Discords. Execution halted.");
+                if (str.Contains("harmony") || str.Contains("Harmony"))
+                    HarmonyPresent = true;
+            }
+            if (HarmonyPresent)
+            {
+                System.Windows.Forms.MessageBox.Show("You have an incompatible copy of Harmony in your Mods folder. Please remove it for emmVRC to function correctly.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                emmVRCLoader.Logger.LogError("Harmony detected in the Mods folder. Please remove it for emmVRC to function correctly.");
+            }
+            string currentVersion = (string)typeof(MelonLoader.BuildInfo).GetField("Version").GetValue(null);
+            if (Attributes.IncompatibleMelonLoaderVersions.Contains(currentVersion))
+            {
+                emmVRCLoader.Logger.LogError("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.");
+                System.Windows.Forms.MessageBox.Show("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 return;
             }
             else

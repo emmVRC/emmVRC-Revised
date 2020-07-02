@@ -62,7 +62,7 @@ namespace emmVRC.Menus
 
 
 
-            supporterButton = new PageItem("Supporters", () => { SupporterMenu.LoadMenu(); }, "Shows all the current supporters of the emmVRC project! Thank you to everyone who has donated so far! <3");
+            supporterButton = new PageItem("<color=#eac81e>Supporters</color>", () => { SupporterMenu.LoadMenu(); }, "Shows all the current supporters of the emmVRC project! Thank you to everyone who has donated so far! <3");
             baseMenu.pageItems.Add(supporterButton);
 
             forceQuitButton = new PageItem("Force\nQuit", () => { DestructiveActions.ForceQuit(); }, "Quits the game, instantly.");

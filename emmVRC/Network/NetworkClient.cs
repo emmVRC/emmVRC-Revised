@@ -14,6 +14,7 @@ using emmVRC.Network.Objects;
 using emmVRC.Objects;
 using emmVRC.Libraries;
 using VRC.Core;
+using System.Linq.Expressions;
 
 namespace emmVRC.Network
 {
@@ -21,9 +22,10 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "https://crreamhub.com" /*"https://thetrueyoshifan.com"*/;
+        private static string BaseAddress = "https://thetrueyoshifan.com";
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
+        public static string configURL { get { return BaseAddress; } } // TODO: Integrate this with the API
         private static string LoginKey;
         private static string _authToken;
         private static bool prompted = false;
@@ -44,6 +46,7 @@ namespace emmVRC.Network
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/"+ Attributes.Version+")");
+            fetchConfig();
             login();
             //return callback();
         }
@@ -55,6 +58,17 @@ namespace emmVRC.Network
             return callback();
         }
 
+        public static void fetchConfig()
+        {
+            MelonLoader.MelonCoroutines.Start(goFetchConfig());
+        }
+
+        private static IEnumerator goFetchConfig()
+        {
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                yield return new WaitForEndOfFrame();
+            getConfigAsync();
+        }
         public static void login(string password = "")
         {
             MelonLoader.MelonCoroutines.Start(sendLogin(password));
@@ -75,22 +89,20 @@ namespace emmVRC.Network
 
         public static void PromptLogin()
         {
-            if (Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
-                return;
             OpenPasswordPrompt();
         }
 
         private static void OpenPasswordPrompt()
         {
-            InputUtilities.OpenNumberPad("To login, please enter your password", "Login", (string password) => { 
+            InputUtilities.OpenNumberPad("To login, please enter your pin", "Login", (string password) => { 
                 login(password);
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
             });
         }
         private static void RequestNewPin()
         {
-            InputUtilities.OpenNumberPad("Please enter your new pin:", "Set Pin", (string pin) => {
-                InputUtilities.OpenNumberPad("Please confirm your new pin:", "Confirm", (string pin2) =>
+            InputUtilities.OpenNumberPad("Please enter your new pin", "Set Pin", (string pin) => {
+                InputUtilities.OpenNumberPad("Please confirm your new pin", "Confirm", (string pin2) =>
                 {
                     if (pin == pin2)
                     {
@@ -104,7 +116,19 @@ namespace emmVRC.Network
                 });
             });
         }
-
+        private static async void getConfigAsync()
+        {
+            try
+            {
+                string result = await HTTPRequest.get(NetworkClient.configURL + "/configuration.php");
+                NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
+            }
+            catch (Exception exception)
+            {
+                emmVRCLoader.Logger.LogError("Client configuration could not be fetched from emmVRC. Assuming default values. Error: "+exception.ToString());
+                NetworkConfig.Instance = new NetworkConfig();
+            }
+        }
         private static async void sendRequest(string password = "")
         {
             if (password == "" && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
@@ -112,7 +136,11 @@ namespace emmVRC.Network
             else if (password == "")
                 LoginKey = VRC.Core.APIUser.CurrentUser.id;
             else
+            {
                 LoginKey = password;
+                Authentication.Authentication.DeleteTokenFile(VRC.Core.APIUser.CurrentUser.id);
+            }
+
 
             string createFile = "0";
             if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
@@ -144,11 +172,20 @@ namespace emmVRC.Network
             {
                 if (exception.ToString().Contains("unauthorized"))
                 {
-                    Managers.NotificationManager.AddNotification("You need to log in to emmVRC.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                    Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                }
+                else if (exception.ToString().Contains("forbidden"))
+                {
+                    Managers.NotificationManager.AddNotification("You have tried to log in too many times. Please try again later.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
                 }
                 else
                 {
-                    Managers.NotificationManager.AddNotification("The emmVRC Network is currently unavailable. Please try again later.", "Reconnect", () => { }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.errorSprite, -1);
+                    Managers.NotificationManager.AddNotification("The emmVRC Network is currently unavailable. Please try again later.", "Reconnect", () => {
+                        Network.NetworkClient.InitializeClient();
+                        //Network.NetworkClient.PromptLogin();
+                        MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
+                        Managers.NotificationManager.DismissCurrentNotification();
+                    }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.errorSprite, -1);
                     emmVRCLoader.Logger.LogError(exception.ToString());
                 }
             }   

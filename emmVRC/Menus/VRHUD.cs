@@ -35,7 +35,7 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().anchorMax += new Vector2(.95f, .125f);
             BackgroundObject.GetComponent<RectTransform>().anchorMin += new Vector2(.95f, .125f);
             BackgroundObject.transform.SetParent(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu"), false);
-            BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
+            BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMaximized;
             if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && Configuration.JSONConfig.FunctionsButtonX != 5)
                 if (!Configuration.JSONConfig.LogoButtonEnabled || Configuration.JSONConfig.LogoButtonX != 5)
                     BackgroundObject.GetComponent<RectTransform>().position -= new Vector3(0.125f, 0f, 0f);
@@ -72,7 +72,7 @@ namespace emmVRC.Menus
                     while (Resources.onlineSprite == null) yield return null;
                     ToggleHUDButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
                 }
-                if (Configuration.JSONConfig.HUDEnabled && Resources.uiMinimized != null && enabled)
+                if (Configuration.JSONConfig.HUDEnabled && Resources.uiMaximized != null && enabled)
                 {
                     BackgroundObject.SetActive(true);
                 }

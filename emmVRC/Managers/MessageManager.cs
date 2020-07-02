@@ -109,6 +109,7 @@ namespace emmVRC.Managers
                             NotificationManager.DismissCurrentNotification();
                             InputUtilities.OpenInputBox("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)), "Send", (string msg2) => {
                                 SendMessage(msg2, msg.message.rest_message_sender_id);
+                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                             });
                         }
                     }, "Mark as\nRead", () => {
@@ -124,7 +125,7 @@ namespace emmVRC.Managers
                     }, Resources.messageSprite, -1);
                     msg.read = true;
                 }
-                yield return new WaitForSeconds(15f);
+                yield return new WaitForSeconds(Objects.NetworkConfig.Instance.MessageUpdateRate);
             }
         }
     }

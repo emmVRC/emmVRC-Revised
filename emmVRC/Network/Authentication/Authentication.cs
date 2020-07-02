@@ -15,14 +15,19 @@ namespace emmVRC.Network.Authentication
 
         public static bool Exists(string userID)
         {
-            return File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + ".ema"));
+            return File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension));
         }
 
         public static string ReadTokenFile(string userID)
         {
-            if (!File.Exists(path+userID + extension))
+            if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension)))
                 return "";
-            return System.IO.File.ReadAllText(path+userID + extension);
+            return System.IO.File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension));
+        }
+        public static void DeleteTokenFile(string userID)
+        {
+            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension)))
+                File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension));
         }
 
         public static void CreateTokenFile(string userID, string data)
@@ -33,7 +38,7 @@ namespace emmVRC.Network.Authentication
                 File.Delete(Path.Combine(path,fileName));
             };
 
-            File.WriteAllBytes(path+fileName, Encoding.UTF8.GetBytes(data));
+            File.WriteAllBytes(Path.Combine(path, fileName), Encoding.UTF8.GetBytes(data));
         }
     }
 }

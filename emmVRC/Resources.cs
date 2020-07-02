@@ -79,6 +79,8 @@ namespace emmVRC
             UnityWebRequest assetBundleRequest;
             if (Environment.CommandLine.Contains("--emmvrc.anniversarymode"))
                 assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Anniversary.emm");
+            else if (Environment.CommandLine.Contains("--emmvrc.pridemode"))
+                assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Pride.emm");
             else if (Environment.CommandLine.Contains("--emmvrc.normalmode"))
                 assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Normal.emm");
             else

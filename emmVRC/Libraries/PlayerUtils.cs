@@ -9,7 +9,7 @@ namespace emmVRC.Libraries
 {
     public class PlayerUtils
     {
-        private static Il2CppSystem.Action<Player> getAllPlayersCache;
+        //private static Il2CppSystem.Action<Player> getAllPlayersCache;
         private static System.Action<Player> requestedAction;
         public static void GetEachPlayer(System.Action<Player> act)
         {

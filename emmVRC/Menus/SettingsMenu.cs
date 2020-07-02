@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using UnityEngine.Events;
 using emmVRC.Libraries;
 using emmVRC.Hacks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace emmVRC.Menus
 {
@@ -86,6 +88,8 @@ namespace emmVRC.Menus
         private static PageItem ToggleHUDEnabledKeybind;
         private static PageItem RespawnKeybind;
         private static PageItem GoHomeKeybind;
+
+        private static bool canToggleNetwork = true;
 
 
         public static void Initialize()
@@ -194,12 +198,19 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances");
             emmVRCNetwork = new PageItem("emmVRC Network\nEnabled", () =>
             {
-                Configuration.JSONConfig.emmVRCNetworkEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-                Network.NetworkClient.InitializeClient();
-                //Network.NetworkClient.PromptLogin();
-                MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
+                if (canToggleNetwork)
+                {
+                    Configuration.JSONConfig.emmVRCNetworkEnabled = true;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                    Network.NetworkClient.InitializeClient();
+                    //Network.NetworkClient.PromptLogin();
+                    MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
+                }else
+                {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait 5 seconds before toggling the network on again.", "Okay", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();}));
+                    emmVRCNetwork.SetToggleState(false, false);
+                }
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.emmVRCNetworkEnabled = false;
@@ -208,6 +219,8 @@ namespace emmVRC.Menus
                 if (Network.NetworkClient.authToken != null)
                     Network.HTTPRequest.get(Network.NetworkClient.baseURL + "/api/authentication/logout");
                 Network.NetworkClient.authToken = null;
+                canToggleNetwork = false;
+                MelonLoader.MelonCoroutines.Start(WaitForDelayNetwork());
             }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
             GlobalChat = new PageItem("Global Chat", () =>
             {
@@ -894,6 +907,11 @@ namespace emmVRC.Menus
         {
             RefreshMenu();
             baseMenu.OpenMenu();
+        }
+        public static IEnumerator WaitForDelayNetwork()
+        {
+            yield return new WaitForSeconds(5f);
+            canToggleNetwork = true;
         }
     }
 }

@@ -74,8 +74,15 @@ namespace emmVRC.Hacks
                     {
                         emmVRCStatusText.text = emmVRCNet.loggedIn ? "<color=#FF69B4>emmVRC</color> v" + emmVRC.version + "    Network Status: <color=lime>Connected</color>" : "emmVRC v" + emmVRC.version + "    Network Status: <color=red> Disconnected </color>";
                     }*/
-
-                    emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + (Configuration.JSONConfig.emmVRCNetworkEnabled ? "    Network Status: "+ (Network.NetworkClient.authToken != null ? "<color=lime>Connected</color>" : "<color=red> Disconnected") : "");
+                    if (Configuration.JSONConfig.emmVRCNetworkEnabled)
+                    {
+                        if (Network.NetworkClient.authToken != null)
+                           emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "    Network Status: <color=lime>Connected</color>";
+                        else
+                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "    Network Status: <color=red> Disconnected</color>";
+                    }
+                    else
+                         emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version;
                 }
                 else
                 {

@@ -21,6 +21,7 @@ namespace emmVRC.Managers
         private static List<GameObject> VanillaIcons = new List<GameObject>();
         private static Thread NotificationManagerThread;
         private static List<Notification> Notifications = new List<Notification>();
+        private static bool blink = false;
         public static void Initialize()
         {
             // Initialize the emmVRC Notification icon, based on the vanilla Notification icon
@@ -40,7 +41,7 @@ namespace emmVRC.Managers
                 emmVRCLoader.Logger.LogError("Failed to fetch all vanilla notification icons: "+ex.ToString());
                 emmVRCLoader.Logger.Log("This isn't a major error, it most likely means that the icons were changed around or removed in this build of VRChat, or assemblies need to be regenerated.");
             }
-            NotificationMenu = new QMNestedButton("ShortcutMenu", Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY, "\n\nemmVRC\nNotification", "  new emmVRC Notifications are available!");
+            NotificationMenu = new QMNestedButton("ShortcutMenu", Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY, "\nemmVRC\nNotifications", "  new emmVRC Notifications are available!");
             NotificationButton1 = new QMSingleButton(NotificationMenu, 1, 0, "Accept", null, "Accept");
             NotificationButton2 = new QMSingleButton(NotificationMenu, 2, 0, "Decline", null, "Decline");
 
@@ -99,8 +100,12 @@ namespace emmVRC.Managers
                             NotificationIcon.GetComponent<Image>().sprite = Notifications[0].Icon;
 
                             NotificationMenu.getMainButton().setActive(true);
-                            NotificationMenu.getMainButton().setButtonText(Notifications.Count + "\nemmVRC\nNotifications");
-                            NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!"+(Notifications[0].Timeout != -1 ? " This notification will expire in "+Notifications[0].Timeout+" seconds." : ""));
+                            if (NotificationMenu.getMainButton().getGameObject().activeInHierarchy)
+                            {
+                                NotificationMenu.getMainButton().setButtonText((blink ? "<color=#FF69B4>" + Notifications.Count + "</color>" : "" + Notifications.Count) + "\nemmVRC\nNotifications");
+                                blink = !blink;
+                                NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!" + (Notifications[0].Timeout != -1 ? " This notification will expire in " + Notifications[0].Timeout + " seconds." : ""));
+                            }
                         }
                         else
                         {

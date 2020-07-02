@@ -29,6 +29,7 @@ namespace emmVRC.Hacks
         private static PageAvatar currPageAvatar;
         private static bool error = false;
         private static bool errorWarned;
+        private static bool Searching = false;
         private static List<ApiAvatar> LoadedAvatars;
         private static List<ApiAvatar> SearchedAvatars;
         private static bool menuJustActivated = false;
@@ -124,6 +125,7 @@ namespace emmVRC.Hacks
 
             SearchAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             SearchAvatarList.clearUnseenListOnCollapse = false;
+            currPageAvatar.avatar.avatarScale *= 0.85f;
 
 
             GameObject refreshButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
@@ -131,6 +133,7 @@ namespace emmVRC.Hacks
             refreshButton.GetComponent<Button>().onClick.RemoveAllListeners();
             refreshButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
             {
+                Searching = false;
                 MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
                 avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
             }));
@@ -172,8 +175,11 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
             if (!request.IsFaulted)
             {
-                avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
-                MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+                if (!Searching)
+                {
+                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                    MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+                }
             }
             else
             {
@@ -191,8 +197,11 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
             if (!request.IsFaulted)
             {
-                avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
-                MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+                if (!Searching)
+                {
+                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                    MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+                }
             } else
             {
                 emmVRCLoader.Logger.LogError("Asynchronous net delete failed: " + request.Exception);
@@ -321,6 +330,9 @@ namespace emmVRC.Hacks
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
             SearchAvatarList.RenderElement(SearchedAvatars);
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
+            if (SearchAvatarList.expandButton.gameObject.transform.Find("ToggleIcon").GetComponentInChildren<Image>().sprite == SearchAvatarList.expandSprite)
+                SearchAvatarList.ToggleExtend();
+            Searching = true;
         }
         internal static void OnUpdate()
         {
@@ -340,6 +352,8 @@ namespace emmVRC.Hacks
                 
                 if (!menuJustActivated)
                 {
+                    Searching = false;
+                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(1f));
                     menuJustActivated = true;
                 }

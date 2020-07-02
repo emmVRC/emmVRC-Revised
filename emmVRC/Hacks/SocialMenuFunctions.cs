@@ -161,8 +161,23 @@ namespace emmVRC.Hacks
                         TeleportButton.SetActive(false);
                         ToggleBlockButton.SetActive(false);
                         PortalToUserButton.SetActive(false);
-                        GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(true);
-                        GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(true);
+                        try
+                        {
+                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(true);
+                            
+                        } catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
+                        try
+                        {
+                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(true);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
+                        
                     }
                 }
             }
