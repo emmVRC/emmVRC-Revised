@@ -42,7 +42,7 @@ namespace emmVRC
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
-            bool HarmonyPresent = false;
+            /*bool HarmonyPresent = false;
             string[] ModsFolderFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Mods"));
             foreach (string str in ModsFolderFiles)
             {
@@ -53,7 +53,7 @@ namespace emmVRC
             {
                 System.Windows.Forms.MessageBox.Show("You have an incompatible copy of Harmony in your Mods folder. Please remove it for emmVRC to function correctly.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 emmVRCLoader.Logger.LogError("Harmony detected in the Mods folder. Please remove it for emmVRC to function correctly.");
-            }
+            }*/
             string currentVersion = (string)typeof(MelonLoader.BuildInfo).GetField("Version").GetValue(null);
             if (Attributes.IncompatibleMelonLoaderVersions.Contains(currentVersion))
             {
@@ -260,7 +260,7 @@ namespace emmVRC
                 // At this point, if no errors have occured, emmVRC is done initializing
                 emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
-
+                DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha1, ActionAction = () => { Managers.NotificationManager.AddNotification("You have tried to log in too many times. Please try again later.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1); } });
                 Initialized = true;
             }
         }

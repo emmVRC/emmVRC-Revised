@@ -152,9 +152,13 @@ namespace emmVRC.Network
                         //throw new Exception(responseMessage.ReasonPhrase);
                         throw new Exception("unauthorized");
                     }
+                    else if (responseMessage.StatusCode == HttpStatusCode.Forbidden)
+                    {
+                        throw new Exception("forbidden");
+                    }
                     else
                     {
-                        emmVRCLoader.Logger.Log("{0}{1}", responseMessage.StatusCode, responseMessage.Content);
+                        emmVRCLoader.Logger.LogDebug("{0}{1}", responseMessage.StatusCode, responseMessage.Content);
                         throw new Exception(responseMessage.ReasonPhrase);
                     }
                 }

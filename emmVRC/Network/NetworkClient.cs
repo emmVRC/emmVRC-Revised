@@ -22,13 +22,15 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "https://thetrueyoshifan.com";
+        private static string BaseAddress = "https://crreamhub.com";//"https://thetrueyoshifan.com";
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
-        public static string configURL { get { return BaseAddress; } } // TODO: Integrate this with the API
+        public static string configURL { get { return "https://thetrueyoshifan.com"; } } // TODO: Integrate this with the API
         private static string LoginKey;
         private static string _authToken;
         private static bool prompted = false;
+        private static bool userIDTried = false;
+        private static bool keyFileTried = false;
         public static string authToken {
             get { return _authToken; }
             set
@@ -131,14 +133,26 @@ namespace emmVRC.Network
         }
         private static async void sendRequest(string password = "")
         {
-            if (password == "" && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
-                LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
-            else if (password == "")
+            if (password == "" && !userIDTried)
+            {
                 LoginKey = VRC.Core.APIUser.CurrentUser.id;
-            else
+                userIDTried = true;
+            }
+            else if (password == "" && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried && !keyFileTried)
+            {
+                LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
+                keyFileTried = true;
+            }
+            else if (password != "" || (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried))
             {
                 LoginKey = password;
                 Authentication.Authentication.DeleteTokenFile(VRC.Core.APIUser.CurrentUser.id);
+            }
+            else
+            {
+                emmVRCLoader.Logger.LogError(":catShrug:");
+                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                emmVRCLoader.Logger.LogDebug("keyFileTried = " +keyFileTried);
             }
 
 
@@ -167,14 +181,20 @@ namespace emmVRC.Network
                     }
                     LoginKey = result["loginKey"];
                 }
+                userIDTried = false;
+                keyFileTried = false;
             }
             catch (Exception exception)
             {
-                if (exception.ToString().Contains("unauthorized"))
+                if (exception.ToString().Contains("unauthorized") || exception.ToString().Contains("Unauthorized"))
                 {
-                    Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                    if (userIDTried && (!keyFileTried || password != ""))
+                    {
+                        sendRequest(password);
+                    } else
+                        Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
                 }
-                else if (exception.ToString().Contains("forbidden"))
+                else if (exception.ToString().Contains("forbidden") || exception.ToString().Contains("Forbidden"))
                 {
                     Managers.NotificationManager.AddNotification("You have tried to log in too many times. Please try again later.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
                 }
