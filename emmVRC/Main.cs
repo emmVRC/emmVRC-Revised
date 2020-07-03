@@ -260,7 +260,6 @@ namespace emmVRC
                 // At this point, if no errors have occured, emmVRC is done initializing
                 emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
-                DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha1, ActionAction = () => { Managers.NotificationManager.AddNotification("You have tried to log in too many times. Please try again later.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1); } });
                 Initialized = true;
             }
         }

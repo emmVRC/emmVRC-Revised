@@ -31,6 +31,7 @@ namespace emmVRC.Network
         private static bool prompted = false;
         private static bool userIDTried = false;
         private static bool keyFileTried = false;
+        private static bool passwordTried = false;
         public static string authToken {
             get { return _authToken; }
             set
@@ -96,7 +97,8 @@ namespace emmVRC.Network
 
         private static void OpenPasswordPrompt()
         {
-            InputUtilities.OpenNumberPad("To login, please enter your pin", "Login", (string password) => { 
+            InputUtilities.OpenNumberPad("To login, please enter your pin", "Login", (string password) => {
+                passwordTried = false;
                 login(password);
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
             });
@@ -135,16 +137,25 @@ namespace emmVRC.Network
         {
             if (password == "" && !userIDTried)
             {
+                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
+                emmVRCLoader.Logger.LogDebug("password = " + password);
                 LoginKey = VRC.Core.APIUser.CurrentUser.id;
                 userIDTried = true;
             }
             else if (password == "" && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried && !keyFileTried)
             {
+                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
+                emmVRCLoader.Logger.LogDebug("password = " + password);
                 LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
                 keyFileTried = true;
             }
             else if (password != "" || (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried))
             {
+                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
+                emmVRCLoader.Logger.LogDebug("password = " + password);
                 LoginKey = password;
                 Authentication.Authentication.DeleteTokenFile(VRC.Core.APIUser.CurrentUser.id);
             }
@@ -153,6 +164,7 @@ namespace emmVRC.Network
                 emmVRCLoader.Logger.LogError(":catShrug:");
                 emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
                 emmVRCLoader.Logger.LogDebug("keyFileTried = " +keyFileTried);
+                emmVRCLoader.Logger.LogDebug("password = " + password);
             }
 
 
@@ -188,11 +200,21 @@ namespace emmVRC.Network
             {
                 if (exception.ToString().Contains("unauthorized") || exception.ToString().Contains("Unauthorized"))
                 {
-                    if (userIDTried && (!keyFileTried || password != ""))
+                    if (userIDTried && password != "" && !passwordTried)
                     {
+                        emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                        emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
+                        emmVRCLoader.Logger.LogDebug("password = " + password);
                         sendRequest(password);
-                    } else
+                        passwordTried = true;
+                    }
+                    else
+                    {
+                        emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                        emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
+                        emmVRCLoader.Logger.LogDebug("password = " + password);
                         Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                    }
                 }
                 else if (exception.ToString().Contains("forbidden") || exception.ToString().Contains("Forbidden"))
                 {
