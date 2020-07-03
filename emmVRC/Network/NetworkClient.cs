@@ -82,12 +82,6 @@ namespace emmVRC.Network
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
             sendRequest(password);
-
-            /*            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && !prompted)
-                        {
-                            prompted = true;
-                            Managers.NotificationManager.AddNotification("Better protect your emmVRC account by setting a pin\n\nAlready have a pin? Login!", "Set\nPassword", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, Resources.alertSprite, -1);
-                        }*/
         }
 
         public static void PromptLogin()
@@ -137,34 +131,34 @@ namespace emmVRC.Network
         {
             if (password == "" && !userIDTried)
             {
-                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                /*emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
                 emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
+                emmVRCLoader.Logger.LogDebug("password = " + password);*/
                 LoginKey = VRC.Core.APIUser.CurrentUser.id;
                 userIDTried = true;
             }
             else if (password == "" && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried && !keyFileTried)
             {
-                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                /*emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
                 emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
+                emmVRCLoader.Logger.LogDebug("password = " + password);*/
                 LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
                 keyFileTried = true;
             }
             else if (password != "" || (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried))
             {
-                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                /*emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
                 emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
+                emmVRCLoader.Logger.LogDebug("password = " + password);*/
                 LoginKey = password;
                 Authentication.Authentication.DeleteTokenFile(VRC.Core.APIUser.CurrentUser.id);
             }
             else
             {
-                emmVRCLoader.Logger.LogError(":catShrug:");
+                /*emmVRCLoader.Logger.LogError(":catShrug:");
                 emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
                 emmVRCLoader.Logger.LogDebug("keyFileTried = " +keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
+                emmVRCLoader.Logger.LogDebug("password = " + password);*/
             }
 
 
@@ -202,17 +196,17 @@ namespace emmVRC.Network
                 {
                     if (userIDTried && password != "" && !passwordTried)
                     {
-                        emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                        /*emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
                         emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                        emmVRCLoader.Logger.LogDebug("password = " + password);
+                        emmVRCLoader.Logger.LogDebug("password = " + password);*/
                         sendRequest(password);
                         passwordTried = true;
                     }
                     else
                     {
-                        emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
+                        /*emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
                         emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                        emmVRCLoader.Logger.LogDebug("password = " + password);
+                        emmVRCLoader.Logger.LogDebug("password = " + password);*/
                         Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
                     }
                 }

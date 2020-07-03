@@ -65,7 +65,6 @@
     <Compile Include="Hacks\WorldFunctions.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
     <Compile Include="Libraries\AssetBundles.cs" />
-    <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Libraries\GameObjectUtils.cs" />
     <Compile Include="Libraries\Hooking.cs" />
