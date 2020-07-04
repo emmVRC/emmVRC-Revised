@@ -76,6 +76,10 @@ namespace emmVRC
             }
 
             // Fetch the resources asset bundle, for things like sprites.
+            // Note from Janni:
+            // The while statements arent required anymore technically,
+            // but I can't truly test their redundancy.
+            // Uncomment them if you feel uncomfortable.
             UnityWebRequest assetBundleRequest;
             if (Environment.CommandLine.Contains("--emmvrc.anniversarymode"))
                 assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Anniversary.emm");
@@ -95,39 +99,39 @@ namespace emmVRC
                 yield return new WaitForSeconds(0.1f);
             AssetBundle newBundle = dlBundle.assetBundle;
 
-            offlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Offline.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
-
-            while (offlineSprite == null) yield return new WaitForSeconds(0.1f);
+            offlineSprite = newBundle.LoadAsset("Assets/Offline.png", Il2CppType.Of<Sprite>()).Cast<Sprite>();
+            
+            //while (offlineSprite == null) yield return new WaitForSeconds(0.1f);
             offlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            onlineSprite = newBundle.LoadAssetAsync_Internal("Assets/Online.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
+            onlineSprite = newBundle.LoadAsset("Assets/Online.png", Il2CppType.Of<Sprite>()).Cast<Sprite>();
             
-            while (onlineSprite == null) yield return new WaitForSeconds(0.1f);
+            //while (onlineSprite == null) yield return new WaitForSeconds(0.1f);
             onlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
+            owonlineSprite = newBundle.LoadAsset("Assets/OwOnline.png", Il2CppType.Of<Sprite>()).Cast<Sprite>();
 
-            while (owonlineSprite == null) yield return new WaitForSeconds(0.1f);
+            //while (owonlineSprite == null) yield return new WaitForSeconds(0.1f);
             owonlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            alertSprite = newBundle.LoadAssetAsync_Internal("Assets/Alert.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
+            alertSprite = newBundle.LoadAsset("Assets/Alert.png", Il2CppType.Of<Sprite>()).Cast<Sprite>();
 
-            while (alertSprite == null) yield return new WaitForSeconds(0.1f);
+            //while (alertSprite == null) yield return new WaitForSeconds(0.1f);
             alertSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            errorSprite = newBundle.LoadAssetAsync_Internal("Assets/Error.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
+            errorSprite = newBundle.LoadAsset("Assets/Error.png", Il2CppType.Of<Sprite>()).Cast<Sprite>();
 
-            while (errorSprite == null) yield return new WaitForSeconds(0.1f);
+            //while (errorSprite == null) yield return new WaitForSeconds(0.1f);
             errorSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            messageSprite = newBundle.LoadAssetAsync_Internal("Assets/Message.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
+            messageSprite = newBundle.LoadAsset("Assets/Message.png", Il2CppType.Of<Sprite>()).Cast<Sprite>();
 
-            while (messageSprite == null) yield return new WaitForSeconds(0.1f);
+            //while (messageSprite == null) yield return new WaitForSeconds(0.1f);
             messageSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
-            crownSprite = newBundle.LoadAssetAsync_Internal("Assets/Crown.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
+            crownSprite = newBundle.LoadAsset("Assets/Crown.png", Il2CppType.Of<Sprite>()).Cast<Sprite>();
 
-            while (crownSprite == null) yield return new WaitForSeconds(0.1f);
+            //while (crownSprite == null) yield return new WaitForSeconds(0.1f);
             crownSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
             // Fetch the texture textures... nani?
