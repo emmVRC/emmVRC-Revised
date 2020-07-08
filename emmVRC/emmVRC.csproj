@@ -146,7 +146,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="anniversary.emm" />
     <None Include="Libraries\TinyJSON\TinyJSON.csproj" />
+    <None Include="normal.emm" />
+    <None Include="pride.emm" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">

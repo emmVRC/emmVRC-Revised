@@ -35,7 +35,7 @@ namespace emmVRC
         public static Texture2D blankGradient = new Texture2D(16, 16);
         public static Material gradientMaterial = new Material(Shader.Find("Skybox/6 Sided"));
 
-        // Icons, for use in notifications, the logo, and nameplate textures
+        // Icons, for use in notifications, the logo, nameplate textures, and buttons
         public static Sprite offlineSprite;
         public static Sprite onlineSprite;
         public static Sprite owonlineSprite; // April fools~
@@ -43,6 +43,9 @@ namespace emmVRC
         public static Sprite errorSprite;
         public static Sprite messageSprite;
         public static Sprite crownSprite;
+        public static Sprite Media_Nav;
+        public static Sprite Media_PlayPause;
+        public static Sprite Media_Stop;
 
         public static AudioClip customLoadingMusic;
 
@@ -125,10 +128,17 @@ namespace emmVRC
             offlineSprite = LoadSprite("Offline.png");
             onlineSprite = LoadSprite("Online.png");
             owonlineSprite = LoadSprite("OwOnline.png");
+
             alertSprite = LoadSprite("Alert.png");
             errorSprite = LoadSprite("Error.png");
             messageSprite = LoadSprite("Message.png");
+
             crownSprite = LoadSprite("Crown.png");
+
+            Media_Nav = LoadSprite("Media_NAV.png");
+            Media_PlayPause = LoadSprite("Media_PLAY_PAUSE.png");
+            Media_Stop = LoadSprite("Media_STOP.png");
+
             uiMinimized = LoadTexture("UIMinimized.png");
             uiMaximized = LoadTexture("UIMaximized.png");
             panelTexture = LoadTexture("Panel.png");
