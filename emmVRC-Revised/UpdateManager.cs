@@ -9,14 +9,7 @@ namespace emmVRCLoader
 {
     public class UpdateManager
     {
-        private static string WebsiteURL
-        {
-            get
-            {
-                byte[] input = Convert.FromBase64String("aHR0cDovL3RoZXRydWV5b3NoaWZhbi5jb20vQmFrYVVwZGF0ZS5waHA=");
-                return Encoding.ASCII.GetString(input);
-            }
-        }
+        private static string WebsiteURL = "https://thetrueyoshifan.com/BakaUpdate.php";
         public static bool LoaderNeedsUpdate = false;
         public static bool HasCheckedLoader = false;
         public static bool HasCheckedUpdate = false;
@@ -24,25 +17,12 @@ namespace emmVRCLoader
         public static bool LoadLibCheck = true;
         private static WebRequest WebRequest = null;
         private static int ResponseCode = 0;
-        private static bool IsBeta = false;
         internal static Byte[] downloadedLib;
 
         public static void Check()
         {
             if (!HasCheckedUpdate)
             {
-                string configpath = null;
-                configpath = Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/config.json");
-                /*if (File.Exists(configpath))
-                   IsBeta = ((JObject)JsonConvert.DeserializeObject(File.ReadAllText(configpath)))["openBeta"].Value<bool>();*/
-                   if (File.Exists(configpath))
-                {
-                    if (TinyJSON.Decoder.Decode(File.ReadAllText(configpath)) != null && File.ReadAllText(configpath).Contains("OpenBetaEnabled"))
-                        IsBeta = TinyJSON.Decoder.Decode(File.ReadAllText(configpath))["OpenBetaEnabled"];
-                    else
-                        File.Delete(configpath);
-                }
-
                 Logger.Log("[emmVRCLoader] Downloading emmVRC...");
                 DownloadLib();
                 HasCheckedUpdate = true;
@@ -51,35 +31,7 @@ namespace emmVRCLoader
 
         public static void LoaderCheck()
         {
-            /*if (!HasCheckedLoader)
-            {
-                string FileHash = null;
-                using (var md5 = MD5.Create())
-                {
-                    string LoaderPath = null;
-                        LoaderPath = Directory.GetCurrentDirectory() + "emmVRCLoader.dll";
-
-                    using (var stream = File.OpenRead(LoaderPath))
-                    {
-                        var hash = md5.ComputeHash(stream);
-                        FileHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                    }
-                }
-                if (FileHash != null)
-                {
-                    WebRequest = HttpWebRequest.Create(WebsiteURL + "?loader=" + FileHash);
-                    HttpWebResponse response = WebRequest.GetResponse();
-                    while (response.ContentLength <= 0) ;
-                    if ((response.StatusCode == HttpStatusCode.OK) && response. .Equals("true"))
-                    {
-                        Logger.Log("[emmVRCLoader] emmVRCLoader needs to update!");
-                        LoaderNeedsUpdate = true;
-                    }
-                    else
-                        Logger.Log("[emmVRCLoader] emmVRCLoader is fully up-to-date.");
-                }*/
             HasCheckedLoader = true;
-            //}
         }
 
         public static void DownloadLib()
@@ -88,21 +40,7 @@ namespace emmVRCLoader
             {
                 try
                 {
-                    /*WebClient client = new WebClient();
-                    client.DownloadData(new Uri(WebsiteURL + (IsBeta ? "?beta&libdownload" : "?libdownload")));
-                    client.DownloadDataCompleted += delegate (object sender, DownloadDataCompletedEventArgs e)
-                    {
-                        if (e.Error != null || e.Cancelled)
-                        {
-                            Logger.LogError("[emmVRCLoader] Error occured while fetching lib: " + (e.Error != null ? e.Error.ToString() : "download cancelled..."));
-                        }
-                        else
-                        {
-                            string resultString = Encoding.Default.GetString(e.Result);
-                            downloadedLib = Convert.FromBase64String(resultString);
-                        }
-                    };*/
-                    WebRequest request = WebRequest.Create(WebsiteURL + (IsBeta ? "?beta&libdownload" : "?libdownload"));
+                    WebRequest request = WebRequest.Create(WebsiteURL + "?libdownload");
                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
@@ -132,7 +70,7 @@ namespace emmVRCLoader
             {
                 Logger.Log("[emmVRCLoader] Checking if emmVRC can Load...");
 
-                WebRequest request = WebRequest.Create(WebsiteURL + (IsBeta ? "?beta&shouldload" : "?shouldload"));
+                WebRequest request = WebRequest.Create(WebsiteURL + ("?shouldload"));
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -146,17 +84,6 @@ namespace emmVRCLoader
                     else
                         Logger.Log("[emmVRCLoader] emmVRC can be loaded!");
                 }
-                /*WebRequest = new WWW(WebsiteURL + (IsBeta ? "?beta&shouldload" : "?shouldload"));
-                while (!WebRequest.isDone) ;
-                ResponseCode = Bootstrapper.GetWWWResponseCode(WebRequest);
-                if ((ResponseCode == 200) && !WebRequest.text.Equals("true"))
-                {
-                    Logger.LogError("[emmVRCLoader] emmVRC can't be loaded...");
-                    LoadLibCheck = false;
-                }
-                else
-                    Logger.Log("[emmVRCLoader] emmVRC can be loaded!");
-                HasCheckedLoadLib = true;*/
             }
             return LoadLibCheck;
         }

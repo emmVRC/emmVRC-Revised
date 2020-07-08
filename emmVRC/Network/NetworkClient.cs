@@ -82,12 +82,6 @@ namespace emmVRC.Network
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 yield return new WaitForEndOfFrame();
             sendRequest(password);
-
-            /*            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && !prompted)
-                        {
-                            prompted = true;
-                            Managers.NotificationManager.AddNotification("Better protect your emmVRC account by setting a pin\n\nAlready have a pin? Login!", "Set\nPassword", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, Resources.alertSprite, -1);
-                        }*/
         }
 
         public static void PromptLogin()
@@ -135,45 +129,35 @@ namespace emmVRC.Network
         }
         private static async void sendRequest(string password = "")
         {
+            if (NetworkConfig.Instance.DeleteAndDisableAuthFile)
+            {
+                Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
+            }
             if (password == "" && !userIDTried)
             {
-                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
-                emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
                 LoginKey = VRC.Core.APIUser.CurrentUser.id;
                 userIDTried = true;
             }
-            else if (password == "" && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried && !keyFileTried)
+            else if (password == "" && userIDTried && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
             {
-                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
-                emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
-                LoginKey = Authentication.Authentication.ReadTokenFile(VRC.Core.APIUser.CurrentUser.id);
-                keyFileTried = true;
-            }
-            else if (password != "" || (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id) && userIDTried))
-            {
-                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
-                emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
-                LoginKey = password;
-                Authentication.Authentication.DeleteTokenFile(VRC.Core.APIUser.CurrentUser.id);
+                LoginKey = Authentication.Authentication.ReadTokenFile(APIUser.CurrentUser.id);
             }
             else
             {
-                emmVRCLoader.Logger.LogError(":catShrug:");
-                emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
-                emmVRCLoader.Logger.LogDebug("keyFileTried = " +keyFileTried);
-                emmVRCLoader.Logger.LogDebug("password = " + password);
+                LoginKey = password;
             }
-
 
             string createFile = "0";
             if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
                 createFile = "1";
+            string response = "undefined";
             try
             {
-                TinyJSON.Variant result = HTTPResponse.Serialize(await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName, ["password"] = LoginKey, ["loginKey"] = createFile }));
+                //emmVRCLoader.Logger.LogDebug("User ID Tried: " + userIDTried);
+                //emmVRCLoader.Logger.LogDebug("Keyfile Tried: " + keyFileTried);
+                //emmVRCLoader.Logger.LogDebug("Password Tried: " + passwordTried);
+                response = await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName, ["password"] = LoginKey, ["loginKey"] = createFile });
+                TinyJSON.Variant result = HTTPResponse.Serialize(response);
                 NetworkClient.authToken = result["token"];
                 if (result["reset"])
                 {
@@ -195,40 +179,43 @@ namespace emmVRC.Network
                 }
                 userIDTried = false;
                 keyFileTried = false;
+                passwordTried = false;
             }
             catch (Exception exception)
             {
-                if (exception.ToString().Contains("unauthorized") || exception.ToString().Contains("Unauthorized"))
+                if (response.ToLower().Contains("unauthorized"))
                 {
-                    if (userIDTried && password != "" && !passwordTried)
+                    //emmVRCLoader.Logger.LogDebug("Password: " + password);
+                    if (keyFileTried && Authentication.Authentication.Exists(APIUser.CurrentUser.id))
+                        Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
+                    if (userIDTried && !keyFileTried)
                     {
-                        emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
-                        emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                        emmVRCLoader.Logger.LogDebug("password = " + password);
+                        sendRequest();
+                        keyFileTried = true;
+                    }
+                    else if (userIDTried && keyFileTried && password != "" && !passwordTried && !NetworkConfig.Instance.DisableAuthFile && !NetworkConfig.Instance.DeleteAndDisableAuthFile)
+                    {
                         sendRequest(password);
                         passwordTried = true;
                     }
                     else
                     {
-                        emmVRCLoader.Logger.LogDebug("userIDTried = " + userIDTried);
-                        emmVRCLoader.Logger.LogDebug("keyFileTried = " + keyFileTried);
-                        emmVRCLoader.Logger.LogDebug("password = " + password);
                         Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
                     }
                 }
-                else if (exception.ToString().Contains("forbidden") || exception.ToString().Contains("Forbidden"))
+                else if (response.ToLower().Contains("forbidden"))
                 {
                     Managers.NotificationManager.AddNotification("You have tried to log in too many times. Please try again later.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
+                    exception = new Exception();
                 }
                 else
                 {
                     Managers.NotificationManager.AddNotification("The emmVRC Network is currently unavailable. Please try again later.", "Reconnect", () => {
                         Network.NetworkClient.InitializeClient();
-                        //Network.NetworkClient.PromptLogin();
                         MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
                         Managers.NotificationManager.DismissCurrentNotification();
                     }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.errorSprite, -1);
-                    emmVRCLoader.Logger.LogError(exception.ToString());
+                    //emmVRCLoader.Logger.LogError(response);
                 }
             }   
         }

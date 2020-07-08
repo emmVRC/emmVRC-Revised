@@ -7,8 +7,8 @@ using VRC.Core;
 using VRC.UI;
 using emmVRC.Libraries;
 using emmVRC.Network;
-
-
+using emmVRC.Objects;
+using Il2CppSystem.Net;
 
 namespace emmVRC.Hacks
 {
@@ -33,6 +33,8 @@ namespace emmVRC.Hacks
         private static List<ApiAvatar> LoadedAvatars;
         private static List<ApiAvatar> SearchedAvatars;
         private static bool menuJustActivated = false;
+        private static UiInputField searchBox;
+        private static UnityAction<string> searchBoxAction;
         //private static System.Collections.Generic.List<Objects.SerializedAvatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Objects.SerializedAvatar>();
 
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
@@ -57,9 +59,9 @@ namespace emmVRC.Hacks
                     if (LoadedAvatars[i].id == apiAvatar.id)
                         flag = true;
                 }
-                if (!flag)
+                if (!flag )
                 {
-                    if ((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null)
+                    if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null) )
                     {
                         if (LoadedAvatars.Count < 500)
                         {
@@ -255,29 +257,6 @@ namespace emmVRC.Hacks
             }
 
         }
-        /*internal static void UpdateAvatarList()
-        {
-            try
-            {
-                avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
-                System.Collections.Generic.List<Objects.SerializedAvatar> avtrs = new System.Collections.Generic.List<Objects.SerializedAvatar>();
-                 foreach (ApiAvatar avatar in LoadedAvatars)
-                {
-                    Objects.SerializedAvatar avtr = new Objects.SerializedAvatar();
-                    avtr.name = Convert.ToBase64String(Encoding.UTF8.GetBytes(avatar.name));
-                    avtr.id = avatar.id;
-                    avtr.assetUrl = avatar.assetUrl;
-                    avtr.thumbnailImageUrl = avatar.thumbnailImageUrl;
-                    avtr.authorId = avatar.authorId;
-                    avtr.supportedPlatforms = avatar.supportedPlatforms;
-                    avtrs.Add(avtr);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                emmVRCLoader.Logger.LogError("[emmVRC] Unable to save favorited avatars: " + ex.ToString());
-            }
-        }*/
         public static System.Collections.IEnumerator RefreshMenu(float delay)
         {
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
@@ -288,7 +267,7 @@ namespace emmVRC.Hacks
 
         public static void OpenSearchBox()
         {
-            InputUtilities.OpenInputBox("\u2315 Search all emmVRC Favorites", "Search", (string query) => {
+            InputUtilities.OpenInputBox("<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>", "Search", (string query) => {
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 if (query == "" || query.Length < 2)
                     return;
@@ -337,6 +316,50 @@ namespace emmVRC.Hacks
         internal static void OnUpdate()
         {
             if (PublicAvatarList == null || FavoriteButtonNew == null) return;
+            if (searchBox == null)
+            {
+                try
+                {
+                    VRCUiPageHeader pageheader = QuickMenuUtils.GetVRCUiMInstance().GetComponentInChildren<VRCUiPageHeader>(true);
+                    if (pageheader != null)
+                    {
+                        searchBox = pageheader.searchBar;
+                    }
+                } catch (System.Exception ex)
+                {
+                    ex = new System.Exception();
+                }
+            }
+            if (searchBoxAction == null)
+            {
+                try
+                {
+                    searchBoxAction = UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<string>>((System.Action<string>)((string searchTerm) =>
+                    {
+                        if (searchTerm == "" || searchTerm.Length < 2)
+                            return;
+                        MelonLoader.MelonCoroutines.Start(SearchAvatars(searchTerm));
+                    }));
+                } catch (System.Exception ex)
+                {
+                    ex = new System.Exception();
+                }
+            }
+            try
+            {
+                if (!searchBox.editButton.interactable && PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+            {
+                    searchBox.editButton.interactable = true;
+                    searchBox.onDoneInputting = searchBoxAction;
+                    searchBox.placeholder.text = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search...</color>";
+                    searchBox.placeholderInputText = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>";
+                }
+                
+            }
+            catch (System.Exception ex)
+            {
+                ex = new System.Exception();
+            }
             if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
             {
                 NewAvatarList.collapsedCount = 500;
@@ -385,16 +408,14 @@ namespace emmVRC.Hacks
                     }
                 }
             }
-            if ((error || LoadedAvatars.Count == 0 || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null) && (PublicAvatarList.activeSelf || FavoriteButtonNew.activeSelf))
+            if ((!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null) && (PublicAvatarList.activeSelf || FavoriteButtonNew.activeSelf))
             {
                 PublicAvatarList.SetActive(false);
-                if (error || !Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null)
-                    FavoriteButtonNew.SetActive(false);
+                FavoriteButtonNew.SetActive(false);
             }
             else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
             {
-                if (LoadedAvatars.Count > 0)
-                    PublicAvatarList.SetActive(true);
+                PublicAvatarList.SetActive(true);
                 FavoriteButtonNew.SetActive(true);
             }
             if (error && !errorWarned)

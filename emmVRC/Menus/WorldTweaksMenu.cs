@@ -34,7 +34,9 @@ namespace emmVRC.Menus
             RevertPedestalsButton = new QMSingleButton(baseMenu, 2, 1, "Enable\nPedestals", () => { Hacks.PedestalTweaks.Revert(); }, "Reverts the pedestals in the world to their default visibility");
 
             ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { new PortalInternal().Method_Private_Void_String_String_0(RoomManager.field_Internal_Static_ApiWorld_0.id, RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags); }, "Loads the current instance again");
-            PortalBlockToggle = new QMToggleButton(baseMenu, 4, 0, "Portals On", () => { Hooking.portalsBlocked = false; }, "Portals Off", () => { Hooking.portalsBlocked = true; }, "TOGGLE: Enables or disables portals in the current world", null, null, false, true);
+            PortalBlockToggle = new QMToggleButton(baseMenu, 4, 0, "Portals On", () => { Hooking.portalsBlocked = false; Configuration.JSONConfig.PortalBlockingEnable = false; Configuration.SaveConfig(); }, "Portals Off", () => { Hooking.portalsBlocked = true;  Configuration.JSONConfig.PortalBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables portals in the current world", null, null, false, true);
+            PortalBlockToggle.setToggleState(!Configuration.JSONConfig.PortalBlockingEnable);
+            Hooking.portalsBlocked = Configuration.JSONConfig.PortalBlockingEnable;
         }
     }
 }

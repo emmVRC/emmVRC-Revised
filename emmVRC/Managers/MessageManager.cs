@@ -108,7 +108,7 @@ namespace emmVRC.Managers
                             }
                             NotificationManager.DismissCurrentNotification();
                             InputUtilities.OpenInputBox("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)), "Send", (string msg2) => {
-                                SendMessage(msg2, msg.message.rest_message_sender_id);
+                                MelonLoader.MelonCoroutines.Start(SendMessage(msg2, msg.message.rest_message_sender_id));
                                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                             });
                         }

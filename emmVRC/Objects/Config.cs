@@ -8,7 +8,6 @@ namespace emmVRC.Objects
         // The main emmVRC configuration structure. Please don't remove anything; it seems to break configs!
 
         // Feature options
-        public bool OpenBetaEnabled = false;
         public bool RiskyFunctionsEnabled = false;
         public bool GlobalDynamicBonesEnabled = true;
         public bool EveryoneGlobalDynamicBonesEnabled = false;
@@ -26,6 +25,7 @@ namespace emmVRC.Objects
         public bool VRHUDInDesktop = false;
         public bool MoveVRHUDIfSpaceFree = true;
         public bool ForceRestartButtonEnabled = true;
+        public bool PortalBlockingEnable = false;
 
         // FOV value
         public int CustomFOV = 60;

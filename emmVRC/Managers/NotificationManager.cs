@@ -100,12 +100,8 @@ namespace emmVRC.Managers
                             NotificationIcon.GetComponent<Image>().sprite = Notifications[0].Icon;
 
                             NotificationMenu.getMainButton().setActive(true);
-                            if (NotificationMenu.getMainButton().getGameObject().activeInHierarchy)
-                            {
-                                NotificationMenu.getMainButton().setButtonText((blink ? "<color=#FF69B4>" + Notifications.Count + "</color>" : "" + Notifications.Count) + "\nemmVRC\nNotifications");
-                                blink = !blink;
-                                NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!" + (Notifications[0].Timeout != -1 ? " This notification will expire in " + Notifications[0].Timeout + " seconds." : ""));
-                            }
+                            NotificationMenu.getMainButton().setButtonText((blink ? "<color=#FF69B4>" + Notifications.Count + "</color>" : "" + Notifications.Count) + "\nemmVRC\nNotifications");
+                            NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!" + (Notifications[0].Timeout != -1 ? " This notification will expire in " + Notifications[0].Timeout + " seconds." : ""));
                         }
                         else
                         {

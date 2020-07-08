@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VRC;
 using VRC.Core;
-using VRC.SDKBase;
-using UnhollowerRuntimeLib.XrefScans;
 
 namespace emmVRC.Hacks
 {
@@ -28,12 +26,15 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-
+                // Check if the player is in a world
                 if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
+                    // Cache the VRCPlayer GameObject. Getting it on each frame is slow
                     if (localPlayer == null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject != null)
                         localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject;
-                    if (player == null && RoomManager.field_Internal_Static_ApiWorld_0 != null && PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
+
+                    // Cache the VRC.Player GameObject, if we don't already have it. Getting it on each frame is super slow, as we have to fetch it out of a list via the current User ID
+                    if (player == null && PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
                     {
                         try
                         {
@@ -50,16 +51,19 @@ namespace emmVRC.Hacks
                     }
                     else
                     {
+                        // If we are flying, store the original world gravity, and set it to zero, to ensure we aren't fighting with physics while flying
                         if (FlightEnabled && originalGravity == Vector3.zero)
                         {
                             originalGravity = Physics.gravity;
                             Physics.gravity = Vector3.zero;
                         }
+                        // If we are not flying, restore the original world gravity
                         if (!FlightEnabled && originalGravity != Vector3.zero)
                         {
                             Physics.gravity = originalGravity;
                             originalGravity = Vector3.zero;
                         }
+                        // If flight is turned off, Noclip should be as well.
                         if (!FlightEnabled && NoclipEnabled)
                         {
                             NoclipEnabled = false;

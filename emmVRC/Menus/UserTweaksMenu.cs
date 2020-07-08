@@ -29,7 +29,7 @@ namespace emmVRC.Menus
             {
                 string targetId = QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.id;
                 
-                InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.displayName + ":", "Send", (string msg) => { MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, targetId)); });
+                InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.displayName + ":", "Send", (string msg) => { MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, targetId)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
             }, "Send a message to this player, either through emmVRC Network, or invites");
         }
         public static void SetRiskyFunctions(bool status)

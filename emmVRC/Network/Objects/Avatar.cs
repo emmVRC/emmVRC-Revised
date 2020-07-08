@@ -1,4 +1,5 @@
-﻿using System;
+﻿using emmVRC.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace emmVRC.Network.Objects
             this.avatar_category = "";
             this.avatar_thumbnail_image_url = vrcAvatar.thumbnailImageUrl;
             this.avatar_supported_platforms = (int)vrcAvatar.supportedPlatforms;
-            this.avatar_public = (vrcAvatar.releaseStatus == "private" ? 0 : (vrcAvatar.releaseStatus == "public" ? 1 : 255));
+            this.avatar_public =  (vrcAvatar.releaseStatus == "private" ? 0 : (vrcAvatar.releaseStatus == "public" ? 1 : 255));
         }
         public string avatar_name = "";
         public string avatar_id = "";
@@ -41,7 +42,7 @@ namespace emmVRC.Network.Objects
                 thumbnailImageUrl = avatar_thumbnail_image_url,
                 authorId = avatar_author_id,
                 authorName = avatar_author_name,
-                releaseStatus = (avatar_public == 0 ? "private" : (avatar_public == 1 ? "public" : "unavailable"))
+                releaseStatus = (NetworkConfig.Instance.DisableAvatarChecks ? "public" : (avatar_public == 0 ? "private" : (avatar_public == 1 ? "public" : "unavailable")))
             };
             return avtr;
         }
