@@ -19,7 +19,6 @@ namespace emmVRC.Menus
         public static QMSingleButton ResetSettingsButton;
 
         // Page 1
-        private static PageItem OpenBeta;
         private static PageItem RiskyFunctions;
         private static PageItem VRFlightControls;
         private static PageItem GlobalDynamicBones;
@@ -114,18 +113,6 @@ namespace emmVRC.Menus
                 }));
             }, "Resets all emmVRC Settings to their default values. This requires a restart to fully take effect");
 
-
-            OpenBeta = new PageItem("Open Beta", () =>
-            {
-                Configuration.JSONConfig.OpenBetaEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.OpenBetaEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "TOGGLE: Enables the emmVRC Open Beta. Requires a restart to take affect");
             RiskyFunctions = new PageItem("Risky Functions", () =>
             {
                 if (!Configuration.JSONConfig.RiskyFunctionsWarningShown)
@@ -255,15 +242,16 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network"); 
-            baseMenu.pageItems.Add(OpenBeta);
             baseMenu.pageItems.Add(RiskyFunctions);
             baseMenu.pageItems.Add(VRFlightControls);
             baseMenu.pageItems.Add(GlobalDynamicBones);
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(emmVRCNetwork);
-            baseMenu.pageItems.Add(GlobalChat);
+            //baseMenu.pageItems.Add(GlobalChat);
             baseMenu.pageItems.Add(AutoInviteMessage);
             baseMenu.pageItems.Add(AvatarFavoriteList);
+            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space());
 
             InfoBar = new PageItem("Info Bar", () =>
             {
@@ -848,7 +836,6 @@ namespace emmVRC.Menus
         {
             try
             {
-                OpenBeta.SetToggleState(Configuration.JSONConfig.OpenBetaEnabled);
                 RiskyFunctions.SetToggleState(Configuration.JSONConfig.RiskyFunctionsEnabled);
                 VRFlightControls.SetToggleState(Configuration.JSONConfig.VRFlightControls);
                 GlobalDynamicBones.SetToggleState(Configuration.JSONConfig.GlobalDynamicBonesEnabled);

@@ -73,13 +73,26 @@ namespace emmVRC.Hacks
                     PortalToUserButton.SetActive(!PortalToUserButton.activeSelf);
                 else
                     PortalToUserButton.SetActive(false);
-                GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").activeSelf);
-                GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
+                try
+                {
+                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").activeSelf);
+                } catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
+                try
+                {
+                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
+                } catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
             }));
 
             UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "Send", (string msg) => {
                     MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 });
             }));
 

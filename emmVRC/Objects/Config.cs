@@ -25,6 +25,7 @@ namespace emmVRC.Objects
         public bool VRHUDInDesktop = false;
         public bool MoveVRHUDIfSpaceFree = true;
         public bool ForceRestartButtonEnabled = true;
+        public bool PortalBlockingEnable = false;
 
         // FOV value
         public int CustomFOV = 60;

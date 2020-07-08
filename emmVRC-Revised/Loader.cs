@@ -10,7 +10,7 @@ namespace emmVRCLoader
         public const string Name = "emmVRCLoader";
         public const string Author = "The emmVRC Team";
         public const string Company = "emmVRC";
-        public const string Version = "0.0.5";
+        public const string Version = "1.0.0";
         public const string DownloadLink = "https://www.thetrueyoshifan.com/downloads/emmVRCLoader.dll";
     }
     [Obfuscation(Exclude = true)]

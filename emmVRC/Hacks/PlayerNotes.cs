@@ -55,6 +55,7 @@ namespace emmVRC.Hacks
                     {
                         PlayerNote newNote = new PlayerNote { UserID = userID, NoteText = newNoteText };
                         SaveNote(newNote);
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     });
                 });
             } catch (Exception ex)
