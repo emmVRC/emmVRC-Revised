@@ -267,7 +267,7 @@ namespace emmVRC.Hacks
 
         public static void OpenSearchBox()
         {
-            InputUtilities.OpenInputBox("<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>", "Search", (string query) => {
+            InputUtilities.OpenInputBox("Search emmVRC Network...", "Search", (string query) => {
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 if (query == "" || query.Length < 2)
                     return;
@@ -347,12 +347,12 @@ namespace emmVRC.Hacks
             }
             try
             {
-                if (!searchBox.editButton.interactable && PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+                if (!searchBox.editButton.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
                     searchBox.editButton.interactable = true;
                     searchBox.onDoneInputting = searchBoxAction;
-                    searchBox.placeholder.text = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search...</color>";
-                    searchBox.placeholderInputText = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>";
+                    //searchBox.placeholder.text = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search...</color>";
+                    //searchBox.placeholderInputText = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>";
                 }
                 
             }
