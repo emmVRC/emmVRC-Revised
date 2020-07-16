@@ -10,10 +10,12 @@ namespace emmVRC.Objects
         // Feature options
         public bool RiskyFunctionsEnabled = false;
         public bool GlobalDynamicBonesEnabled = true;
+        public bool FriendGlobalDynamicBonesEnabled = false;
         public bool EveryoneGlobalDynamicBonesEnabled = false;
         public bool emmVRCNetworkEnabled = true;
         public bool GlobalChatEnabled = true;
         public bool AutoInviteMessage = false;
+        public bool ConsoleClean = true;
         public bool VRFlightControls = true;
         public bool UnlimitedFPSEnabled = false;
         public bool InfoBarDisplayEnabled = true;
@@ -29,6 +31,9 @@ namespace emmVRC.Objects
 
         // FOV value
         public int CustomFOV = 60;
+
+        // FPS limit
+        public int FPSLimit = 144;
 
         // Button positions
         public int FunctionsButtonX = 5;

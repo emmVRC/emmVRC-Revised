@@ -107,10 +107,10 @@ namespace emmVRC.Managers
                                 emmVRCLoader.Logger.LogError(ex.ToString());
                             }
                             NotificationManager.DismissCurrentNotification();
-                            InputUtilities.OpenInputBox("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)), "Send", (string msg2) => {
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg2, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+                            { 
                                 MelonLoader.MelonCoroutines.Start(SendMessage(msg2, msg.message.rest_message_sender_id));
-                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                            });
+                            }), null, "Enter message....");
                         }
                     }, "Mark as\nRead", () => {
                         if (NetworkClient.authToken != null)

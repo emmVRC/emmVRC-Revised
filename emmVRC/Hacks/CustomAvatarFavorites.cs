@@ -149,19 +149,6 @@ namespace emmVRC.Hacks
 
             SearchedAvatars = new List<ApiAvatar>();
 
-            // Avatar Search
-
-            GameObject searchBar = GameObject.Instantiate(ChangeButton, avText.transform.parent);
-            searchBar.GetComponentInChildren<Text>().text = "\u2315 Search all emmVRC ...";
-
-            searchBar.GetComponent<Button>().onClick.RemoveAllListeners();
-            searchBar.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
-            {
-                OpenSearchBox();
-            }));
-            searchBar.GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 1f);
-            searchBar.transform.SetParent(avText.transform, true);
-            searchBar.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(750f, 0f);
         }
         public static void Refresh()
         {
@@ -265,17 +252,6 @@ namespace emmVRC.Hacks
             PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
         }
 
-        public static void OpenSearchBox()
-        {
-            InputUtilities.OpenInputBox("Search emmVRC Network...", "Search", (string query) => {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                if (query == "" || query.Length < 2)
-                    return;
-                MelonLoader.MelonCoroutines.Start(SearchAvatars(query));
-            });
-
-            
-        }
         public static System.Collections.IEnumerator SearchAvatars(string query)
         {
             if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null)

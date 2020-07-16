@@ -178,9 +178,7 @@ namespace emmVRC.Menus
                             "\n" +
                             "\nUsers in room"+(RoomManager.field_Internal_Static_ApiWorldInstance_0 != null ? " ("+PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count+")" : "")+":\n" + userList + "" +
                             "\n" +
-                            "\n" +
                             "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
-                            "\n" +
                             "\n" +
                             "\n" +
                             (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.IO;
 using System.Reflection;
 using Il2CppSystem.Reflection;
 using System.Collections.Generic;
@@ -10,6 +12,8 @@ using UnhollowerBaseLib;
 using MelonLoader;
 using UnityEngine;
 using UnhollowerRuntimeLib;
+using Transmtn.DTO;
+using Transmtn.Exceptions;
 
 namespace emmVRC.Libraries
 {
@@ -20,6 +24,7 @@ namespace emmVRC.Libraries
         private delegate void PortalEnteredDelegate(IntPtr instance);
         private static PortalEnteredDelegate onPortalEnteredDelegate;
         public static bool portalsBlocked = false;
+        private static Harmony.HarmonyInstance instanceHarmony;
 
 
         /*public static void Hook(IntPtr target, IntPtr detour)
@@ -29,6 +34,20 @@ namespace emmVRC.Libraries
 
         public unsafe static void Initialize()
         {
+            instanceHarmony = Harmony.HarmonyInstance.Create("emmVRCHarmony");
+            instanceHarmony.Patch(typeof(Il2CppSystem.Console).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).First(
+                (System.Reflection.MethodInfo a) => 
+                { 
+                    if (a.Name != "WriteLine") 
+                    { 
+                        return false;
+                    } 
+                    if (a.GetParameters().Length == 1)
+                    {
+                        return a.GetParameters()[0].ParameterType == typeof(string);
+                    }
+                    return false;
+                }), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IL2CPPConsoleWriteLine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)), null, null);
             IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
             Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
             onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
@@ -38,7 +57,37 @@ namespace emmVRC.Libraries
             Imports.Hook((IntPtr)(&original), Marshal.GetFunctionPointerForDelegate(new Action<IntPtr>(OnPortalEntered)));
             onPortalEnteredDelegate = Marshal.GetDelegateForFunctionPointer<PortalEnteredDelegate>(original);
         }
-        
+        private static bool IL2CPPConsoleWriteLine(string __0)
+        {
+            if (__0.Contains("authcookie") || __0.Contains("Steam ID") || Configuration.JSONConfig.ConsoleClean)
+                return false;
+            return true;
+        }
+        /*private static bool TransmtnGet(Transmtn.HttpConnection __instance, string __0, ref string __result)
+        {
+            string result;
+            try
+            {
+                WebClient webClient = new WebClient();
+                webClient.Headers.Add(HttpRequestHeader.Cookie, string.Format("apiKey={0}; auth={1}", __instance.Config.apiKey, __instance.Token.Token));
+                webClient.Headers.Add(HttpRequestHeader.UserAgent, "Transmtn-Pipeline");
+                webClient.Headers.Add("X-Client-Version", __instance._clientVersion);
+                webClient.Headers.Add("X-Platform", __instance._clientVersion);
+                Stream stream = webClient.OpenRead(__instance.Endpoint + __0);
+                StreamReader streamReader = new StreamReader(stream);
+                string text = streamReader.ReadToEnd();
+                stream.Close();
+                streamReader.Close();
+                result = text;
+            }
+            catch (System.Net.WebException ex)
+            {
+                throw ex;
+            }
+            __result = result;
+            return false;
+        }*/
+
         private static void OnAvatarInstantiated(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded)
         {
             onAvatarInstantiatedDelegate(@this, avatarPtr, avatarDescriptorPtr, loaded);

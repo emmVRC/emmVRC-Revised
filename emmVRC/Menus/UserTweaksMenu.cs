@@ -28,8 +28,9 @@ namespace emmVRC.Menus
             SendMessageButton = new QMSingleButton(UserTweaks, 1, 1, "Send\nMessage", () =>
             {
                 string targetId = QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.id;
-                
-                InputUtilities.OpenInputBox("Send a message to " + QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.displayName + ":", "Send", (string msg) => { MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, targetId)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.displayName + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => {
+                    MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, targetId));
+                }), null, "Enter message....");
             }, "Send a message to this player, either through emmVRC Network, or invites");
         }
         public static void SetRiskyFunctions(bool status)

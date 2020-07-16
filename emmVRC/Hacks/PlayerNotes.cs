@@ -51,12 +51,10 @@ namespace emmVRC.Hacks
                     loadedNote = new PlayerNote { UserID = userID, NoteText = "" };
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopupV2("Note for " + displayName, loadedNote.NoteText == "" ? "There is currently no note for this user." : loadedNote.NoteText, "Change Note", () =>
                 {
-                    InputUtilities.OpenInputBox("Enter a note for " + displayName + ":", "Accept", (string newNoteText) =>
-                    {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter a note for "+displayName+":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string newNoteText, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => {
                         PlayerNote newNote = new PlayerNote { UserID = userID, NoteText = newNoteText };
                         SaveNote(newNote);
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    });
+                    }), null, "Enter note....");
                 });
             } catch (Exception ex)
             {

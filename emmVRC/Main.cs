@@ -291,6 +291,49 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
+                DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => {
+                    try
+                    {
+                        var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
+                        var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
+                        testCube.AddComponent<BoxCollider>();
+                        var pickup = testCube.AddComponent<VRCSDK2.VRC_Pickup>();
+                        var rigidbody = testCube.AddComponent<Rigidbody>();
+                        rigidbody.useGravity = true;
+                        rigidbody.isKinematic = true;
+                        pickup.proximity = 0.5f;
+                        pickup.pickupable = true;
+                    } catch (Exception ex)
+                    {
+                        ex = new Exception();
+                    }
+                } });
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha9,
+                    ActionAction = () => {
+                        try
+                        {
+                            var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
+                            var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
+                            testCube.AddComponent<BoxCollider>();
+                            var pickup = testCube.AddComponent<VRCSDK2.VRC_Station>();
+                            var trigger = testCube.AddComponent<VRC.SDKBase.VRC_Trigger>();
+                            var rigidbody = testCube.AddComponent<Rigidbody>();
+                            rigidbody.useGravity = true;
+                            rigidbody.isKinematic = true;
+                            pickup.stationEnterPlayerLocation = testCube.transform;
+                            pickup.stationExitPlayerLocation = testCube.transform;
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
+                    }
+                });
             }
         }
 

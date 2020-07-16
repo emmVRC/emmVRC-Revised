@@ -30,7 +30,7 @@ namespace emmVRC.Hacks
                 UserPermissions uperms = UserPermissions.GetUserPermissions(avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id);
 
                 // If the user can have global dynamic bones (or is you), or "Everyone Global Dynamic Bones" is on...
-                if (uperms.GlobalDynamicBonesEnabled || avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id == APIUser.CurrentUser.id || Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled)
+                if (uperms.GlobalDynamicBonesEnabled || avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id == APIUser.CurrentUser.id || Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled || ( Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled && APIUser.IsFriendsWith(avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id)))
                 {
                     // If neither Hand nor Feet colliders is turned on, fetch all the colliders from the avatar and add them to cache
                     if (!aperms.HandColliders && !aperms.FeetColliders)

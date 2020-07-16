@@ -59,7 +59,11 @@ namespace emmVRC.Menus
             selectedWaypointMenu = new QMNestedButton(baseMenu, 1024, 768, "Selected Waypoint", "");
             selectedWaypointMenu.getMainButton().DestroyMe();
             teleportButton = new QMSingleButton(selectedWaypointMenu, 1, 0, "Teleport", () => { VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(worldWaypoints[selectedWaypoint].x, worldWaypoints[selectedWaypoint].y, worldWaypoints[selectedWaypoint].z); VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation = new Quaternion(worldWaypoints[selectedWaypoint].rx, worldWaypoints[selectedWaypoint].ry, worldWaypoints[selectedWaypoint].rz, worldWaypoints[selectedWaypoint].rw); }, "Teleport to this waypoint");
-            renameButton = new QMSingleButton(selectedWaypointMenu, 2, 0, "Rename", () => { InputUtilities.OpenInputBox("Type a name (or none for default)", "Accept", (string name) => { worldWaypoints[selectedWaypoint].Name = name; SaveWaypoints(); }); }, "Rename this waypoint (currently unnamed)");
+            renameButton = new QMSingleButton(selectedWaypointMenu, 2, 0, "Rename", () => {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Type a name (or none for default)", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string name, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => { 
+                worldWaypoints[selectedWaypoint].Name = name; SaveWaypoints();
+            }), null, "Enter name...");
+            }, "Rename this waypoint (currently unnamed)");
             setLocationButton = new QMSingleButton(selectedWaypointMenu, 3, 0, "Set\nLocation", () => { 
                 worldWaypoints[selectedWaypoint].x = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.x; 
                 worldWaypoints[selectedWaypoint].y = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.y; 
