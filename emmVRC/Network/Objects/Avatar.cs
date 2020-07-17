@@ -32,6 +32,11 @@ namespace emmVRC.Network.Objects
         public string avatar_author_name = "";
         public int avatar_public = 1;
         public int avatar_supported_platforms = (int)VRC.Core.ApiModel.SupportedPlatforms.All;
+        public Il2CppSystem.Collections.Generic.List<string> avatar_tags { get {
+                Il2CppSystem.Collections.Generic.List<string> list = new Il2CppSystem.Collections.Generic.List<string>();
+                list.Add("avatar");
+                return list;
+            } }
         public ApiAvatar apiAvatar()
         {
             ApiAvatar avtr = new ApiAvatar
@@ -41,8 +46,16 @@ namespace emmVRC.Network.Objects
                 assetUrl = avatar_asset_url,
                 thumbnailImageUrl = avatar_thumbnail_image_url,
                 authorId = avatar_author_id,
-                authorName = avatar_author_name,
-                releaseStatus = (NetworkConfig.Instance.DisableAvatarChecks ? "public" : (avatar_public == 0 ? "private" : (avatar_public == 1 ? "public" : "unavailable")))
+                authorName = Encoding.UTF8.GetString(Convert.FromBase64String(avatar_author_name)),
+                description = Encoding.UTF8.GetString(Convert.FromBase64String(avatar_name)),
+                releaseStatus = (NetworkConfig.Instance.DisableAvatarChecks ? "public" : (avatar_public == 0 ? "private" : (avatar_public == 1 ? "public" : "unavailable"))),
+                unityVersion = "2018.4.20f1",
+                version = 1,
+                apiVersion = 1,
+                Endpoint = "avatars",
+                Populated = true,
+                assetVersion = new AssetVersion("2018.4.20f1", 0),
+                tags =  avatar_tags
             };
             return avtr;
         }

@@ -291,7 +291,25 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
-                DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => {
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () => {
+                        //emmVRCLoader.Logger.LogDebug("==========================================================");
+                        //GameObjectUtils.GetProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0);
+                        emmVRCLoader.Logger.LogDebug("Endpoint: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Endpoint);
+                        emmVRCLoader.Logger.LogDebug("Populated: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Populated);
+                        emmVRCLoader.Logger.LogDebug("Required properties: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties);
+                        foreach (string str in CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties)
+                        {
+                            emmVRCLoader.Logger.LogDebug(str);
+                        }                        
+
+                        //emmVRCLoader.Logger.LogDebug("Processing list differences...");
+                        //GameObjectUtils.CompareProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0, CustomAvatarFavorites.LoadedAvatars[0]);
+                    }
+                });
+                /*DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => {
                     try
                     {
                         var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
@@ -333,7 +351,7 @@ namespace emmVRC
                             ex = new Exception();
                         }
                     }
-                });
+                });*/
             }
         }
 

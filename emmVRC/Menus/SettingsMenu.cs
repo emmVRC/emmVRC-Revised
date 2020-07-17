@@ -26,7 +26,6 @@ namespace emmVRC.Menus
         private static PageItem EveryoneGlobalDynamicBones;
         private static PageItem emmVRCNetwork;
         private static PageItem GlobalChat;
-        private static PageItem AutoInviteMessage;
         private static PageItem ConsoleClean;
         private static PageItem AvatarFavoriteList;
 
@@ -245,17 +244,6 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
-            AutoInviteMessage = new PageItem("Automatic\nInvite Messages", () =>
-            {
-                Configuration.JSONConfig.AutoInviteMessage = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.AutoInviteMessage = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "TOGGLE: Sends messages through invites, instead of the emmVRC Network");
             ConsoleClean = new PageItem("Console\nCleaning", () =>
             {
                 Configuration.JSONConfig.ConsoleClean = true;
@@ -287,8 +275,8 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(VRFlightControls);
             //baseMenu.pageItems.Add(GlobalChat);
-            baseMenu.pageItems.Add(AutoInviteMessage);
             baseMenu.pageItems.Add(ConsoleClean);
+            baseMenu.pageItems.Add(PageItem.Space());
 
             InfoBar = new PageItem("Info Bar", () =>
             {
@@ -881,10 +869,9 @@ namespace emmVRC.Menus
                 EveryoneGlobalDynamicBones.SetToggleState(Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled);
                 emmVRCNetwork.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
                 GlobalChat.SetToggleState(Configuration.JSONConfig.GlobalChatEnabled);
-                AutoInviteMessage.SetToggleState(Configuration.JSONConfig.AutoInviteMessage);
                 AvatarFavoriteList.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);
                 ConsoleClean.SetToggleState(Configuration.JSONConfig.ConsoleClean);
-
+                
                 InfoBar.SetToggleState(Configuration.JSONConfig.InfoBarDisplayEnabled);
                 Clock.SetToggleState(Configuration.JSONConfig.ClockEnabled);
                 MasterIcon.SetToggleState(Configuration.JSONConfig.MasterIconEnabled);

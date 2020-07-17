@@ -14,6 +14,9 @@ using UnityEngine;
 using UnhollowerRuntimeLib;
 using Transmtn.DTO;
 using Transmtn.Exceptions;
+using VRC.SDKBase;
+using VRCSDK2;
+using VRC;
 
 namespace emmVRC.Libraries
 {
@@ -23,7 +26,6 @@ namespace emmVRC.Libraries
         private static AvatarInstantiatedDelegate onAvatarInstantiatedDelegate;
         private delegate void PortalEnteredDelegate(IntPtr instance);
         private static PortalEnteredDelegate onPortalEnteredDelegate;
-        public static bool portalsBlocked = false;
         private static Harmony.HarmonyInstance instanceHarmony;
 
 
@@ -31,6 +33,7 @@ namespace emmVRC.Libraries
         {
             typeof(Imports).GetMethod("Hook", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).Invoke(null, new object[] { target, detour });
         }*/
+        
 
         public unsafe static void Initialize()
         {
@@ -47,20 +50,32 @@ namespace emmVRC.Libraries
                         return a.GetParameters()[0].ParameterType == typeof(string);
                     }
                     return false;
-                }), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IL2CPPConsoleWriteLine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)), null, null);
+                }), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IL2CPPConsoleWriteLine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)), null, null);    
             IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
             Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
             onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
 
-            IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_4", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
+            IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_3", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
             var original = *(IntPtr*)funcToEnterPortal;
             Imports.Hook((IntPtr)(&original), Marshal.GetFunctionPointerForDelegate(new Action<IntPtr>(OnPortalEntered)));
             onPortalEnteredDelegate = Marshal.GetDelegateForFunctionPointer<PortalEnteredDelegate>(original);
+            instanceHarmony.Patch(typeof(VRC_StationInternal).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+            instanceHarmony.Patch(typeof(VRC_StationInternal2).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+            instanceHarmony.Patch(typeof(VRC_StationInternal3).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
         }
         private static bool IL2CPPConsoleWriteLine(string __0)
         {
-            if (__0.Contains("authcookie") || __0.Contains("Steam ID") || Configuration.JSONConfig.ConsoleClean)
+            if (__0.Contains("authcookie") || Configuration.JSONConfig.ConsoleClean)
                 return false;
+            return true;
+        }
+        private static bool PlayerCanUseStation(ref bool __result, VRC.Player __0, bool __1)
+        {
+            if (__0 != null && __0 == VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_Player_0 && Configuration.JSONConfig.ChairBlockingEnable)
+            {
+                __result = false;
+                return false;
+            }
             return true;
         }
         /*private static bool TransmtnGet(Transmtn.HttpConnection __instance, string __0, ref string __result)
@@ -109,7 +124,7 @@ namespace emmVRC.Libraries
         {
             if (@this != IntPtr.Zero)
             {
-                if (!portalsBlocked)
+                if (!Configuration.JSONConfig.PortalBlockingEnable)
                     onPortalEnteredDelegate(@this);
             }
         }

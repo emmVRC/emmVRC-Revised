@@ -30,7 +30,7 @@ namespace emmVRC.Hacks
         private static bool error = false;
         private static bool errorWarned;
         private static bool Searching = false;
-        private static List<ApiAvatar> LoadedAvatars;
+        public static List<ApiAvatar> LoadedAvatars;
         private static List<ApiAvatar> SearchedAvatars;
         private static bool menuJustActivated = false;
         private static UiInputField searchBox;
@@ -42,6 +42,7 @@ namespace emmVRC.Hacks
             uivrclist.Method_Protected_Void_List_1_T_Int32_Boolean_0<ApiAvatar>(AvatarList, 0, true);
             //uivrclist.Method_Protected_List_1_T_Int32_Boolean_1<ApiAvatar>(AvatarList, 0, true);
         }
+
         internal static void Initialize()
         {
             pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
@@ -246,10 +247,23 @@ namespace emmVRC.Hacks
         }
         public static System.Collections.IEnumerator RefreshMenu(float delay)
         {
-            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
-            yield return new WaitForSeconds(delay);
-            NewAvatarList.RenderElement(LoadedAvatars);
-            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
+            if (NewAvatarList.scrollRect != null)
+            {
+                NewAvatarList.scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
+                yield return new WaitForSeconds(delay);
+                NewAvatarList.RenderElement(LoadedAvatars);
+
+                NewAvatarList.scrollRect.movementType = ScrollRect.MovementType.Elastic;
+            }
+            /*if (NewAvatarList.avatarPedestal != null)
+                emmVRCLoader.Logger.LogDebug(GameObjectUtils.GetPath(NewAvatarList.avatarPedestal.gameObject));
+            else
+                emmVRCLoader.Logger.LogDebug("Avatar pedestal is null!");
+            if (NewAvatarList.myPage != null)
+                emmVRCLoader.Logger.LogDebug(GameObjectUtils.GetPath(NewAvatarList.myPage.gameObject));
+            else
+                emmVRCLoader.Logger.LogDebug("My Page is null!");
+            emmVRCLoader.Logger.LogDebug(NewAvatarList.pickers[0].contentId);*/
         }
 
         public static System.Collections.IEnumerator SearchAvatars(string query)
@@ -282,9 +296,9 @@ namespace emmVRC.Hacks
                 emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
             }
-            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Unrestricted;
+            SearchAvatarList.scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
             SearchAvatarList.RenderElement(SearchedAvatars);
-            PublicAvatarList.GetComponent<ScrollRect>().movementType = ScrollRect.MovementType.Elastic;
+            SearchAvatarList.scrollRect.movementType = ScrollRect.MovementType.Elastic;
             if (SearchAvatarList.expandButton.gameObject.transform.Find("ToggleIcon").GetComponentInChildren<Image>().sprite == SearchAvatarList.expandSprite)
                 SearchAvatarList.ToggleExtend();
             Searching = true;
@@ -340,6 +354,7 @@ namespace emmVRC.Hacks
             {
                 NewAvatarList.collapsedCount = 500;
                 NewAvatarList.expandedCount = 500;
+                
 
                 /*if (!PublicAvatarList.activeInHierarchy)
                 {

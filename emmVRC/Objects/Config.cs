@@ -14,7 +14,6 @@ namespace emmVRC.Objects
         public bool EveryoneGlobalDynamicBonesEnabled = false;
         public bool emmVRCNetworkEnabled = true;
         public bool GlobalChatEnabled = true;
-        public bool AutoInviteMessage = false;
         public bool ConsoleClean = true;
         public bool VRFlightControls = true;
         public bool UnlimitedFPSEnabled = false;
@@ -28,6 +27,7 @@ namespace emmVRC.Objects
         public bool MoveVRHUDIfSpaceFree = true;
         public bool ForceRestartButtonEnabled = true;
         public bool PortalBlockingEnable = false;
+        public bool ChairBlockingEnable = false;
 
         // FOV value
         public int CustomFOV = 60;
