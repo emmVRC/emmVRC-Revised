@@ -22,10 +22,11 @@ namespace emmVRC.Menus
         private static PageItem RiskyFunctions;
         private static PageItem VRFlightControls;
         private static PageItem GlobalDynamicBones;
+        private static PageItem FriendGlobalDynamicBones;
         private static PageItem EveryoneGlobalDynamicBones;
         private static PageItem emmVRCNetwork;
         private static PageItem GlobalChat;
-        private static PageItem AutoInviteMessage;
+        private static PageItem ConsoleClean;
         private static PageItem AvatarFavoriteList;
 
         // Page 2
@@ -163,16 +164,38 @@ namespace emmVRC.Menus
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
+                Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled = false;
+                Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                LoadMenu();
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
             }, "TOGGLE: Enables the Global Dynamic Bones system");
+            FriendGlobalDynamicBones = new PageItem("Friend Global\nDynamic Bones", () =>
+            {
+                Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled = true;
+                Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                LoadMenu();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+            }, "Disabled", () => {
+                Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                LoadMenu();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+            }, "TOGGLE: Enables Global Dynamic Bones for friends. Note that this might cause lag with lots of friends in a room");
             EveryoneGlobalDynamicBones = new PageItem("Everybody Global\nDynamic Bones", () =>
             {
                 Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = true;
+                Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                LoadMenu();
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
             }, "Disabled", () =>
@@ -180,6 +203,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
+                LoadMenu();
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
             }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances");
@@ -220,17 +244,17 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
-            AutoInviteMessage = new PageItem("Automatic\nInvite Messages", () =>
+            ConsoleClean = new PageItem("Console\nCleaning", () =>
             {
-                Configuration.JSONConfig.AutoInviteMessage = true;
+                Configuration.JSONConfig.ConsoleClean = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "Disabled", () =>
             {
-                Configuration.JSONConfig.AutoInviteMessage = false;
+                Configuration.JSONConfig.ConsoleClean = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Sends messages through invites, instead of the emmVRC Network");
+            }, "TOGGLE: Hides some of VRChat's console messages, including PostOffice and \"This is happening\"");
             AvatarFavoriteList = new PageItem("emmVRC\nFavorite List", () =>
             {
                 Configuration.JSONConfig.AvatarFavoritesEnabled = true;
@@ -243,14 +267,15 @@ namespace emmVRC.Menus
                 RefreshMenu();
             }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network"); 
             baseMenu.pageItems.Add(RiskyFunctions);
-            baseMenu.pageItems.Add(VRFlightControls);
-            baseMenu.pageItems.Add(GlobalDynamicBones);
-            baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(emmVRCNetwork);
-            //baseMenu.pageItems.Add(GlobalChat);
-            baseMenu.pageItems.Add(AutoInviteMessage);
             baseMenu.pageItems.Add(AvatarFavoriteList);
-            baseMenu.pageItems.Add(PageItem.Space());
+            
+            baseMenu.pageItems.Add(GlobalDynamicBones);
+            baseMenu.pageItems.Add(FriendGlobalDynamicBones);
+            baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
+            baseMenu.pageItems.Add(VRFlightControls);
+            //baseMenu.pageItems.Add(GlobalChat);
+            baseMenu.pageItems.Add(ConsoleClean);
             baseMenu.pageItems.Add(PageItem.Space());
 
             InfoBar = new PageItem("Info Bar", () =>
@@ -460,7 +485,7 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables local info hiding, which can protect your identity in screenshots, recordings, and streams");
             InfoSpooferNamePicker = new PageItem("F", () =>
             {
-                Libraries.InputUtilities.OpenInputBox("Enter your spoof name (or none for random)", "Accept", (name) =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter your spoof name (or none for random)", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string name, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
                 {
                     if (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled)
                     {
@@ -484,7 +509,8 @@ namespace emmVRC.Menus
                     Configuration.JSONConfig.InfoSpoofingName = name;
                     Configuration.SaveConfig();
                     RefreshMenu();
-                });
+
+                }), null, "Enter spoof name....");
             }, "Allows you to change your spoofed name to one that never changes");
             baseMenu.pageItems.Add(UIColorChanging);
             baseMenu.pageItems.Add(UIColorChangePickerButton);
@@ -839,12 +865,13 @@ namespace emmVRC.Menus
                 RiskyFunctions.SetToggleState(Configuration.JSONConfig.RiskyFunctionsEnabled);
                 VRFlightControls.SetToggleState(Configuration.JSONConfig.VRFlightControls);
                 GlobalDynamicBones.SetToggleState(Configuration.JSONConfig.GlobalDynamicBonesEnabled);
+                FriendGlobalDynamicBones.SetToggleState(Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled);
                 EveryoneGlobalDynamicBones.SetToggleState(Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled);
                 emmVRCNetwork.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
                 GlobalChat.SetToggleState(Configuration.JSONConfig.GlobalChatEnabled);
-                AutoInviteMessage.SetToggleState(Configuration.JSONConfig.AutoInviteMessage);
                 AvatarFavoriteList.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);
-
+                ConsoleClean.SetToggleState(Configuration.JSONConfig.ConsoleClean);
+                
                 InfoBar.SetToggleState(Configuration.JSONConfig.InfoBarDisplayEnabled);
                 Clock.SetToggleState(Configuration.JSONConfig.ClockEnabled);
                 MasterIcon.SetToggleState(Configuration.JSONConfig.MasterIconEnabled);

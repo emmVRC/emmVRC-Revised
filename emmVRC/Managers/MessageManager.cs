@@ -39,7 +39,7 @@ namespace emmVRC.Managers
         }
         public static IEnumerator SendMessage(string message, string targetId)
         {
-            if (NetworkClient.authToken != null && !Configuration.JSONConfig.AutoInviteMessage && Configuration.JSONConfig.emmVRCNetworkEnabled)
+            if (NetworkClient.authToken != null && Configuration.JSONConfig.emmVRCNetworkEnabled)
             {
                 SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId, icon = "None" };
                 var request = HTTPRequest.post(NetworkClient.baseURL + "/api/message", msg);
@@ -49,11 +49,11 @@ namespace emmVRC.Managers
                 if (request.IsFaulted)
                 {
                     emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
-                    VRCWebSocketsManager.field_Private_Static_VRCWebSocketsManager_0.field_Private_Api_0.PostOffice.Send(Transmtn.DTO.Notifications.Invite.Create(targetId, "", new Location("", new Transmtn.DTO.Instance("", "", "", "", "", false)), "message from " + APIUser.CurrentUser.displayName + ", sent " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + ":\n" + message));
+                    NotificationManager.AddNotification("We could not send your message. Check to make sure you are connected to the emmVRC Network, or try again later.", "Dismiss", NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
                 }
             } else
             {
-                VRCWebSocketsManager.field_Private_Static_VRCWebSocketsManager_0.field_Private_Api_0.PostOffice.Send(Transmtn.DTO.Notifications.Invite.Create(targetId, "", new Location("", new Transmtn.DTO.Instance("", "", "", "", "", false)), "message from "+APIUser.CurrentUser.displayName+", sent "+DateTime.Now.ToShortDateString() + " " +  DateTime.Now.ToShortTimeString()+":\n"+message));
+                NotificationManager.AddNotification("You must be connected to the emmVRC Network in order to send messages. We are sorry for the inconvenience.", "Dismiss", NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
             }
         }
         public static IEnumerator CheckLoop()
@@ -107,10 +107,10 @@ namespace emmVRC.Managers
                                 emmVRCLoader.Logger.LogError(ex.ToString());
                             }
                             NotificationManager.DismissCurrentNotification();
-                            InputUtilities.OpenInputBox("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)), "Send", (string msg2) => {
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg2, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+                            { 
                                 MelonLoader.MelonCoroutines.Start(SendMessage(msg2, msg.message.rest_message_sender_id));
-                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                            });
+                            }), null, "Enter message....");
                         }
                     }, "Mark as\nRead", () => {
                         if (NetworkClient.authToken != null)

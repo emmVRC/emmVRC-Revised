@@ -24,11 +24,12 @@ namespace emmVRC.Hacks
         {
             try
             {
-                InputUtilities.OpenInputBox("Send message to " + displayName + ":", "Send", (string newMessageText) =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send message to " + displayName + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string newMessageText, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
                 {
                     SocialMessage socialMessage = new SocialMessage { UserID = userID, MessageText = newMessageText };
                     SendMessage(socialMessage);
-                });
+
+                }), null, "Enter message....");
             }
             catch (Exception ex)
             {

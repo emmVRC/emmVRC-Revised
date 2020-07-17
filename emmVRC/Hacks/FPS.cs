@@ -11,9 +11,8 @@ namespace emmVRC.Hacks
         public static void Initialize()
         {
             // "Unlimited FPS" only works in Desktop mode, as VRChat controls the framerate separately for VR mode.
-            // It also doesn't need to go up from 144, as not many people have monitors that can display more than 144hz
             if (Configuration.JSONConfig.UnlimitedFPSEnabled)
-                UnityEngine.Application.targetFrameRate = 144;
+                UnityEngine.Application.targetFrameRate = Configuration.JSONConfig.FPSLimit;
         }
     }
 }

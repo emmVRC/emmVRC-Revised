@@ -17,6 +17,8 @@ using System.Reflection;
 using System.Linq;
 using RootMotion.Dynamics;
 using VRC.UI;
+using System.Net;
+using System.Windows.Forms;
 
 namespace emmVRC
 {
@@ -55,12 +57,40 @@ namespace emmVRC
                 emmVRCLoader.Logger.LogError("Harmony detected in the Mods folder. Please remove it for emmVRC to function correctly.");
             }*/
             string currentVersion = (string)typeof(MelonLoader.BuildInfo).GetField("Version").GetValue(null);
+            string currentEmmVRCLoaderVersion = (string)typeof(emmVRCLoader.BuildInfo).GetField("Version").GetValue(null);
             if (Attributes.IncompatibleMelonLoaderVersions.Contains(currentVersion))
             {
                 emmVRCLoader.Logger.LogError("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.");
                 System.Windows.Forms.MessageBox.Show("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 return;
             }
+            else if (Attributes.IncompatibleemmVRCLoaderVersions.Contains(currentEmmVRCLoaderVersion)){
+                try
+                {
+                    WebClient cli = new WebClient();
+                    string dest = "";
+                    foreach (string modFile in System.IO.Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Mods"))){
+                        if (modFile.Contains("emmVRC"))
+                        {
+                            dest = modFile;
+                            System.IO.File.Delete(modFile);
+                        }
+                    }
+                    if (dest != "")
+                        cli.DownloadFile("https://thetrueyoshifan.com/downloads/emmVRCLoader.dll", dest);
+                    else
+                        cli.DownloadFile("https://thetrueyoshifan.com/downloads/emmVRCLoader.dll", Path.Combine(Environment.CurrentDirectory, "Mods/emmVRCLoader.dll"));
+                    MessageBox.Show("The newest emmVRCLoader has been downloaded to your Mods folder. To use emmVRC, restart your game. If the problem persists, remove any current emmVRCLoader files, and download the latest from #loader-updates in the emmVRC Discord.", "emmVRC", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                } catch (Exception ex)
+                {
+                    emmVRCLoader.Logger.LogError("Attempt to download the new loader failed. You must download the latest from https://thetrueyoshifan.com/downloads/emmVRCLoader.dll manually.");
+                    emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
+                    System.Windows.Forms.MessageBox.Show("You are using an incompatible version of emmVRCLoader: v" + currentEmmVRCLoaderVersion + ". Please install v" + Attributes.TargetemmVRCLoaderVersion + " or greater, from the #loader-updates channel in the emmVRC Discord. emmVRC cannot start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                }
+                return;
+            }
+
+
             else
             {
                 if (Configuration.JSONConfig.emmVRCNetworkEnabled)
@@ -261,6 +291,67 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () => {
+                        //emmVRCLoader.Logger.LogDebug("==========================================================");
+                        //GameObjectUtils.GetProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0);
+                        emmVRCLoader.Logger.LogDebug("Endpoint: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Endpoint);
+                        emmVRCLoader.Logger.LogDebug("Populated: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Populated);
+                        emmVRCLoader.Logger.LogDebug("Required properties: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties);
+                        foreach (string str in CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties)
+                        {
+                            emmVRCLoader.Logger.LogDebug(str);
+                        }                        
+
+                        //emmVRCLoader.Logger.LogDebug("Processing list differences...");
+                        //GameObjectUtils.CompareProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0, CustomAvatarFavorites.LoadedAvatars[0]);
+                    }
+                });
+                /*DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => {
+                    try
+                    {
+                        var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
+                        var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
+                        testCube.AddComponent<BoxCollider>();
+                        var pickup = testCube.AddComponent<VRCSDK2.VRC_Pickup>();
+                        var rigidbody = testCube.AddComponent<Rigidbody>();
+                        rigidbody.useGravity = true;
+                        rigidbody.isKinematic = true;
+                        pickup.proximity = 0.5f;
+                        pickup.pickupable = true;
+                    } catch (Exception ex)
+                    {
+                        ex = new Exception();
+                    }
+                } });
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha9,
+                    ActionAction = () => {
+                        try
+                        {
+                            var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
+                            var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
+                            testCube.AddComponent<BoxCollider>();
+                            var pickup = testCube.AddComponent<VRCSDK2.VRC_Station>();
+                            var trigger = testCube.AddComponent<VRC.SDKBase.VRC_Trigger>();
+                            var rigidbody = testCube.AddComponent<Rigidbody>();
+                            rigidbody.useGravity = true;
+                            rigidbody.isKinematic = true;
+                            pickup.stationEnterPlayerLocation = testCube.transform;
+                            pickup.stationExitPlayerLocation = testCube.transform;
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
+                    }
+                });*/
             }
         }
 

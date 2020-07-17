@@ -91,28 +91,26 @@ namespace emmVRC.Network
 
         private static void OpenPasswordPrompt()
         {
-            InputUtilities.OpenNumberPad("To login, please enter your pin", "Login", (string password) => {
+            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("To login, please enter your pin", "", UnityEngine.UI.InputField.InputType.Standard, true, "Login", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string password, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+            {
                 passwordTried = false;
                 login(password);
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-            });
+            }), null, "Enter pin....");
         }
         private static void RequestNewPin()
         {
-            InputUtilities.OpenNumberPad("Please enter your new pin", "Set Pin", (string pin) => {
-                InputUtilities.OpenNumberPad("Please confirm your new pin", "Confirm", (string pin2) =>
-                {
+            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Please enter your new pin", "", UnityEngine.UI.InputField.InputType.Standard, true, "Set Pin", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string pin, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Please confirm your new pin", "", UnityEngine.UI.InputField.InputType.Standard, true, "Set Pin", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string pin2, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk2, UnityEngine.UI.Text tx2) => {
                     if (pin == pin2)
                     {
                         MelonLoader.MelonCoroutines.Start(sendLogin(pin2));
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     }
                     else
                     {
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "The pins you entered did not match. Please try again.", "Okay", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                     }
-                });
-            });
+                }), null, "Enter pin....");
+            }), null, "Enter pin....");
         }
         private static async void getConfigAsync()
         {
