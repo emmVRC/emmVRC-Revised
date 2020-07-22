@@ -34,7 +34,6 @@ namespace emmVRC
         // Icons, for use in notifications, the logo, and nameplate textures
         public static Sprite offlineSprite;
         public static Sprite onlineSprite;
-        public static Sprite owonlineSprite; // April fools~
         public static Sprite alertSprite;
         public static Sprite errorSprite;
         public static Sprite messageSprite;
@@ -104,11 +103,6 @@ namespace emmVRC
             
             while (onlineSprite == null) yield return new WaitForSeconds(0.1f);
             onlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-
-            owonlineSprite = newBundle.LoadAssetAsync("Assets/OwOnline.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
-
-            while (owonlineSprite == null) yield return new WaitForSeconds(0.1f);
-            owonlineSprite.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
             alertSprite = newBundle.LoadAssetAsync_Internal("Assets/Alert.png", Il2CppType.Of<Sprite>()).asset.Cast<Sprite>();
 

@@ -90,7 +90,9 @@ namespace emmVRC.Menus
     {
         private static GameObject CanvasObject;
         private static GameObject BackgroundObject;
+        private static RawImage BackgroundImage;
         private static GameObject TextObject;
+        private static Text TextText;
         private static bool keyFlag;
         public static bool UIExpanded = false;
         public static bool Initialized = false;
@@ -118,19 +120,19 @@ namespace emmVRC.Menus
 
             BackgroundObject.AddComponent<CanvasRenderer>();
 
-            BackgroundObject.AddComponent<RawImage>();
+            BackgroundImage = BackgroundObject.AddComponent<RawImage>();
             BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
             BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
             BackgroundObject.transform.SetParent(CanvasObject.transform, false);
-            BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
+            BackgroundImage.texture = Resources.uiMinimized;
             TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
-            Text text = TextObject.AddComponent<Text>();
+            TextText = TextObject.AddComponent<Text>();
             //text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 15;
-            text.text = "            emmVRClient  fps: 90";
+            TextText.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
+            TextText.fontSize = 15;
+            TextText.text = "";
             TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
 
             CanvasObject.SetActive(false);
@@ -165,14 +167,14 @@ namespace emmVRC.Menus
                 }
                 if (!Input.GetKey(KeyCode.E) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && keyFlag)
                     keyFlag = false;
-                if (BackgroundObject != null && TextObject != null && TextObject.GetComponent<Text>() != null)
+                if (BackgroundObject != null && TextObject != null && TextText != null)
                 {
-                    BackgroundObject.GetComponent<RawImage>().texture = UIExpanded ? Resources.uiMaximized : Resources.uiMinimized;
+                    BackgroundImage.texture = UIExpanded ? Resources.uiMaximized : Resources.uiMinimized;
                     if (UIExpanded)
                     {
                         string userList = "";
                         userList = CommonHUD.RenderPlayerList();
-                        TextObject.GetComponent<Text>().text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
+                        TextText.text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
                             "\n                  press 'CTRL+E' to close" +
                             "\n" +
                             "\n" +
@@ -184,11 +186,11 @@ namespace emmVRC.Menus
                             (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
                             "\n";
                         if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
-                            TextObject.GetComponent<Text>().text = TextObject.GetComponent<Text>().text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
+                            TextText.text = TextText.text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                     }
                     else if (!UIExpanded)
                     {
-                        TextObject.GetComponent<Text>().text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
+                        TextText.text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
                             "\n                  press 'CTRL+E' to open";
                     }
                 }

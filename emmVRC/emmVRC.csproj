@@ -69,18 +69,16 @@
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Libraries\GameObjectUtils.cs" />
     <Compile Include="Libraries\Hooking.cs" />
-    <Compile Include="Libraries\InputUtilities.cs" />
     <Compile Include="Libraries\InstanceIDUtilities.cs" />
     <Compile Include="Libraries\KeybindChanger.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
     <Compile Include="Libraries\MainMenuUtils.cs" />
+    <Compile Include="Libraries\TextDisplayMenu.cs" />
     <Compile Include="Libraries\PaginatedMenu.cs" />
     <Compile Include="Libraries\PlayerUtils.cs" />
     <Compile Include="Libraries\PopupManagerUtils.cs" />
-    <Compile Include="Libraries\QuickMenuExtensions.cs" />
     <Compile Include="Libraries\QuickMenuUtils.cs" />
     <Compile Include="Libraries\RubyButtonAPI.cs" />
-    <Compile Include="Libraries\TextBoxer.cs" />
     <Compile Include="Libraries\TinyJSON\Decoder.cs" />
     <Compile Include="Libraries\TinyJSON\EncodeOptions.cs" />
     <Compile Include="Libraries\TinyJSON\Encoder.cs" />
@@ -93,7 +91,6 @@
     <Compile Include="Libraries\TinyJSON\Types\ProxyString.cs" />
     <Compile Include="Libraries\TinyJSON\Types\Variant.cs" />
     <Compile Include="Libraries\UnixTime.cs" />
-    <Compile Include="Libraries\UserInterfaceUtils.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\KeybindManager.cs" />
     <Compile Include="Managers\UserPermissionManager.cs" />
@@ -102,6 +99,7 @@
     <Compile Include="Managers\MessageManager.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
+    <Compile Include="Menus\ChangelogMenu.cs" />
     <Compile Include="Menus\CreditsMenu.cs" />
     <Compile Include="Menus\VRHUD.cs" />
     <Compile Include="Menus\DesktopHUD.cs" />
@@ -136,7 +134,6 @@
     <Compile Include="Objects\SerializedAvatar.cs" />
     <Compile Include="Objects\SerializedWorld.cs" />
     <Compile Include="Objects\Slider.cs" />
-    <Compile Include="Patches\AvatarLoading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplaceCubemap.cs" />
     <Compile Include="Resources.cs" />

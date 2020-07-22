@@ -10,6 +10,8 @@ using emmVRC.Hacks;
 using UnityEngine;
 using UnityEngine.UI;
 
+#pragma warning disable 4014
+
 namespace emmVRC.Menus
 {
     public class SettingsMenu

@@ -19,6 +19,7 @@ namespace emmVRC.Hacks
         internal static UiAvatarList NewAvatarList;
         internal static UiAvatarList SearchAvatarList;
         private static GameObject avText;
+        private static Text avTextText;
         private static GameObject ChangeButton;
         private static Button.ButtonClickedEvent baseChooseEvent;
         private static GameObject FavoriteButton;
@@ -60,9 +61,9 @@ namespace emmVRC.Hacks
                     if (LoadedAvatars[i].id == apiAvatar.id)
                         flag = true;
                 }
-                if (!flag )
+                if (!flag)
                 {
-                    if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null) )
+                    if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))
                     {
                         if (LoadedAvatars.Count < 500)
                         {
@@ -114,12 +115,15 @@ namespace emmVRC.Hacks
                 else if (selectedAvatar.releaseStatus == "unavailable")
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                } else
-                baseChooseEvent.Invoke();
+                }
+                else
+                    baseChooseEvent.Invoke();
             }));
 
             avText = PublicAvatarList.transform.Find("Button").gameObject;
-            avText.GetComponentInChildren<Text>().text = "(0) emmVRC Favorites";
+            avTextText = avText.GetComponentInChildren<Text>();
+            avTextText.text = "(0) emmVRC Favorites";
+
 
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
             NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
@@ -192,7 +196,8 @@ namespace emmVRC.Hacks
                     avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
                 }
-            } else
+            }
+            else
             {
                 emmVRCLoader.Logger.LogError("Asynchronous net delete failed: " + request.Exception);
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
@@ -223,23 +228,17 @@ namespace emmVRC.Hacks
                 avatarArray = TinyJSON.Decoder.Decode(request.Result).Make<Network.Objects.Avatar[]>();
                 if (avatarArray != null)
                 {
-                    try
+                    foreach (Network.Objects.Avatar avtr in avatarArray)
                     {
-                        foreach (Network.Objects.Avatar avtr in avatarArray)
-                        {
-                            LoadedAvatars.Add(avtr.apiAvatar());
-                        }
-                        avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                        LoadedAvatars.Add(avtr.apiAvatar());
                     }
-                    catch (System.Exception ex)
-                    {
-                        emmVRCLoader.Logger.LogError(ex.ToString());
-                    }
+                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                 }
-            } else
+            }
+            else
             {
                 emmVRCLoader.Logger.LogError("Asynchronous net get failed: " + request.Exception);
-                Managers.NotificationManager.AddNotification("emmVRC Avatar Favorites list failed to load. Please check your internet connection.", "Dismiss",  Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
+                Managers.NotificationManager.AddNotification("emmVRC Avatar Favorites list failed to load. Please check your internet connection.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
                 error = true;
                 errorWarned = true;
             }
@@ -282,14 +281,14 @@ namespace emmVRC.Hacks
             if (!request.IsFaulted)
             {
                 avatarArray = TinyJSON.Decoder.Decode(request.Result).Make<Network.Objects.Avatar[]>();
-                if(avatarArray != null)
+                if (avatarArray != null)
                 {
                     foreach (Network.Objects.Avatar avatar in avatarArray)
                     {
                         SearchedAvatars.Add(avatar.apiAvatar());
                     }
                 }
-                avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Result(s): "+ query;
+                avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Result(s): " + query;
             }
             else
             {
@@ -305,56 +304,38 @@ namespace emmVRC.Hacks
         }
         internal static void OnUpdate()
         {
-            if (PublicAvatarList == null || FavoriteButtonNew == null) return;
-            if (searchBox == null)
+            if (PublicAvatarList == null || FavoriteButtonNew == null || RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
+            if (searchBox == null && NewAvatarList.gameObject.activeInHierarchy)
             {
-                try
+                VRCUiPageHeader pageheader = QuickMenuUtils.GetVRCUiMInstance().GetComponentInChildren<VRCUiPageHeader>(true);
+                if (pageheader != null)
                 {
-                    VRCUiPageHeader pageheader = QuickMenuUtils.GetVRCUiMInstance().GetComponentInChildren<VRCUiPageHeader>(true);
-                    if (pageheader != null)
-                    {
-                        searchBox = pageheader.searchBar;
-                    }
-                } catch (System.Exception ex)
-                {
-                    ex = new System.Exception();
+                    searchBox = pageheader.searchBar;
                 }
             }
             if (searchBoxAction == null)
             {
-                try
+                searchBoxAction = UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<string>>((System.Action<string>)((string searchTerm) =>
                 {
-                    searchBoxAction = UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<string>>((System.Action<string>)((string searchTerm) =>
-                    {
-                        if (searchTerm == "" || searchTerm.Length < 2)
-                            return;
-                        MelonLoader.MelonCoroutines.Start(SearchAvatars(searchTerm));
-                    }));
-                } catch (System.Exception ex)
-                {
-                    ex = new System.Exception();
-                }
+                    if (searchTerm == "" || searchTerm.Length < 2)
+                        return;
+                    MelonLoader.MelonCoroutines.Start(SearchAvatars(searchTerm));
+                }));
             }
-            try
+            if (searchBox != null && searchBox.editButton != null && !searchBox.editButton.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
-                if (!searchBox.editButton.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
-            {
-                    searchBox.editButton.interactable = true;
-                    searchBox.onDoneInputting = searchBoxAction;
-                    //searchBox.placeholder.text = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search...</color>";
-                    //searchBox.placeholderInputText = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>";
-                }
-                
+                searchBox.editButton.interactable = true;
+                searchBox.onDoneInputting = searchBoxAction;
+                //searchBox.placeholder.text = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search...</color>";
+                //searchBox.placeholderInputText = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>";
             }
-            catch (System.Exception ex)
-            {
-                ex = new System.Exception();
-            }
+
+
             if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
             {
                 NewAvatarList.collapsedCount = 500;
                 NewAvatarList.expandedCount = 500;
-                
+
 
                 /*if (!PublicAvatarList.activeInHierarchy)
                 {
@@ -363,21 +344,21 @@ namespace emmVRC.Hacks
                 }
                 if (PublicAvatarList.activeInHierarchy && !menuWasActivated && !menuJustActivated)
                     menuJustActivated = true;*/
-                
+
                 if (!menuJustActivated)
                 {
                     Searching = false;
-                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                    avTextText.text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(1f));
                     menuJustActivated = true;
                 }
                 if (menuJustActivated && (NewAvatarList.pickers.Count < LoadedAvatars.Count || NewAvatarList.isOffScreen))
                     menuJustActivated = false;
                 NewAvatarList.clearUnseenListOnCollapse = false;
-                NewAvatarList.deferInitialFetch = true;
+                NewAvatarList.deferInitialFetch = false;
                 NewAvatarList.hideElementsWhenContracted = false;
                 NewAvatarList.hideWhenEmpty = false;
-                NewAvatarList.usePagination = false;
+                NewAvatarList.usePagination = true;
                 if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
                 {
                     bool flag = false;

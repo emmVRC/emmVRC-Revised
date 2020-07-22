@@ -69,10 +69,16 @@ namespace emmVRC.Hacks
                     TeleportButton.SetActive(!TeleportButton.activeSelf);
                 else
                     TeleportButton.SetActive(false);
-                if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
-                    PortalToUserButton.SetActive(!PortalToUserButton.activeSelf);
-                else
-                    PortalToUserButton.SetActive(false);
+                try
+                {
+                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
+                        PortalToUserButton.SetActive(!PortalToUserButton.activeSelf);
+                    else
+                        PortalToUserButton.SetActive(false);
+                } catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
                 try
                 {
                     GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").activeSelf);
@@ -112,7 +118,7 @@ namespace emmVRC.Hacks
                     {
                         VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
                     }
-                    QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_2();
+                    QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_4();
                 }
             }));
             PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {

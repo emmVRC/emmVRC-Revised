@@ -22,13 +22,12 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = "https://thetrueyoshifan.com";
+        private static string BaseAddress = (Attributes.Beta ? "" : "https://thetrueyoshifan.com");
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         public static string configURL { get { return "https://thetrueyoshifan.com"; } } // TODO: Integrate this with the API
         private static string LoginKey;
         private static string _authToken;
-        private static bool prompted = false;
         private static bool userIDTried = false;
         private static bool keyFileTried = false;
         private static bool passwordTried = false;
@@ -104,13 +103,14 @@ namespace emmVRC.Network
                     if (pin == pin2)
                     {
                         MelonLoader.MelonCoroutines.Start(sendLogin(pin2));
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     }
                     else
                     {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "The pins you entered did not match. Please try again.", "Okay", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "The pins you entered did not match. Please try again.", "Okay", () => { RequestNewPin(); });
                     }
-                }), null, "Enter pin....");
-            }), null, "Enter pin....");
+                }), null, "Enter pin....", false, null);
+            }), null, "Enter pin....", false, null);
         }
         private static async void getConfigAsync()
         {

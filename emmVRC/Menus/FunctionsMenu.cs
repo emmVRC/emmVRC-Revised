@@ -18,6 +18,7 @@ namespace emmVRC.Menus
         private static PageItem programsButton;
         private static PageItem settingsButton;
         private static PageItem creditsButton;
+        private static PageItem changelogButton;
         private static PageItem supporterButton;
         private static PageItem forceQuitButton;
         private static PageItem instantRestartButton;
@@ -58,7 +59,8 @@ namespace emmVRC.Menus
             creditsButton = new PageItem("<color=#ee006c>emmVRC\nTeam</color>", () => { CreditsMenu.baseMenu.OpenMenu(); }, "View all the users that make this project possible! <3");
             baseMenu.pageItems.Add(creditsButton);
             baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            changelogButton = new PageItem("Changelog", () => { ChangelogMenu.baseMenu.OpenMenu(); }, "Check the changes with the current build of emmVRC");
+            baseMenu.pageItems.Add(changelogButton);
 
 
 

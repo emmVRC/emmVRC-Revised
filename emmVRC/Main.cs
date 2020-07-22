@@ -20,6 +20,8 @@ using VRC.UI;
 using System.Net;
 using System.Windows.Forms;
 
+#pragma warning disable 4014
+
 namespace emmVRC
 {
     public static class emmVRC
@@ -156,6 +158,9 @@ namespace emmVRC
                 // Initialize the "Supporters" menu
                 Menus.SupporterMenu.Initialize();
 
+                // Initialize the "Changelog" menu
+                Menus.ChangelogMenu.Initialize();
+
                 // Initialize the "Social Menu Functions" menu
                 Hacks.SocialMenuFunctions.Initialize();
 
@@ -272,6 +277,12 @@ namespace emmVRC
                     MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
                     MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
                     MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
+                    if (Configuration.JSONConfig.LastVersion != Attributes.Version)
+                    {
+                        Configuration.JSONConfig.LastVersion = Attributes.Version;
+                        Configuration.SaveConfig();
+                        Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Attributes.Version + "!", "View\nChangelog", () => { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                    }
 
                 }));
 
@@ -291,7 +302,8 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
-                DebugManager.DebugActions.Add(new DebugAction
+
+                /*DebugManager.DebugActions.Add(new DebugAction
                 {
                     ActionKey = KeyCode.Alpha0,
                     ActionAction = () => {
@@ -350,6 +362,16 @@ namespace emmVRC
                         {
                             ex = new Exception();
                         }
+                    }
+                });*/
+                /*DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        TextDisplayMenu menu = new TextDisplayMenu("ShortcutMenu", 128, 128, "Test", "This is a test world", null, "Sample Text", "Hordini is a super major\nadorable cutie", "Test Button Long", () => { }, "This is a test button to go with the menu");
+                        menu.menuEntryButton.DestroyMe();
+                        menu.OpenMenu();
                     }
                 });*/
             }

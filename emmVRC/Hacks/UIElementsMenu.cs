@@ -44,7 +44,8 @@ namespace emmVRC.Hacks
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
                 yield return new UnityEngine.WaitForSeconds(0.1f);
             new System.Action(() =>
-            {try
+            {
+                try
                 {
                     if (!Configuration.JSONConfig.UIVisible)
                         QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").GetComponent<Button>().onClick.Invoke();

@@ -5,6 +5,7 @@ using Il2CppSystem.Collections.Generic;
 using Il2CppSystem.Reflection;
 using UnityEngine;
 using UnhollowerRuntimeLib;
+using UnhollowerRuntimeLib.XrefScans;
 
 namespace emmVRC.Libraries
 {
