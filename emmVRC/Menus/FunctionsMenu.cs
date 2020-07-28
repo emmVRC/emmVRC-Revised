@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
+using emmVRC.Managers;
+using emmVRC.Objects;
 using UnityEngine.Events;
 
 namespace emmVRC.Menus
@@ -19,6 +21,7 @@ namespace emmVRC.Menus
         private static PageItem settingsButton;
         private static PageItem creditsButton;
         private static PageItem changelogButton;
+        private static PageItem debugMenuButton;
         private static PageItem supporterButton;
         private static PageItem forceQuitButton;
         private static PageItem instantRestartButton;
@@ -57,8 +60,12 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(PageItem.Space());
             }
             creditsButton = new PageItem("<color=#ee006c>emmVRC\nTeam</color>", () => { CreditsMenu.baseMenu.OpenMenu(); }, "View all the users that make this project possible! <3");
+            debugMenuButton = new PageItem("Debug\nActions", () => { QuickMenuUtils.ShowQuickmenuPage(DebugMenu.menuBase.getMenuName()); }, "Contains debug actions to test emmVRC and the modding environment as a whole");
             baseMenu.pageItems.Add(creditsButton);
-            baseMenu.pageItems.Add(PageItem.Space());
+            if (Attributes.Debug)
+                baseMenu.pageItems.Add(debugMenuButton);
+            else
+                baseMenu.pageItems.Add(PageItem.Space());
             changelogButton = new PageItem("Changelog", () => { ChangelogMenu.baseMenu.OpenMenu(); }, "Check the changes with the current build of emmVRC");
             baseMenu.pageItems.Add(changelogButton);
 

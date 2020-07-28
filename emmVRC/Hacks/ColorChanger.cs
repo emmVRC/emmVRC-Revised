@@ -1,4 +1,5 @@
-﻿using emmVRC.Menus;
+﻿using emmVRC.Libraries;
+using emmVRC.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -230,6 +231,17 @@ namespace emmVRC.Hacks
                     {
                         ex = new Exception();
                         //emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
+                    try
+                    {
+                        foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_CONTEXT").GetComponentsInChildren<Text>(true))
+                        {
+                            if (text.transform.name == "Text" && text.transform.parent.name != "AvatarImage")
+                                text.color = new Color(color.r * 1.25f, color.g * 1.25f, color.b * 1.25f);
+                        }
+                    } catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
                     }
                     /*
                     try

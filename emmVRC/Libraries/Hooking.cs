@@ -63,6 +63,16 @@ namespace emmVRC.Libraries
             instanceHarmony.Patch(typeof(VRC_StationInternal2).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
             instanceHarmony.Patch(typeof(VRC_StationInternal3).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
         }
+        private static bool CustomTriggerCheck(VRCSDK2.VRC_Interactable __instance)
+        {
+            if (__instance.GetType() == typeof(Libraries.emmVRC_Trigger))
+            {
+                __instance.Cast<emmVRC_Trigger>().onInteract.Invoke();
+                return false;
+            }
+            return true;
+        }
+        
         private static bool IL2CPPConsoleWriteLine(string __0)
         {
             if (__0.Contains("authcookie") || Configuration.JSONConfig.ConsoleClean)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
+using emmVRC.Network;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -44,31 +45,32 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(PageItem.Space());
             baseMenu.pageTitles.Add("Fetching, please wait...");
             baseMenu.UpdateMenu();
-            UnityWebRequest req = UnityWebRequest.Get("http://www.thetrueyoshifan.com/supporters.json");
-            req.SendWebRequest();
-            while (!req.isDone)
+
+            var thing = HTTPRequest.get("http://www.thetrueyoshifan.com/supporters.json");
+            while (!thing.IsCompleted && !thing.IsFaulted)
                 yield return new WaitForEndOfFrame();
 
-            if (req.responseCode != 200)
-            {
-                baseMenu.pageTitles[0] = "Network error...";
-                baseMenu.UpdateMenu();
-                emmVRCLoader.Logger.LogError("Network error occured while grabbing supporters: " + req.error);
-            }
-            else
+            if (!thing.IsFaulted)
             {
                 baseMenu.pageItems.Clear();
                 baseMenu.pageTitles.Clear();
-                string result = Il2CppSystem.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
-                List<Supporter> supporters = TinyJSON.Decoder.Decode(result).Make<List<Supporter>>();
+                List<Supporter> supporters = TinyJSON.Decoder.Decode(thing.Result).Make<List<Supporter>>();
                 foreach (Supporter supp in supporters)
                 {
                     baseMenu.pageItems.Add(new PageItem(supp.Name, null, supp.Tooltip));
                 }
-                for (int i = 0; i < (int)Math.Ceiling((double)baseMenu.pageItems.Count / 9); i++){
+                for (int i = 0; i < (int)Math.Ceiling((double)baseMenu.pageItems.Count / 9); i++)
+                {
                     baseMenu.pageTitles.Add("Special thanks to these supporters!");
                 }
                 baseMenu.UpdateMenu();
+            }
+            else
+            {
+                baseMenu.pageTitles[0] = "Network error...";
+                baseMenu.UpdateMenu();
+                emmVRCLoader.Logger.LogError("Network error occured while grabbing supporters: " + thing.Exception);
+
             }
         }
 

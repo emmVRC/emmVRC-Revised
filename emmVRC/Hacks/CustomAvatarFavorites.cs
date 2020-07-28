@@ -1,5 +1,4 @@
-﻿using Il2CppSystem;
-using Il2CppSystem.Collections.Generic;
+﻿using Il2CppSystem.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -7,8 +6,6 @@ using VRC.Core;
 using VRC.UI;
 using emmVRC.Libraries;
 using emmVRC.Network;
-using emmVRC.Objects;
-using Il2CppSystem.Net;
 
 namespace emmVRC.Hacks
 {

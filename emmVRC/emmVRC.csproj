@@ -67,6 +67,7 @@
     <Compile Include="Libraries\AssetBundles.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
+    <Compile Include="Libraries\emmVRC_Trigger.cs" />
     <Compile Include="Libraries\GameObjectUtils.cs" />
     <Compile Include="Libraries\Hooking.cs" />
     <Compile Include="Libraries\InstanceIDUtilities.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Libraries\TinyJSON\Types\ProxyObject.cs" />
     <Compile Include="Libraries\TinyJSON\Types\ProxyString.cs" />
     <Compile Include="Libraries\TinyJSON\Types\Variant.cs" />
+    <Compile Include="Libraries\UIManagerUtils.cs" />
     <Compile Include="Libraries\UnixTime.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Managers\KeybindManager.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
     <Compile Include="Menus\ChangelogMenu.cs" />
     <Compile Include="Menus\CreditsMenu.cs" />
+    <Compile Include="Menus\DebugMenu.cs" />
+    <Compile Include="Menus\FlashlightMenu.cs" />
     <Compile Include="Menus\VRHUD.cs" />
     <Compile Include="Menus\DesktopHUD.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
@@ -128,6 +132,7 @@
     <Compile Include="Network\Objects\User.cs" />
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
+    <Compile Include="Objects\emmVRCPanel.cs" />
     <Compile Include="Objects\NetworkConfig.cs" />
     <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Program.cs" />

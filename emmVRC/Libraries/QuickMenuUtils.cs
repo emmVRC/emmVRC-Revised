@@ -6,6 +6,7 @@ using Il2CppSystem.Reflection;
 using UnityEngine;
 using UnhollowerRuntimeLib;
 using UnhollowerRuntimeLib.XrefScans;
+using VRC.UI;
 
 namespace emmVRC.Libraries
 {

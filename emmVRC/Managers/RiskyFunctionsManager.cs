@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using emmVRC.Network;
 namespace emmVRC.Managers
 {
     public class RiskyFunctionsManager
@@ -59,41 +60,38 @@ namespace emmVRC.Managers
                 // Temporary boolean that we will set if the world is whitelisted or blacklisted, to disable our later check.
                 bool temp = false;
 
-                // Sets up the UnityWebRequest to the remote server. TODO: Make this HTTPS://
-                UnityWebRequest req = UnityWebRequest.Get("https://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" + VRC.Core.APIUser.CurrentUser.id + "&worldid=" + RoomManager.field_Internal_Static_ApiWorld_0.id);
-                
-                // Sends the web request async
-                req.SendWebRequest();
-                
-                // Allow the rest of the game to run while we're awaiting our response
-                while (!req.isDone)
+                var thing = HTTPRequest.get("https://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" + VRC.Core.APIUser.CurrentUser.id + "&worldid=" + RoomManager.field_Internal_Static_ApiWorld_0.id);
+                while (!thing.IsCompleted && !thing.IsFaulted)
                     yield return new WaitForEndOfFrame();
 
-                // If there is an error, risky functions should be disabled; this could mean the server is down, or the server response is being tampered with or blocked
-                if (req.responseCode != 200)
+                if (!thing.IsFaulted)
                 {
-                    emmVRCLoader.Logger.LogError("Network error occured while checking Risky Functions status: " + req.error);
-                    emmVRCLoader.Logger.LogError("Please check your internet connection and firewall settings.");
-                    Configuration.JSONConfig.RiskyFunctionsEnabled = false;
-                    Configuration.SaveConfig();
-                    NotificationManager.AddNotification("A network error occured while checking this world. Risky Functions have been disabled. Please check your firewall or antivirus, and restart your game.", "Dismiss", () => { NotificationManager.DismissCurrentNotification(); }, "", null, Resources.errorSprite, -1);
-                    temp = true;
+                    try
+                    {
+                        // If the world is whitelisted, "allowed" will be returned. This skips the tag check and enables Risky Functions outright
+                        if (thing.Result == "allowed")
+                        {
+                            temp = true;
+                            RiskyFunctionsAllowed = true;
+                        }
+                        // If the world is blacklisted, or the user is banned, "denied" is returned. This skips the tag check and disables Risky Functions outright
+                        else if (thing.Result == "denied")
+                        {
+                            temp = true;
+                            RiskyFunctionsAllowed = false;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
                 }
                 else
                 {
-                    // If the world is whitelisted, "allowed" will be returned. This skips the tag check and enables Risky Functions outright
-                    if (Il2CppSystem.Text.Encoding.UTF8.GetString(req.downloadHandler.data) == "allowed")
-                    {
-                        temp = true;
-                        RiskyFunctionsAllowed = true;
-                    }
-                    // If the world is blacklisted, or the user is banned, "denied" is returned. This skips the tag check and disables Risky Functions outright
-                    else if (Il2CppSystem.Text.Encoding.UTF8.GetString(req.downloadHandler.data) == "denied")
-                    {
-                        temp = true;
-                        RiskyFunctionsAllowed = false;
-                    }
+                    emmVRCLoader.Logger.LogError("Asynchronous net request failed: " + thing.Exception);
+
                 }
+
                 // If the temp flag isn't set, perform the tag check
                 if (!temp)
                 {

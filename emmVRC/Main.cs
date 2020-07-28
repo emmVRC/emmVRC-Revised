@@ -19,6 +19,7 @@ using RootMotion.Dynamics;
 using VRC.UI;
 using System.Net;
 using System.Windows.Forms;
+using Il2CppSystem.Collections.Specialized;
 
 #pragma warning disable 4014
 
@@ -161,6 +162,9 @@ namespace emmVRC
                 // Initialize the "Changelog" menu
                 Menus.ChangelogMenu.Initialize();
 
+                // Initialize the "Debug" menu
+                Menus.DebugMenu.Initialize();
+
                 // Initialize the "Social Menu Functions" menu
                 Hacks.SocialMenuFunctions.Initialize();
 
@@ -222,6 +226,9 @@ namespace emmVRC
                 // Initialize the Nameplate color changer
                 Hacks.Nameplates.Initialize();
 
+                // Initialize the Flashlight system
+                Menus.FlashlightMenu.Initialize();
+
                 // Change the FOV, if we want to
                 Hacks.FOV.Initialize();
 
@@ -267,6 +274,7 @@ namespace emmVRC
                     Menus.PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
                     Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(false, true);
                     Menus.PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
+                    Menus.FlashlightMenu.toggleFlashlight.setToggleState(false);
 
                     MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
                 // Ensure that everything through here is after the game has loaded
@@ -303,77 +311,6 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
 
-                /*DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () => {
-                        //emmVRCLoader.Logger.LogDebug("==========================================================");
-                        //GameObjectUtils.GetProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0);
-                        emmVRCLoader.Logger.LogDebug("Endpoint: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Endpoint);
-                        emmVRCLoader.Logger.LogDebug("Populated: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Populated);
-                        emmVRCLoader.Logger.LogDebug("Required properties: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties);
-                        foreach (string str in CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties)
-                        {
-                            emmVRCLoader.Logger.LogDebug(str);
-                        }                        
-
-                        //emmVRCLoader.Logger.LogDebug("Processing list differences...");
-                        //GameObjectUtils.CompareProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0, CustomAvatarFavorites.LoadedAvatars[0]);
-                    }
-                });
-                /*DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => {
-                    try
-                    {
-                        var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
-                        var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
-                        testCube.AddComponent<BoxCollider>();
-                        var pickup = testCube.AddComponent<VRCSDK2.VRC_Pickup>();
-                        var rigidbody = testCube.AddComponent<Rigidbody>();
-                        rigidbody.useGravity = true;
-                        rigidbody.isKinematic = true;
-                        pickup.proximity = 0.5f;
-                        pickup.pickupable = true;
-                    } catch (Exception ex)
-                    {
-                        ex = new Exception();
-                    }
-                } });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha9,
-                    ActionAction = () => {
-                        try
-                        {
-                            var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
-                            var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
-                            testCube.AddComponent<BoxCollider>();
-                            var pickup = testCube.AddComponent<VRCSDK2.VRC_Station>();
-                            var trigger = testCube.AddComponent<VRC.SDKBase.VRC_Trigger>();
-                            var rigidbody = testCube.AddComponent<Rigidbody>();
-                            rigidbody.useGravity = true;
-                            rigidbody.isKinematic = true;
-                            pickup.stationEnterPlayerLocation = testCube.transform;
-                            pickup.stationExitPlayerLocation = testCube.transform;
-
-                        }
-                        catch (Exception ex)
-                        {
-                            ex = new Exception();
-                        }
-                    }
-                });*/
-                /*DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () =>
-                    {
-                        TextDisplayMenu menu = new TextDisplayMenu("ShortcutMenu", 128, 128, "Test", "This is a test world", null, "Sample Text", "Hordini is a super major\nadorable cutie", "Test Button Long", () => { }, "This is a test button to go with the menu");
-                        menu.menuEntryButton.DestroyMe();
-                        menu.OpenMenu();
-                    }
-                });*/
             }
         }
 
