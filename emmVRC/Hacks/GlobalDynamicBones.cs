@@ -77,9 +77,10 @@ namespace emmVRC.Hacks
                     // Cycle through each dynamic bone in the cache, remove existing colliders, and then add the collider cache to them. 
                     foreach (DynamicBone bone in currentWorldDynamicBones)
                     {
-                        bone.m_Colliders.Clear();
+                        //bone.m_Colliders.Clear();
                         foreach (DynamicBoneCollider coll in currentWorldDynamicBoneColliders)
-                            bone.m_Colliders.Add(coll);
+                            if (bone.m_Colliders.IndexOf(coll) == -1)
+                                bone.m_Colliders.Add(coll);
                     }
                 }
             }

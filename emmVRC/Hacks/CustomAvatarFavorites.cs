@@ -261,6 +261,11 @@ namespace emmVRC.Hacks
                 emmVRCLoader.Logger.LogDebug("My Page is null!");
             emmVRCLoader.Logger.LogDebug(NewAvatarList.pickers[0].contentId);*/
         }
+        public static System.Collections.IEnumerator SearchAvatarsAfterDelay(string query)
+        {
+            yield return new WaitForSecondsRealtime(1f);
+            MelonLoader.MelonCoroutines.Start(SearchAvatars(query));
+        }
 
         public static System.Collections.IEnumerator SearchAvatars(string query)
         {

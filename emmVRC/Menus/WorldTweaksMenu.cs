@@ -18,6 +18,7 @@ namespace emmVRC.Menus
         public static QMSingleButton RevertPedestalsButton;
         public static QMSingleButton ReloadWorldButton;
         public static QMToggleButton PortalBlockToggle;
+        public static QMSingleButton DeletePortalsButton;
         public static QMToggleButton ChairBlockToggle;
         public static void Initialize()
         {

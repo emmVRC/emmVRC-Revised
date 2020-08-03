@@ -20,6 +20,9 @@ using VRC.UI;
 using System.Net;
 using System.Windows.Forms;
 using Il2CppSystem.Collections.Specialized;
+using JetBrains.Annotations;
+using Il2CppSystem.Collections.Generic;
+using UnityEngine.Bindings;
 
 #pragma warning disable 4014
 
@@ -311,6 +314,10 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
 
+
+
+                // Debug actions need to go before this
+                DebugMenu.PopulateDebugMenu();
             }
         }
 

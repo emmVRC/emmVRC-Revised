@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Threading;
 
 namespace emmVRC.Menus
 {
@@ -24,12 +25,15 @@ namespace emmVRC.Menus
         private static QMSingleButton testHUDMessageButton;
         private static QMSingleButton testNotificationButton;
         private static QMSingleButton testNetworkPingButton;
+        private static QMSingleButton debugActionsMenuButton;
+
+        public static PaginatedMenu debugActionsMenu;
         public static void Initialize()
         {
             menuBase = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 10293, 20934, "Debug", "");
             menuBase.getMainButton().DestroyMe();
             //loadDebugModuleButton = new QMSingleButton(menuBase, 1, 0, "Load\nDebug\nModule", () => { MelonLoader.MelonCoroutines.Start(loadDebugModule()); }, "Loads a test module from .DLL, in order to assist with testing and development of new features");
-            
+
             testPopupV1OneButtonButton = new QMSingleButton(menuBase, 1, 0, "Test\nSingle\nButton\nPopup", () =>
             {
                 try
@@ -115,6 +119,33 @@ namespace emmVRC.Menus
                     VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("A notification manager error occured.");
                 }
             }, "Add a test notification to the Notification Manager");
+
+            testNetworkPingButton = new QMSingleButton(menuBase, 4, 1, "Ping\nemmVRC\nNetwork", () =>
+            {
+                MelonLoader.MelonCoroutines.Start(PingNetwork());
+            }, "Test the ping of the emmVRC Network server");
+            debugActionsMenu = new PaginatedMenu(menuBase, 1, 2, "Registered\nDebug\nActions", "Shows all of the registered debug actions registered in this build of emmVRC, if any", null);
+
+        }
+        public static void PopulateDebugMenu()
+        {
+            if (DebugManager.DebugActions.Count > 0)
+                foreach (DebugAction action in DebugManager.DebugActions)
+                {
+                    string actionName = action.Name;
+                    Action newAction = action.ActionAction;
+                    if (actionName == "")
+                        actionName = "Action " + (debugActionsMenu.pageItems.Count + 1);
+                    debugActionsMenu.pageItems.Add(new PageItem(actionName, newAction, action.Description));
+                }
+        }
+        public static IEnumerator PingNetwork()
+        {
+            Ping sender = new Ping("51.68.189.195");
+            while (!sender.isDone)
+                yield return null;
+
+            Managers.NotificationManager.AddNotification("The ping from the emmVRC Network is currently: " + sender.time + "ms", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
         }
         public static IEnumerator loadDebugModule()
         {

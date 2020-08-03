@@ -12,6 +12,7 @@ using System.Collections;
 using emmVRC.Managers;
 using emmVRC.Libraries;
 using BestHTTP.ServerSentEvents;
+using emmVRC.Network;
 
 namespace emmVRC.Hacks
 {
@@ -21,6 +22,8 @@ namespace emmVRC.Hacks
         private static GameObject UserSendMessage;
         private static GameObject UserNotes;
         private static GameObject TeleportButton;
+        private static GameObject AvatarSearchButton;
+
         private static GameObject ToggleBlockButton;
         private static GameObject PortalToUserButton;
 
@@ -51,15 +54,21 @@ namespace emmVRC.Hacks
             TeleportButton.GetComponentInChildren<Text>().text = "Teleport";
             TeleportButton.SetActive(false);
 
-            ToggleBlockButton = GameObject.Instantiate(TeleportButton, SocialFunctionsButton.transform.parent);
-            ToggleBlockButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
-            ToggleBlockButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Block";
-            ToggleBlockButton.SetActive(false);
+            AvatarSearchButton = GameObject.Instantiate(TeleportButton, SocialFunctionsButton.transform.parent);
+            AvatarSearchButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            AvatarSearchButton.GetComponentInChildren<Text>().text = "Search Avatars";
+            AvatarSearchButton.SetActive(false);
 
-            PortalToUserButton = GameObject.Instantiate(TeleportButton, SocialFunctionsButton.transform.parent);
+
+            PortalToUserButton = GameObject.Instantiate(AvatarSearchButton, SocialFunctionsButton.transform.parent);
             PortalToUserButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             PortalToUserButton.GetComponentInChildren<Text>().text = "Drop Portal";
             PortalToUserButton.SetActive(false);
+
+            ToggleBlockButton = GameObject.Instantiate(PortalToUserButton, SocialFunctionsButton.transform.parent);
+            ToggleBlockButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            ToggleBlockButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Block";
+            ToggleBlockButton.SetActive(false);
 
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 UserSendMessage.SetActive(!UserSendMessage.activeSelf);
@@ -69,6 +78,8 @@ namespace emmVRC.Hacks
                     TeleportButton.SetActive(!TeleportButton.activeSelf);
                 else
                     TeleportButton.SetActive(false);
+                if (NetworkClient.authToken != null && Configuration.JSONConfig.AvatarFavoritesEnabled)
+                    AvatarSearchButton.SetActive(!AvatarSearchButton.activeSelf);
                 try
                 {
                     if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
@@ -90,6 +101,14 @@ namespace emmVRC.Hacks
                 {
                     GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
                 } catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
+                try
+                {
+                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").activeSelf);
+                }
+                catch (Exception ex)
                 {
                     ex = new Exception();
                 }
@@ -119,6 +138,14 @@ namespace emmVRC.Hacks
                         VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
                     }
                     QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_4();
+                }
+            }));
+            AvatarSearchButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null)
+                {
+                    VRCUiManager.field_Protected_Static_VRCUiManager_0.ShowScreen(VRCUiManager.field_Protected_Static_VRCUiManager_0.menuContent.transform.Find("Screens/Avatar").GetComponent<VRCUiPage>());
+                    MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName != "" ? QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName : QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.username));
                 }
             }));
             PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
@@ -178,6 +205,7 @@ namespace emmVRC.Hacks
                         UserSendMessage.SetActive(false);
                         UserNotes.SetActive(false);
                         TeleportButton.SetActive(false);
+                        AvatarSearchButton.SetActive(false);
                         ToggleBlockButton.SetActive(false);
                         PortalToUserButton.SetActive(false);
                         try
@@ -196,7 +224,15 @@ namespace emmVRC.Hacks
                         {
                             ex = new Exception();
                         }
-                        
+                        try
+                        {
+                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").SetActive(true);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
+
                     }
                 }
             }

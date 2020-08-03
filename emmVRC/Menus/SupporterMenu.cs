@@ -23,7 +23,7 @@ namespace emmVRC.Menus
         public static void Initialize()
         {
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 768, 1024, "Supporters", "", null);
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.menuEntryButton.DestroyMe();
         }
         public static void LoadMenu()
@@ -42,7 +42,7 @@ namespace emmVRC.Menus
             baseMenu.OpenMenu();
             baseMenu.pageItems.Clear();
             baseMenu.pageTitles.Clear();
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageTitles.Add("Fetching, please wait...");
             baseMenu.UpdateMenu();
 

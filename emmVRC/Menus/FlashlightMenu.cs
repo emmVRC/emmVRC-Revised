@@ -1,6 +1,7 @@
 ﻿using emmVRC.Libraries;
 using emmVRC.Objects;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace emmVRC.Menus
         public static QMNestedButton baseMenu;
 
         public static QMToggleButton toggleFlashlight;
+        public static QMToggleButton toggleHeadlight;
         public static ColorPicker setFlashlightLightColor;
         public static Objects.Slider flashlightStrengthSlider;
 
@@ -22,6 +24,7 @@ namespace emmVRC.Menus
         public static float LightStrength = 10f;
 
         public static GameObject FlashlightObject;
+        public static GameObject HeadlightObject;
         public static void Initialize()
         {
             baseMenu = new QMNestedButton(WorldTweaksMenu.baseMenu, 3, 1, "Flashlight", "Configure and summon a flashlight you can carry through your current world");
@@ -60,11 +63,15 @@ namespace emmVRC.Menus
             {
                 GameObject.Destroy(FlashlightObject);
             }, "TOGGLE: Turns on and off the flashlight");
+            
+
             setFlashlightLightColor = new ColorPicker(baseMenu.getMenuName(), 4, 0, "Light\nColor", "Allows you to set the flashlight color", (Color result) =>
             {
                 lightColor = result;
                 if (FlashlightObject != null)
                     FlashlightObject.GetComponentInChildren<Light>().color = result;
+                if (HeadlightObject != null)
+                    HeadlightObject.GetComponentInChildren<Light>().color = result;
                 QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
             }, () => {
                 QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
@@ -73,11 +80,34 @@ namespace emmVRC.Menus
                 LightStrength = flt;
                 if (FlashlightObject != null)
                     FlashlightObject.GetComponentInChildren<Light>().range = LightStrength;
+                if (HeadlightObject != null)
+                    HeadlightObject.GetComponentInChildren<Light>().range = LightStrength;
             }), 10);
             flashlightStrengthSlider.slider.GetComponent<UnityEngine.UI.Slider>().maxValue = 100;
             flashlightStrengthSlider.slider.GetComponent<UnityEngine.UI.Slider>().minValue = 10;
             flashlightStrengthSlider.slider.GetComponent<RectTransform>().anchoredPosition += new Vector2(480f, -104f);
             flashlightStrengthSlider.slider.GetComponent<RectTransform>().sizeDelta *= new Vector2(2.5f, 1f);
+
+            MelonLoader.MelonCoroutines.Start(Loop());
+        }
+        private static IEnumerator Loop()
+        {
+            while (true)
+            {
+                yield return new WaitForEndOfFrame();
+                /*if (HeadlightObject != null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+                {
+                    try
+                    {
+                        HeadlightObject.transform.position = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_Animator_0.GetBoneTransform(HumanBodyBones.Head).position;
+                        HeadlightObject.transform.rotation = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_Animator_0.GetBoneTransform(HumanBodyBones.Head).rotation;
+                    }
+                    catch (Exception ex)
+                    {
+                        ex = new Exception();
+                    }
+                }*/
+            }
         }
     }
 }

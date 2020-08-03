@@ -33,24 +33,24 @@ namespace emmVRC.Libraries
         {
             typeof(Imports).GetMethod("Hook", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).Invoke(null, new object[] { target, detour });
         }*/
-        
+
 
         public unsafe static void Initialize()
         {
             instanceHarmony = Harmony.HarmonyInstance.Create("emmVRCHarmony");
             instanceHarmony.Patch(typeof(Il2CppSystem.Console).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).First(
-                (System.Reflection.MethodInfo a) => 
-                { 
-                    if (a.Name != "WriteLine") 
-                    { 
+                (System.Reflection.MethodInfo a) =>
+                {
+                    if (a.Name != "WriteLine")
+                    {
                         return false;
-                    } 
+                    }
                     if (a.GetParameters().Length == 1)
                     {
                         return a.GetParameters()[0].ParameterType == typeof(string);
                     }
                     return false;
-                }), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IL2CPPConsoleWriteLine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)), null, null);    
+                }), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IL2CPPConsoleWriteLine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)), null, null);
             IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
             Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
             onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
@@ -62,15 +62,6 @@ namespace emmVRC.Libraries
             instanceHarmony.Patch(typeof(VRC_StationInternal).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
             instanceHarmony.Patch(typeof(VRC_StationInternal2).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
             instanceHarmony.Patch(typeof(VRC_StationInternal3).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-        }
-        private static bool CustomTriggerCheck(VRCSDK2.VRC_Interactable __instance)
-        {
-            if (__instance.GetType() == typeof(Libraries.emmVRC_Trigger))
-            {
-                __instance.Cast<emmVRC_Trigger>().onInteract.Invoke();
-                return false;
-            }
-            return true;
         }
         
         private static bool IL2CPPConsoleWriteLine(string __0)

@@ -64,7 +64,7 @@
     <Compile Include="Hacks\UIElementsMenu.cs" />
     <Compile Include="Hacks\WorldFunctions.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
-    <Compile Include="Libraries\AssetBundles.cs" />
+    <Compile Include="Libraries\Analysis.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Libraries\emmVRC_Trigger.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="Libraries\KeybindChanger.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
     <Compile Include="Libraries\MainMenuUtils.cs" />
+    <Compile Include="Libraries\Reflections.cs" />
     <Compile Include="Libraries\TextDisplayMenu.cs" />
     <Compile Include="Libraries\PaginatedMenu.cs" />
     <Compile Include="Libraries\PlayerUtils.cs" />

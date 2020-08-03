@@ -107,7 +107,7 @@ namespace emmVRC.Hacks
                             if (motionState != null)
                             {
                                 // Stops momentum from affecting the player during flight
-                                motionState.Method_Public_Void_1();
+                                motionState.Reset();
                             
 
                                 // Disable the character controller during noclip, in order to allow the character to pass through colliders
@@ -118,7 +118,7 @@ namespace emmVRC.Hacks
 
                             // Locks the player's body into place when flying. Without the noclip check, this also leaves the player's body behind when in VR
                             if (stateController != null && !NoclipEnabled)
-                                stateController.Method_Public_Void_0();
+                                stateController.ResetLastPosition();
                             
                         }
                     }
