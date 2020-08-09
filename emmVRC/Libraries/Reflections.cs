@@ -87,9 +87,9 @@ namespace emmVRC.Libraries
             }
         }
 
-        public static void ReloadAvatar(this VRCPlayer instance, bool something = false)
+        public static void ReloadAvatar(this VRCPlayer instance, bool ignoreSelf = false)
         {
-            instance.Method_Public_Void_Boolean_0(something);
+            instance.Method_Public_Void_Boolean_0(ignoreSelf);
             //ReloadAvatarAct.Invoke(instance, something);
         }
         #endregion
@@ -99,7 +99,7 @@ namespace emmVRC.Libraries
         {
             foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
             {
-                plr.field_Internal_VRCPlayer_0.ReloadAvatar(true);
+                plr.field_Internal_VRCPlayer_0.ReloadAvatar(false);
             }
         }
         #endregion
