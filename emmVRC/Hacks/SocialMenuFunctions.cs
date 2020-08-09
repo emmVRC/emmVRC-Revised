@@ -148,6 +148,14 @@ namespace emmVRC.Hacks
                     MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName != "" ? QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName : QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.username));
                 }
             }));
+            AvatarSearchButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null)
+                {
+                    VRCUiManager.field_Protected_Static_VRCUiManager_0.ShowScreen(VRCUiManager.field_Protected_Static_VRCUiManager_0.menuContent.transform.Find("Screens/Avatar").GetComponent<VRCUiPage>());
+                    MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName != "" ? QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName : QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.username));
+                }
+            }));
             PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
                 {try

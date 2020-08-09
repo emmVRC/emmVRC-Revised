@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
-using emmVRC.Managers;
-using emmVRC.Objects;
 using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +21,6 @@ namespace emmVRC.Menus
         private static PageItem programsButton;
         private static PageItem settingsButton;
         private static PageItem creditsButton;
-        private static PageItem changelogButton;
-        private static PageItem debugMenuButton;
         private static PageItem supporterButton;
         private static PageItem forceQuitButton;
         private static PageItem instantRestartButton;
@@ -63,14 +59,9 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(PageItem.Space);
             }
             creditsButton = new PageItem("<color=#ee006c>emmVRC\nTeam</color>", () => { CreditsMenu.baseMenu.OpenMenu(); }, "View all the users that make this project possible! <3");
-            debugMenuButton = new PageItem("Debug", () => { QuickMenuUtils.ShowQuickmenuPage(DebugMenu.menuBase.getMenuName()); }, "Contains debug actions to test emmVRC and the modding environment as a whole");
             baseMenu.pageItems.Add(creditsButton);
-            if (Attributes.Debug)
-                baseMenu.pageItems.Add(debugMenuButton);
-            else
-                baseMenu.pageItems.Add(PageItem.Space);
-            changelogButton = new PageItem("Changelog", () => { ChangelogMenu.baseMenu.OpenMenu(); }, "Check the changes with the current build of emmVRC");
-            baseMenu.pageItems.Add(changelogButton);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
 
 
 
@@ -101,7 +92,9 @@ namespace emmVRC.Menus
             PrevButton = GameObject.Instantiate(BaseButton, parentMenu, true);
             PrevButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(210f, 192f);
             PrevButton.GetComponentInChildren<Text>().text = "";
-            //PrevButton.GetComponent<UnityEngine.UI.Image>().sprite =
+            PrevButton.GetComponent<Image>().sprite = Resources.Media_Nav;
+            PrevButton.GetComponent<UiTooltip>().text = "Go to the next song in your Playlist";
+            PrevButton.GetComponent<UiTooltip>().alternateText = "Go to the next song in your Playlist";
             PrevButton.transform.rotation *= Quaternion.Euler(0f, 0f, 180f);
             PrevButtonButton = PrevButton.GetComponent<Button>();
             PrevButtonButton.name = "emmVRC_PreviousSong";
@@ -110,7 +103,9 @@ namespace emmVRC.Menus
             PlayButton = GameObject.Instantiate(BaseButton, parentMenu, true);
             PlayButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(630f, 192f);
             PlayButton.GetComponentInChildren<Text>().text = "";
-            //PlayButton.GetComponent<UnityEngine.UI.Image>().sprite =
+            PlayButton.GetComponent<Image>().sprite = Resources.Media_PlayPause;
+            PlayButton.GetComponent<UiTooltip>().text = "Pause or continue listening to the current song";
+            PlayButton.GetComponent<UiTooltip>().alternateText = "Pause or continue listening to the current song";
             PlayButtonButton = PlayButton.GetComponent<Button>();
             PlayButtonButton.name = "emmVRC_PlayPause";
             PlayButtonButton.onClick = new Button.ButtonClickedEvent();
@@ -118,7 +113,9 @@ namespace emmVRC.Menus
             StopButton = GameObject.Instantiate(BaseButton, parentMenu, true);
             StopButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(1050f, 192f);
             StopButton.GetComponentInChildren<Text>().text = "";
-            //StopButton.GetComponent<UnityEngine.UI.Image>().sprite =
+            StopButton.GetComponent<Image>().sprite = Resources.Media_Stop;
+            StopButton.GetComponent<UiTooltip>().text = "Stop the current song completely";
+            StopButton.GetComponent<UiTooltip>().alternateText = "Stop the current song completely";
             StopButtonButton = StopButton.GetComponent<Button>();
             StopButtonButton.name = "emmVRC_StopSong";
             StopButtonButton.onClick = new Button.ButtonClickedEvent();
@@ -126,7 +123,9 @@ namespace emmVRC.Menus
             NextButton = GameObject.Instantiate(BaseButton, parentMenu, true);
             NextButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(1470f, 192f);
             NextButton.GetComponentInChildren<Text>().text = "";
-            //NextButton.GetComponent<UnityEngine.UI.Image>().sprite = 
+            NextButton.GetComponent<Image>().sprite = Resources.Media_Nav;
+            NextButton.GetComponent<UiTooltip>().text = "Go to the previous song in your Playlist (click twice)\n or restart the current song";
+            NextButton.GetComponent<UiTooltip>().alternateText = "Go to the previous song in your Playlist (click twice)\n or restart the current song";
             NextButtonButton = NextButton.GetComponent<Button>();
             NextButtonButton.name = "emmVRC_NextSong";
             NextButtonButton.onClick = new Button.ButtonClickedEvent();

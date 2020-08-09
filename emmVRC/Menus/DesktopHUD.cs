@@ -72,7 +72,7 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
             BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
             BackgroundObject.transform.SetParent(parent, false);
-            BackgroundObject.GetComponent<RawImage>().texture = Resources.uiMinimized;
+            BackgroundObject.GetComponent<Image>().sprite = Resources.HUD_Minimized;
             GameObject TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
@@ -90,8 +90,8 @@ namespace emmVRC.Menus
     {
         private static GameObject CanvasObject;
         private static GameObject BackgroundObject;
-        private static RawImage BackgroundImage;
         private static GameObject TextObject;
+        private static Image BackgroundImage;
         private static Text TextText;
         private static bool keyFlag;
         public static bool UIExpanded = false;
@@ -120,11 +120,11 @@ namespace emmVRC.Menus
 
             BackgroundObject.AddComponent<CanvasRenderer>();
 
-            BackgroundImage = BackgroundObject.AddComponent<RawImage>();
+            BackgroundImage = BackgroundObject.AddComponent<Image>();
             BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
             BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
             BackgroundObject.transform.SetParent(CanvasObject.transform, false);
-            BackgroundImage.texture = Resources.uiMinimized;
+            BackgroundImage.sprite = Resources.HUD_Minimized;
             TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
@@ -145,7 +145,7 @@ namespace emmVRC.Menus
         {
             while (true)
             {
-                if (Configuration.JSONConfig.HUDEnabled && Resources.uiMinimized != null && enabled)
+                if (Configuration.JSONConfig.HUDEnabled && enabled)
                 {
                     CanvasObject.SetActive(true);
                 }
@@ -157,6 +157,10 @@ namespace emmVRC.Menus
                 if (((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.E)) && !keyFlag)
                 {
                     UIExpanded = !UIExpanded;
+                    if (UIExpanded)
+                        BackgroundImage.sprite = Resources.HUD_Base;
+                    else
+                        BackgroundImage.sprite = Resources.HUD_Minimized;
                     keyFlag = true;
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1]) || (KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && !keyFlag)
@@ -167,9 +171,8 @@ namespace emmVRC.Menus
                 }
                 if (!Input.GetKey(KeyCode.E) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && keyFlag)
                     keyFlag = false;
-                if (BackgroundObject != null && TextObject != null && TextText != null)
+                if (TextText)
                 {
-                    BackgroundImage.texture = UIExpanded ? Resources.uiMaximized : Resources.uiMinimized;
                     if (UIExpanded)
                     {
                         string userList = "";
