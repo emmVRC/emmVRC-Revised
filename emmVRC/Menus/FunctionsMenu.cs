@@ -7,6 +7,9 @@ using emmVRC.Libraries;
 using emmVRC.Managers;
 using emmVRC.Objects;
 using UnityEngine.Events;
+using UnityEngine;
+using UnityEngine.UI;
+using UnhollowerRuntimeLib;
 
 namespace emmVRC.Menus
 {
@@ -78,6 +81,56 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(forceQuitButton);
             instantRestartButton = new PageItem("Instant\nRestart", () => { DestructiveActions.ForceRestart(); }, "Restarts the game, instantly.");
             baseMenu.pageItems.Add(instantRestartButton);
+
+            AddMediaKeys();
+        }
+        private static GameObject BaseButton;
+        private static Transform parentMenu;
+        private static GameObject PrevButton;
+        private static Button PrevButtonButton;
+        private static GameObject PlayButton;
+        private static Button PlayButtonButton;
+        private static GameObject StopButton;
+        private static Button StopButtonButton;
+        private static GameObject NextButton;
+        private static Button NextButtonButton;
+        //Seperate method to more easily read or disable temporarily. Could also help with a cfg option.
+        private static void AddMediaKeys() {
+            BaseButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/WorldsButton").gameObject;
+            parentMenu = QuickMenuUtils.GetQuickMenuInstance().transform.Find(baseMenu.menuBase.getMenuName());
+            PrevButton = GameObject.Instantiate(BaseButton, parentMenu, true);
+            PrevButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(210f, 192f);
+            PrevButton.GetComponentInChildren<Text>().text = "";
+            //PrevButton.GetComponent<UnityEngine.UI.Image>().sprite =
+            PrevButton.transform.rotation *= Quaternion.Euler(0f, 0f, 180f);
+            PrevButtonButton = PrevButton.GetComponent<Button>();
+            PrevButtonButton.name = "emmVRC_PreviousSong";
+            PrevButtonButton.onClick = new Button.ButtonClickedEvent();
+            PrevButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.PrevTrack)));
+            PlayButton = GameObject.Instantiate(BaseButton, parentMenu, true);
+            PlayButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(630f, 192f);
+            PlayButton.GetComponentInChildren<Text>().text = "";
+            //PlayButton.GetComponent<UnityEngine.UI.Image>().sprite =
+            PlayButtonButton = PlayButton.GetComponent<Button>();
+            PlayButtonButton.name = "emmVRC_PlayPause";
+            PlayButtonButton.onClick = new Button.ButtonClickedEvent();
+            PlayButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.PlayPause)));
+            StopButton = GameObject.Instantiate(BaseButton, parentMenu, true);
+            StopButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(1050f, 192f);
+            StopButton.GetComponentInChildren<Text>().text = "";
+            //StopButton.GetComponent<UnityEngine.UI.Image>().sprite =
+            StopButtonButton = StopButton.GetComponent<Button>();
+            StopButtonButton.name = "emmVRC_StopSong";
+            StopButtonButton.onClick = new Button.ButtonClickedEvent();
+            StopButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.Stop)));
+            NextButton = GameObject.Instantiate(BaseButton, parentMenu, true);
+            NextButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(1470f, 192f);
+            NextButton.GetComponentInChildren<Text>().text = "";
+            //NextButton.GetComponent<UnityEngine.UI.Image>().sprite = 
+            NextButtonButton = NextButton.GetComponent<Button>();
+            NextButtonButton.name = "emmVRC_NextSong";
+            NextButtonButton.onClick = new Button.ButtonClickedEvent();
+            NextButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.NextTrack)));
         }
     }
 }
