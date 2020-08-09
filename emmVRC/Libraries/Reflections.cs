@@ -89,7 +89,8 @@ namespace emmVRC.Libraries
 
         public static void ReloadAvatar(this VRCPlayer instance, bool something = false)
         {
-            ReloadAvatarAct.Invoke(instance, something);
+            instance.Method_Public_Void_Boolean_0(something);
+            //ReloadAvatarAct.Invoke(instance, something);
         }
         #endregion
 

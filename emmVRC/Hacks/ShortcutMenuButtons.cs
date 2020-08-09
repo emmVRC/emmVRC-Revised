@@ -15,6 +15,7 @@ namespace emmVRC.Hacks
     {
         public static QMSingleButton logoButton;
         public static GameObject emojiButton;
+        public static GameObject emoteButton;
         public static GameObject reportWorldButton;
         public static GameObject trustRankButton;
         public static IEnumerator Process()
@@ -27,12 +28,17 @@ namespace emmVRC.Hacks
             }
             logoButton.setActive(Configuration.JSONConfig.LogoButtonEnabled);
             emojiButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmojiButton").gameObject;
+            emoteButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmoteButton").gameObject;
             reportWorldButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/ReportWorldButton").gameObject;
             trustRankButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors").gameObject;
             if (Configuration.JSONConfig.DisableEmojiButton)
                 emojiButton.SetActive(false);
             else
                 emojiButton.SetActive(true);
+            if (Configuration.JSONConfig.DisableEmoteButton)
+                emoteButton.SetActive(false);
+            else
+                emoteButton.SetActive(true);
             if (Configuration.JSONConfig.DisableReportWorldButton)
                 reportWorldButton.SetActive(false);
             else

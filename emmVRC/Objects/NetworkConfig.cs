@@ -8,7 +8,7 @@ namespace emmVRC.Objects
 {
     public class NetworkConfig
     {
-        public int MessageUpdateRate = 15;
+        public int MessageUpdateRate = 60;
         public bool DisableAuthFile = false;
         public bool DeleteAndDisableAuthFile = false;
         public bool DisableAvatarChecks = false;

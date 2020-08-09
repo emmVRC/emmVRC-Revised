@@ -54,6 +54,7 @@ namespace emmVRC.Objects
         // Sub section: Shortcut Menu
         public bool DisableReportWorldButton = false;
         public bool DisableEmojiButton = false;
+        public bool DisableEmoteButton = false;
         public bool DisableRankToggleButton = false;
         // Sub section: User Interact Menu
         public bool DisablePlaylistsButton = false;

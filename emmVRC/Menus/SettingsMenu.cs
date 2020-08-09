@@ -68,6 +68,7 @@ namespace emmVRC.Menus
         // Page 5
         private static PageItem DisableReportWorld;
         private static PageItem DisableEmoji;
+        private static PageItem DisableEmote;
         private static PageItem DisableRankToggle;
 
         // Page 6
@@ -623,7 +624,20 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "TOGGLE: Disables the 'Emoji' button in the Quick Menu. Its functionality can be found in the Disabled Buttons menu");
+            }, "TOGGLE: Disables the 'Emoji' button in the Quick Menu. Its functionality can be found in the Disabled Buttons menu, as well as the new Radial menu");
+            DisableEmote = new PageItem("Disable\nEmote", () =>
+            {
+                Configuration.JSONConfig.DisableEmoteButton = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableEmoteButton = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "TOGGLE: Disables the 'Emote' button in the Quick Menu. Its functionality can be found in the new Radial menu");
             DisableRankToggle = new PageItem("Disable\nRank Toggle", () =>
             {
                 Configuration.JSONConfig.DisableRankToggleButton = true;
@@ -691,12 +705,12 @@ namespace emmVRC.Menus
             }, "TOGGLE: Combines the Warn and Kick buttons into one space, to make room for more buttons");
             baseMenu.pageItems.Add(DisableReportWorld);
             baseMenu.pageItems.Add(DisableEmoji);
+            baseMenu.pageItems.Add(DisableEmote);
             baseMenu.pageItems.Add(DisableRankToggle);
             baseMenu.pageItems.Add(DisablePlaylists);
             baseMenu.pageItems.Add(DisableReportUser);
             baseMenu.pageItems.Add(DisableAvatarStats);
             baseMenu.pageItems.Add(MinimalWarnKick);
-            baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
 
             DisableAvatarHotWorlds = new PageItem("Disable Hot Avatar\nWorld List", () =>
@@ -895,6 +909,7 @@ namespace emmVRC.Menus
 
                 DisableReportWorld.SetToggleState(Configuration.JSONConfig.DisableReportWorldButton);
                 DisableEmoji.SetToggleState(Configuration.JSONConfig.DisableEmojiButton);
+                DisableEmote.SetToggleState(Configuration.JSONConfig.DisableEmoteButton);
                 DisableRankToggle.SetToggleState(Configuration.JSONConfig.DisableRankToggleButton);
                 DisablePlaylists.SetToggleState(Configuration.JSONConfig.DisablePlaylistsButton);
                 DisableAvatarStats.SetToggleState(Configuration.JSONConfig.DisableAvatarStatsButton);

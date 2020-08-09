@@ -314,8 +314,6 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
 
-
-
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();
             }

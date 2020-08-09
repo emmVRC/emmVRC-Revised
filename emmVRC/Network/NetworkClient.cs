@@ -22,7 +22,7 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private static string BaseAddress = (Attributes.Beta ? "" : "https://thetrueyoshifan.com");
+        private static string BaseAddress = (Attributes.Beta ? "" : "https://api.emmvrc.com");
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         public static string configURL { get { return "https://thetrueyoshifan.com"; } } // TODO: Integrate this with the API
