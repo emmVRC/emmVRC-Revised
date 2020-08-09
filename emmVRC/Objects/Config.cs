@@ -7,6 +7,9 @@ namespace emmVRC.Objects
     {
         // The main emmVRC configuration structure. Please don't remove anything; it seems to break configs!
 
+        // emmVRC Version log
+        public string LastVersion = "0.0.0";
+
         // Feature options
         public bool RiskyFunctionsEnabled = false;
         public bool GlobalDynamicBonesEnabled = true;
@@ -51,6 +54,7 @@ namespace emmVRC.Objects
         // Sub section: Shortcut Menu
         public bool DisableReportWorldButton = false;
         public bool DisableEmojiButton = false;
+        public bool DisableEmoteButton = false;
         public bool DisableRankToggleButton = false;
         // Sub section: User Interact Menu
         public bool DisablePlaylistsButton = false;

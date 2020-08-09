@@ -10,6 +10,8 @@ using emmVRC.Hacks;
 using UnityEngine;
 using UnityEngine.UI;
 
+#pragma warning disable 4014
+
 namespace emmVRC.Menus
 {
     public class SettingsMenu
@@ -117,7 +119,7 @@ namespace emmVRC.Menus
             RiskyFunctions = new PageItem("Risky Functions", () =>
             {
                 if (!Configuration.JSONConfig.RiskyFunctionsWarningShown)
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Risky Functions", "By enabling these functions, you accept the risk that these functions could be detected by VRChat, and you agree to not use them for malicious or harassment purposes.", "Agree", new System.Action(() =>
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Risky Functions", "By agreeing, you accept that the use of these functions could be reported to VRChat, and that you will not use them for malicious purposes.\n", "Agree", new System.Action(() =>
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
@@ -159,8 +161,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
@@ -169,8 +170,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 LoadMenu();
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "TOGGLE: Enables the Global Dynamic Bones system");
             FriendGlobalDynamicBones = new PageItem("Friend Global\nDynamic Bones", () =>
             {
@@ -179,15 +179,13 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 LoadMenu();
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "Disabled", () => {
                 Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 LoadMenu();
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "TOGGLE: Enables Global Dynamic Bones for friends. Note that this might cause lag with lots of friends in a room");
             EveryoneGlobalDynamicBones = new PageItem("Everybody Global\nDynamic Bones", () =>
             {
@@ -196,16 +194,14 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 LoadMenu();
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 LoadMenu();
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances");
             emmVRCNetwork = new PageItem("emmVRC Network\nEnabled", () =>
             {
@@ -276,7 +272,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(VRFlightControls);
             //baseMenu.pageItems.Add(GlobalChat);
             baseMenu.pageItems.Add(ConsoleClean);
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
 
             InfoBar = new PageItem("Info Bar", () =>
             {
@@ -314,15 +310,24 @@ namespace emmVRC.Menus
             HUD = new PageItem("HUD", () => {
                 Configuration.JSONConfig.HUDEnabled = true;
                 Configuration.SaveConfig();
+                if (VRHUD.Initialized) {
+                    VRHUD.ToggleHUDButton.setActive(true);
+                }
                 RefreshMenu();
             }, "Disabled", () => {
                 Configuration.JSONConfig.HUDEnabled = false;
                 Configuration.SaveConfig();
+                if (VRHUD.Initialized) {
+                    VRHUD.ToggleHUDButton.setActive(false);
+                }
                 RefreshMenu();
             }, "TOGGLE: Enables the HUD, which shows players in the room and instance information");
             ChooseHUD = new PageItem("Show Quick Menu HUD\n in desktop", () => {
                 if (!VRHUD.Initialized) {
                     VRHUD.Initialize();
+                }
+                else {
+                    VRHUD.ToggleHUDButton.setActive(true);
                 }
                 DesktopHUD.enabled = false;
                 VRHUD.enabled = true;
@@ -333,6 +338,9 @@ namespace emmVRC.Menus
                 if (!DesktopHUD.Initialized) {
                     DesktopHUD.Initialize();
                 }
+                if (VRHUD.Initialized) {
+                    VRHUD.ToggleHUDButton.setActive(false);
+                }
                 VRHUD.enabled = false;
                 DesktopHUD.enabled = true;
                 Configuration.JSONConfig.VRHUDInDesktop = false;
@@ -342,12 +350,14 @@ namespace emmVRC.Menus
             MoveVRHUD = new PageItem("Closer Quick Menu\nHUD", () => {
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = true;
                 Configuration.SaveConfig();
+                VRHUD.RefreshPosition();
                 RefreshMenu();
             }, "Disabled", () => {
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = false;
                 Configuration.SaveConfig();
+                VRHUD.RefreshPosition();
                 RefreshMenu();
-            }, "TOGGLE: Allows the Quick Menu HUD to move inwards by one row if no emmVRC Buttons occupy the space (requires restart)");
+            }, "TOGGLE: Allows the Quick Menu HUD to move inwards by one row if no emmVRC or Vanilla Buttons occupy the space (requires restart)");
             LogoButton = new PageItem("Logo Button", () => {
                 Configuration.JSONConfig.LogoButtonEnabled = true;
                 Configuration.SaveConfig();
@@ -391,6 +401,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(LogoButton);
             baseMenu.pageItems.Add(ForceRestart);
             baseMenu.pageItems.Add(UnlimitedFPS);
+            baseMenu.pageItems.Add(PageItem.Space);
 
             UIColorChanging = new PageItem("UI Color\nChange", () =>
             {
@@ -514,10 +525,10 @@ namespace emmVRC.Menus
             }, "Allows you to change your spoofed name to one that never changes");
             baseMenu.pageItems.Add(UIColorChanging);
             baseMenu.pageItems.Add(UIColorChangePickerButton);
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(InfoSpoofing);
             baseMenu.pageItems.Add(InfoHiding);
             baseMenu.pageItems.Add(InfoSpooferNamePicker);
@@ -528,6 +539,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex), Libraries.ColorConversion.HexToColor("#FFFF00"));
             VisitorNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1001, "Visitor Nameplate Color", "Select the color for Visitor Nameplate colors", (UnityEngine.Color newColor) =>
             {
@@ -535,6 +547,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VisitorNamePlateColorHex), Libraries.ColorConversion.HexToColor("#CCCCCC"));
             NewUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1002, "New User Nameplate Color", "Select the color for New User Nameplate colors", (UnityEngine.Color newColor) =>
             {
@@ -542,6 +555,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#1778FF"));
             UserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1003, "User Nameplate Color", "Select the color for User Nameplate colors", (UnityEngine.Color newColor) =>
             {
@@ -549,7 +563,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_1(false);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#2BCE5C"));
             KnownUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1004, "Known User Nameplate Color", "Select the color for Known User Nameplate colors", (UnityEngine.Color newColor) =>
             {
@@ -557,6 +571,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#FF7B42"));
             TrustedUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1005, "Trusted User Nameplate Color", "Select the color for Trusted User Nameplate colors", (UnityEngine.Color newColor) =>
             {
@@ -564,6 +579,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#8143E6"));
             NameplateColorChanging = new PageItem("Nameplate\nColor Changing", () =>
             {
@@ -571,12 +587,14 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.NameplateColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "TOGGLE: Enables the nameplate color changing module, which changes the colors of the various trust ranks in nameplates and the UI");
             FriendNameplateColorPickerButton = new PageItem("Friend\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(FriendNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Friend Nameplate colors");
             VisitorNameplateColorPickerButton = new PageItem("Visitor\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(VisitorNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Visitor Nameplate colors");
@@ -585,8 +603,8 @@ namespace emmVRC.Menus
             KnownUserNameplateColorPickerButton = new PageItem("Known User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(KnownUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Known User Nameplate colors");
             TrustedUserNameplateColorPickerButton = new PageItem("Trusted User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(TrustedUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Trusted User Nameplate colors");
             baseMenu.pageItems.Add(NameplateColorChanging);
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(FriendNameplateColorPickerButton);
             baseMenu.pageItems.Add(VisitorNameplateColorPickerButton);
             baseMenu.pageItems.Add(NewUserNameplateColorPickerButton);
@@ -692,8 +710,8 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(DisableReportUser);
             baseMenu.pageItems.Add(DisableAvatarStats);
             baseMenu.pageItems.Add(MinimalWarnKick);
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
 
             DisableAvatarHotWorlds = new PageItem("Disable Hot Avatar\nWorld List", () =>
             {
@@ -743,11 +761,11 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(DisableAvatarRandomWorlds);
             baseMenu.pageItems.Add(DisableAvatarLegacyList);
             baseMenu.pageItems.Add(DisableAvatarPublicList);
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
 
 
             FlightKeybind = new PageItem("Flight\nKeybind:\nLeftCTRL + F", () =>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.UI;
+using VRC.Core;
 
 namespace emmVRC.Menus
 {
@@ -18,6 +19,7 @@ namespace emmVRC.Menus
         public static QMSingleButton PlayerNotesButton;
         public static QMSingleButton TeleportButton;
         public static QMSingleButton SendMessageButton;
+        public static QMSingleButton FavoriteAvatarButton;
         public static void Initialize()
         {
             UserTweaks = new QMNestedButton("UserInteractMenu", Configuration.JSONConfig.PlayerActionsButtonX, Configuration.JSONConfig.PlayerActionsButtonY, "<color=#FF69B4>emmVRC</color>\nActions", "Provides functions and tweaks with the selected user");
@@ -32,6 +34,24 @@ namespace emmVRC.Menus
                     MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, targetId));
                 }), null, "Enter message....");
             }, "Send a message to this player, either through emmVRC Network, or invites");
+            FavoriteAvatarButton = new QMSingleButton(UserTweaks, 2, 1, "Favorite\nAvatar", () =>
+            {
+                bool flag = false;
+                if (QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.allowAvatarCopying && QuickMenuUtils.GetQuickMenuInstance().field_Private_VRCPlayer_0.prop_ApiAvatar_0.releaseStatus == "public")
+                {
+                    foreach(ApiAvatar avtr in CustomAvatarFavorites.LoadedAvatars)
+                    {
+                        if (avtr.id == QuickMenuUtils.GetQuickMenuInstance().field_Private_VRCPlayer_0.prop_ApiAvatar_0.id)
+                            flag = true;
+                    }
+                    if (flag)
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You already have this avatar favorited", "Dismiss", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                    else
+                        MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_VRCPlayer_0.prop_ApiAvatar_0));
+                }
+                else
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "This avatar is not public, or the user does not have cloning turned on.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+            }, "Allows you to favorite this user's avatar, if the avatar is public and cloning is on");
         }
         public static void SetRiskyFunctions(bool status)
         {

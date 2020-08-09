@@ -122,10 +122,10 @@ namespace emmVRC.Managers
             baseMenu.pageItems.Add(ClothEnabledToggle);
             baseMenu.pageItems.Add(ShadersEnabledToggle);
             baseMenu.pageItems.Add(AudioSourcesEnabledToggle);
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
 
             HandCollidersToggle = new PageItem("Hand\nColliders", () => {
                 selectedAvatarPermissions.HandColliders = true;
@@ -161,8 +161,7 @@ namespace emmVRC.Managers
         }
         public static void ReloadAvatars()
         {
-            VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(true);
-            VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+            VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.Method_Private_Void_Boolean_1(false);
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.Method_Private_Void_Boolean_2(false);
         }

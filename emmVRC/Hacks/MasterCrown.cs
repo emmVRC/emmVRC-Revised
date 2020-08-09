@@ -49,7 +49,8 @@ namespace emmVRC.Hacks
                         else
                             masterIconObj.SetActive(false);
                     }
-                } catch (System.Exception ex)
+                }
+                catch (System.Exception ex)
                 {
                     ex = new System.Exception();
                 }

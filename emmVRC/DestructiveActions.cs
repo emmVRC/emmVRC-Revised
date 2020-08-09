@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Network;
 
+#pragma warning disable 4014
+
 namespace emmVRC
 {
     public class DestructiveActions

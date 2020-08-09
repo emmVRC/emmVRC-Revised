@@ -8,10 +8,6 @@ using UnityEngine;
 
 namespace emmVRC.Hacks
 {
-    // This is a really hacky solution to not having custom components
-    // Essentially, we are iterating through the objects that **should** have custom components, and updating their stuff manually.
-    // This is not optimized at all, and should be scrapped the second we get real custom component support. But for now... here we go
-
     // Here are the component types we have to work with:
 
     // --eVRCDisable--
@@ -30,17 +26,9 @@ namespace emmVRC.Hacks
 
     public class CustomWorldObjects
     {
-        public static List<GameObject> emmVRCPanels;
         public static void Initialize()
         {
 
-        }
-        public static IEnumerator Loop()
-        {
-            while (true)
-            {
-                // TODO: Put panel code here. Essentially, we're going to iterate through each panel, and update the contents based on variables from the network.
-            }
         }
         public static IEnumerator OnRoomEnter()
         {
@@ -56,6 +44,10 @@ namespace emmVRC.Hacks
                 else if (obj.name == "eVRCEnable")
                 {
                     obj.SetActive(true);
+                }
+                else if (obj.name == "eVRCPanel")
+                {
+                    Objects.emmVRCPanel.Instantiate(obj);
                 }
             }
         }

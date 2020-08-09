@@ -47,9 +47,14 @@ namespace emmVRC.Libraries
             ToggleState = defaultState;
             type = PageItems.Toggle;
         }
-        public static PageItem Space()
+        /*public static PageItem Space()
         {
             return new PageItem("", null, "", false);
+        }*/
+        public static PageItem Space { get
+            {
+                return new PageItem("", null, "", false);
+            } 
         }
         public void SetToggleState(bool newBool, bool triggerAction = false)
         {

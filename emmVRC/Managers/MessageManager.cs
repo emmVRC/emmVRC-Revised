@@ -14,7 +14,7 @@ using VRC.Core;
 using Transmtn;
 using Transmtn.DTO;
 
-
+#pragma warning disable 4014
 
 namespace emmVRC.Managers
 {
@@ -94,36 +94,46 @@ namespace emmVRC.Managers
                 foreach (PendingMessage msg in pendingMessages)
                 {
                     if (!msg.read)
-                    NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ", sent " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortDateString() + " " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortTimeString() + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), "Go to\nMessages", () => {
-                        if (NetworkClient.authToken != null)
+                        try
                         {
-                            try
+                            NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ", sent " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortDateString() + " " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortTimeString() + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), "Go to\nMessages", () =>
                             {
-                                HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
-                                //HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
-                            }
-                            catch (Exception ex)
+                                if (NetworkClient.authToken != null)
+                                {
+                                    try
+                                    {
+                                        HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                        //HTTPRequest.patch_sync(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        emmVRCLoader.Logger.LogError(ex.ToString());
+                                    }
+                                    NotificationManager.DismissCurrentNotification();
+                                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg2, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+                                    {
+                                        MelonLoader.MelonCoroutines.Start(SendMessage(msg2, msg.message.rest_message_sender_id));
+                                    }), null, "Enter message....");
+                                }
+                            }, "Mark as\nRead", () =>
                             {
-                                emmVRCLoader.Logger.LogError(ex.ToString());
-                            }
-                            NotificationManager.DismissCurrentNotification();
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg2, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
-                            { 
-                                MelonLoader.MelonCoroutines.Start(SendMessage(msg2, msg.message.rest_message_sender_id));
-                            }), null, "Enter message....");
+                                if (NetworkClient.authToken != null)
+                                    try
+                                    {
+                                        HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        emmVRCLoader.Logger.LogError(ex.ToString());
+                                    }
+                                NotificationManager.DismissCurrentNotification();
+                            }, Resources.messageSprite, -1);
+                            msg.read = true;
                         }
-                    }, "Mark as\nRead", () => {
-                        if (NetworkClient.authToken != null)
-                            try
-                            {
-                                HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
-                            } catch (Exception ex)
-                            {
-                                emmVRCLoader.Logger.LogError(ex.ToString());
-                            }
-                        NotificationManager.DismissCurrentNotification();
-                    }, Resources.messageSprite, -1);
-                    msg.read = true;
+                        catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
                 }
                 yield return new WaitForSeconds(Objects.NetworkConfig.Instance.MessageUpdateRate);
             }

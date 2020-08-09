@@ -69,7 +69,8 @@ namespace emmVRC.Network
                         }
                     }
                 });
-            } catch (Exception conception)
+            }
+            catch (Exception conception)
             {
                 return (conception.ToString());
             }

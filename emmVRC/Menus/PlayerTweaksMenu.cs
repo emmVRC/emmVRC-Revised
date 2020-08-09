@@ -46,8 +46,7 @@ namespace emmVRC.Menus
 
             ReloadAllAvatars = new QMSingleButton(baseMenu, 2, 0, "Reload\nAll\nAvatars", () =>
             {
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(false);
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_10();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "Reloads all the current avatars in the room");
 
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
@@ -126,7 +125,7 @@ namespace emmVRC.Menus
             }, 0.5f);
             SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().enabled = false;
             SpeedSlider.slider.GetComponent<RectTransform>().anchoredPosition += new Vector2(256f, -104f);
-            SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().maxValue = 5f;
+            SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().maxValue = Configuration.JSONConfig.MaxSpeedIncrease;
 
             SpeedReset = new QMSingleButton(baseMenu, 3, 2, "Reset", () =>
             {

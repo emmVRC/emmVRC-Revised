@@ -12,6 +12,8 @@ namespace emmVRC.Managers
     {
         public KeyCode ActionKey;
         public System.Action ActionAction;
+        public string Name = "";
+        public string Description = "";
     }
     public class DebugManager
     {

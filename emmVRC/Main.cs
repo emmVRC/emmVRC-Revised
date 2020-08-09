@@ -19,6 +19,12 @@ using RootMotion.Dynamics;
 using VRC.UI;
 using System.Net;
 using System.Windows.Forms;
+using Il2CppSystem.Collections.Specialized;
+using JetBrains.Annotations;
+using Il2CppSystem.Collections.Generic;
+using UnityEngine.Bindings;
+
+#pragma warning disable 4014
 
 namespace emmVRC
 {
@@ -156,6 +162,12 @@ namespace emmVRC
                 // Initialize the "Supporters" menu
                 Menus.SupporterMenu.Initialize();
 
+                // Initialize the "Changelog" menu
+                Menus.ChangelogMenu.Initialize();
+
+                // Initialize the "Debug" menu
+                Menus.DebugMenu.Initialize();
+
                 // Initialize the "Social Menu Functions" menu
                 Hacks.SocialMenuFunctions.Initialize();
 
@@ -217,6 +229,9 @@ namespace emmVRC
                 // Initialize the Nameplate color changer
                 Hacks.Nameplates.Initialize();
 
+                // Initialize the Flashlight system
+                Menus.FlashlightMenu.Initialize();
+
                 // Change the FOV, if we want to
                 Hacks.FOV.Initialize();
 
@@ -230,10 +245,12 @@ namespace emmVRC
                 Managers.MessageManager.Initialize();
 
                 // Initialize the emmVRC HUD
-                if (Configuration.JSONConfig.VRHUDInDesktop || UnityEngine.XR.XRDevice.isPresent)
-                    Menus.VRHUD.Initialize();
-                else
-                    Menus.DesktopHUD.Initialize();
+                if (Configuration.JSONConfig.VRHUDInDesktop || UnityEngine.XR.XRDevice.isPresent) {
+                    VRHUD.Initialize();
+                }
+                else {
+                    DesktopHUD.Initialize();
+                }
 
                 // Initialize the Third Person mode
                 try
@@ -262,6 +279,7 @@ namespace emmVRC
                     Menus.PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
                     Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(false, true);
                     Menus.PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
+                    Menus.FlashlightMenu.toggleFlashlight.setToggleState(false);
 
                     MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
                 // Ensure that everything through here is after the game has loaded
@@ -272,6 +290,12 @@ namespace emmVRC
                     MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
                     MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
                     MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
+                    if (Configuration.JSONConfig.LastVersion != Attributes.Version)
+                    {
+                        Configuration.JSONConfig.LastVersion = Attributes.Version;
+                        Configuration.SaveConfig();
+                        Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Attributes.Version + "!", "View\nChangelog", () => { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                    }
 
                 }));
 
@@ -291,67 +315,11 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () => {
-                        //emmVRCLoader.Logger.LogDebug("==========================================================");
-                        //GameObjectUtils.GetProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0);
-                        emmVRCLoader.Logger.LogDebug("Endpoint: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Endpoint);
-                        emmVRCLoader.Logger.LogDebug("Populated: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.Populated);
-                        emmVRCLoader.Logger.LogDebug("Required properties: " + CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties);
-                        foreach (string str in CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0.RequiredProperties)
-                        {
-                            emmVRCLoader.Logger.LogDebug(str);
-                        }                        
 
-                        //emmVRCLoader.Logger.LogDebug("Processing list differences...");
-                        //GameObjectUtils.CompareProperties(CustomAvatarFavorites.NewAvatarList.myPage.avatar.field_Internal_ApiAvatar_0, CustomAvatarFavorites.LoadedAvatars[0]);
-                    }
-                });
-                /*DebugManager.DebugActions.Add(new DebugAction { ActionKey = KeyCode.Alpha0, ActionAction = () => {
-                    try
-                    {
-                        var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
-                        var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
-                        testCube.AddComponent<BoxCollider>();
-                        var pickup = testCube.AddComponent<VRCSDK2.VRC_Pickup>();
-                        var rigidbody = testCube.AddComponent<Rigidbody>();
-                        rigidbody.useGravity = true;
-                        rigidbody.isKinematic = true;
-                        pickup.proximity = 0.5f;
-                        pickup.pickupable = true;
-                    } catch (Exception ex)
-                    {
-                        ex = new Exception();
-                    }
-                } });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha9,
-                    ActionAction = () => {
-                        try
-                        {
-                            var localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
-                            var testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            testCube.transform.position = localPlayer.transform.position + new Vector3(0f, 1f, 0f);
-                            testCube.AddComponent<BoxCollider>();
-                            var pickup = testCube.AddComponent<VRCSDK2.VRC_Station>();
-                            var trigger = testCube.AddComponent<VRC.SDKBase.VRC_Trigger>();
-                            var rigidbody = testCube.AddComponent<Rigidbody>();
-                            rigidbody.useGravity = true;
-                            rigidbody.isKinematic = true;
-                            pickup.stationEnterPlayerLocation = testCube.transform;
-                            pickup.stationExitPlayerLocation = testCube.transform;
 
-                        }
-                        catch (Exception ex)
-                        {
-                            ex = new Exception();
-                        }
-                    }
-                });*/
+
+                // Debug actions need to go before this
+                DebugMenu.PopulateDebugMenu();
             }
         }
 

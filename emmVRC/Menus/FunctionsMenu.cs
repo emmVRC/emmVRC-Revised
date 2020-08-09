@@ -56,12 +56,12 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(settingsButton);
             for (int i=0; i <= 5; i++)
             {
-                baseMenu.pageItems.Add(PageItem.Space());
+                baseMenu.pageItems.Add(PageItem.Space);
             }
             creditsButton = new PageItem("<color=#ee006c>emmVRC\nTeam</color>", () => { CreditsMenu.baseMenu.OpenMenu(); }, "View all the users that make this project possible! <3");
             baseMenu.pageItems.Add(creditsButton);
-            baseMenu.pageItems.Add(PageItem.Space());
-            baseMenu.pageItems.Add(PageItem.Space());
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
 
 
 
