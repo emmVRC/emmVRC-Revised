@@ -31,7 +31,8 @@ namespace emmVRC.Network
         private static bool userIDTried = false;
         private static bool keyFileTried = false;
         private static bool passwordTried = false;
-        public static string authToken {
+        public static string authToken
+        {
             get { return _authToken; }
             set
             {
@@ -47,7 +48,7 @@ namespace emmVRC.Network
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/"+ Attributes.Version+")");
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/" + Attributes.Version + ")");
             fetchConfig();
             login();
             //return callback();
@@ -121,7 +122,7 @@ namespace emmVRC.Network
             }
             catch (Exception exception)
             {
-                emmVRCLoader.Logger.LogError("Client configuration could not be fetched from emmVRC. Assuming default values. Error: "+exception.ToString());
+                emmVRCLoader.Logger.LogError("Client configuration could not be fetched from emmVRC. Assuming default values. Error: " + exception.ToString());
                 NetworkConfig.Instance = new NetworkConfig();
             }
         }
@@ -169,7 +170,8 @@ namespace emmVRC.Network
                     try
                     {
                         Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
@@ -215,7 +217,7 @@ namespace emmVRC.Network
                     }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.errorSprite, -1);
                     //emmVRCLoader.Logger.LogError(response);
                 }
-            }   
+            }
         }
     }
 }
