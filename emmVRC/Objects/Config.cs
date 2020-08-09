@@ -27,7 +27,7 @@ namespace emmVRC.Objects
         public bool LogoButtonEnabled = true;
         public bool HUDEnabled = true;
         public bool VRHUDInDesktop = false;
-        public bool MoveVRHUDIfSpaceFree = true;
+        public bool MoveVRHUDIfSpaceFree = false;
         public bool ForceRestartButtonEnabled = true;
         public bool PortalBlockingEnable = false;
         public bool ChairBlockingEnable = false;
