@@ -384,11 +384,11 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(MasterIcon);
             baseMenu.pageItems.Add(HUD);
             baseMenu.pageItems.Add(ChooseHUD);
-            //baseMenu.pageItems.Add(MoveVRHUD);
+            baseMenu.pageItems.Add(MoveVRHUD);
             baseMenu.pageItems.Add(LogoButton);
             baseMenu.pageItems.Add(ForceRestart);
             baseMenu.pageItems.Add(UnlimitedFPS);
-            baseMenu.pageItems.Add(PageItem.Space);
+            //baseMenu.pageItems.Add(PageItem.Space);
 
             UIColorChanging = new PageItem("UI Color\nChange", () =>
             {
