@@ -25,9 +25,10 @@ namespace emmVRC.Menus
         public static bool enabled = true;
         public static bool Initialized;
         public static QMSingleButton ToggleHUDButton;
-        public static void Initialize()
+        public static IEnumerator Initialize()
         {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing Quickmenu HUD");
+            while (Resources.HUD_Base == null) yield return null;
             // Find the shortcut menu and tie it to a global variable:
             ShortcutMenu = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu");
 

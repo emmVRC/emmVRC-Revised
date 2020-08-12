@@ -46,6 +46,7 @@ namespace emmVRC.Menus
         private static PageItem UIColorChanging;
         private static PageItem UIColorChangePickerButton;
         private static ColorPicker UIColorChangePicker;
+        private static PageItem UIActionMenuColorChanging;
         private static PageItem InfoSpoofing;
         private static PageItem InfoHiding;
         private static PageItem InfoSpooferNamePicker;
@@ -320,7 +321,7 @@ namespace emmVRC.Menus
             ChooseHUD = new PageItem("Show Quick Menu HUD\n in desktop", () => {
                 if (!VRHUD.Initialized)
                 {
-                    VRHUD.Initialize();
+                    MelonLoader.MelonCoroutines.Start(VRHUD.Initialize());
                 }
                 else
                 {
@@ -334,7 +335,7 @@ namespace emmVRC.Menus
             }, "Disabled", () => {
                 if (!DesktopHUD.Initialized)
                 {
-                    DesktopHUD.Initialize();
+                    MelonLoader.MelonCoroutines.Start(DesktopHUD.Initialize());
                 }
                 if (VRHUD.Initialized)
                 {
@@ -426,6 +427,19 @@ namespace emmVRC.Menus
             {
                 QuickMenuUtils.ShowQuickmenuPage(UIColorChangePicker.baseMenu.getMenuName());
             }, "Selects the color splashed across the rest of the UI");
+            UIActionMenuColorChanging = new PageItem("Action Menu\nChange", () =>
+            {
+                Configuration.JSONConfig.UIActionMenuColorChangingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.UIActionMenuColorChangingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "TOGGLE: Enables the color changing module for the radial menu");
             InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
             {
                 if (Configuration.JSONConfig.InfoHidingEnabled)
@@ -524,7 +538,7 @@ namespace emmVRC.Menus
             }, "Allows you to change your spoofed name to one that never changes");
             baseMenu.pageItems.Add(UIColorChanging);
             baseMenu.pageItems.Add(UIColorChangePickerButton);
-            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(UIActionMenuColorChanging);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
@@ -913,6 +927,7 @@ namespace emmVRC.Menus
                 UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
 
                 UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
+                UIActionMenuColorChanging.SetToggleState(Configuration.JSONConfig.UIActionMenuColorChangingEnabled);
                 InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
                 InfoHiding.SetToggleState(Configuration.JSONConfig.InfoHidingEnabled);
                 InfoSpooferNamePicker.Name = "Set\nSpoofed\nName";

@@ -103,5 +103,30 @@ namespace emmVRC.Libraries
             }
         }
         #endregion
+
+        #region VRCPlayer TriggerEmote
+        public delegate void TriggerEmoteAction(VRCPlayer @this, int emote);
+
+        private static TriggerEmoteAction ourTriggerEmoteAction;
+
+        public static TriggerEmoteAction TriggerEmoteAct
+        {
+            get
+            {
+                if (ourTriggerEmoteAction != null) return ourTriggerEmoteAction;
+                var targetMethod = typeof(VRCPlayer).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                    .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters()[0].ParameterType == typeof(int) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "PlayEmoteRPC"));
+
+                ourTriggerEmoteAction = (TriggerEmoteAction)Delegate.CreateDelegate(typeof(TriggerEmoteAction), targetMethod);
+
+                return ourTriggerEmoteAction;
+            }
+        }
+
+        public static void TriggerEmote(this VRCPlayer instance, int emote)
+        {
+            TriggerEmoteAct.Invoke(instance, emote);
+        }
+        #endregion
     }
 }

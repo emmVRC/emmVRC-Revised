@@ -243,6 +243,26 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
+                    if (Configuration.JSONConfig.UIActionMenuColorChangingEnabled)
+                    try
+                    {
+                        Color referenceColor = (Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : new Color(Configuration.defaultMenuColor().r * 1.5f, Configuration.defaultMenuColor().g * 1.5f, Configuration.defaultMenuColor().b * 1.5f));
+                        Color transparent = new Color(referenceColor.r, referenceColor.g, referenceColor.b, referenceColor.a / 1.25f);
+                        foreach (PedalGraphic grph in UnityEngine.Resources.FindObjectsOfTypeAll<PedalGraphic>())
+                        {
+                            //grph.material.SetColor("_Color", Color.white);
+                            grph.color = referenceColor;
+                            //grph.CrossFadeColor(Color.white, 0f, false, false);
+
+                        }
+                        foreach (ActionMenu menu in UnityEngine.Resources.FindObjectsOfTypeAll<ActionMenu>())
+                        {
+                            menu.cursor.GetComponentInChildren<Image>().color = transparent;
+                        }
+                    } catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
                     /*
                     try
                     {

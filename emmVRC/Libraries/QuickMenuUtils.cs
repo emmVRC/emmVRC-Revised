@@ -30,12 +30,33 @@ namespace emmVRC.Libraries
         // Internal cache of the VRCUiManager
         private static VRCUiManager vrcuimInstance;
 
+        private static Vector3 QuickMenuColliderSizeNormal = Vector3.zero;
+        private static Vector3 QuickMenuColliderPositionNormal = Vector3.zero;
+
         // Fetch the background from the Quick Menu
         public static BoxCollider QuickMenuBackground()
         {
             if (QuickMenuBackgroundReference == null)
                 QuickMenuBackgroundReference = GetQuickMenuInstance().GetComponent<BoxCollider>();
             return QuickMenuBackgroundReference;
+        }
+
+        public static void ResizeQuickMenuCollider()
+        {
+            if (QuickMenuColliderPositionNormal == Vector3.zero && QuickMenuColliderSizeNormal == Vector3.zero)
+            {
+                QuickMenuColliderSizeNormal = QuickMenuBackground().size;
+                QuickMenuColliderPositionNormal = QuickMenuBackground().center;
+                QuickMenuBackground().size = new Vector3(QuickMenuColliderSizeNormal.x, QuickMenuColliderSizeNormal.y + (QuickMenuColliderSizeNormal.y / 4f), QuickMenuColliderSizeNormal.z);
+                QuickMenuBackground().center = new Vector3(QuickMenuColliderPositionNormal.x, QuickMenuColliderPositionNormal.y + (QuickMenuColliderPositionNormal.y / 8f), QuickMenuColliderPositionNormal.z);
+            }
+            else
+            {
+                QuickMenuBackground().size = QuickMenuColliderSizeNormal;
+                QuickMenuBackground().center = QuickMenuColliderPositionNormal;
+                QuickMenuColliderSizeNormal = Vector3.zero;
+                QuickMenuColliderPositionNormal = Vector3.zero;
+            }
         }
 
         // Fetch the Single Button Template from the Quick Menu

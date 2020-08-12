@@ -17,6 +17,7 @@ using Transmtn.Exceptions;
 using VRC.SDKBase;
 using VRCSDK2;
 using VRC;
+using System.Linq.Expressions;
 
 namespace emmVRC.Libraries
 {
@@ -85,6 +86,7 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogError("Station patching failed: " + ex.ToString());
             }
+
         }
         
         private static bool IL2CPPConsoleWriteLine(string __0)

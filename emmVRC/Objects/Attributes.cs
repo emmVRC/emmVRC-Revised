@@ -8,16 +8,20 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "1.8.1";
+        public static string Version = "1.9.2";
         public static bool Beta = false;
-        public static string DateUpdated = "8/6/2020";
+        public static string DateUpdated = "8/10/2020";
         //  "This is a reference for a bout how long the text can be in"
         //  "the Changelog before it rolls off the page."
         public static string Changelog =
-            "• Added a setting to remove the now pointless Emote\n" +
-            "button, to make room for other mod buttons\n" +
-            "• Improved compatibility with the latest version of\n" +
-            "VRChat";
+            "• Added media keys! This allows you to easily play,\n" +
+            "pause, and change tracks, all from within VRChat\n" +
+            "• Added emote buttons back into the emotes menu!\n" +
+            "• Added coloring options for the radial menu!\n" +
+            "• Added back the closer HUD option for the\n" +
+            "quick menu HUD\n" +
+            "• Updated resource management in order to make\n" +
+            "things more optimized\n";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.2.6";
         public static string TargetemmVRCLoaderVersion = "1.0.0";

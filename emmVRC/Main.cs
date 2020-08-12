@@ -23,6 +23,8 @@ using Il2CppSystem.Collections.Specialized;
 using JetBrains.Annotations;
 using Il2CppSystem.Collections.Generic;
 using UnityEngine.Bindings;
+using UnityEngine.UI;
+using Il2CppSystem.Text;
 
 #pragma warning disable 4014
 
@@ -180,6 +182,9 @@ namespace emmVRC
                 // Initialize World Notes
                 Hacks.WorldNotes.Initialize();
 
+                // Initialize the new Emote menu
+                Hacks.EmoteMenuReborn.Initialize();
+
                 // Initialize the "Loading Screen Functions" menu
                 Menus.LoadingScreenMenu.Initialize();
 
@@ -246,9 +251,9 @@ namespace emmVRC
 
                 // Initialize the emmVRC HUD
                 if (Configuration.JSONConfig.VRHUDInDesktop || UnityEngine.XR.XRDevice.isPresent)
-                    Menus.VRHUD.Initialize();
+                    MelonLoader.MelonCoroutines.Start(Menus.VRHUD.Initialize());
                 else
-                    Menus.DesktopHUD.Initialize();
+                    MelonLoader.MelonCoroutines.Start(Menus.DesktopHUD.Initialize());
 
                 // Initialize the Third Person mode
                 try

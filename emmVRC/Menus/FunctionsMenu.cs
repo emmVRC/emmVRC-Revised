@@ -10,6 +10,7 @@ using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.UI;
 using UnhollowerRuntimeLib;
+using System.Collections;
 
 namespace emmVRC.Menus
 {
@@ -82,63 +83,29 @@ namespace emmVRC.Menus
             instantRestartButton = new PageItem("Instant\nRestart", () => { DestructiveActions.ForceRestart(); }, "Restarts the game, instantly.");
             baseMenu.pageItems.Add(instantRestartButton);
 
-            AddMediaKeys();
+            MelonLoader.MelonCoroutines.Start(AddMediaKeys());
         }
-    private static GameObject BaseButton;
-        private static Transform parentMenu;
-        private static GameObject PrevButton;
-        private static Button PrevButtonButton;
-        private static GameObject PlayButton;
-        private static Button PlayButtonButton;
-        private static GameObject StopButton;
-        private static Button StopButtonButton;
-        private static GameObject NextButton;
-        private static Button NextButtonButton;
+
+        private static QMSingleButton PrevTrackButton;
+        private static QMSingleButton PlayTrackButton;
+        private static QMSingleButton StopTrackButton;
+        private static QMSingleButton NextTrackButton;
+
         //Seperate method to more easily read or disable temporarily. Could also help with a cfg option.
-        private static void AddMediaKeys() {
-            BaseButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/WorldsButton").gameObject;
-            parentMenu = QuickMenuUtils.GetQuickMenuInstance().transform.Find(baseMenu.menuBase.getMenuName());
-            PrevButton = GameObject.Instantiate(BaseButton, parentMenu, true);
-            PrevButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(210f, 192f);
-            PrevButton.GetComponentInChildren<Text>().text = "";
-            PrevButton.GetComponent<Image>().sprite = Resources.Media_Nav;
-            PrevButton.GetComponent<UiTooltip>().text = "Go to the next song in your Playlist";
-            PrevButton.GetComponent<UiTooltip>().alternateText = "Go to the next song in your Playlist";
-            PrevButton.transform.rotation *= Quaternion.Euler(0f, 0f, 180f);
-            PrevButtonButton = PrevButton.GetComponent<Button>();
-            PrevButtonButton.name = "emmVRC_PreviousSong";
-            PrevButtonButton.onClick = new Button.ButtonClickedEvent();
-            PrevButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.PrevTrack)));
-            PlayButton = GameObject.Instantiate(BaseButton, parentMenu, true);
-            PlayButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(630f, 192f);
-            PlayButton.GetComponentInChildren<Text>().text = "";
-            PlayButton.GetComponent<Image>().sprite = Resources.Media_PlayPause;
-            PlayButton.GetComponent<UiTooltip>().text = "Pause or continue listening to the current song";
-            PlayButton.GetComponent<UiTooltip>().alternateText = "Pause or continue listening to the current song";
-            PlayButtonButton = PlayButton.GetComponent<Button>();
-            PlayButtonButton.name = "emmVRC_PlayPause";
-            PlayButtonButton.onClick = new Button.ButtonClickedEvent();
-            PlayButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.PlayPause)));
-            StopButton = GameObject.Instantiate(BaseButton, parentMenu, true);
-            StopButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(1050f, 192f);
-            StopButton.GetComponentInChildren<Text>().text = "";
-            StopButton.GetComponent<Image>().sprite = Resources.Media_Stop;
-            StopButton.GetComponent<UiTooltip>().text = "Stop the current song completely";
-            StopButton.GetComponent<UiTooltip>().alternateText = "Stop the current song completely";
-            StopButtonButton = StopButton.GetComponent<Button>();
-            StopButtonButton.name = "emmVRC_StopSong";
-            StopButtonButton.onClick = new Button.ButtonClickedEvent();
-            StopButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.Stop)));
-            NextButton = GameObject.Instantiate(BaseButton, parentMenu, true);
-            NextButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(1470f, 192f);
-            NextButton.GetComponentInChildren<Text>().text = "";
-            NextButton.GetComponent<Image>().sprite = Resources.Media_Nav;
-            NextButton.GetComponent<UiTooltip>().text = "Go to the previous song in your Playlist (click twice)\n or restart the current song";
-            NextButton.GetComponent<UiTooltip>().alternateText = "Go to the previous song in your Playlist (click twice)\n or restart the current song";
-            NextButtonButton = NextButton.GetComponent<Button>();
-            NextButtonButton.name = "emmVRC_NextSong";
-            NextButtonButton.onClick = new Button.ButtonClickedEvent();
-            NextButtonButton.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(MediaControl.NextTrack)));
+        private static IEnumerator AddMediaKeys() {
+            QuickMenuUtils.ResizeQuickMenuCollider();
+            PrevTrackButton = new QMSingleButton(baseMenu.menuBase, 1, -2, "", MediaControl.PrevTrack, "Go to the previous song in your Playlist (click twice)\n or restart the current song");
+            while (Resources.Media_Nav == null) yield return null;
+            PrevTrackButton.getGameObject().GetComponent<Image>().sprite = Resources.Media_Nav;
+            PrevTrackButton.getGameObject().transform.rotation *= Quaternion.Euler(0f, 0f, 180f);
+            PlayTrackButton = new QMSingleButton(baseMenu.menuBase, 2, -2, "", MediaControl.PlayPause, "Pause or continue listening to the current song");
+            while (Resources.Media_PlayPause == null) yield return null;
+            PlayTrackButton.getGameObject().GetComponent<Image>().sprite = Resources.Media_PlayPause;
+            StopTrackButton = new QMSingleButton(baseMenu.menuBase, 3, -2, "", MediaControl.Stop, "Stop the current song completely");
+            while (Resources.Media_Stop == null) yield return null;
+            StopTrackButton.getGameObject().GetComponent<Image>().sprite = Resources.Media_Stop;
+            NextTrackButton = new QMSingleButton(baseMenu.menuBase, 4, -2, "", MediaControl.NextTrack, "Go to the next song in your Playlist");
+            NextTrackButton.getGameObject().GetComponent<Image>().sprite = Resources.Media_Nav;
         }
     }
 }

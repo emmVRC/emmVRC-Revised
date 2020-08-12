@@ -71,6 +71,7 @@ namespace emmVRC.Objects
         // UI Color setup
         public bool UIColorChangingEnabled = false;
         public string UIColorHex = "#0EA6AD";
+        public bool UIActionMenuColorChangingEnabled = true;
 
         // Nameplate Color Setup
         public bool NameplateColorChangingEnabled = false;

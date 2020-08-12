@@ -97,10 +97,11 @@ namespace emmVRC.Menus
         public static bool UIExpanded = false;
         public static bool Initialized = false;
         public static bool enabled = true;
-        public static void Initialize()
+        public static IEnumerator Initialize()
         {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing HUD canvas");
             // UI Init
+            while (Resources.HUD_Minimized == null) yield return null;
             CanvasObject = new GameObject("emmVRCUICanvas");
             GameObject.DontDestroyOnLoad(CanvasObject);
             Canvas canvas = CanvasObject.AddComponent<Canvas>();
