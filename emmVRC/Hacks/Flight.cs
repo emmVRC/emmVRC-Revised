@@ -43,21 +43,10 @@ namespace emmVRC.Hacks
                     if (stateController == null && localPlayer != null)
                         stateController = localPlayer.GetComponent<InputStateController>();
 
-                    // Cache the VRC.Player GameObject, if we don't already have it. Getting it on each frame is super slow, as we have to fetch it out of a list via the current User ID
-                    if (player == null && PlayerManager.field_Private_Static_PlayerManager_0 != null && PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0 != null)
+                    // Cache the VRC.Player GameObject, if we don't already have it
+                    if (player == null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
                     {
-                        try
-                        {
-                            foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
-                            {
-                                if (plr != null && plr.field_Private_APIUser_0 != null)
-                                    if (plr.field_Private_APIUser_0.id == APIUser.CurrentUser.id)
-                                        player = plr;
-                            }
-                        } catch (Exception ex)
-                        {
-                            ex = new Exception();
-                        }
+                        player = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_Player_0;
                     }
                     else
                     {

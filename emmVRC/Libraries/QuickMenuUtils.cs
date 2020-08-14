@@ -7,6 +7,7 @@ using UnityEngine;
 using UnhollowerRuntimeLib;
 using UnhollowerRuntimeLib.XrefScans;
 using VRC.UI;
+using System;
 
 namespace emmVRC.Libraries
 {
@@ -90,20 +91,12 @@ namespace emmVRC.Libraries
         // Fetch the Quick Menu instance
         public static QuickMenu GetQuickMenuInstance()
         {
-            if (quickmenuInstance == null)
-            {
-                quickmenuInstance = QuickMenu.prop_QuickMenu_0;
-            }
-            return quickmenuInstance;
+            return QuickMenu.prop_QuickMenu_0;
         }
         // Fetch the VRCUiManager instance
         public static VRCUiManager GetVRCUiMInstance()
         {
-            if (vrcuimInstance == null)
-            {
-                vrcuimInstance = VRCUiManager.field_Protected_Static_VRCUiManager_0;
-            }
-            return vrcuimInstance;
+            return VRCUiManager.field_Protected_Static_VRCUiManager_0;
         }
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!
@@ -116,7 +109,7 @@ namespace emmVRC.Libraries
             Transform pageTransform = quickmenu?.transform.Find(pagename);
             if (pageTransform == null)
             {
-                Console.WriteLine("[QuickMenuUtils] pageTransform is null !");
+                emmVRCLoader.Logger.LogError("pageTransform is null!");
             }
 
             if (currentPageGetter == null)
@@ -141,7 +134,7 @@ namespace emmVRC.Libraries
                 }
                 if (currentPageGetter == null)
                 {
-                    Console.WriteLine("[QuickMenuUtils] Unable to find field currentPage in QuickMenu");
+                    emmVRCLoader.Logger.LogError("Unable to find field \"currentPage\" in QuickMenu");
                     return;
                 }
             }

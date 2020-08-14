@@ -137,7 +137,13 @@ namespace emmVRC.Hacks
                     {
                         VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
                     }
-                    QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_1();
+                    try
+                    {
+                        QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_1();
+                    } catch (Exception ex)
+                    {
+                        ex = new Exception();
+                    }
                 }
             }));
             AvatarSearchButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>

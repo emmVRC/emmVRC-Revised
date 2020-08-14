@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Threading;
+using UnhollowerBaseLib;
 
 namespace emmVRC.Menus
 {
@@ -26,6 +27,11 @@ namespace emmVRC.Menus
         private static QMSingleButton testNotificationButton;
         private static QMSingleButton testNetworkPingButton;
         private static QMSingleButton debugActionsMenuButton;
+
+        private static QMNestedButton benchmarkMenu;
+        private static QMSingleButton colorChangeBenchmark;
+        private static QMSingleButton monoListBenchmark;
+        private static QMSingleButton il2cppListBenchmark;
 
         public static PaginatedMenu debugActionsMenu;
         public static void Initialize()
@@ -124,7 +130,88 @@ namespace emmVRC.Menus
             {
                 MelonLoader.MelonCoroutines.Start(PingNetwork());
             }, "Test the ping of the emmVRC Network server");
-            debugActionsMenu = new PaginatedMenu(menuBase, 1, 2, "Registered\nDebug\nActions", "Shows all of the registered debug actions registered in this build of emmVRC, if any", null);
+            benchmarkMenu = new QMNestedButton(menuBase, 1, 2, "Benchmarks", "Test the performance of various sections of emmVRC");
+            colorChangeBenchmark = new QMSingleButton(benchmarkMenu, 1, 0, "Color\nChanging\nBenchmark", () =>
+            {
+                System.Diagnostics.Stopwatch[] watches = new System.Diagnostics.Stopwatch[5] { new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch() };
+                var benchWatch = new System.Diagnostics.Stopwatch();
+                string oldColor = Configuration.JSONConfig.UIColorHex;
+                bool useColorChanging = Configuration.JSONConfig.UIColorChangingEnabled;
+                Configuration.JSONConfig.UIColorHex = "#FFFFFF";
+                Configuration.JSONConfig.UIColorChangingEnabled = true;
+                for (int i=0; i < 5; i++)
+                {
+                    watches[i].Start();
+                    Hacks.ColorChanger.ApplyIfApplicable();
+                    watches[i].Stop();
+                }
+                Configuration.JSONConfig.UIColorHex = oldColor;
+                Configuration.JSONConfig.UIColorChangingEnabled = useColorChanging;
+                Hacks.ColorChanger.ApplyIfApplicable();
+                long watchAvg = 0;
+                foreach (System.Diagnostics.Stopwatch watch in watches)
+                    watchAvg += watch.ElapsedMilliseconds;
+                watchAvg = watchAvg / 5;
+                Managers.NotificationManager.AddNotification("Average time taken for color change: " + watchAvg + "ms.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
+            }, "Tests the UI color changing, to see the time it consumes CPU");
+            il2cppListBenchmark = new QMSingleButton(benchmarkMenu, 2, 0, "IL2CPP\nList\nBenchmark", () =>
+            {
+                System.Diagnostics.Stopwatch[] watchesFill = new System.Diagnostics.Stopwatch[5] { new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch() };
+                System.Diagnostics.Stopwatch[] watchesIterate = new System.Diagnostics.Stopwatch[5] { new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch() };
+                Il2CppSystem.Collections.Generic.List<float> benchList = new Il2CppSystem.Collections.Generic.List<float>();
+                for (int i=0; i < 5; i++)
+                {
+                    watchesFill[i].Start();
+                    for (int j = 0; j < 63; j++)
+                        benchList.Add(j * 0.1f);
+                    watchesFill[i].Stop();
+                    float outsideValue = 0.0f;
+                    watchesIterate[i].Start();
+                    foreach (float flt in benchList)
+                        outsideValue = flt;
+                    watchesIterate[i].Stop();
+                }
+                long fillAverage = 0;
+                foreach (System.Diagnostics.Stopwatch watch in watchesFill)
+                    fillAverage += watch.ElapsedMilliseconds;
+                fillAverage = fillAverage / 5;
+
+                long iterateAverage = 0;
+                foreach (System.Diagnostics.Stopwatch watch in watchesIterate)
+                    iterateAverage += watch.ElapsedMilliseconds;
+                iterateAverage = iterateAverage / 5;
+
+                Managers.NotificationManager.AddNotification("IL2CPP Average fill time: " + fillAverage + "ms, average iterate time: " + iterateAverage + "ms.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
+            }, "Tests IL2CPP lists for efficiency");
+            monoListBenchmark = new QMSingleButton(benchmarkMenu, 3, 0, "Mono\nList\nBenchmark", () =>
+            {
+                System.Diagnostics.Stopwatch[] watchesFill = new System.Diagnostics.Stopwatch[5] {new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch() };
+                System.Diagnostics.Stopwatch[] watchesIterate = new System.Diagnostics.Stopwatch[5] { new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch() };
+                System.Collections.Generic.List<float> benchList = new System.Collections.Generic.List<float>();
+                for (int i = 0; i < 5; i++)
+                {
+                    watchesFill[i].Start();
+                    for (int j = 0; j < 63; j++)
+                        benchList.Add(j * 0.1f);
+                    watchesFill[i].Stop();
+                    float outsideValue = 0.0f;
+                    watchesIterate[i].Start();
+                    foreach (float flt in benchList)
+                        outsideValue = flt;
+                    watchesIterate[i].Stop();
+                }
+                long fillAverage = 0;
+                foreach (System.Diagnostics.Stopwatch watch in watchesFill)
+                    fillAverage += watch.ElapsedMilliseconds;
+                fillAverage = fillAverage / 5;
+
+                long iterateAverage = 0;
+                foreach (System.Diagnostics.Stopwatch watch in watchesIterate)
+                    iterateAverage += watch.ElapsedMilliseconds;
+                iterateAverage = iterateAverage / 5;
+                Managers.NotificationManager.AddNotification("Mono Average fill time: " + fillAverage + "ms, average iterate time: " + iterateAverage + "ms.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
+            }, "Tests Mono lists for efficiency");
+            debugActionsMenu = new PaginatedMenu(menuBase, 2, 2, "Registered\nDebug\nActions", "Shows all of the registered debug actions registered in this build of emmVRC, if any", null);
 
         }
         public static void PopulateDebugMenu()

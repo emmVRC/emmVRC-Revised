@@ -52,6 +52,8 @@ namespace emmVRC
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
             /*bool HarmonyPresent = false;
             string[] ModsFolderFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Mods"));
             foreach (string str in ModsFolderFiles)
@@ -70,6 +72,7 @@ namespace emmVRC
             {
                 emmVRCLoader.Logger.LogError("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.");
                 System.Windows.Forms.MessageBox.Show("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                watch.Stop();
                 return;
             }
             else if (Attributes.IncompatibleemmVRCLoaderVersions.Contains(currentEmmVRCLoaderVersion)){
@@ -89,11 +92,13 @@ namespace emmVRC
                     else
                         cli.DownloadFile("https://thetrueyoshifan.com/downloads/emmVRCLoader.dll", Path.Combine(Environment.CurrentDirectory, "Mods/emmVRCLoader.dll"));
                     MessageBox.Show("The newest emmVRCLoader has been downloaded to your Mods folder. To use emmVRC, restart your game. If the problem persists, remove any current emmVRCLoader files, and download the latest from #loader-updates in the emmVRC Discord.", "emmVRC", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    watch.Stop();
                 } catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError("Attempt to download the new loader failed. You must download the latest from https://thetrueyoshifan.com/downloads/emmVRCLoader.dll manually.");
                     emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
                     System.Windows.Forms.MessageBox.Show("You are using an incompatible version of emmVRCLoader: v" + currentEmmVRCLoaderVersion + ". Please install v" + Attributes.TargetemmVRCLoaderVersion + " or greater, from the #loader-updates channel in the emmVRC Discord. emmVRC cannot start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    watch.Stop();
                 }
                 return;
             }
@@ -315,7 +320,8 @@ namespace emmVRC
                 Libraries.Hooking.Initialize();
 
                 // At this point, if no errors have occured, emmVRC is done initializing
-                emmVRCLoader.Logger.Log("Initialization is successful. Welcome to emmVRC!");
+                watch.Stop();
+                emmVRCLoader.Logger.Log("Initialization is successful in "+watch.Elapsed.ToString(@"ss\.f", null) +"s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
 
