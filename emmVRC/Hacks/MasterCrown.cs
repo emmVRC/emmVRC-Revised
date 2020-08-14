@@ -21,6 +21,7 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
+                while (Resources.crownSprite == null) yield return null;
                 try
                 {
                     if (RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.MasterIconEnabled && masterIconObj == null)
