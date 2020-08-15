@@ -134,6 +134,9 @@ namespace emmVRC
                 // Initialize the "UI Elements" replacement buttons
                 MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
 
+                // Initialize the Mod Compatibility system
+                Libraries.ModCompatibility.Initialize();
+
                 // Initialize the "Functions" menu
                 emmVRCLoader.Logger.LogDebug("Initializing functions menu...");
                 Menus.FunctionsMenu.Initialize();
@@ -303,6 +306,12 @@ namespace emmVRC
                         Configuration.JSONConfig.LastVersion = Attributes.Version;
                         Configuration.SaveConfig();
                         Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Attributes.Version + "!", "View\nChangelog", () => { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                    }
+                    if (Libraries.ModCompatibility.MultiplayerDynamicBones && Configuration.JSONConfig.GlobalDynamicBonesEnabled)
+                    {
+                        Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
+                        Configuration.SaveConfig();
+                        Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
                     }
 
                 }));

@@ -72,6 +72,7 @@ namespace emmVRC.Objects
         public bool UIColorChangingEnabled = false;
         public string UIColorHex = "#0EA6AD";
         public bool UIActionMenuColorChangingEnabled = true;
+        public bool UIMicIconColorChangingEnabled = false;
 
         // Nameplate Color Setup
         public bool NameplateColorChangingEnabled = false;
@@ -81,6 +82,8 @@ namespace emmVRC.Objects
         public string UserNamePlateColorHex = "#2BCE5C";
         public string KnownUserNamePlateColorHex = "#FF7B42";
         public string TrustedUserNamePlateColorHex = "#8143E6";
+        public string VeteranUserNamePlateColorHex = "#ABCDEE";
+        public string LegendaryUserNamePlateColorHex = "#FF69B4";
 
         // Info spoofing and hiding
         public bool InfoSpoofingEnabled = false;

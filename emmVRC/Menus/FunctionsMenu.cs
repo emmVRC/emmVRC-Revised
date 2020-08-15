@@ -83,7 +83,8 @@ namespace emmVRC.Menus
             instantRestartButton = new PageItem("Instant\nRestart", () => { DestructiveActions.ForceRestart(); }, "Restarts the game, instantly.");
             baseMenu.pageItems.Add(instantRestartButton);
 
-            MelonLoader.MelonCoroutines.Start(AddMediaKeys());
+            if (!Libraries.ModCompatibility.MControl)
+                MelonLoader.MelonCoroutines.Start(AddMediaKeys());
         }
 
         private static QMSingleButton PrevTrackButton;

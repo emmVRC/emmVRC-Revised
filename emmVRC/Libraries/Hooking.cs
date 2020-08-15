@@ -41,38 +41,47 @@ namespace emmVRC.Libraries
             instanceHarmony = Harmony.HarmonyInstance.Create("emmVRCHarmony");
             try
             {
-                instanceHarmony.Patch(typeof(Il2CppSystem.Console).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).First(
-                    (System.Reflection.MethodInfo a) =>
-                    {
-                        if (a.Name != "WriteLine")
+                if (!Libraries.ModCompatibility.CleanConsole)
+                {
+                    instanceHarmony.Patch(typeof(Il2CppSystem.Console).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).First(
+                        (System.Reflection.MethodInfo a) =>
                         {
+                            if (a.Name != "WriteLine")
+                            {
+                                return false;
+                            }
+                            if (a.GetParameters().Length == 1)
+                            {
+                                return a.GetParameters()[0].ParameterType == typeof(string);
+                            }
                             return false;
-                        }
-                        if (a.GetParameters().Length == 1)
-                        {
-                            return a.GetParameters()[0].ParameterType == typeof(string);
-                        }
-                        return false;
-                    }), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IL2CPPConsoleWriteLine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)), null, null);
+                        }), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IL2CPPConsoleWriteLine", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)), null, null);
+                }
             } catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError("Console cleanup failed: " + ex.ToString());
             }
             try
             {
-                IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
-                Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
-                onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
+                if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
+                {
+                    IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
+                    Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
+                    onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
+                }
             } catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError("Avatar patching failed: " + ex.ToString());
             }
             try
             {
-                IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_4", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
-                var original = *(IntPtr*)funcToEnterPortal;
-                Imports.Hook((IntPtr)(&original), Marshal.GetFunctionPointerForDelegate(new Action<IntPtr>(OnPortalEntered)));
-                onPortalEnteredDelegate = Marshal.GetDelegateForFunctionPointer<PortalEnteredDelegate>(original);
+                if (!Libraries.ModCompatibility.PortalConfirmation)
+                {
+                    IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_4", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
+                    var original = *(IntPtr*)funcToEnterPortal;
+                    Imports.Hook((IntPtr)(&original), Marshal.GetFunctionPointerForDelegate(new Action<IntPtr>(OnPortalEntered)));
+                    onPortalEnteredDelegate = Marshal.GetDelegateForFunctionPointer<PortalEnteredDelegate>(original);
+                }
             } catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError("Portal blocking failed: " + ex.ToString());

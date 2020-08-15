@@ -8,7 +8,7 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "1.9.4";
+        public static string Version = "2.0.0";
         public static bool Beta = false;
         public static string DateUpdated = "8/14/2020";
         //  "This is a reference for about how long the"

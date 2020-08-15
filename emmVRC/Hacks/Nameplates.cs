@@ -28,6 +28,19 @@ namespace emmVRC.Hacks
                     VRCPlayer.field_Internal_Static_Color_4 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex);
                     VRCPlayer.field_Internal_Static_Color_5 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex);
                     VRCPlayer.field_Internal_Static_Color_6 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex);
+                    if (Libraries.ModCompatibility.OGTrustRank)
+                    {
+                        try
+                        {
+                            MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "OGTrustRanks").Assembly.GetType("OGTrustRanks.OGTrustRanks").GetField("TrustedUserColor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
+                            MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "OGTrustRanks").Assembly.GetType("OGTrustRanks.OGTrustRanks").GetField("VeteranUserColor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VeteranUserNamePlateColorHex));
+                            MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "OGTrustRanks").Assembly.GetType("OGTrustRanks.OGTrustRanks").GetField("LegendaryUserColor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.LegendaryUserNamePlateColorHex));
+                        }
+                        catch (Exception ex)
+                        {
+                            emmVRCLoader.Logger.LogError(ex.ToString());
+                        }
+                    }
                     colorChanged = false;
                 }
                 else if (colorChanged && !Configuration.JSONConfig.NameplateColorChangingEnabled)

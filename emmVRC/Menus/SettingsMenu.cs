@@ -65,6 +65,10 @@ namespace emmVRC.Menus
         private static ColorPicker KnownUserNameplateColorPicker;
         private static PageItem TrustedUserNameplateColorPickerButton;
         private static ColorPicker TrustedUserNameplateColorPicker;
+        private static PageItem VeteranUserNameplateColorPickerButton;
+        private static ColorPicker VeteranUserNameplateColorPicker;
+        private static PageItem LegendaryUserNameplateColorPickerButton;
+        private static ColorPicker LegendaryUserNameplateColorPicker;
 
         // Page 5
         private static PageItem DisableReportWorld;
@@ -160,10 +164,16 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables the enhanced VR flight controls. May not work on Windows Mixed Reality");
             GlobalDynamicBones = new PageItem("Global\nDynamic Bones", () =>
             {
-                Configuration.JSONConfig.GlobalDynamicBonesEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
+                if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
+                {
+                    Configuration.JSONConfig.GlobalDynamicBonesEnabled = true;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
+                } else
+                {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Global Dynamic Bones are not compatible with MultiplayerDynamicBones. You must remove this mod to use Global Dynamic Bones.", "Dismiss", VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup);
+                }
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
@@ -594,6 +604,22 @@ namespace emmVRC.Menus
                 Hacks.Nameplates.colorChanged = true;
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#8143E6"));
+            VeteranUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1006, "Veteran User Nameplate Color (OGTrustRanks)", "Select the color for Veteran User Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.VeteranUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#ABCDEE"));
+            LegendaryUserNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1007, "Legendary User Nameplate Color (OGTrustRanks)", "Select the color for Legendary User Nameplate colors", (UnityEngine.Color newColor) =>
+            {
+                Configuration.JSONConfig.LegendaryUserNamePlateColorHex = ColorConversion.ColorToHex(newColor, true);
+                Configuration.SaveConfig();
+                LoadMenu();
+                Hacks.Nameplates.colorChanged = true;
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
+            }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex), Libraries.ColorConversion.HexToColor("#FF69B4"));
             NameplateColorChanging = new PageItem("Nameplate\nColor Changing", () =>
             {
                 Configuration.JSONConfig.NameplateColorChangingEnabled = true;
@@ -615,16 +641,25 @@ namespace emmVRC.Menus
             UserNameplateColorPickerButton = new PageItem("User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(UserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for User Nameplate colors");
             KnownUserNameplateColorPickerButton = new PageItem("Known User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(KnownUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Known User Nameplate colors");
             TrustedUserNameplateColorPickerButton = new PageItem("Trusted User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(TrustedUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Trusted User Nameplate colors");
+            VeteranUserNameplateColorPickerButton = new PageItem("Veteran User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(VeteranUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Veteran User Nameplate colors (via OGTrustRanks)");
+            LegendaryUserNameplateColorPickerButton = new PageItem("Legendary User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(LegendaryUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Legendary User Nameplate colors (via OGTrustRanks)");
             baseMenu.pageItems.Add(NameplateColorChanging);
-            baseMenu.pageItems.Add(PageItem.Space);
-            baseMenu.pageItems.Add(PageItem.Space);
+            if (!Libraries.ModCompatibility.OGTrustRank)
+            {
+                baseMenu.pageItems.Add(PageItem.Space);
+                baseMenu.pageItems.Add(PageItem.Space);
+            }
             baseMenu.pageItems.Add(FriendNameplateColorPickerButton);
             baseMenu.pageItems.Add(VisitorNameplateColorPickerButton);
             baseMenu.pageItems.Add(NewUserNameplateColorPickerButton);
             baseMenu.pageItems.Add(UserNameplateColorPickerButton);
             baseMenu.pageItems.Add(KnownUserNameplateColorPickerButton);
             baseMenu.pageItems.Add(TrustedUserNameplateColorPickerButton);
-
+            if (Libraries.ModCompatibility.OGTrustRank)
+            {
+                baseMenu.pageItems.Add(VeteranUserNameplateColorPickerButton);
+                baseMenu.pageItems.Add(LegendaryUserNameplateColorPickerButton);
+            }
             DisableReportWorld = new PageItem("Disable\nReport World", () =>
             {
                 Configuration.JSONConfig.DisableReportWorldButton = true;

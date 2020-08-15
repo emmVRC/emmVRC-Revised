@@ -76,6 +76,7 @@
     <Compile Include="Libraries\KeyCodeConversion.cs" />
     <Compile Include="Libraries\MainMenuUtils.cs" />
     <Compile Include="Libraries\MediaControl.cs" />
+    <Compile Include="Libraries\ModCompatibility.cs" />
     <Compile Include="Libraries\Reflections.cs" />
     <Compile Include="Libraries\TextDisplayMenu.cs" />
     <Compile Include="Libraries\PaginatedMenu.cs" />
