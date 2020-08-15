@@ -60,8 +60,8 @@ namespace emmVRC.Libraries
             button.GetComponent<RectTransform>().anchoredPosition += Vector2.right * (420 * (buttonXLoc + initShift[0]));
             button.GetComponent<RectTransform>().anchoredPosition += Vector2.down * (420 * (buttonYLoc + initShift[1]));
 
-            btnTag = "(" + buttonXLoc + "," + buttonYLoc + ")";
-            button.name = btnQMLoc + "/" + btnType + btnTag;
+            btnTag = System.Guid.NewGuid().ToString();
+            button.name = btnQMLoc + "/" + btnType + "_" + btnTag;
             button.GetComponent<Button>().name = btnType + btnTag;
         }
 
@@ -353,7 +353,7 @@ namespace emmVRC.Libraries
             btnType = "NestedButton";
 
             Transform menu = UnityEngine.Object.Instantiate<Transform>(QuickMenuUtils.NestedMenuTemplate(), QuickMenuUtils.GetQuickMenuInstance().transform);
-            menuName = "emmVRC" + btnQMLoc + "_" + btnXLocation + "_" + btnYLocation;
+            menuName = "emmVRC_Menu_" + System.Guid.NewGuid().ToString();
             menu.name = menuName;
 
             mainButton = new QMSingleButton(btnQMLoc, btnXLocation, btnYLocation, btnText, () => { QuickMenuUtils.ShowQuickmenuPage(menuName); }, btnToolTip, btnBackgroundColor, btnTextColor);

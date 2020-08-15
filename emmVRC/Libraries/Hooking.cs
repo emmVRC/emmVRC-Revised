@@ -69,7 +69,7 @@ namespace emmVRC.Libraries
             }
             try
             {
-                IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_2", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
+                IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_4", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
                 var original = *(IntPtr*)funcToEnterPortal;
                 Imports.Hook((IntPtr)(&original), Marshal.GetFunctionPointerForDelegate(new Action<IntPtr>(OnPortalEntered)));
                 onPortalEnteredDelegate = Marshal.GetDelegateForFunctionPointer<PortalEnteredDelegate>(original);

@@ -139,7 +139,7 @@ namespace emmVRC.Hacks
                     }
                     try
                     {
-                        QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_1();
+                        QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_3();
                     } catch (Exception ex)
                     {
                         ex = new Exception();

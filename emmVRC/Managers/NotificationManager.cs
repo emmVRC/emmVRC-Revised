@@ -27,6 +27,7 @@ namespace emmVRC.Managers
             // Initialize the emmVRC Notification icon, based on the vanilla Notification icon
             NotificationIcon vanillaIcon = GameObject.FindObjectOfType<NotificationIcon>();
             NotificationManager.NotificationIcon = GameObject.Instantiate(vanillaIcon.notificationIcon, vanillaIcon.notificationIcon.transform.parent);
+            NotificationManager.NotificationIcon.name = "emmVRCNotificationIcon";
             NotificationIcon.GetComponent<Image>().sprite = Resources.alertSprite;
             // Populate the list of vanilla icons, for use in checks later
             try
