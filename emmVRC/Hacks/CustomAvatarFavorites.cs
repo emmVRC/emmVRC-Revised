@@ -18,12 +18,12 @@ namespace emmVRC.Hacks
         private static GameObject avText;
         private static Text avTextText;
         private static GameObject ChangeButton;
-        private static Button.ButtonClickedEvent baseChooseEvent;
+        public static Button.ButtonClickedEvent baseChooseEvent;
         private static GameObject FavoriteButton;
         private static GameObject FavoriteButtonNew;
         private static Button FavoriteButtonNewButton;
         private static Text FavoriteButtonNewText;
-        private static GameObject pageAvatar;
+        public static GameObject pageAvatar;
         private static PageAvatar currPageAvatar;
         private static bool error = false;
         private static bool errorWarned;

@@ -139,7 +139,10 @@ namespace emmVRC.Hacks
                     }
                     try
                     {
-                        QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_3();
+                        //QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_3();
+                        CustomAvatarFavorites.pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0 = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0;
+                        CustomAvatarFavorites.baseChooseEvent.Invoke();
+                        //Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Change Button").gameObject.GetComponentInChildren<Button>().onClick.Invoke();
                     } catch (Exception ex)
                     {
                         ex = new Exception();
