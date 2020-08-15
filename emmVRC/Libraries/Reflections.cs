@@ -33,7 +33,7 @@ namespace emmVRC.Libraries
                 return ourResetLastPositionAction;
             }
         }
-        
+
         public static void ResetLastPosition(this InputStateController instance)
         {
             ResetLastPositionAct.Invoke(instance);

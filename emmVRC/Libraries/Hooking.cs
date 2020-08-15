@@ -25,16 +25,7 @@ namespace emmVRC.Libraries
     {
         private delegate void AvatarInstantiatedDelegate(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded);
         private static AvatarInstantiatedDelegate onAvatarInstantiatedDelegate;
-        private delegate void PortalEnteredDelegate(IntPtr instance);
-        private static PortalEnteredDelegate onPortalEnteredDelegate;
         private static Harmony.HarmonyInstance instanceHarmony;
-
-
-        /*public static void Hook(IntPtr target, IntPtr detour)
-        {
-            typeof(Imports).GetMethod("Hook", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).Invoke(null, new object[] { target, detour });
-        }*/
-
 
         public unsafe static void Initialize()
         {
@@ -77,10 +68,8 @@ namespace emmVRC.Libraries
             {
                 if (!Libraries.ModCompatibility.PortalConfirmation)
                 {
-                    IntPtr funcToEnterPortal = (IntPtr)typeof(PortalInternal).GetField("NativeMethodInfoPtr_Method_Public_Void_4", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
-                    var original = *(IntPtr*)funcToEnterPortal;
-                    Imports.Hook((IntPtr)(&original), Marshal.GetFunctionPointerForDelegate(new Action<IntPtr>(OnPortalEntered)));
-                    onPortalEnteredDelegate = Marshal.GetDelegateForFunctionPointer<PortalEnteredDelegate>(original);
+                    new PortalInternal().Method_Public_Void_4();
+                    instanceHarmony.Patch(typeof(PortalInternal).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 0 && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == " was at capacity, cannot enter.")), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("OnPortalEntered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                 }
             } catch (Exception ex)
             {
@@ -113,30 +102,6 @@ namespace emmVRC.Libraries
             }
             return true;
         }
-        /*private static bool TransmtnGet(Transmtn.HttpConnection __instance, string __0, ref string __result)
-        {
-            string result;
-            try
-            {
-                WebClient webClient = new WebClient();
-                webClient.Headers.Add(HttpRequestHeader.Cookie, string.Format("apiKey={0}; auth={1}", __instance.Config.apiKey, __instance.Token.Token));
-                webClient.Headers.Add(HttpRequestHeader.UserAgent, "Transmtn-Pipeline");
-                webClient.Headers.Add("X-Client-Version", __instance._clientVersion);
-                webClient.Headers.Add("X-Platform", __instance._clientVersion);
-                Stream stream = webClient.OpenRead(__instance.Endpoint + __0);
-                StreamReader streamReader = new StreamReader(stream);
-                string text = streamReader.ReadToEnd();
-                stream.Close();
-                streamReader.Close();
-                result = text;
-            }
-            catch (System.Net.WebException ex)
-            {
-                throw ex;
-            }
-            __result = result;
-            return false;
-        }*/
 
         private static void OnAvatarInstantiated(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded)
         {
@@ -155,13 +120,11 @@ namespace emmVRC.Libraries
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
         }
-        private static void OnPortalEntered(IntPtr @this)
+        private static bool OnPortalEntered(PortalInternal __instance)
         {
-            if (@this != IntPtr.Zero)
-            {
-                if (!Configuration.JSONConfig.PortalBlockingEnable)
-                    onPortalEnteredDelegate(@this);
-            }
+            if (!Configuration.JSONConfig.PortalBlockingEnable)
+                return true;
+            return false;
         }
     }
 }
