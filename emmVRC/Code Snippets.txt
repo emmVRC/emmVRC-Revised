@@ -3,5 +3,4 @@
 
 // Change Mute Icon color
 
-foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
-	img.color = Color.white;
+

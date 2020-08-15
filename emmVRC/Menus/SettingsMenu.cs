@@ -47,6 +47,8 @@ namespace emmVRC.Menus
         private static PageItem UIColorChangePickerButton;
         private static ColorPicker UIColorChangePicker;
         private static PageItem UIActionMenuColorChanging;
+        private static PageItem UIMicIconColorChanging;
+        private static PageItem UIMicIconPulse;
         private static PageItem InfoSpoofing;
         private static PageItem InfoHiding;
         private static PageItem InfoSpooferNamePicker;
@@ -450,6 +452,32 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 Hacks.ColorChanger.ApplyIfApplicable();
             }, "TOGGLE: Enables the color changing module for the radial menu");
+            UIMicIconColorChanging = new PageItem("Muted Icon\nColor Change", () =>
+            {
+                Configuration.JSONConfig.UIMicIconColorChangingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.UIMicIconColorChangingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "TOGGLE: Enables the color changing module for the Muted Microphone icon on the HUD");
+            UIMicIconPulse = new PageItem("Muted Icon\nPulsing", () =>
+            {
+                Configuration.JSONConfig.UIMicIconPulsingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.UIMicIconPulsingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ColorChanger.ApplyIfApplicable();
+            }, "TOGGLE: Enables or disables VRChat's new pulsating effect on the Microphone icon");
             InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
             {
                 if (Configuration.JSONConfig.InfoHidingEnabled)
@@ -549,8 +577,8 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(UIColorChanging);
             baseMenu.pageItems.Add(UIColorChangePickerButton);
             baseMenu.pageItems.Add(UIActionMenuColorChanging);
-            baseMenu.pageItems.Add(PageItem.Space);
-            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(UIMicIconColorChanging);
+            baseMenu.pageItems.Add(UIMicIconPulse);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(InfoSpoofing);
             baseMenu.pageItems.Add(InfoHiding);
@@ -963,6 +991,8 @@ namespace emmVRC.Menus
 
                 UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
                 UIActionMenuColorChanging.SetToggleState(Configuration.JSONConfig.UIActionMenuColorChangingEnabled);
+                UIMicIconColorChanging.SetToggleState(Configuration.JSONConfig.UIMicIconColorChangingEnabled);
+                UIMicIconPulse.SetToggleState(Configuration.JSONConfig.UIMicIconPulsingEnabled);
                 InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
                 InfoHiding.SetToggleState(Configuration.JSONConfig.InfoHidingEnabled);
                 InfoSpooferNamePicker.Name = "Set\nSpoofed\nName";

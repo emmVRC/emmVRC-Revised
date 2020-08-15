@@ -170,6 +170,28 @@ namespace emmVRC.Hacks
             color.a = 0.9f;
             if (UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().Count != 0)
                 UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().FirstOrDefault().highlightColor = color;
+            try
+            {
+                if (Configuration.JSONConfig.UIMicIconColorChangingEnabled && Configuration.JSONConfig.UIColorChangingEnabled)
+                {
+                    foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
+                        img.color = color;
+                }
+                else
+                {
+                    foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
+                        img.color = Color.red;
+                }
+                foreach (HudVoiceIndicator indicator in GameObject.FindObjectsOfType<HudVoiceIndicator>())
+                {
+                    indicator.transform.Find("VoiceDotDisabled").GetComponent<FadeCycleEffect>().enabled = Configuration.JSONConfig.UIMicIconPulsingEnabled;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex = new Exception();
+            }
+            
             if (Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent != null)
             {
                 {
@@ -281,6 +303,7 @@ namespace emmVRC.Hacks
                         {
                             emmVRCLoader.Logger.LogError(ex.ToString());
                         }
+
                 }
             }
 

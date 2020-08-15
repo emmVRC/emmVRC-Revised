@@ -43,7 +43,7 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("This is the beginning of a new beginning!");
                 emmVRCLoader.Logger.Log("Wait... have I said that before?");
             }
-            
+
             // Load the config for emmVRC
             Configuration.Initialize();
 
@@ -75,12 +75,14 @@ namespace emmVRC
                 watch.Stop();
                 return;
             }
-            else if (Attributes.IncompatibleemmVRCLoaderVersions.Contains(currentEmmVRCLoaderVersion)){
+            else if (Attributes.IncompatibleemmVRCLoaderVersions.Contains(currentEmmVRCLoaderVersion))
+            {
                 try
                 {
                     WebClient cli = new WebClient();
                     string dest = "";
-                    foreach (string modFile in System.IO.Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Mods"))){
+                    foreach (string modFile in System.IO.Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Mods")))
+                    {
                         if (modFile.Contains("emmVRC"))
                         {
                             dest = modFile;
@@ -93,7 +95,8 @@ namespace emmVRC
                         cli.DownloadFile("https://thetrueyoshifan.com/downloads/emmVRCLoader.dll", Path.Combine(Environment.CurrentDirectory, "Mods/emmVRCLoader.dll"));
                     MessageBox.Show("The newest emmVRCLoader has been downloaded to your Mods folder. To use emmVRC, restart your game. If the problem persists, remove any current emmVRCLoader files, and download the latest from #loader-updates in the emmVRC Discord.", "emmVRC", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     watch.Stop();
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError("Attempt to download the new loader failed. You must download the latest from https://thetrueyoshifan.com/downloads/emmVRCLoader.dll manually.");
                     emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
@@ -293,9 +296,10 @@ namespace emmVRC
                     Menus.FlashlightMenu.toggleFlashlight.setToggleState(false);
 
                     MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
-                // Ensure that everything through here is after the game has loaded
-                // Reset the instance clock when you switch instances
-                MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
+
+                    // Ensure that everything through here is after the game has loaded
+                    // Reset the instance clock when you switch instances
+                    MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
                     if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
                         Hacks.InfoBarClock.instanceTime = 0;
                     MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
@@ -330,7 +334,7 @@ namespace emmVRC
 
                 // At this point, if no errors have occured, emmVRC is done initializing
                 watch.Stop();
-                emmVRCLoader.Logger.Log("Initialization is successful in "+watch.Elapsed.ToString(@"ss\.f", null) +"s. Welcome to emmVRC!");
+                emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
 
