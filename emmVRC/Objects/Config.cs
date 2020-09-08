@@ -17,8 +17,8 @@ namespace emmVRC.Objects
         public bool EveryoneGlobalDynamicBonesEnabled = false;
         public bool emmVRCNetworkEnabled = true;
         public bool GlobalChatEnabled = true;
-        public bool ConsoleClean = true;
         public bool VRFlightControls = true;
+        public bool UIExpansionKitIntegration = true;
         public bool UnlimitedFPSEnabled = false;
         public bool InfoBarDisplayEnabled = true;
         public bool ClockEnabled = true;

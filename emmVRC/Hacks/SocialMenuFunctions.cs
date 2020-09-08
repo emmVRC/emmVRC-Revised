@@ -11,7 +11,6 @@ using VRC.UI;
 using System.Collections;
 using emmVRC.Managers;
 using emmVRC.Libraries;
-using BestHTTP.ServerSentEvents;
 using emmVRC.Network;
 
 namespace emmVRC.Hacks

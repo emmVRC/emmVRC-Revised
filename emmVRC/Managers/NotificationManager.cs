@@ -14,7 +14,7 @@ namespace emmVRC.Managers
     {
         private static bool Enabled = true;
         private static int notificationActiveTimer = 0;
-        private static QMNestedButton NotificationMenu;
+        public static QMNestedButton NotificationMenu;
         private static QMSingleButton NotificationButton1;
         private static QMSingleButton NotificationButton2;
         private static GameObject NotificationIcon;
@@ -49,7 +49,7 @@ namespace emmVRC.Managers
             // Set up the entering menu action
             NotificationMenu.getMainButton().setAction(() => { 
                 QuickMenuUtils.ShowQuickmenuPage(NotificationMenu.getMenuName());
-                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.Notification, null, Notifications[0].Message);
+                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_PDM_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.Notification, null, Notifications[0].Message);
                 if (Notifications[0].Button1Action != null)
                 {
                     NotificationButton1.setButtonText(Notifications[0].Button1Text);
@@ -150,7 +150,7 @@ namespace emmVRC.Managers
             if (Notifications.Count > 0)
                 Notifications.Remove(Notifications[0]);
             QuickMenuUtils.ShowQuickmenuPage("ShortcutMenu");
-            QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
+            QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_PDM_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
         }
     }
 }

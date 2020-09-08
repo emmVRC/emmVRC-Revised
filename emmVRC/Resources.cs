@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.IO;
-using BestHTTP.SocketIO;
 using UnhollowerRuntimeLib;
 using VRC.UI;
 

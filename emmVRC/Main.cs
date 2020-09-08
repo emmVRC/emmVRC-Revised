@@ -1,30 +1,18 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Events;
 using emmVRC.Managers;
 using emmVRC.Hacks;
 using emmVRC.Network;
 using emmVRC.Menus;
-using emmVRC.Libraries;
-using VRC;
-using VRC.Core;
-using VRC.SDKBase;
-using VRCSDK2;
 using emmVRC.Objects;
-using MelonLoader;
 using Il2CppSystem.IO;
-using System.Reflection;
 using System.Linq;
-using RootMotion.Dynamics;
-using VRC.UI;
 using System.Net;
 using System.Windows.Forms;
-using Il2CppSystem.Collections.Specialized;
-using JetBrains.Annotations;
+using emmVRC.Libraries;
 using Il2CppSystem.Collections.Generic;
-using UnityEngine.Bindings;
-using UnityEngine.UI;
-using Il2CppSystem.Text;
+using VRC.UI;
+
 
 #pragma warning disable 4014
 
@@ -214,6 +202,9 @@ namespace emmVRC
 
                 // Process the "Hacks" for the User Interact Menu
                 UserInteractMenuButtons.Initialize();
+
+                // Process the "Hacks" for the Settings Menu (basically just logout)
+                Hacks.LogoutPatch.Initialize();
 
                 // Initialize the Quick Menu clock
                 Hacks.InfoBarClock.Initialize();

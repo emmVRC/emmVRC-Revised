@@ -337,7 +337,7 @@ namespace emmVRC.Hacks
             {
                 NewAvatarList.collapsedCount = 500;
                 NewAvatarList.expandedCount = 500;
-
+                
 
                 /*if (!PublicAvatarList.activeInHierarchy)
                 {
@@ -356,11 +356,6 @@ namespace emmVRC.Hacks
                 }
                 if (menuJustActivated && (NewAvatarList.pickers.Count < LoadedAvatars.Count || NewAvatarList.isOffScreen))
                     menuJustActivated = false;
-                NewAvatarList.clearUnseenListOnCollapse = false;
-                NewAvatarList.deferInitialFetch = false;
-                NewAvatarList.hideElementsWhenContracted = false;
-                NewAvatarList.hideWhenEmpty = false;
-                NewAvatarList.usePagination = true;
                 if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
                 {
                     bool flag = false;

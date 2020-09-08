@@ -28,8 +28,8 @@ namespace emmVRC.Menus
         private static PageItem EveryoneGlobalDynamicBones;
         private static PageItem emmVRCNetwork;
         private static PageItem GlobalChat;
-        private static PageItem ConsoleClean;
         private static PageItem AvatarFavoriteList;
+        private static PageItem UIExpansionKitIntegration;
 
         // Page 2
         private static PageItem InfoBar;
@@ -43,6 +43,14 @@ namespace emmVRC.Menus
         private static PageItem UnlimitedFPS;
 
         // Page 3
+        private static PageItem FunctionsMenuPosition;
+        private static PageItem LogoPosition;
+        private static PageItem NotificationPosition;
+        private static ButtonConfigurationMenu FunctionsMenuPositionMenu;
+        private static ButtonConfigurationMenu LogoPositionMenu;
+        private static ButtonConfigurationMenu NotificationPositionMenu;
+
+        // Page 4
         private static PageItem UIColorChanging;
         private static PageItem UIColorChangePickerButton;
         private static ColorPicker UIColorChangePicker;
@@ -53,7 +61,7 @@ namespace emmVRC.Menus
         private static PageItem InfoHiding;
         private static PageItem InfoSpooferNamePicker;
 
-        // Page 4
+        // Page 5
         private static PageItem NameplateColorChanging;
         private static PageItem FriendNameplateColorPickerButton;
         private static ColorPicker FriendNameplateColorPicker;
@@ -72,25 +80,25 @@ namespace emmVRC.Menus
         private static PageItem LegendaryUserNameplateColorPickerButton;
         private static ColorPicker LegendaryUserNameplateColorPicker;
 
-        // Page 5
+        // Page 6
         private static PageItem DisableReportWorld;
         private static PageItem DisableEmoji;
         private static PageItem DisableEmote;
         private static PageItem DisableRankToggle;
 
-        // Page 6
+        // Page 7
         private static PageItem DisablePlaylists;
         private static PageItem DisableAvatarStats;
         private static PageItem DisableReportUser;
         private static PageItem MinimalWarnKick;
 
-        // Page 7
+        // Page 8
         private static PageItem DisableAvatarHotWorlds;
         private static PageItem DisableAvatarRandomWorlds;
         private static PageItem DisableAvatarLegacyList;
         private static PageItem DisableAvatarPublicList;
 
-        // Page 8
+        // Page 9
         private static PageItem FlightKeybind;
         private static PageItem NoclipKeybind;
         private static PageItem SpeedKeybind;
@@ -154,6 +162,12 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 PlayerTweaksMenu.SetRiskyFunctions(false);
+                if (Flight.FlightEnabled || Flight.NoclipEnabled)
+                    PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
+                if (Speed.SpeedModified)
+                    PlayerTweaksMenu.SpeedToggle.setToggleState(false, true);
+                if (ESP.ESPEnabled)
+                    PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
             }, "TOGGLE: Enables the Risky Functions, which contains functions that shouldn't be used in public worlds. This includes flight, noclip, speed, and teleporting/waypoints");
             VRFlightControls = new PageItem("VR Flight\nControls", () =>
             {
@@ -254,17 +268,6 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
-            ConsoleClean = new PageItem("Console\nCleaning", () =>
-            {
-                Configuration.JSONConfig.ConsoleClean = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.ConsoleClean = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "TOGGLE: Hides some of VRChat's console messages, including PostOffice and \"This is happening\"");
             AvatarFavoriteList = new PageItem("emmVRC\nFavorite List", () =>
             {
                 Configuration.JSONConfig.AvatarFavoritesEnabled = true;
@@ -275,7 +278,34 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.AvatarFavoritesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network"); 
+            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network");
+            UIExpansionKitIntegration = new PageItem("UI Expansion\nKit Integration", () =>
+            {
+                Configuration.JSONConfig.UIExpansionKitIntegration = true;
+                Configuration.SaveConfig();
+                if (ModCompatibility.FlightButton != null)
+                    ModCompatibility.FlightButton.SetActive(true);
+                if (ModCompatibility.NoclipButton != null)
+                    ModCompatibility.NoclipButton.SetActive(true);
+                if (ModCompatibility.SpeedButton != null)
+                    ModCompatibility.SpeedButton.SetActive(true);
+                if (ModCompatibility.ESPButton != null)
+                    ModCompatibility.ESPButton.SetActive(true);
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.UIExpansionKitIntegration = false;
+                Configuration.SaveConfig();
+                if (ModCompatibility.FlightButton != null)
+                    ModCompatibility.FlightButton.SetActive(false);
+                if (ModCompatibility.NoclipButton != null)
+                    ModCompatibility.NoclipButton.SetActive(false);
+                if (ModCompatibility.SpeedButton != null)
+                    ModCompatibility.SpeedButton.SetActive(false);
+                if (ModCompatibility.ESPButton != null)
+                    ModCompatibility.ESPButton.SetActive(false);
+                RefreshMenu();
+            }, "TOGGLE: Shows the Risky Functions buttons in the UI Expansion Kit menu", ModCompatibility.UIExpansionKit);
             baseMenu.pageItems.Add(RiskyFunctions);
             baseMenu.pageItems.Add(emmVRCNetwork);
             baseMenu.pageItems.Add(AvatarFavoriteList);
@@ -285,7 +315,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(VRFlightControls);
             //baseMenu.pageItems.Add(GlobalChat);
-            baseMenu.pageItems.Add(ConsoleClean);
+            baseMenu.pageItems.Add(UIExpansionKitIntegration);
             baseMenu.pageItems.Add(PageItem.Space);
 
             InfoBar = new PageItem("Info Bar", () =>
@@ -415,18 +445,78 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(UnlimitedFPS);
             //baseMenu.pageItems.Add(PageItem.Space);
 
+            FunctionsMenuPosition = new PageItem("Functions\nMenu\nButton", () => { FunctionsMenuPositionMenu.OpenMenu(); }, "Allows changing the position of the Functions button");
+            LogoPosition = new PageItem("Logo\nButton", () => { LogoPositionMenu.OpenMenu(); }, "Allows changing the position of the Logo button");
+            NotificationPosition = new PageItem("Notification\nButton", () => { NotificationPositionMenu.OpenMenu(); }, "Allows changing the position of the Notification button");
+
+            FunctionsMenuPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 312312, 654632, "", (ButtonConfigurationMenu menu) => {
+                GetUsedMenuSpaces(menu);
+            }, (Vector2 vec) =>
+            {
+                SettingsMenu.LoadMenu();
+                QMSingleButton tempPosition = new QMSingleButton("ShortcutMenu", 1, 0, "", null, "");
+                FunctionsMenu.baseMenu.menuEntryButton.getGameObject().GetComponent<RectTransform>().anchoredPosition = tempPosition.getGameObject().GetComponent<RectTransform>().anchoredPosition;
+                tempPosition.DestroyMe();
+                Configuration.JSONConfig.FunctionsButtonX = Mathf.FloorToInt(vec.x);
+                Configuration.JSONConfig.FunctionsButtonY = Mathf.FloorToInt(vec.y);
+                Configuration.SaveConfig();
+                FunctionsMenu.baseMenu.menuEntryButton.setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
+            }, "", "Select the new position for the Functions button", null);
+
+            LogoPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 520394, 296321, "", (ButtonConfigurationMenu menu) => {
+                GetUsedMenuSpaces(menu);
+            }, (Vector2 vec) =>
+            {
+                SettingsMenu.LoadMenu();
+                QMSingleButton tempPosition = new QMSingleButton("ShortcutMenu", 1, 0, "", null, "");
+                ShortcutMenuButtons.logoButton.getGameObject().GetComponent<RectTransform>().anchoredPosition = tempPosition.getGameObject().GetComponent<RectTransform>().anchoredPosition;
+                tempPosition.DestroyMe();
+                Configuration.JSONConfig.LogoButtonX = Mathf.FloorToInt(vec.x);
+                Configuration.JSONConfig.LogoButtonY = Mathf.FloorToInt(vec.y);
+                Configuration.SaveConfig();
+                ShortcutMenuButtons.logoButton.setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
+            }, "", "Select the new position for the Logo button", null);
+
+            NotificationPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 322222, 255423, "", (ButtonConfigurationMenu menu) => {
+                GetUsedMenuSpaces(menu);
+            }, (Vector2 vec) =>
+            {
+                SettingsMenu.LoadMenu();
+                QMSingleButton tempPosition = new QMSingleButton("ShortcutMenu", 1, 0, "", null, "");
+                Managers.NotificationManager.NotificationMenu.getMainButton().getGameObject().GetComponent<RectTransform>().anchoredPosition = tempPosition.getGameObject().GetComponent<RectTransform>().anchoredPosition;
+                tempPosition.DestroyMe();
+                Configuration.JSONConfig.NotificationButtonPositionX = Mathf.FloorToInt(vec.x);
+                Configuration.JSONConfig.NotificationButtonPositionY = Mathf.FloorToInt(vec.y);
+                Configuration.SaveConfig();
+                Managers.NotificationManager.NotificationMenu.getMainButton().setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
+                Managers.NotificationManager.AddNotification("Your new button position has been saved.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
+            }, "", "Select the new position for the Notification button", null);
+            baseMenu.pageItems.Add(FunctionsMenuPosition);
+            baseMenu.pageItems.Add(LogoPosition);
+            baseMenu.pageItems.Add(NotificationPosition);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
+
             UIColorChanging = new PageItem("UI Color\nChange", () =>
             {
                 Configuration.JSONConfig.UIColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.ColorChanger.ApplyIfApplicable();
+                if (ModCompatibility.UIExpansionKit)
+                    MelonLoader.MelonCoroutines.Start(ModCompatibility.ColorUIExpansionKit());
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.UIColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 Hacks.ColorChanger.ApplyIfApplicable();
+                if (ModCompatibility.UIExpansionKit)
+                    MelonLoader.MelonCoroutines.Start(ModCompatibility.ColorUIExpansionKit());
             }, "TOGGLE: Enables the color changing module, which affects UI, ESP, and loading");
             UIColorChangePicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1001, 1000, "UI Color", "Select the color for the UI", (UnityEngine.Color newColor) =>
             {
@@ -434,6 +524,8 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 LoadMenu();
                 Hacks.ColorChanger.ApplyIfApplicable();
+                if (ModCompatibility.UIExpansionKit)
+                    MelonLoader.MelonCoroutines.Start(ModCompatibility.ColorUIExpansionKit());
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UIColorHex), Libraries.ColorConversion.HexToColor("#0EA6AD"));
             UIColorChangePickerButton = new PageItem("Select UI\nColor", () =>
             {
@@ -959,6 +1051,7 @@ namespace emmVRC.Menus
 
             baseMenu.pageTitles.Add("Core Features");
             baseMenu.pageTitles.Add("Visual Features");
+            baseMenu.pageTitles.Add("Button Positions");
             baseMenu.pageTitles.Add("UI Changing");
             baseMenu.pageTitles.Add("Nameplate Color Changing");
             baseMenu.pageTitles.Add("Disable VRChat Buttons");
@@ -977,7 +1070,7 @@ namespace emmVRC.Menus
                 emmVRCNetwork.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
                 GlobalChat.SetToggleState(Configuration.JSONConfig.GlobalChatEnabled);
                 AvatarFavoriteList.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);
-                ConsoleClean.SetToggleState(Configuration.JSONConfig.ConsoleClean);
+                UIExpansionKitIntegration.SetToggleState(Configuration.JSONConfig.UIExpansionKitIntegration);
                 
                 InfoBar.SetToggleState(Configuration.JSONConfig.InfoBarDisplayEnabled);
                 Clock.SetToggleState(Configuration.JSONConfig.ClockEnabled);
@@ -1028,6 +1121,32 @@ namespace emmVRC.Menus
                 emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
             }
         }
+
+        public static void GetUsedMenuSpaces(ButtonConfigurationMenu menu)
+        {
+            System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, Vector2>> unavailableButtons = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, Vector2>> {
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Worlds", new Vector2(1, 0)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Avatar", new Vector2(2, 0)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Social", new Vector2(3, 0)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Safety", new Vector2(4, 0)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Go Home", new Vector2(1, 1)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Respawn", new Vector2(2, 1)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Seated\nStanding\nPlay", new Vector2(3, 1)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Settings", new Vector2(4, 1)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("UI\nElements", new Vector2(1, 2)),
+                new System.Collections.Generic.KeyValuePair<string, Vector2>("Camera", new Vector2(2, 2)),
+            };
+            if (!Configuration.JSONConfig.DisableEmoteButton)
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Emote", new Vector2(3, 2)));
+            if (!Configuration.JSONConfig.DisableEmojiButton)
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Emoji", new Vector2(4, 2)));
+            if (!Configuration.JSONConfig.DisableRankToggleButton)
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Toggle\nRank", new Vector2(5, 0)));
+            if (!Configuration.JSONConfig.DisableReportWorldButton)
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Report\nWorld", new Vector2(5, 1)));
+            menu.ChangeDisabledButtons(unavailableButtons);
+        }
+
         public static void LoadMenu()
         {
             RefreshMenu();

@@ -76,7 +76,7 @@ namespace emmVRC.Menus
             foreach (SerializedWorld pastInstance in previousInstances) { 
                 baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags), () =>
                 {
-                    new PortalInternal().Method_Private_Void_String_String_0(pastInstance.WorldID, pastInstance.WorldTags);
+                    new PortalInternal().Method_Private_Void_String_String_PDM_0(pastInstance.WorldID, pastInstance.WorldTags);
                 }, pastInstance.WorldName + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
             }
         }

@@ -51,7 +51,7 @@ namespace emmVRC.Menus
 
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
             {
-                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_VRCPlayer_0(VRCPlayer.field_Internal_Static_VRCPlayer_0);
+                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_VRCPlayer_PDM_0(VRCPlayer.field_Internal_Static_VRCPlayer_0);
             }, "Selects you as the current user");
 
             AvatarOptionsMenu = new QMSingleButton(baseMenu, 4, 0, "Avatar\nOptions", () => {

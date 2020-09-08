@@ -49,6 +49,7 @@
     <Compile Include="Hacks\InfoSpoofing.cs" />
     <Compile Include="Hacks\InfoBarClock.cs" />
     <Compile Include="Hacks\InfoBarStatus.cs" />
+    <Compile Include="Hacks\LogoutPatch.cs" />
     <Compile Include="Hacks\MasterCrown.cs" />
     <Compile Include="Hacks\PedestalTweaks.cs" />
     <Compile Include="Hacks\MirrorTweaks.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Hacks\WorldFunctions.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
     <Compile Include="Libraries\Analysis.cs" />
+    <Compile Include="Libraries\ButtonConfiguration.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Libraries\emmVRC_Trigger.cs" />
