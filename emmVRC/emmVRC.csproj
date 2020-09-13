@@ -36,6 +36,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
     <Compile Include="Hacks\AvatarMenu.cs" />
+    <Compile Include="Hacks\AvatarPropertySaving.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />
     <Compile Include="Hacks\CustomAvatarFavorites.cs" />
     <Compile Include="Hacks\CustomMenuMusic.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Objects\NetworkConfig.cs" />
     <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Program.cs" />
+    <Compile Include="Objects\SerializableAvatarParameter.cs" />
     <Compile Include="Objects\SerializedAvatar.cs" />
     <Compile Include="Objects\SerializedWorld.cs" />
     <Compile Include="Objects\Slider.cs" />
@@ -420,6 +422,10 @@
     <Reference Include="VRCSDK3, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRCSDK3.dll</HintPath>
+    </Reference>
+    <Reference Include="VRCSDK3A, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRCSDK3A.dll</HintPath>
     </Reference>
     <Reference Include="VRCSDKBase, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

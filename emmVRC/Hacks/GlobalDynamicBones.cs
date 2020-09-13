@@ -46,22 +46,29 @@ namespace emmVRC.Hacks
                         if (aperms.HandColliders)
                         {
                             foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftHand).GetComponentsInChildren<DynamicBoneCollider>())
+                            {
                                 if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
                                     currentWorldDynamicBoneColliders.Add(coll);
+                            }
                             foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand).GetComponentsInChildren<DynamicBoneCollider>())
+                            {
                                 if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
                                     currentWorldDynamicBoneColliders.Add(coll);
+                            }
                         }
-
                         // If feet folliders specifically is on, fetch all the colliders for each foot and add them to cache
                         if (aperms.FeetColliders)
                         {
                             foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftFoot).GetComponentsInChildren<DynamicBoneCollider>())
+                            {
                                 if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
                                     currentWorldDynamicBoneColliders.Add(coll);
+                            }
                             foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightFoot).GetComponentsInChildren<DynamicBoneCollider>())
+                            {
                                 if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
                                     currentWorldDynamicBoneColliders.Add(coll);
+                            }
                         }
                     }
 
@@ -74,14 +81,26 @@ namespace emmVRC.Hacks
                         }
                     }
 
+                    System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+                    watch.Start();
                     // Cycle through each dynamic bone in the cache, remove existing colliders, and then add the collider cache to them. 
-                    foreach (DynamicBone bone in currentWorldDynamicBones)
+                    foreach (DynamicBone bone in currentWorldDynamicBones.ToList())
                     {
-                        //bone.m_Colliders.Clear();
-                        foreach (DynamicBoneCollider coll in currentWorldDynamicBoneColliders)
-                            if (bone.m_Colliders.IndexOf(coll) == -1)
-                                bone.m_Colliders.Add(coll);
+                        if (bone == null)
+                            currentWorldDynamicBones.Remove(bone);
+                        else
+                            //bone.m_Colliders.Clear();
+                            foreach (DynamicBoneCollider coll in currentWorldDynamicBoneColliders.ToList())
+                            {
+                                if (coll == null)
+                                    currentWorldDynamicBoneColliders.Remove(coll);
+                                else
+                                    if (bone.m_Colliders.IndexOf(coll) == -1)
+                                    bone.m_Colliders.Add(coll);
+                            }
                     }
+                    watch.Stop();
+                    emmVRCLoader.Logger.LogDebug("Global Dynamic Bone processing took " + watch.Elapsed + "ms.");
                 }
             }
         }

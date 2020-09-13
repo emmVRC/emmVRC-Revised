@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using emmVRC.Libraries;
 using Il2CppSystem.Collections.Generic;
 using VRC.UI;
+using Il2CppSystem.Runtime.Remoting.Messaging;
+using Il2CppSystem.Security.Cryptography;
 
 
 #pragma warning disable 4014
@@ -181,6 +183,9 @@ namespace emmVRC
                 // Initialize World Notes
                 Hacks.WorldNotes.Initialize();
 
+                // Initialize Avatar Property Saving
+                Hacks.AvatarPropertySaving.Initialize();
+
                 // Initialize the new Emote menu
                 Hacks.EmoteMenuReborn.Initialize();
 
@@ -328,6 +333,46 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
+
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        System.Collections.Generic.List<string> crap = new System.Collections.Generic.List<string> { "Viseme", "GestureLeft", "GestureLeftWeight", "GestureRight", "GestureRightWeight", "VelocityX", "VelocityY", "VelocityZ", "AngularY", "Grounded", "Seated", "Upright", "Supine", "GroundProximity", "AFK", "IsLocal", "VRCEmote", "VRCFaceBlendH", "VRCFaceBlendV" };
+                        VRCPlayer selectedPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
+                        if (selectedPlayer.prop_VRCAvatarManager_0.field_Private_AvatarPlayableController_0.field_Private_Dictionary_2_Int32_ObjectPublicAnStInObLi1BoInSiBoUnique_0 != null)
+                        {
+
+                            foreach (var thing in selectedPlayer.prop_VRCAvatarManager_0.field_Private_AvatarPlayableController_0.field_Private_Dictionary_2_Int32_ObjectPublicAnStInObLi1BoInSiBoUnique_0)
+                            {
+                                if (crap.IndexOf(thing.value.prop_String_0) == -1)
+                                {
+                                    emmVRCLoader.Logger.LogDebug("Parameter name: " + thing.value.prop_String_0);
+                                    switch (thing.value.field_Private_EnumNPublicSealedvaUnBoInFl5vUnique_0)
+                                    {
+                                        case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Float:
+                                            emmVRCLoader.Logger.Log("Type: Float");
+                                            emmVRCLoader.Logger.Log("Value: " + thing.value.prop_Single_0 + "f");
+                                            break;
+                                        case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Int:
+                                            emmVRCLoader.Logger.Log("Type: Int");
+                                            emmVRCLoader.Logger.Log("Value: " + thing.value.prop_Int32_1);
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha1,
+                    ActionAction = () =>
+                    {
+                        AvatarPropertySaving.SaveAvatarParameters();
+                    }
+                });
 
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();

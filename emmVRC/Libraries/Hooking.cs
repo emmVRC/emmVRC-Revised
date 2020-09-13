@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using emmVRC.Hacks;
 using MelonLoader;
 using UnityEngine;
 
@@ -71,6 +72,7 @@ namespace emmVRC.Libraries
                 {
                     Managers.AvatarPermissionManager.ProcessAvatar(new GameObject(avatarPtr), new VRC.SDKBase.VRC_AvatarDescriptor(avatarDescriptorPtr));
                     Hacks.GlobalDynamicBones.ProcessDynamicBones(new GameObject(avatarPtr), new VRC.SDKBase.VRC_AvatarDescriptor(avatarDescriptorPtr), new VRCAvatarManager(@this));
+                    MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar());
                 }
             }
             catch (System.Exception ex)
