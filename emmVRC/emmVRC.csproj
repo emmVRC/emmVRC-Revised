@@ -57,6 +57,7 @@
     <Compile Include="Hacks\Nameplates.cs" />
     <Compile Include="Hacks\SocialMessenger.cs" />
     <Compile Include="Hacks\UserInteractMenuButtons.cs" />
+    <Compile Include="Hacks\UserListRefresh.cs" />
     <Compile Include="Hacks\Volume.cs" />
     <Compile Include="Hacks\WorldNotes.cs" />
     <Compile Include="Hacks\PlayerNotes.cs" />

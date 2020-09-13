@@ -81,8 +81,6 @@ namespace emmVRC.Hacks
                         }
                     }
 
-                    System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-                    watch.Start();
                     // Cycle through each dynamic bone in the cache, remove existing colliders, and then add the collider cache to them. 
                     foreach (DynamicBone bone in currentWorldDynamicBones.ToList())
                     {
@@ -99,8 +97,6 @@ namespace emmVRC.Hacks
                                     bone.m_Colliders.Add(coll);
                             }
                     }
-                    watch.Stop();
-                    emmVRCLoader.Logger.LogDebug("Global Dynamic Bone processing took " + watch.Elapsed + "ms.");
                 }
             }
         }

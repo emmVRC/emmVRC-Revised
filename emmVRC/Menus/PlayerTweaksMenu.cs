@@ -16,6 +16,7 @@ namespace emmVRC.Menus
         public static GameObject SpeedText;
         public static QMSingleButton UnloadDynamicBonesButton;
         public static QMSingleButton SelectCurrentUserButton;
+        public static QMSingleButton SaveAvatarParameters;
         public static QMSingleButton ReloadAllAvatars;
         public static QMSingleButton AvatarOptionsMenu;
         public static QMSingleButton EnableJumpButton;
@@ -44,10 +45,10 @@ namespace emmVRC.Menus
                     GameObject.Destroy(coll);
             }, "Unload all the current dynamic bones in the instance");
 
-            ReloadAllAvatars = new QMSingleButton(baseMenu, 2, 0, "Reload\nAll\nAvatars", () =>
+            SaveAvatarParameters = new QMSingleButton(baseMenu, 2, 0, "Save\nAvatar\nParameters", () =>
             {
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
-            }, "Reloads all the current avatars in the room");
+                Hacks.AvatarPropertySaving.SaveAvatarParameters();
+            }, "Saves all of the current parameters for your avatar. Only works with Avatars 3.0 content");
 
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
             {
@@ -98,6 +99,11 @@ namespace emmVRC.Menus
             }, "ESP Off", () => {
                 Hacks.ESP.ESPEnabled = false;
             }, "TOGGLE: Enables ESP for all the players in the instance. Requires Risky Functions");
+
+            ReloadAllAvatars = new QMSingleButton(baseMenu, 5, 1, "Reload\nAll\nAvatars", () =>
+            {
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
+            }, "Reloads all the current avatars in the room");
 
             SpeedToggle = new QMToggleButton(baseMenu, 4, 2, "Speed On", () =>
             {

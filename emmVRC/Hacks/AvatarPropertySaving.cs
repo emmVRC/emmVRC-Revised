@@ -8,6 +8,8 @@ using emmVRC.Objects;
 using System.Collections;
 using UnityEngine;
 using VRC.Core;
+using emmVRC.Menus;
+using UnityEngine.UI;
 
 namespace emmVRC.Hacks
 {
@@ -25,6 +27,7 @@ namespace emmVRC.Hacks
             VRCAvatarManager mngr = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0;
             if (mngr != null && mngr.prop_VRCAvatarDescriptor_0 != null)
             {
+                PlayerTweaksMenu.SaveAvatarParameters.getGameObject().GetComponent<Button>().enabled = true;
                 string avatarID = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id;
                 emmVRCLoader.Logger.LogDebug("SDK3 avatar detected with ID "+avatarID);
                 if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", avatarID + ".json")))
@@ -63,6 +66,9 @@ namespace emmVRC.Hacks
                         File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", mngr.field_Private_ApiAvatar_0.id + ".json"));
                     }
                 }
+            } else
+            {
+                PlayerTweaksMenu.SaveAvatarParameters.getGameObject().GetComponent<Button>().enabled = false;
             }
         }
         public static void SaveAvatarParameters()

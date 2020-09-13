@@ -174,6 +174,9 @@ namespace emmVRC
                 // Initialize the "Social Menu Functions" menu
                 Hacks.SocialMenuFunctions.Initialize();
 
+                // Initialize the User List Refresh button on the Social Menu
+                Hacks.UserListRefresh.Initialize();
+
                 // Initialize the "World Functions" menu
                 Hacks.WorldFunctions.Initialize();
 
@@ -336,7 +339,6 @@ namespace emmVRC
 
                 DebugManager.DebugActions.Add(new DebugAction
                 {
-                    ActionKey = KeyCode.Alpha0,
                     ActionAction = () =>
                     {
                         System.Collections.Generic.List<string> crap = new System.Collections.Generic.List<string> { "Viseme", "GestureLeft", "GestureLeftWeight", "GestureRight", "GestureRightWeight", "VelocityX", "VelocityY", "VelocityZ", "AngularY", "Grounded", "Seated", "Upright", "Supine", "GroundProximity", "AFK", "IsLocal", "VRCEmote", "VRCFaceBlendH", "VRCFaceBlendV" };
@@ -363,15 +365,8 @@ namespace emmVRC
                                 }
                             }
                         }
-                    }
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha1,
-                    ActionAction = () =>
-                    {
-                        AvatarPropertySaving.SaveAvatarParameters();
-                    }
+                    },
+                    Name = "Get\nAvatar\nParameters"
                 });
 
                 // Debug actions need to go before this
