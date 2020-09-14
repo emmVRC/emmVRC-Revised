@@ -14,6 +14,7 @@ using Il2CppSystem.Collections.Generic;
 using VRC.UI;
 using Il2CppSystem.Runtime.Remoting.Messaging;
 using Il2CppSystem.Security.Cryptography;
+using UnityEngine.UI;
 
 
 #pragma warning disable 4014
@@ -259,6 +260,9 @@ namespace emmVRC
                 // Initialize the message system
                 Managers.MessageManager.Initialize();
 
+                // Initialize the custom Main Menu page system
+                Hacks.CustomMainMenuPage.Initialize();
+
                 // Initialize the emmVRC HUD
                 if (Configuration.JSONConfig.VRHUDInDesktop || UnityEngine.XR.XRDevice.isPresent)
                     MelonLoader.MelonCoroutines.Start(Menus.VRHUD.Initialize());
@@ -368,6 +372,19 @@ namespace emmVRC
                     },
                     Name = "Get\nAvatar\nParameters"
                 });
+                /*DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        Hacks.CustomMainMenuPage page = new CustomMainMenuPage("Test Menu");
+                        page.CreateButton("Test", new Vector2(0f, 0.1f), () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "Button pressed", 1000f); });
+                        page.CreateCheckbox("Test", new Vector2(0f, 0.2f), (bool checkBox) => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "Checkbox: "+checkBox, 1000f); });
+
+                        //customButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(128f, 256f);
+                        Hacks.CustomMainMenuPage.ShowCustomMenu(page);
+                    }
+                });*/
 
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();

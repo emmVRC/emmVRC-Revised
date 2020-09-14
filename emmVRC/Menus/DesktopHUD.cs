@@ -164,7 +164,7 @@ namespace emmVRC.Menus
                         BackgroundImage.sprite = Resources.HUD_Minimized;
                     keyFlag = true;
                 }
-                if ((Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1]) || (KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && !keyFlag)
+                if ((Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1]) || (KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && !keyFlag && Configuration.JSONConfig.EnableKeybinds)
                 {
                     Configuration.JSONConfig.HUDEnabled = !Configuration.JSONConfig.HUDEnabled;
                     Configuration.SaveConfig();

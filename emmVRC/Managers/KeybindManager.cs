@@ -23,58 +23,61 @@ namespace emmVRC.Managers
         {
             while (true)
             {
-                if (RiskyFunctionsManager.RiskyFunctionsAllowed)
+                if (Configuration.JSONConfig.EnableKeybinds)
                 {
-                    // If the flight keybind is pressed...
-                    if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) || (KeyCode)Configuration.JSONConfig.FlightKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !keyFlag)
+                    if (RiskyFunctionsManager.RiskyFunctionsAllowed)
                     {
-                        Menus.PlayerTweaksMenu.FlightToggle.setToggleState(!Hacks.Flight.FlightEnabled, true);
+                        // If the flight keybind is pressed...
+                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) || (KeyCode)Configuration.JSONConfig.FlightKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !keyFlag)
+                        {
+                            Menus.PlayerTweaksMenu.FlightToggle.setToggleState(!Hacks.Flight.FlightEnabled, true);
+                            keyFlag = true;
+                        }
+                        // If the noclip keybind is pressed...
+                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1]) || (KeyCode)Configuration.JSONConfig.NoclipKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !keyFlag)
+                        {
+                            Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(!Hacks.Flight.NoclipEnabled, true);
+                            keyFlag = true;
+                        }
+                        // If the Speed keybind is pressed...
+                        if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1]) || (KeyCode)Configuration.JSONConfig.SpeedKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !keyFlag)
+                        {
+                            Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(!Hacks.Speed.SpeedModified, true);
+                            keyFlag = true;
+                        }
+                    }
+                    if (Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !keyFlag)
+                    {
+                        if (Hacks.ThirdPerson.CameraSetup != 2)
+                        {
+                            Hacks.ThirdPerson.CameraSetup++;
+                            Hacks.ThirdPerson.TPCameraBack.transform.position -= Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
+                            Hacks.ThirdPerson.TPCameraFront.transform.position += Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
+                            Hacks.ThirdPerson.zoomOffset = 0f;
+                            keyFlag = true;
+                        }
+                        else
+                        {
+                            Hacks.ThirdPerson.CameraSetup = 0;
+                            Hacks.ThirdPerson.TPCameraBack.transform.position -= Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
+                            Hacks.ThirdPerson.TPCameraFront.transform.position += Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
+                            Hacks.ThirdPerson.zoomOffset = 0f;
+                            keyFlag = true;
+                        }
+                    }
+                    if (Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
+                    {
+                        QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GoHomeButton").GetComponent<Button>().onClick.Invoke();
                         keyFlag = true;
                     }
-                    // If the noclip keybind is pressed...
-                    if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1]) || (KeyCode)Configuration.JSONConfig.NoclipKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !keyFlag)
+                    if (Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && !keyFlag)
                     {
-                        Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(!Hacks.Flight.NoclipEnabled, true);
+                        QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/RespawnButton").GetComponent<Button>().onClick.Invoke();
                         keyFlag = true;
                     }
-                    // If the Speed keybind is pressed...
-                    if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1]) || (KeyCode)Configuration.JSONConfig.SpeedKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !keyFlag)
-                    {
-                        Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(!Hacks.Speed.SpeedModified, true);
-                        keyFlag = true;
-                    }
+                    if (!Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && keyFlag)
+                        keyFlag = false;
                 }
-                if (Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !keyFlag)
-                {
-                    if (Hacks.ThirdPerson.CameraSetup != 2)
-                    {
-                        Hacks.ThirdPerson.CameraSetup++;
-                        Hacks.ThirdPerson.TPCameraBack.transform.position -= Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
-                        Hacks.ThirdPerson.TPCameraFront.transform.position += Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
-                        Hacks.ThirdPerson.zoomOffset = 0f;
-                        keyFlag = true;
-                    }
-                    else
-                    {
-                        Hacks.ThirdPerson.CameraSetup = 0;
-                        Hacks.ThirdPerson.TPCameraBack.transform.position -= Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
-                        Hacks.ThirdPerson.TPCameraFront.transform.position += Hacks.ThirdPerson.TPCameraBack.transform.forward * Hacks.ThirdPerson.zoomOffset;
-                        Hacks.ThirdPerson.zoomOffset = 0f;
-                        keyFlag = true;
-                    }
-                }
-                if (Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
-                {
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GoHomeButton").GetComponent<Button>().onClick.Invoke();
-                    keyFlag = true;
-                }
-                if (Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && !keyFlag)
-                {
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/RespawnButton").GetComponent<Button>().onClick.Invoke();
-                    keyFlag = true;
-                }
-                if (!Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && keyFlag)
-                    keyFlag = false;
                 yield return new WaitForEndOfFrame();
             }
         }

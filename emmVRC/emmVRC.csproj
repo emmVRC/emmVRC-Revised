@@ -39,6 +39,7 @@
     <Compile Include="Hacks\AvatarPropertySaving.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />
     <Compile Include="Hacks\CustomAvatarFavorites.cs" />
+    <Compile Include="Hacks\CustomMainMenuPage.cs" />
     <Compile Include="Hacks\CustomMenuMusic.cs" />
     <Compile Include="Hacks\CustomWorldObjects.cs" />
     <Compile Include="Hacks\EmoteMenuReborn.cs" />

@@ -17,12 +17,19 @@ namespace emmVRC
 {
     public class DestructiveActions
     {
-        public static Thread restartThread;
         public static void ForceQuit()
         {
             if (NetworkClient.authToken != null)
                 HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
-            Process.GetCurrentProcess().Kill();
+            if (Attributes.Debug)
+            {
+                Thread quitThread = new Thread(QuitAfterQuit)
+                {
+                    IsBackground = true,
+                    Name = "emmVRC Quit Thread"
+                };
+                quitThread.Start();
+            }
         }
         public static void ForceRestart()
         {
@@ -30,17 +37,12 @@ namespace emmVRC
                 HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
             if (Attributes.Debug)
             {
-                restartThread = new Thread(RestartAfterQuit)
+                Thread restartThread = new Thread(RestartAfterQuit)
                 {
                     IsBackground = true,
                     Name = "emmVRC Restart Thread"
                 };
                 restartThread.Start();
-            }
-            else
-            {
-                try { Process.Start(@Environment.CurrentDirectory + "\\VRChat.exe", Environment.CommandLine.ToString()); } catch (Exception ex) { ex = new Exception(); }
-                Process.GetCurrentProcess().Kill();
             }
         }
         public static void RestartAfterQuit()
@@ -48,6 +50,12 @@ namespace emmVRC
             Application.Quit();
             Thread.Sleep(1000);
             try { Process.Start(@Environment.CurrentDirectory + "\\VRChat.exe", Environment.CommandLine.ToString()); } catch (Exception ex) { ex = new Exception(); }
+            Process.GetCurrentProcess().Kill();
+        }
+        public static void QuitAfterQuit()
+        {
+            Application.Quit();
+            Thread.Sleep(1000);
             Process.GetCurrentProcess().Kill();
         }
     }

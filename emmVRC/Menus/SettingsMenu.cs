@@ -99,6 +99,7 @@ namespace emmVRC.Menus
         private static PageItem DisableAvatarPublicList;
 
         // Page 9
+        private static PageItem EnableKeybinds;
         private static PageItem FlightKeybind;
         private static PageItem NoclipKeybind;
         private static PageItem SpeedKeybind;
@@ -949,6 +950,13 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(PageItem.Space);
 
 
+            EnableKeybinds = new PageItem("Enable\nKeybinds", () => {
+                Configuration.JSONConfig.EnableKeybinds = true;
+                Configuration.SaveConfig();
+            }, "Disabled", () => {
+                Configuration.JSONConfig.EnableKeybinds = false;
+                Configuration.SaveConfig();
+            }, "TOGGLE: Enables or disables the desktop-mode keybinds for emmVRC");
             FlightKeybind = new PageItem("Flight\nKeybind:\nLeftCTRL + F", () =>
             {
                 KeybindChanger.Show("Please press a keybind for Flight:", (UnityEngine.KeyCode mainKey, UnityEngine.KeyCode modifier) =>
@@ -1040,6 +1048,8 @@ namespace emmVRC.Menus
                     LoadMenu();
                 });
             }, "Change the keybind for going to your home world (Default is LeftCTRL + U");
+            baseMenu.pageItems.Add(EnableKeybinds);
+            baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(FlightKeybind);
             baseMenu.pageItems.Add(NoclipKeybind);
             baseMenu.pageItems.Add(SpeedKeybind);
@@ -1106,6 +1116,7 @@ namespace emmVRC.Menus
                 DisableAvatarLegacyList.SetToggleState(Configuration.JSONConfig.DisableAvatarLegacy);
                 DisableAvatarPublicList.SetToggleState(Configuration.JSONConfig.DisableAvatarPublic);
 
+                EnableKeybinds.SetToggleState(Configuration.JSONConfig.EnableKeybinds);
                 FlightKeybind.Name = "Flight:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));
                 NoclipKeybind.Name = "Noclip:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0])));
                 SpeedKeybind.Name = "Speed:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0])));
