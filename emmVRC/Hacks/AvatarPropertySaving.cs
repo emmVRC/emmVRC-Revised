@@ -21,54 +21,66 @@ namespace emmVRC.Hacks
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/"));
         }
-        public static IEnumerator OnLoadAvatar()
+        public static IEnumerator OnLoadAvatar(VRC.SDKBase.VRC_AvatarDescriptor avatarDescriptor)
         {
             yield return new WaitForSecondsRealtime(0.25f);
-            VRCAvatarManager mngr = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0;
-            if (mngr != null && mngr.prop_VRCAvatarDescriptor_0 != null)
+            if (avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id == APIUser.CurrentUser.id)
             {
-                PlayerTweaksMenu.SaveAvatarParameters.getGameObject().GetComponent<Button>().enabled = true;
-                string avatarID = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id;
-                emmVRCLoader.Logger.LogDebug("SDK3 avatar detected with ID "+avatarID);
-                if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", avatarID + ".json")))
+                VRCAvatarManager mngr = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0;
+                if (mngr != null && mngr.prop_VRCAvatarDescriptor_0 != null)
                 {
-                    try
+                    PlayerTweaksMenu.SaveAvatarParameters.getGameObject().GetComponent<Button>().enabled = true;
+                    if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id != null)
                     {
-                        List<SerializableAvatarParameter> parameters = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", avatarID + ".json"))).Make<List<SerializableAvatarParameter>>();
-                        foreach (SerializableAvatarParameter param in parameters)
+                        string avatarID = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id;
+                        emmVRCLoader.Logger.LogDebug("SDK3 avatar detected with ID " + avatarID);
+                        if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", avatarID + ".json")))
                         {
-                            if (mngr.field_Private_AvatarPlayableController_0 != null)
+                            try
                             {
-                                
-                                foreach (Il2CppSystem.Collections.Generic.KeyValuePair<int, ObjectPublicAnStInObLi1BoInSiBoUnique> val in mngr.field_Private_AvatarPlayableController_0.field_Private_Dictionary_2_Int32_ObjectPublicAnStInObLi1BoInSiBoUnique_0)
+                                List<SerializableAvatarParameter> parameters = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", avatarID + ".json"))).Make<List<SerializableAvatarParameter>>();
+                                foreach (SerializableAvatarParameter param in parameters)
                                 {
-                                    if (val.Value.prop_String_0 == param.name)
-                                        switch (val.value.prop_EnumNPublicSealedvaUnBoInFl5vUnique_0)
+                                    if (mngr.field_Private_AvatarPlayableController_0 != null)
+                                    {
+
+                                        foreach (Il2CppSystem.Collections.Generic.KeyValuePair<int, ObjectPublicAnStInObLi1BoInSiBoUnique> val in mngr.field_Private_AvatarPlayableController_0.field_Private_Dictionary_2_Int32_ObjectPublicAnStInObLi1BoInSiBoUnique_0)
                                         {
-                                            case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Float:
-                                                val.value.prop_Single_0 = (float)param.floatValue;
-                                                break;
-                                            case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Int:
-                                                val.value.prop_Int32_1 = (int)param.intValue;
-                                                break;
+                                            if (val.Value.prop_String_0 == param.name)
+                                                switch (val.value.prop_EnumNPublicSealedvaUnBoInFl5vUnique_0)
+                                                {
+                                                    case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Float:
+                                                        val.value.prop_Single_0 = (float)param.floatValue;
+                                                        break;
+                                                    case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Int:
+                                                        val.value.prop_Int32_1 = (int)param.intValue;
+                                                        break;
+                                                }
                                         }
+                                        //mngr.field_Private_AvatarPlayableController_0.Method_Private_Void_0();
+                                        mngr.field_Private_AvatarPlayableController_0.Method_Public_Void_Int32_PDM_0(0);
+                                    }
                                 }
-                                //mngr.field_Private_AvatarPlayableController_0.Method_Private_Void_0();
-                                mngr.field_Private_AvatarPlayableController_0.Method_Public_Void_Int32_PDM_0(0);
+
+                            }
+                            catch (Exception ex)
+                            {
+                                emmVRCLoader.Logger.Log("Error occurred reading property file for this avatar. The avatar has most likely changed since the last time properties were saved.");
+                                emmVRCLoader.Logger.LogError(ex.ToString());
+                                File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", mngr.field_Private_ApiAvatar_0.id + ".json"));
                             }
                         }
-
                     }
-                    catch (Exception ex)
+
+                    else
                     {
-                        emmVRCLoader.Logger.Log("Error occurred reading property file for this avatar. The avatar has most likely changed since the last time properties were saved.");
-                        emmVRCLoader.Logger.LogError(ex.ToString());
-                        File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", mngr.field_Private_ApiAvatar_0.id + ".json"));
+                        PlayerTweaksMenu.SaveAvatarParameters.getGameObject().GetComponent<Button>().enabled = false;
                     }
                 }
-            } else
-            {
-                PlayerTweaksMenu.SaveAvatarParameters.getGameObject().GetComponent<Button>().enabled = false;
+                else
+                {
+                    PlayerTweaksMenu.SaveAvatarParameters.getGameObject().GetComponent<Button>().enabled = false;
+                }
             }
         }
         public static void SaveAvatarParameters()

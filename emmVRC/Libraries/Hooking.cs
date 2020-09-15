@@ -65,14 +65,16 @@ namespace emmVRC.Libraries
         private static void OnAvatarInstantiated(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded)
         {
             onAvatarInstantiatedDelegate(@this, avatarPtr, avatarDescriptorPtr, loaded);
-
             try
             {
                 if (loaded)
                 {
-                    Managers.AvatarPermissionManager.ProcessAvatar(new GameObject(avatarPtr), new VRC.SDKBase.VRC_AvatarDescriptor(avatarDescriptorPtr));
-                    Hacks.GlobalDynamicBones.ProcessDynamicBones(new GameObject(avatarPtr), new VRC.SDKBase.VRC_AvatarDescriptor(avatarDescriptorPtr), new VRCAvatarManager(@this));
-                    MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar());
+                    VRC.SDKBase.VRC_AvatarDescriptor descriptor = new VRC.SDKBase.VRC_AvatarDescriptor(avatarDescriptorPtr);
+                    GameObject avatarObj = new GameObject(avatarPtr);
+                    VRCAvatarManager avatarMgr = new VRCAvatarManager(@this);
+                    Managers.AvatarPermissionManager.ProcessAvatar(avatarObj, descriptor);
+                    Hacks.GlobalDynamicBones.ProcessDynamicBones(avatarObj, descriptor, avatarMgr);
+                    MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(descriptor));
                 }
             }
             catch (System.Exception ex)

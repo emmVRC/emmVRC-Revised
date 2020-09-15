@@ -10,6 +10,7 @@ namespace emmVRC.Objects
     {
         public string name = "";
         public string programPath = "";
+        public string url = "";
         public string toolTip = "";
     }
 }
