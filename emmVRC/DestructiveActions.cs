@@ -21,29 +21,23 @@ namespace emmVRC
         {
             if (NetworkClient.authToken != null)
                 HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
-            if (Attributes.Debug)
+            Thread quitThread = new Thread(QuitAfterQuit)
             {
-                Thread quitThread = new Thread(QuitAfterQuit)
-                {
-                    IsBackground = true,
-                    Name = "emmVRC Quit Thread"
-                };
-                quitThread.Start();
-            }
+                IsBackground = true,
+                Name = "emmVRC Quit Thread"
+            };
+            quitThread.Start();
         }
         public static void ForceRestart()
         {
             if (NetworkClient.authToken != null)
                 HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
-            if (Attributes.Debug)
+            Thread restartThread = new Thread(RestartAfterQuit)
             {
-                Thread restartThread = new Thread(RestartAfterQuit)
-                {
-                    IsBackground = true,
-                    Name = "emmVRC Restart Thread"
-                };
-                restartThread.Start();
-            }
+                IsBackground = true,
+                Name = "emmVRC Restart Thread"
+            };
+            restartThread.Start();
         }
         public static void RestartAfterQuit()
         {

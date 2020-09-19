@@ -17,6 +17,8 @@ namespace emmVRC.Hacks
                 // Fetch the camera object. This only works on Desktop, but setting FOV for VR could be catastrophic
                 GameObject cameraobj = GameObject.Find("Camera (eye)");
 
+                if (cameraobj == null)
+                    cameraobj = GameObject.Find("CenterEyeAnchor");
                 // Check if the camera object exists. If not, we're not going to set anything
                 if (cameraobj != null)
                 {

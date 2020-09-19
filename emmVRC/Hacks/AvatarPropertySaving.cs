@@ -10,6 +10,7 @@ using UnityEngine;
 using VRC.Core;
 using emmVRC.Menus;
 using UnityEngine.UI;
+using emmVRC.Libraries;
 
 namespace emmVRC.Hacks
 {
@@ -24,7 +25,7 @@ namespace emmVRC.Hacks
         public static IEnumerator OnLoadAvatar(VRC.SDKBase.VRC_AvatarDescriptor avatarDescriptor)
         {
             yield return new WaitForSecondsRealtime(0.25f);
-            if (avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id == APIUser.CurrentUser.id)
+            if (avatarDescriptor != null && avatarDescriptor.GetComponentInParent<VRCPlayer>() != null && avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id == APIUser.CurrentUser.id)
             {
                 VRCAvatarManager mngr = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0;
                 if (mngr != null && mngr.prop_VRCAvatarDescriptor_0 != null)
@@ -33,34 +34,39 @@ namespace emmVRC.Hacks
                     if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id != null)
                     {
                         string avatarID = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0.id;
-                        emmVRCLoader.Logger.LogDebug("SDK3 avatar detected with ID " + avatarID);
+                        emmVRCLoader.Logger.LogDebug("SDK3 avatar detected");
                         if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", avatarID + ".json")))
                         {
                             try
                             {
+                                emmVRCLoader.Logger.LogDebug("Avatar parameter file exists, loading...");
                                 List<SerializableAvatarParameter> parameters = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", avatarID + ".json"))).Make<List<SerializableAvatarParameter>>();
                                 foreach (SerializableAvatarParameter param in parameters)
                                 {
+                                    emmVRCLoader.Logger.LogDebug("Parameter name: " + param.name + ", float value: " + param.floatValue + ", int value: " + param.intValue);
                                     if (mngr.field_Private_AvatarPlayableController_0 != null)
                                     {
-
+                                        emmVRCLoader.Logger.LogDebug("Applying parameter...");
                                         foreach (Il2CppSystem.Collections.Generic.KeyValuePair<int, ObjectPublicAnStInObLi1BoInSiBoUnique> val in mngr.field_Private_AvatarPlayableController_0.field_Private_Dictionary_2_Int32_ObjectPublicAnStInObLi1BoInSiBoUnique_0)
                                         {
                                             if (val.Value.prop_String_0 == param.name)
                                                 switch (val.value.prop_EnumNPublicSealedvaUnBoInFl5vUnique_0)
                                                 {
                                                     case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Float:
+                                                        emmVRCLoader.Logger.LogDebug("Parameter is float");
                                                         val.value.prop_Single_0 = (float)param.floatValue;
                                                         break;
                                                     case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Int:
+                                                        emmVRCLoader.Logger.LogDebug("Parameter is int");
                                                         val.value.prop_Int32_1 = (int)param.intValue;
                                                         break;
                                                 }
                                         }
                                         //mngr.field_Private_AvatarPlayableController_0.Method_Private_Void_0();
-                                        mngr.field_Private_AvatarPlayableController_0.Method_Public_Void_Int32_PDM_0(0);
                                     }
                                 }
+                                emmVRCLoader.Logger.LogDebug("Calling update. Does this crash...?");
+                                mngr.field_Private_AvatarPlayableController_0.ApplyParameters(0);
 
                             }
                             catch (Exception ex)

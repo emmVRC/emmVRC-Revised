@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using VRC;
+using VRC.Animation;
 using VRC.Core;
 
 namespace emmVRC.Hacks

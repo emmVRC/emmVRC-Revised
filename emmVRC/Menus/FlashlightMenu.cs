@@ -25,6 +25,9 @@ namespace emmVRC.Menus
 
         public static GameObject FlashlightObject;
         public static GameObject HeadlightObject;
+
+        public static GameObject CameraBase;
+
         public static void Initialize()
         {
             baseMenu = new QMNestedButton(WorldTweaksMenu.baseMenu, 3, 1, "Flashlight", "Configure and summon a flashlight you can carry through your current world");
@@ -63,7 +66,34 @@ namespace emmVRC.Menus
             {
                 GameObject.Destroy(FlashlightObject);
             }, "TOGGLE: Turns on and off the flashlight");
-            
+
+            toggleHeadlight = new QMToggleButton(baseMenu, 2, 0, "Headlight On", () =>
+            {
+                if (CameraBase == null)
+                CameraBase = GameObject.Find("Camera (eye)");
+
+                if (CameraBase == null)
+                    CameraBase = GameObject.Find("CenterEyeAnchor");
+                if (CameraBase != null)
+                {
+                    GameObject headLightBase = new GameObject("Headlight");
+                    headLightBase.transform.SetParent(CameraBase.transform, false);
+                    GameObject headLightLight = new GameObject("LightBase");
+                    headLightLight.transform.SetParent(headLightBase.transform);
+                    headLightLight.transform.localPosition = Vector3.zero;
+                    Light lght = headLightLight.AddComponent<Light>();
+                    lght.color = lightColor;
+                    headLightLight.transform.rotation = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation;
+                    headLightLight.transform.Rotate(20f, 0f, 0f);
+                    lght.type = LightType.Spot;
+                    lght.range = LightStrength;
+                    lght.spotAngle *= 2;
+                    HeadlightObject = headLightBase;
+                }
+            }, "Headlight Off", () =>
+            {
+                GameObject.Destroy(HeadlightObject);
+            }, "TOGGLE: Turns on and off the headlight");
 
             setFlashlightLightColor = new ColorPicker(baseMenu.getMenuName(), 4, 0, "Light\nColor", "Allows you to set the flashlight color", (Color result) =>
             {

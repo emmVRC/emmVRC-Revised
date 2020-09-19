@@ -8,6 +8,7 @@ using UnhollowerRuntimeLib.XrefScans;
 using VRC.UI;
 using UnityEngine;
 using VRC;
+using VRC.Animation;
 
 namespace emmVRC.Libraries
 {
@@ -126,6 +127,31 @@ namespace emmVRC.Libraries
         public static void TriggerEmote(this VRCPlayer instance, int emote)
         {
             TriggerEmoteAct.Invoke(instance, emote);
+        }
+        #endregion
+
+        #region AvatarPlayableController ApplyParameters
+        public delegate void ApplyParametersAction(AvatarPlayableController @this, int value);
+
+        private static ApplyParametersAction ourApplyParametersAction;
+
+        public static ApplyParametersAction ApplyParametersAct
+        {
+            get
+            {
+                if (ourApplyParametersAction != null) return ourApplyParametersAction;
+                var targetMethod = typeof(AvatarPlayableController).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                    .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters()[0].ParameterType == typeof(int) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "Tried to clear an unassigned puppet channel!"));
+
+                ourApplyParametersAction = (ApplyParametersAction)Delegate.CreateDelegate(typeof(ApplyParametersAction), targetMethod);
+
+                return ourApplyParametersAction;
+            }
+        }
+
+        public static void ApplyParameters(this AvatarPlayableController instance, int value)
+        {
+            ApplyParametersAct.Invoke(instance, value);
         }
         #endregion
     }

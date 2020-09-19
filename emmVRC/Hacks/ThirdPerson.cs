@@ -28,6 +28,8 @@ namespace emmVRC.Hacks
             GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
             GameObject.Destroy(gameObject.GetComponent<MeshRenderer>());
             referenceCamera = GameObject.Find("Camera (eye)");
+            if (referenceCamera == null)
+                referenceCamera = GameObject.Find("CenterEyeAnchor");
             if (referenceCamera != null)
             {
                 gameObject.transform.localScale = referenceCamera.transform.localScale;
@@ -72,7 +74,7 @@ namespace emmVRC.Hacks
                 TPCameraFront = gameObject3;
                 TPCameraBack.GetComponent<Camera>().enabled = false;
                 TPCameraFront.GetComponent<Camera>().enabled = false;
-                GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = true;
+                referenceCamera.GetComponent<Camera>().enabled = true;
                 /*thirdPersonBack = new QMSingleButton("CameraMenu", 4, 0, "Third\nPerson\nBack View", delegate
                 {
                     CameraSetup = 1;

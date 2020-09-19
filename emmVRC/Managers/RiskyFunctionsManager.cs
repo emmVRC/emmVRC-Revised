@@ -95,7 +95,7 @@ namespace emmVRC.Managers
                 // If the temp flag isn't set, perform the tag check
                 if (!temp)
                 {
-                    if (RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_game") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("admin_game") != -1)
+                    if (RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_game") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_games") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_club") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("admin_game") != -1)
                     {
                         RiskyFunctionsAllowed = false;
                     }

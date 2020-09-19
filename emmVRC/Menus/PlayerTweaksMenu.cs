@@ -7,6 +7,7 @@ using emmVRC.Libraries;
 using emmVRC.Managers;
 using UnityEngine;
 using UnityEngine.UI;
+using VRC.Animation;
 
 namespace emmVRC.Menus
 {
