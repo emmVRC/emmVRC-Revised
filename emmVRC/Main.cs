@@ -10,11 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using emmVRC.Libraries;
-using Il2CppSystem.Collections.Generic;
-using VRC.UI;
-using Il2CppSystem.Runtime.Remoting.Messaging;
-using Il2CppSystem.Security.Cryptography;
-using UnityEngine.UI;
+using VRC.Core;
 
 
 #pragma warning disable 4014
@@ -371,14 +367,6 @@ namespace emmVRC
                         }
                     },
                     Name = "Get\nAvatar\nParameters"
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha2,
-                    ActionAction = () =>
-                    {
-                        Analysis.LogXrefResults(typeof(AvatarPlayableController).GetMethod("Method_Public_Void_Int32_PDM_1"), new System.Collections.Generic.List<Type> { typeof(string) });
-                    }
                 });
                 /*DebugManager.DebugActions.Add(new DebugAction
                 {

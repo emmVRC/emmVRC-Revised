@@ -15,6 +15,7 @@ using emmVRC.Objects;
 using emmVRC.Libraries;
 using VRC.Core;
 using System.Linq.Expressions;
+using emmVRC.Hacks;
 
 namespace emmVRC.Network
 {
@@ -119,6 +120,7 @@ namespace emmVRC.Network
             {
                 string result = await HTTPRequest.get(NetworkClient.configURL + "/configuration.php");
                 NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
+                CustomAvatarFavorites.MigrateButton.SetActive(NetworkConfig.Instance.APICallsAllowed);
             }
             catch (Exception exception)
             {

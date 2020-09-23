@@ -70,6 +70,7 @@
     <Compile Include="Hacks\WorldFunctions.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
     <Compile Include="Libraries\Analysis.cs" />
+    <Compile Include="Libraries\AvatarUtilities.cs" />
     <Compile Include="Libraries\ButtonConfiguration.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />

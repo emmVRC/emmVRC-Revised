@@ -51,6 +51,7 @@ namespace emmVRC.Objects
         public int PlayerActionsButtonY = 2;
 
         // Hack options
+
         // Sub section: Shortcut Menu
         public bool DisableReportWorldButton = false;
         public bool DisableEmojiButton = false;
