@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using emmVRC.Hacks;
 using MelonLoader;
 using UnityEngine;
-
+using VRC;
 
 namespace emmVRC.Libraries
 {
@@ -13,6 +13,8 @@ namespace emmVRC.Libraries
         private delegate void AvatarInstantiatedDelegate(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded);
         private static AvatarInstantiatedDelegate onAvatarInstantiatedDelegate;
         private static Harmony.HarmonyInstance instanceHarmony;
+        private static Action<Player> event1Action;
+        private static Action<Player> event2Action;
 
         public unsafe static void Initialize()
         {
@@ -49,7 +51,37 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogError("Station patching failed: " + ex.ToString());
             }
-
+            try
+            {
+                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_0.Method_Public_Void_UnityAction_1_T_0(new System.Action<Player>((Player plr) =>
+                {
+                    if (event1Action == null && event2Action == null)
+                    {
+                        event1Action = (Player plr2) => { NetworkManagerHooking.OnPlayerJoined(plr2); };
+                        event2Action = (Player plr3) => { NetworkManagerHooking.OnPlayerLeft(plr3); };
+                        event1Action.Invoke(plr);
+                    }
+                    else
+                    {
+                        event1Action.Invoke(plr);
+                    }
+                }));
+                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_0.Method_Public_Void_UnityAction_1_T_1(new System.Action<Player>((Player plr) => {
+                    if (event1Action == null && event2Action == null)
+                    {
+                        event2Action = (Player plr2) => { NetworkManagerHooking.OnPlayerJoined(plr2); };
+                        event1Action = (Player plr3) => { NetworkManagerHooking.OnPlayerLeft(plr3); };
+                        event2Action.Invoke(plr);
+                    }
+                    else
+                    {
+                        event2Action.Invoke(plr);
+                    }
+                }));
+            } catch (Exception ex)
+            {
+                emmVRCLoader.Logger.LogError("Network Manager hooking failed: " + ex.ToString());
+            }
         }
         
         private static bool PlayerCanUseStation(ref bool __result, VRC.Player __0, bool __1)

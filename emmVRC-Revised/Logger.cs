@@ -14,7 +14,7 @@ namespace emmVRCLoader
 
         internal static void Init()
         {
-            if (log == null)
+            /*if (log == null)
             {
                 string logFilePath = null;
                 logFilePath = Path.Combine(Environment.CurrentDirectory, ("Logs/" + fileprefix + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff") + ".log"));
@@ -45,7 +45,7 @@ namespace emmVRCLoader
                     Logger.LogError(ex.ToString());
                 }
             }
-            Log("[emmVRCLoader] Logger Initialized");
+            Log("[emmVRCLoader] Logger Initialized");*/
         }
 
 
@@ -53,7 +53,7 @@ namespace emmVRCLoader
 
         internal static void CleanOld(DirectoryInfo logDirInfo)
         {
-            FileInfo[] filetbl = logDirInfo.GetFiles(fileprefix + "*");
+            /*FileInfo[] filetbl = logDirInfo.GetFiles(fileprefix + "*");
             if (filetbl.Length > 0)
             {
                 List<FileInfo> filelist = filetbl.ToList().OrderBy(x => x.LastWriteTime).ToList();
@@ -62,14 +62,14 @@ namespace emmVRCLoader
                     FileInfo file = filelist[i];
                     file.Delete();
                 }
-            }
+            }*/
         }
 
         internal static string GetTimestamp() { return DateTime.Now.ToString("HH:mm:ss.fff"); }
 
         public static void Log(string s)
         {
-            var normalConsoleColor = Console.ForegroundColor;
+            /*var normalConsoleColor = Console.ForegroundColor;
             var timestamp = GetTimestamp();
             Console.Write("[");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -80,15 +80,16 @@ namespace emmVRCLoader
             Console.Write("emmVRC");
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] " + s);
-            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] " + s);
+            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] " + s);*/
+            MelonLoader.MelonLogger.Log(s);
         }
 
         public static void Log(string s, params object[] args)
         {
-            var normalConsoleColor = Console.ForegroundColor;
-            var timestamp = GetTimestamp();
+            //var normalConsoleColor = Console.ForegroundColor;
+            //var timestamp = GetTimestamp();
             var formatted = string.Format(s, args);
-            Console.Write("[");
+            /*Console.Write("[");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(timestamp);
             Console.ForegroundColor = normalConsoleColor;
@@ -97,7 +98,8 @@ namespace emmVRCLoader
             Console.Write("emmVRC");
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] "+ s, args);
-            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] " + formatted);
+            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] " + formatted);*/
+            MelonLoader.MelonLogger.Log(formatted);
         }
 
         public static void LogError(string s)
@@ -105,7 +107,7 @@ namespace emmVRCLoader
             var normalConsoleColor = Console.ForegroundColor;
             if (errorCount < 255)
             {
-                var timestamp = GetTimestamp();
+                /*var timestamp = GetTimestamp();
                 Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(timestamp);
@@ -119,12 +121,13 @@ namespace emmVRCLoader
                 Console.Write("Error");
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] "+ s);
-                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] " + s);
+                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] " + s);*/
+                MelonLoader.MelonLogger.LogError(s);
                 errorCount++;
             }
             if (errorCount == 255)
             {
-                var timestamp = GetTimestamp();
+                /*var timestamp = GetTimestamp();
                 Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(timestamp);
@@ -138,7 +141,8 @@ namespace emmVRCLoader
                 Console.Write("Error");
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] The console error limit has been reached. Please report this issue to Emilia!");
-                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] The log file error limit has been reached. Please report this issue to Emilia!");
+                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] The log file error limit has been reached. Please report this issue to Emilia!");*/
+                MelonLoader.MelonLogger.LogError("The error limit has been reached. Please report this issue to Emilia!");
                 errorCount++;
             }
         }
@@ -150,7 +154,7 @@ namespace emmVRCLoader
             {
                 var timestamp = GetTimestamp();
                 var formatted = string.Format(s, args);
-                Console.Write("[");
+                /*Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(timestamp);
                 Console.ForegroundColor = normalConsoleColor;
@@ -163,12 +167,13 @@ namespace emmVRCLoader
                 Console.Write("Error");
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] " + formatted);
-                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] " + formatted);
+                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] " + formatted);*/
+                MelonLoader.MelonLogger.LogError(formatted);
                 errorCount++;
             }
             if (errorCount == 255)
             {
-                var timestamp = GetTimestamp();
+                /*var timestamp = GetTimestamp();
                 Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(timestamp);
@@ -182,14 +187,15 @@ namespace emmVRCLoader
                 Console.Write("Error");
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] The console error limit has been reached. Please report this issue to Emilia!");
-                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] The log file error limit has been reached. Please report this issue to Emilia!");
+                if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] The log file error limit has been reached. Please report this issue to Emilia!");*/
+                MelonLoader.MelonLogger.LogError("The error limit has been reached. Please report this issue to Emilia!");
                 errorCount++;
             }
         }
         public static void LogDebug(string s)
         {
             if (!Environment.CommandLine.Contains("--emmvrc.debug")) return;
-            var normalConsoleColor = Console.ForegroundColor;
+            /*var normalConsoleColor = Console.ForegroundColor;
             var timestamp = GetTimestamp();
             Console.Write("[");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -204,16 +210,17 @@ namespace emmVRCLoader
             Console.Write("Debug");
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] " + s);
-            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Debug] " + s);
+            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Debug] " + s);*/
+            MelonLoader.MelonLogger.Log("[Debug] " + s);
         }
 
         public static void LogDebug(string s, params object[] args)
         {
             if (!Environment.CommandLine.Contains("--emmvrc.debug")) return;
-            var normalConsoleColor = Console.ForegroundColor;
-            var timestamp = GetTimestamp();
+            //var normalConsoleColor = Console.ForegroundColor;
+            //var timestamp = GetTimestamp();
             var formatted = string.Format(s, args);
-            Console.Write("[");
+            /*Console.Write("[");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(timestamp);
             Console.ForegroundColor = normalConsoleColor;
@@ -226,7 +233,8 @@ namespace emmVRCLoader
             Console.Write("Debug");
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] " + s, args);
-            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Debug] " + formatted);
+            if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Debug] " + formatted);*/
+            MelonLoader.MelonLogger.Log("[Debug] " + formatted);
         }
     }
 }

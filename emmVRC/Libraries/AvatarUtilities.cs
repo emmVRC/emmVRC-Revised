@@ -34,11 +34,10 @@ namespace emmVRC.Libraries
                 else
                     errored = true;
                 yield return new WaitForSeconds(1f);
-               
             }
             CustomAvatarFavorites.MigrateButton.SetActive(false);
+            File.Move(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json"), Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.old.json"));
             Managers.NotificationManager.AddNotification("Your avatars have been migrated" + (errored ? ", but one or more of your avatars are no longer available. They may have been privated or deleted." : " successfully."), "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
-
         }
         public static IEnumerator fetchAvatars(List<string> avatars, Action<List<ApiAvatar>, bool> callBack)
         {
@@ -50,29 +49,23 @@ namespace emmVRC.Libraries
                 while (!requestFinished)
                     yield return new WaitForEndOfFrame();
                 requestFinished = false;
-                emmVRCLoader.Logger.LogDebug("Starting API request");
                 API.Fetch<ApiAvatar>(avatarId, new Action<ApiContainer>((ApiContainer container) =>
                 {
-                    emmVRCLoader.Logger.LogDebug("API request finished!");
                     processingList.Add(container.Model.Cast<ApiAvatar>());
                     MelonLoader.MelonCoroutines.Start(Delay());
                 }), new Action<ApiContainer>((ApiContainer container) =>
                 {
-                    emmVRCLoader.Logger.LogDebug("API request failed.");
                     errored = true;
                     MelonLoader.MelonCoroutines.Start(Delay());
                 }));
             }
             while (!requestFinished)
                 yield return new WaitForEndOfFrame();
-            emmVRCLoader.Logger.LogDebug("Request finished. Calling callback...");
             callBack.Invoke(processingList, errored);
         }
         public static IEnumerator Delay()
         {
-            emmVRCLoader.Logger.LogDebug("Waiting 2.5 seconds...");
             yield return new WaitForSeconds(2.5f);
-            emmVRCLoader.Logger.LogDebug("Done waiting.");
             requestFinished = true;
         }
     }

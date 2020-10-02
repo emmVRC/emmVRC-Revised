@@ -155,6 +155,9 @@ namespace emmVRC
                 // Initialize the World Instance History menu
                 Menus.InstanceHistoryMenu.Initialize();
 
+                // Initialize the Player History menu
+                Menus.PlayerHistoryMenu.Initialize();
+
                 // Initialize the "Settings" menu
                 emmVRCLoader.Logger.LogDebug("Initializing Settings menu...");
                 Menus.SettingsMenu.Initialize();
@@ -316,6 +319,7 @@ namespace emmVRC
                         Configuration.SaveConfig();
                         Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
                     }
+                    PlayerHistoryMenu.currentPlayersNames = new System.Collections.Generic.List<string>();
 
                 }));
 
@@ -367,6 +371,48 @@ namespace emmVRC
                         }
                     },
                     Name = "Get\nAvatar\nParameters"
+                });
+
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () => {
+                        PlayerHistoryMenu.currentPlayersNames = new System.Collections.Generic.List<string>();
+                        
+                        Analysis.LogXrefResults(typeof(VRCUiManager).GetMethod("Method_Public_VRCUiPage_VRCUiPage_1"), new System.Collections.Generic.List<Type> { typeof(string) });
+                    }
+                });
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha1,
+                    ActionAction = () => {
+                        emmVRCLoader.Logger.Log("Player joined: LusciousNight");
+                        PlayerHistoryMenu.currentPlayersNames.Add("LusciousNight");
+                    }
+                });
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha2,
+                    ActionAction = () => {
+                        emmVRCLoader.Logger.Log("Player joined: tupper");
+                        PlayerHistoryMenu.currentPlayersNames.Add("tupper");
+                    }
+                });
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha3,
+                    ActionAction = () => {
+                        emmVRCLoader.Logger.Log("Player joined: VRPill");
+                        PlayerHistoryMenu.currentPlayersNames.Add("VRPill");
+                    }
+                });
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha4,
+                    ActionAction = () => {
+                        emmVRCLoader.Logger.Log("Player joined: Ron");
+                        PlayerHistoryMenu.currentPlayersNames.Add("Ron");
+                    }
                 });
                 /*DebugManager.DebugActions.Add(new DebugAction
                 {

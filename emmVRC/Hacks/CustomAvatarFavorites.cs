@@ -111,10 +111,10 @@ namespace emmVRC.Hacks
                     }
                     if (ids.Count > 0)
                     {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your avatars are being migrated. This may take a few minutes.", "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your avatars are being migrated in the background. This may take a few minutes. Please do not close VRChat.", "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                         MigrateButton.GetComponentInChildren<Button>().enabled = false;
                         MigrateButton.GetComponentInChildren<Text>().text = "Migrating...";
-                        
+
                         MelonLoader.MelonCoroutines.Start(AvatarUtilities.fetchAvatars(ids, (System.Collections.Generic.List<ApiAvatar> avatars, bool errored) =>
                         {
                             MelonLoader.MelonCoroutines.Start(AvatarUtilities.FavoriteAvatars(avatars, errored));
@@ -124,10 +124,14 @@ namespace emmVRC.Hacks
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 });
             }));
-            if (File.Exists(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json")) && NetworkClient.authToken != null)
+            if (File.Exists(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json")))
             {
                 MigrateButton.SetActive(true);
                 MigrateButton.GetComponentInChildren<Button>().enabled = true;
+            }
+            else
+            {
+                MigrateButton.SetActive(false);
             }
 
             GameObject oldPublicAvatarList;
@@ -141,7 +145,8 @@ namespace emmVRC.Hacks
             ChangeButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
             {
                 ApiAvatar selectedAvatar = pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0;
-                if (NetworkConfig.Instance.APICallsAllowed) {
+                if (NetworkConfig.Instance.APICallsAllowed && !selectedAvatar.id.Contains("local"))
+                {
                     API.Fetch<ApiAvatar>(selectedAvatar.id, new System.Action<ApiContainer>((ApiContainer cont) => {
                         ApiAvatar fetchedAvatar = cont.Model.Cast<ApiAvatar>();
                         if (fetchedAvatar.releaseStatus == "private" && fetchedAvatar.authorId != APIUser.CurrentUser.id && fetchedAvatar.authorName != "tafi_licensed")
@@ -230,7 +235,8 @@ namespace emmVRC.Hacks
                     emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                 }
-            } else
+            }
+            else
             {
                 emmVRCLoader.Logger.LogDebug("Tried to add an avatar that already exists...");
             }
@@ -394,7 +400,7 @@ namespace emmVRC.Hacks
             {
                 NewAvatarList.collapsedCount = 500;
                 NewAvatarList.expandedCount = 500;
-                
+
 
                 /*if (!PublicAvatarList.activeInHierarchy)
                 {

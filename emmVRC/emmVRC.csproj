@@ -83,6 +83,7 @@
     <Compile Include="Libraries\MainMenuUtils.cs" />
     <Compile Include="Libraries\MediaControl.cs" />
     <Compile Include="Libraries\ModCompatibility.cs" />
+    <Compile Include="Libraries\NetworkManagerHooking.cs" />
     <Compile Include="Libraries\Reflections.cs" />
     <Compile Include="Libraries\TextDisplayMenu.cs" />
     <Compile Include="Libraries\PaginatedMenu.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Menus\CreditsMenu.cs" />
     <Compile Include="Menus\DebugMenu.cs" />
     <Compile Include="Menus\FlashlightMenu.cs" />
+    <Compile Include="Menus\PlayerHistoryMenu.cs" />
     <Compile Include="Menus\VRHUD.cs" />
     <Compile Include="Menus\DesktopHUD.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />

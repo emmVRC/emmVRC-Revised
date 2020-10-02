@@ -31,6 +31,7 @@ namespace emmVRC.Objects
         public bool ForceRestartButtonEnabled = true;
         public bool PortalBlockingEnable = false;
         public bool ChairBlockingEnable = false;
+        public bool PlayerHistoryEnable = false;
 
         // FOV value
         public int CustomFOV = 60;

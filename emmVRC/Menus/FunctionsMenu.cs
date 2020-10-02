@@ -22,6 +22,7 @@ namespace emmVRC.Menus
         private static PageItem instanceHistoryButton;
         private static PageItem disabledButtonsButton;
         private static PageItem programsButton;
+        private static PageItem playerHistoryButton;
         private static PageItem settingsButton;
         private static PageItem creditsButton;
         private static PageItem changelogButton;
@@ -54,12 +55,15 @@ namespace emmVRC.Menus
             programsButton = new PageItem("Programs", () => { ProgramMenu.baseMenu.OpenMenu(); }, "Lets you launch external programs from within VRChat.");
             baseMenu.pageItems.Add(programsButton);
 
+            playerHistoryButton = new PageItem("Player\nHistory", () => { PlayerHistoryMenu.ShowMenu(); }, "Allows you to view players who have entered this instance since you joined");
+            baseMenu.pageItems.Add(playerHistoryButton);
+
             // Add the Settings button
             settingsButton = new PageItem("Settings", () => {
                 SettingsMenu.LoadMenu();
             }, "Access the Settings for emmVRC, including Risky Functions, color changes, etc.");
             baseMenu.pageItems.Add(settingsButton);
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i <= 4; i++)
             {
                 baseMenu.pageItems.Add(PageItem.Space);
             }
