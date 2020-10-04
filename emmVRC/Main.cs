@@ -341,7 +341,7 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
 
-                DebugManager.DebugActions.Add(new DebugAction
+                /*DebugManager.DebugActions.Add(new DebugAction
                 {
                     ActionAction = () =>
                     {
@@ -371,61 +371,6 @@ namespace emmVRC
                         }
                     },
                     Name = "Get\nAvatar\nParameters"
-                });
-
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () => {
-                        PlayerHistoryMenu.currentPlayersNames = new System.Collections.Generic.List<string>();
-                        
-                        Analysis.LogXrefResults(typeof(VRCUiManager).GetMethod("Method_Public_VRCUiPage_VRCUiPage_1"), new System.Collections.Generic.List<Type> { typeof(string) });
-                    }
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha1,
-                    ActionAction = () => {
-                        emmVRCLoader.Logger.Log("Player joined: LusciousNight");
-                        PlayerHistoryMenu.currentPlayersNames.Add("LusciousNight");
-                    }
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha2,
-                    ActionAction = () => {
-                        emmVRCLoader.Logger.Log("Player joined: tupper");
-                        PlayerHistoryMenu.currentPlayersNames.Add("tupper");
-                    }
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha3,
-                    ActionAction = () => {
-                        emmVRCLoader.Logger.Log("Player joined: VRPill");
-                        PlayerHistoryMenu.currentPlayersNames.Add("VRPill");
-                    }
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha4,
-                    ActionAction = () => {
-                        emmVRCLoader.Logger.Log("Player joined: Ron");
-                        PlayerHistoryMenu.currentPlayersNames.Add("Ron");
-                    }
-                });
-                /*DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () =>
-                    {
-                        Hacks.CustomMainMenuPage page = new CustomMainMenuPage("Test Menu");
-                        page.CreateButton("Test", new Vector2(0f, 0.1f), () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "Button pressed", 1000f); });
-                        page.CreateCheckbox("Test", new Vector2(0f, 0.2f), (bool checkBox) => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "Checkbox: "+checkBox, 1000f); });
-
-                        //customButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(128f, 256f);
-                        Hacks.CustomMainMenuPage.ShowCustomMenu(page);
-                    }
                 });*/
 
                 // Debug actions need to go before this
