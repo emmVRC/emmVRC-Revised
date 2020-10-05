@@ -220,6 +220,9 @@ namespace emmVRC
                 // Initialize the Quick Menu status
                 Hacks.InfoBarStatus.Initialize();
 
+                // Initialize the FBT saving system
+                Hacks.FBTSaving.Initialize();
+
                 // Initialize the Flight and Noclip module for Risky Functions
                 Hacks.Flight.Initialize();
 
@@ -340,38 +343,6 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
-
-                /*DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionAction = () =>
-                    {
-                        System.Collections.Generic.List<string> crap = new System.Collections.Generic.List<string> { "Viseme", "GestureLeft", "GestureLeftWeight", "GestureRight", "GestureRightWeight", "VelocityX", "VelocityY", "VelocityZ", "AngularY", "Grounded", "Seated", "Upright", "Supine", "GroundProximity", "AFK", "IsLocal", "VRCEmote", "VRCFaceBlendH", "VRCFaceBlendV" };
-                        VRCPlayer selectedPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
-                        if (selectedPlayer.prop_VRCAvatarManager_0.field_Private_AvatarPlayableController_0.field_Private_Dictionary_2_Int32_ObjectPublicAnStInObLi1BoInSiBoUnique_0 != null)
-                        {
-
-                            foreach (var thing in selectedPlayer.prop_VRCAvatarManager_0.field_Private_AvatarPlayableController_0.field_Private_Dictionary_2_Int32_ObjectPublicAnStInObLi1BoInSiBoUnique_0)
-                            {
-                                if (crap.IndexOf(thing.value.prop_String_0) == -1)
-                                {
-                                    emmVRCLoader.Logger.LogDebug("Parameter name: " + thing.value.prop_String_0);
-                                    switch (thing.value.field_Private_EnumNPublicSealedvaUnBoInFl5vUnique_0)
-                                    {
-                                        case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Float:
-                                            emmVRCLoader.Logger.Log("Type: Float");
-                                            emmVRCLoader.Logger.Log("Value: " + thing.value.prop_Single_0 + "f");
-                                            break;
-                                        case ObjectPublicAnStInObLi1BoInSiBoUnique.EnumNPublicSealedvaUnBoInFl5vUnique.Int:
-                                            emmVRCLoader.Logger.Log("Type: Int");
-                                            emmVRCLoader.Logger.Log("Value: " + thing.value.prop_Int32_1);
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    Name = "Get\nAvatar\nParameters"
-                });*/
 
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();

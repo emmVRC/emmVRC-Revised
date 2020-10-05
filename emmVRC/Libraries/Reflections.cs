@@ -154,5 +154,66 @@ namespace emmVRC.Libraries
             ApplyParametersAct.Invoke(instance, value);
         }
         #endregion
+
+        #region VRCTrackingManager GetPlayerHeight
+        private static MethodInfo ourGetPlayerHeightMethod;
+        public static MethodInfo getPlayerHeightMethod {
+            get
+            {
+                if (ourGetPlayerHeightMethod != null) return ourGetPlayerHeightMethod;
+                var targetMethod = typeof(VRCTrackingManager).GetMethods()
+                    .Single(it => it != null && it.ReturnType == typeof(Single) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "PlayerHeight"));
+                ourGetPlayerHeightMethod = targetMethod;
+                return ourGetPlayerHeightMethod;
+            }
+        }
+
+        public static Single GetPlayerHeight(this VRCTrackingManager instance)
+        {
+            return (Single)getPlayerHeightMethod.Invoke(instance, null);
+        }
+        #endregion
+
+        #region VRCTrackingManager SetPlayerHeight
+        private static MethodInfo ourSetPlayerHeightMethod;
+        public static MethodInfo SetPlayerHeightMethod
+        {
+            get
+            {
+                if (ourSetPlayerHeightMethod != null) return ourSetPlayerHeightMethod;
+                var targetMethod = typeof(VRCTrackingManager).GetMethods()
+                    .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(Single) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "PlayerHeight"));
+                ourSetPlayerHeightMethod = targetMethod;
+                return ourSetPlayerHeightMethod;
+            }
+        }
+
+        public static void SetPlayerHeight(this VRCTrackingManager instance, float height)
+        {
+            SetPlayerHeightMethod.Invoke(instance, new object[]{ height });
+        }
+        #endregion
+
+        #region VRCTrackingManager SetControllerVisibility
+        private static MethodInfo ourSetControllerVisibilityMethod;
+        public static MethodInfo SetControllerVisibilityMethod
+        {
+            get
+            {
+                if (ourSetControllerVisibilityMethod != null) return ourSetControllerVisibilityMethod;
+                XrefScanMethodDb.RegisterType(typeof(VRCTracking));
+                var targetMethod = typeof(VRCTrackingManager).GetMethods()
+                    .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(bool) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType != null && jt.TryResolve().ReflectedType.Name == "Whiteboard"));
+                ourSetControllerVisibilityMethod = targetMethod;
+                return ourSetControllerVisibilityMethod;
+            }
+        }
+
+        public static void SetControllerVisibility(this VRCTrackingManager instance, bool value)
+        {
+            SetControllerVisibilityMethod.Invoke(instance, new object[] { value });
+        }
+        #endregion
+
     }
 }

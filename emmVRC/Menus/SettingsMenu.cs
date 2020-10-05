@@ -30,6 +30,7 @@ namespace emmVRC.Menus
         private static PageItem GlobalChat;
         private static PageItem AvatarFavoriteList;
         private static PageItem UIExpansionKitIntegration;
+        private static PageItem TrackingSaving;
 
         // Page 2
         private static PageItem InfoBar;
@@ -307,6 +308,15 @@ namespace emmVRC.Menus
                     ModCompatibility.ESPButton.SetActive(false);
                 RefreshMenu();
             }, "TOGGLE: Shows the Risky Functions buttons in the UI Expansion Kit menu", ModCompatibility.UIExpansionKit);
+            TrackingSaving = new PageItem("Calibration\nSaving", () =>
+            {
+                Configuration.JSONConfig.TrackingSaving = true;
+                Configuration.SaveConfig();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.TrackingSaving = false;
+                Configuration.SaveConfig();
+            }, "TOGGLE: Saves calibration between avatar switches for Full Body Tracking");
             baseMenu.pageItems.Add(RiskyFunctions);
             baseMenu.pageItems.Add(emmVRCNetwork);
             baseMenu.pageItems.Add(AvatarFavoriteList);
@@ -317,7 +327,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(VRFlightControls);
             //baseMenu.pageItems.Add(GlobalChat);
             baseMenu.pageItems.Add(UIExpansionKitIntegration);
-            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(TrackingSaving);
 
             InfoBar = new PageItem("Info Bar", () =>
             {
@@ -1081,6 +1091,7 @@ namespace emmVRC.Menus
                 GlobalChat.SetToggleState(Configuration.JSONConfig.GlobalChatEnabled);
                 AvatarFavoriteList.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);
                 UIExpansionKitIntegration.SetToggleState(Configuration.JSONConfig.UIExpansionKitIntegration);
+                TrackingSaving.SetToggleState(Configuration.JSONConfig.TrackingSaving);
                 
                 InfoBar.SetToggleState(Configuration.JSONConfig.InfoBarDisplayEnabled);
                 Clock.SetToggleState(Configuration.JSONConfig.ClockEnabled);

@@ -44,6 +44,7 @@
     <Compile Include="Hacks\CustomWorldObjects.cs" />
     <Compile Include="Hacks\EmoteMenuReborn.cs" />
     <Compile Include="Hacks\ESP.cs" />
+    <Compile Include="Hacks\FBTSaving.cs" />
     <Compile Include="Hacks\Flight.cs" />
     <Compile Include="Hacks\FOV.cs" />
     <Compile Include="Hacks\FPS.cs" />

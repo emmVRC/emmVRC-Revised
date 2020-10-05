@@ -32,6 +32,7 @@ namespace emmVRC.Objects
         public bool PortalBlockingEnable = false;
         public bool ChairBlockingEnable = false;
         public bool PlayerHistoryEnable = false;
+        public bool TrackingSaving = true;
 
         // FOV value
         public int CustomFOV = 60;
