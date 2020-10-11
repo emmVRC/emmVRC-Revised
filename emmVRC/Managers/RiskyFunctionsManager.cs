@@ -95,7 +95,10 @@ namespace emmVRC.Managers
                 // If the temp flag isn't set, perform the tag check
                 if (!temp)
                 {
-                    if (RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_game") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_games") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("author_tag_club") != -1 || RoomManager.field_Internal_Static_ApiWorld_0.tags.IndexOf("admin_game") != -1)
+                    List<string> lowerTags = new List<string>();
+                    foreach (string str in RoomManager.field_Internal_Static_ApiWorld_0.tags)
+                        lowerTags.Add(str.ToLower());
+                    if (lowerTags.IndexOf("author_tag_game") != -1 || lowerTags.IndexOf("author_tag_games") != -1 || lowerTags.IndexOf("author_tag_club") != -1 || lowerTags.IndexOf("admin_game") != -1)
                     {
                         RiskyFunctionsAllowed = false;
                     }
@@ -103,6 +106,7 @@ namespace emmVRC.Managers
                     {
                         RiskyFunctionsAllowed = true;
                     }
+                    lowerTags.Clear();
                 }
                 // Now have Risky Functions reprocess based on this result
                 RiskyFunctionsChecked = false;

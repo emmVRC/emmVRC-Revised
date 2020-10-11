@@ -95,6 +95,7 @@ namespace emmVRC.Objects
         public bool InfoHidingEnabled = false;
 
         // One-timers
+        public string AcceptedEULAVersion = "0.0.0";
         public bool WelcomeMessageShown = false;
         public bool RiskyFunctionsWarningShown = false;
 

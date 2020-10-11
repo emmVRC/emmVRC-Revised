@@ -301,7 +301,7 @@ namespace emmVRC
                     Menus.FlashlightMenu.toggleFlashlight.setToggleState(false);
 
                     MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
-
+                    MelonLoader.MelonCoroutines.Start(EULA.Initialize());
                     // Ensure that everything through here is after the game has loaded
                     // Reset the instance clock when you switch instances
                     MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
@@ -344,6 +344,16 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
 
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    Name = "Hide\nPersonal\nAvatars",
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Personal Avatar List").gameObject.SetActive(false); 
+                    }
+                });
+
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();
             }
@@ -372,7 +382,7 @@ namespace emmVRC
                 }
             }
 
-
+            
             Hacks.CustomAvatarFavorites.OnUpdate();
         }
         public static void OnApplicationQuit()

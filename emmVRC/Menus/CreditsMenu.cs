@@ -29,11 +29,11 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("DltDat", null, "Developer of the hooking method used for various functions across emmVRC"));
             baseMenu.pageItems.Add(new PageItem("SupahMario", null, "Major supporter and moderator"));
             baseMenu.pageItems.Add(new PageItem("404", null, "Major helper and mod developer"));
-            for (int i = 0; i < 7; i++)
+            /*for (int i = 0; i < 7; i++)
                 baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(new PageItem("Licenses", () => { 
             
-            }, "Licenses for the components used in emmVRC"));
+            }, "Licenses for the components used in emmVRC"));*/
         }
     }
 }
