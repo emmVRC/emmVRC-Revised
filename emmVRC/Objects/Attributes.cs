@@ -18,6 +18,7 @@ namespace emmVRC.Objects
             "<color=#FF6347>This is an pre-release build! Do not distribute to others.</color>\n\n" +
             "There are too many changes to list here! However, here\n" +
             "are the highlights:\n" +
+            "• Oculus support\n" +
             "• Mod compatibility modules\n" +
             "• User List refresh button\n" +
             "• Avatar 3.0 Parameter saving\n" +

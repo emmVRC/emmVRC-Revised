@@ -34,7 +34,7 @@ namespace emmVRC.Libraries
                     {
                         File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt"), new string[] { eulaDownload.Result });
                         yield return new WaitForSeconds(2.5f);
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Please read the EULA for emmVRC.\n\nThis will open on your desktop.", "Open EULA", () => { System.Diagnostics.Process.Start(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt")); }, "Agree", () => { Configuration.JSONConfig.AcceptedEULAVersion = Attributes.Version; Configuration.SaveConfig(); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Please read the EULA for emmVRC.\nThis will open on your desktop.", "Open EULA", () => { System.Diagnostics.Process.Start(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt")); }, "Agree", () => { Configuration.JSONConfig.AcceptedEULAVersion = Attributes.Version; Configuration.SaveConfig(); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                         EULADownloaded = true;
                     }
                 }
