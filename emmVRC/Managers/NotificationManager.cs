@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,30 +87,8 @@ namespace emmVRC.Managers
                     try
                     {
                         // Change icon and button visibility, if there is a notification
-                        if (Notifications.Count > 0)
-                        {
-                            // Checking if a vanilla icon (such as an invite) is already present, to avoid overlapping
-                            bool vanillaIconsActive = false;
-                            foreach (GameObject icon in VanillaIcons)
-                                if (icon.activeSelf)
-                                    vanillaIconsActive = true;
-                            if (!vanillaIconsActive)
-                                NotificationIcon.SetActive(true);
-                            else
-                                NotificationIcon.SetActive(false);
-                            // Set up the notification icon
-                            NotificationIcon.GetComponent<Image>().sprite = Notifications[0].Icon;
+                        MelonLoader.MelonCoroutines.Start(UpdateButton());
 
-                            NotificationMenu.getMainButton().setActive(true);
-                            NotificationMenu.getMainButton().setButtonText((blink ? "<color=#FF69B4>" + Notifications.Count + "</color>" : "" + Notifications.Count) + "\nemmVRC\nNotifications");
-                            NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!" + (Notifications[0].Timeout != -1 ? " This notification will expire in " + Notifications[0].Timeout + " seconds." : ""));
-                        }
-                        else
-                        {
-                            NotificationIcon.SetActive(false);
-                            NotificationMenu.getMainButton().setActive(false);
-                            notificationActiveTimer = 0;
-                        }
 
                         if (Notifications.Count > 0 && Notifications[0].Timeout != -1)
                         {
@@ -130,7 +109,37 @@ namespace emmVRC.Managers
                 }
             }
         }
+        public static IEnumerator UpdateButton()
+        {
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null) {
+                yield return new WaitForEndOfFrame();
+            }
+            if (Notifications.Count > 0)
+            {
+                // Checking if a vanilla icon (such as an invite) is already present, to avoid overlapping
+                bool vanillaIconsActive = false;
+                foreach (GameObject icon in VanillaIcons)
+                    if (icon.activeSelf)
+                        vanillaIconsActive = true;
+                if (!vanillaIconsActive)
+                    NotificationIcon.SetActive(true);
+                else
+                    NotificationIcon.SetActive(false);
+                // Set up the notification icon
+                NotificationIcon.GetComponent<Image>().sprite = Notifications[0].Icon;
 
+                NotificationMenu.getMainButton().setActive(true);
+                NotificationMenu.getMainButton().setButtonText((blink ? "<color=#FF69B4>" + Notifications.Count + "</color>" : "" + Notifications.Count) + "\nemmVRC\nNotifications");
+                NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!" + (Notifications[0].Timeout != -1 ? " This notification will expire in " + Notifications[0].Timeout + " seconds." : ""));
+            }
+            else
+            {
+                NotificationIcon.SetActive(false);
+                NotificationMenu.getMainButton().setActive(false);
+                notificationActiveTimer = 0;
+            }
+            
+        }
         public static void AddNotification(string text, string button1Text, System.Action button1Action, string button2Text, System.Action button2Action, Sprite notificationIcon = null, int timeout = -1)
         {
             Notification newNotification = new Notification()

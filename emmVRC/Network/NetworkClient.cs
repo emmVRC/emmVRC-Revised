@@ -187,22 +187,29 @@ namespace emmVRC.Network
             {
                 if (response.ToLower().Contains("unauthorized"))
                 {
-                    //emmVRCLoader.Logger.LogDebug("Password: " + password);
-                    if (keyFileTried && Authentication.Authentication.Exists(APIUser.CurrentUser.id))
-                        Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
-                    if (userIDTried && !keyFileTried)
+                    if (response.ToLower().Contains("banned"))
                     {
-                        sendRequest();
-                        keyFileTried = true;
-                    }
-                    else if (userIDTried && keyFileTried && password != "" && !passwordTried && !NetworkConfig.Instance.DisableAuthFile && !NetworkConfig.Instance.DeleteAndDisableAuthFile)
-                    {
-                        sendRequest(password);
-                        passwordTried = true;
+                        Managers.NotificationManager.AddNotification("You cannot connect to the emmVRC Network because you are banned.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
                     }
                     else
                     {
-                        Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                        //emmVRCLoader.Logger.LogDebug("Password: " + password);
+                        if (keyFileTried && Authentication.Authentication.Exists(APIUser.CurrentUser.id))
+                            Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
+                        if (userIDTried && !keyFileTried)
+                        {
+                            sendRequest();
+                            keyFileTried = true;
+                        }
+                        else if (userIDTried && keyFileTried && password != "" && !passwordTried && !NetworkConfig.Instance.DisableAuthFile && !NetworkConfig.Instance.DeleteAndDisableAuthFile)
+                        {
+                            sendRequest(password);
+                            passwordTried = true;
+                        }
+                        else
+                        {
+                            Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                        }
                     }
                 }
                 else if (response.ToLower().Contains("forbidden"))
