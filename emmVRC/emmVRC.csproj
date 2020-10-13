@@ -147,7 +147,6 @@
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
     <Compile Include="Objects\emmVRCPanel.cs" />
-    <Compile Include="Objects\Eula.cs" />
     <Compile Include="Objects\NetworkConfig.cs" />
     <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Program.cs" />

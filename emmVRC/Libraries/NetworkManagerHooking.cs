@@ -11,16 +11,17 @@ namespace emmVRC.Libraries
 {
     public class NetworkManagerHooking
     {
-        public static void OnPlayerJoined(Player plr)
+        public static void OnPlayerJoined(VRC.Player plr)
         {
            
             if (Configuration.JSONConfig.PlayerHistoryEnable && plr.field_Private_APIUser_0 != null && plr.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
             {
-                PlayerHistoryMenu.currentPlayersNames.Add(plr.field_Private_APIUser_0.displayName);
+
+                PlayerHistoryMenu.currentPlayers.Add(new InstancePlayer { Name = plr.field_Private_APIUser_0.displayName, UserID = plr.field_Private_APIUser_0.id });
                 emmVRCLoader.Logger.Log("Player joined: " + plr.field_Private_APIUser_0.displayName);
             }
         }
-        public static void OnPlayerLeft(Player plr)
+        public static void OnPlayerLeft(VRC.Player plr)
         {
             if (Configuration.JSONConfig.PlayerHistoryEnable)
             {

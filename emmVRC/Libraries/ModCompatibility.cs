@@ -21,6 +21,7 @@ namespace emmVRC.Libraries
         public static bool MControl = false;
         public static bool OGTrustRank = false;
         public static bool UIExpansionKit = false;
+        public static bool FBTSaver = false;
 
         public static GameObject FlightButton;
         public static GameObject NoclipButton;
@@ -38,6 +39,8 @@ namespace emmVRC.Libraries
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "OGTrustRanks") != -1)
                 OGTrustRank = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "UI Expansion Kit") != -1)
+                UIExpansionKit = true;
+            if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "FBT Saver") != -1)
                 UIExpansionKit = true;
 
             if (MultiplayerDynamicBones)
@@ -67,8 +70,13 @@ namespace emmVRC.Libraries
                                 if (RiskyFunctionsManager.RiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                         PlayerTweaksMenu.ESPToggle.setToggleState(!ESP.ESPEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { ESPButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
+                if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
                     MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterWaitConditionBeforeDecorating", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { ColorUIExpansionKit() });
 
+            }
+            if (FBTSaver)
+            {
+                emmVRCLoader.Logger.LogDebug("Detected FBTSaver");
             }
         }
         public static IEnumerator ColorUIExpansionKit()

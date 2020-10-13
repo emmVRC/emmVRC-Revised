@@ -58,6 +58,7 @@ namespace emmVRC.Menus
         private static PageItem UIActionMenuColorChanging;
         private static PageItem UIMicIconColorChanging;
         private static PageItem UIMicIconPulse;
+        private static PageItem UIExpansionKitColorChanging;
         private static PageItem InfoSpoofing;
         private static PageItem InfoHiding;
         private static PageItem InfoSpooferNamePicker;
@@ -326,8 +327,14 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(VRFlightControls);
             //baseMenu.pageItems.Add(GlobalChat);
-            baseMenu.pageItems.Add(UIExpansionKitIntegration);
-            baseMenu.pageItems.Add(TrackingSaving);
+            if (!ModCompatibility.FBTSaver)
+                baseMenu.pageItems.Add(TrackingSaving);
+            else
+                baseMenu.pageItems.Add(PageItem.Space);
+            if (ModCompatibility.UIExpansionKit)
+                baseMenu.pageItems.Add(UIExpansionKitIntegration);
+            else
+                baseMenu.pageItems.Add(PageItem.Space);
 
             InfoBar = new PageItem("Info Bar", () =>
             {
@@ -581,6 +588,17 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 Hacks.ColorChanger.ApplyIfApplicable();
             }, "TOGGLE: Enables or disables VRChat's new pulsating effect on the Microphone icon");
+            UIExpansionKitColorChanging = new PageItem("UI Expansion\nKit Coloring", () => {
+                Configuration.JSONConfig.UIExpansionKitColorChangingEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("You must restart VRChat for your changes to apply");
+            }, "Disabled", () => {
+                Configuration.JSONConfig.UIExpansionKitColorChangingEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("You must restart VRChat for your changes to apply");
+            }, "TOGGLE: Enables changing the color of UIExpansionKit's menu. Requires a restart to apply");
             InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
             {
                 if (Configuration.JSONConfig.InfoHidingEnabled)
@@ -682,7 +700,10 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(UIActionMenuColorChanging);
             baseMenu.pageItems.Add(UIMicIconColorChanging);
             baseMenu.pageItems.Add(UIMicIconPulse);
-            baseMenu.pageItems.Add(PageItem.Space);
+            if (ModCompatibility.UIExpansionKit)
+                baseMenu.pageItems.Add(UIExpansionKitColorChanging);
+            else
+                baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(InfoSpoofing);
             baseMenu.pageItems.Add(InfoHiding);
             baseMenu.pageItems.Add(InfoSpooferNamePicker);
@@ -1107,6 +1128,7 @@ namespace emmVRC.Menus
                 UIActionMenuColorChanging.SetToggleState(Configuration.JSONConfig.UIActionMenuColorChangingEnabled);
                 UIMicIconColorChanging.SetToggleState(Configuration.JSONConfig.UIMicIconColorChangingEnabled);
                 UIMicIconPulse.SetToggleState(Configuration.JSONConfig.UIMicIconPulsingEnabled);
+                UIExpansionKitColorChanging.SetToggleState(Configuration.JSONConfig.UIExpansionKitColorChangingEnabled);
                 InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
                 InfoHiding.SetToggleState(Configuration.JSONConfig.InfoHidingEnabled);
                 InfoSpooferNamePicker.Name = "Set\nSpoofed\nName";

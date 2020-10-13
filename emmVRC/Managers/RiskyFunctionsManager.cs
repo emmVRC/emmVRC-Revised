@@ -7,13 +7,22 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using emmVRC.Network;
+using UnityEngine.UI;
+using emmVRC.Menus;
+
 namespace emmVRC.Managers
 {
     public class RiskyFunctionsManager
     {
-        public static bool RiskyFunctionsAllowed { get; private set; } = false;
-        public static bool RiskyFunctionsChecked = false;
+        private static bool riskyFuncsAllowed = false;
+        public static bool RiskyFunctionsAllowed { get { return riskyFuncsAllowed; } }
+        private static bool RiskyFunctionsChecked = false;
         public static Il2CppSystem.Action<string> worldTagsCheck = null;
+
+        private static Button FlightButton;
+        private static Button NoclipButton;
+        private static Button SpeedButton;
+        private static Button ESPButton;
 
         public static void Initialize()
         {
@@ -24,6 +33,7 @@ namespace emmVRC.Managers
         {
             while (true)
             {
+
                 // Check if we are in a world; if not, we need to wait until we are.
                 if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
@@ -40,8 +50,31 @@ namespace emmVRC.Managers
                             Menus.UserTweaksMenu.SetRiskyFunctions(false);
                         }
                         RiskyFunctionsChecked = true;
-
                     }
+                    try
+                    {
+                        // This does stuff
+                        if (FlightButton == null)
+                            FlightButton = PlayerTweaksMenu.FlightToggle.getGameObject().GetComponent<Button>();
+                        else if (NoclipButton == null)
+                            NoclipButton = PlayerTweaksMenu.NoclipToggle.getGameObject().GetComponent<Button>();
+                        else if (SpeedButton == null)
+                            SpeedButton = PlayerTweaksMenu.SpeedToggle.getGameObject().GetComponent<Button>();
+                        else if (ESPButton == null)
+                            ESPButton = PlayerTweaksMenu.ESPToggle.getGameObject().GetComponent<Button>();
+                        else
+                        {
+                            if ((FlightButton.enabled || NoclipButton.enabled || SpeedButton.enabled || ESPButton.enabled) && (!RiskyFunctionsAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled))
+                            {
+                                RiskyFunctionsChecked = false;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError(ex.ToString());
+                    }
+                    
                 }
                 yield return new WaitForEndOfFrame();
             }
@@ -55,7 +88,7 @@ namespace emmVRC.Managers
             // Check if we are in a VRCSDK3 world, or if Risky Functions are even on; Risky Functions are (currently) not compatible with VRCSDK3 worlds, so we will not enable risky functions if this is the case
             if (Configuration.JSONConfig.RiskyFunctionsEnabled)
             {
-                RiskyFunctionsAllowed = false;
+                riskyFuncsAllowed = false;
                 RiskyFunctionsChecked = false;
                 // Temporary boolean that we will set if the world is whitelisted or blacklisted, to disable our later check.
                 bool temp = false;
@@ -72,13 +105,13 @@ namespace emmVRC.Managers
                         if (thing.Result == "allowed")
                         {
                             temp = true;
-                            RiskyFunctionsAllowed = true;
+                            riskyFuncsAllowed = true;
                         }
                         // If the world is blacklisted, or the user is banned, "denied" is returned. This skips the tag check and disables Risky Functions outright
                         else if (thing.Result == "denied")
                         {
                             temp = true;
-                            RiskyFunctionsAllowed = false;
+                            riskyFuncsAllowed = false;
                         }
                     }
                     catch (System.Exception ex)
@@ -100,11 +133,11 @@ namespace emmVRC.Managers
                         lowerTags.Add(str.ToLower());
                     if (lowerTags.IndexOf("author_tag_game") != -1 || lowerTags.IndexOf("author_tag_games") != -1 || lowerTags.IndexOf("author_tag_club") != -1 || lowerTags.IndexOf("admin_game") != -1)
                     {
-                        RiskyFunctionsAllowed = false;
+                        riskyFuncsAllowed = false;
                     }
                     else
                     {
-                        RiskyFunctionsAllowed = true;
+                        riskyFuncsAllowed = true;
                     }
                     lowerTags.Clear();
                 }

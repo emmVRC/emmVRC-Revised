@@ -39,7 +39,6 @@ namespace emmVRC.Libraries
             {
                 if (!Libraries.ModCompatibility.PortalConfirmation)
                 {
-                    //new PortalInternal().Method_Public_Void_4();
                     instanceHarmony.Patch(typeof(PortalInternal).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 0 && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == " was at capacity, cannot enter.")), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("OnPortalEntered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                 }
             }
@@ -90,35 +89,39 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogError("Network Manager hooking failed: " + ex.ToString());
             }
-            try
+            if (!ModCompatibility.FBTSaver)
             {
-                foreach (System.Reflection.MethodInfo inf in typeof(VRCTrackingSteam).GetMethods())
+                try
                 {
-                    if (inf.GetParameters().Length == 1 && inf.GetParameters().First().ParameterType == typeof(string) && inf.ReturnType == typeof(bool) && inf.GetRuntimeBaseDefinition() == inf)
+                    foreach (System.Reflection.MethodInfo inf in typeof(VRCTrackingSteam).GetMethods())
                     {
-                        instanceHarmony.Patch(inf, new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IsCalibratedForAvatar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                        if (inf.GetParameters().Length == 1 && inf.GetParameters().First().ParameterType == typeof(string) && inf.ReturnType == typeof(bool) && inf.GetRuntimeBaseDefinition() == inf)
+                        {
+                            instanceHarmony.Patch(inf, new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IsCalibratedForAvatar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                        }
+                    }
+                    foreach (System.Reflection.MethodInfo inf in typeof(VRCTrackingSteam).GetMethods())
+                    {
+                        if (inf.GetParameters().Length == 3 && inf.GetParameters().First().ParameterType == typeof(Animator) && inf.ReturnType == typeof(void) && inf.GetRuntimeBaseDefinition() == inf)
+                        {
+                            instanceHarmony.Patch(inf, new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PerformCalibration", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                        }
                     }
                 }
-                foreach (System.Reflection.MethodInfo inf in typeof(VRCTrackingSteam).GetMethods())
+                catch (Exception ex)
                 {
-                    if (inf.GetParameters().Length == 3 && inf.GetParameters().First().ParameterType == typeof(Animator) && inf.ReturnType == typeof(void) && inf.GetRuntimeBaseDefinition() == inf)
-                    {
-                        instanceHarmony.Patch(inf, new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PerformCalibration", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                    }
+                    emmVRCLoader.Logger.LogError("VRCTrackingSteam hooking failed: " + ex.ToString());
                 }
-            }
-            catch (Exception ex)
-            {
-                emmVRCLoader.Logger.LogError("VRCTrackingSteam hooking failed: " + ex.ToString());
-            }
-            try
-            {
+                try
+                {
 
-                instanceHarmony.Patch(typeof(VRCTrackingManager).GetMethods()
-                    .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(bool) && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType != null && jt.TryResolve().ReflectedType.Name == "Whiteboard")), new HarmonyMethod(typeof(Hooking).GetMethod("SetControllerVisibility", BindingFlags.NonPublic | BindingFlags.Static)));
-            } catch (Exception ex)
-            {
-                emmVRCLoader.Logger.LogError("SetControllerVisibility hooking failed: " + ex.ToString());
+                    instanceHarmony.Patch(typeof(VRCTrackingManager).GetMethods()
+                        .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(bool) && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType != null && jt.TryResolve().ReflectedType.Name == "Whiteboard")), new HarmonyMethod(typeof(Hooking).GetMethod("SetControllerVisibility", BindingFlags.NonPublic | BindingFlags.Static)));
+                }
+                catch (Exception ex)
+                {
+                    emmVRCLoader.Logger.LogError("SetControllerVisibility hooking failed: " + ex.ToString());
+                }
             }
         }
 
@@ -150,8 +153,8 @@ namespace emmVRC.Libraries
         
         private static bool SetControllerVisibility(VRCTrackingManager __instance, bool __0)
         {
-            if (UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>().Count != 0 && UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>()[0].field_Private_String_0 == null && !__0)
-                return false;
+            //if (UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>().Count != 0 && UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>()[0].field_Private_String_0 == null && !__0)
+            //    return false;
             return true;
         }
 

@@ -322,7 +322,7 @@ namespace emmVRC
                         Configuration.SaveConfig();
                         Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
                     }
-                    PlayerHistoryMenu.currentPlayersNames = new System.Collections.Generic.List<string>();
+                    PlayerHistoryMenu.currentPlayers = new System.Collections.Generic.List<InstancePlayer>();
 
                 }));
 
@@ -343,16 +343,6 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
                 Initialized = true;
-
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    Name = "Hide\nPersonal\nAvatars",
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () =>
-                    {
-                        Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Personal Avatar List").gameObject.SetActive(false); 
-                    }
-                });
 
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();

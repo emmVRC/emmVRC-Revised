@@ -8,14 +8,16 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.0.0p";
+        public static string Version = "2.0.0p3";
+        public static string EULAVersion = "1.0.0";
         public static bool Beta = false;
         public static string DateUpdated = "10/11/2020";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
+        //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "<color=#FF6347>This is an pre-release build! Do not distribute to others.</color>\n\n" +
+            "<color=#FF6347>This is an pre-release build! Do not distribute to others.</color>\n" +
             "There are too many changes to list here! However, here\n" +
             "are the highlights:\n" +
             "• Oculus support\n" +

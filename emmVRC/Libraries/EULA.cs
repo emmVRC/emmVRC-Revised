@@ -18,7 +18,7 @@ namespace emmVRC.Libraries
         {
             while (!EULADownloaded)
             {
-                if (Configuration.JSONConfig.AcceptedEULAVersion != Attributes.Version)
+                if (Configuration.JSONConfig.AcceptedEULAVersion != Attributes.EULAVersion)
                 {
                     emmVRCLoader.Logger.Log("Downloading EULA...");
                     while (RoomManager.field_Internal_Static_ApiWorld_0 == null || RoomManager.field_Internal_Static_ApiWorldInstance_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
@@ -34,10 +34,11 @@ namespace emmVRC.Libraries
                     {
                         File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt"), new string[] { eulaDownload.Result });
                         yield return new WaitForSeconds(2.5f);
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Please read the EULA for emmVRC.\nThis will open on your desktop.", "Open EULA", () => { System.Diagnostics.Process.Start(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt")); }, "Agree", () => { Configuration.JSONConfig.AcceptedEULAVersion = Attributes.Version; Configuration.SaveConfig(); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Please read the EULA for emmVRC.\nThis will open on your desktop.", "Open EULA", () => { System.Diagnostics.Process.Start(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt")); }, "Agree", () => { Configuration.JSONConfig.AcceptedEULAVersion = Attributes.EULAVersion; Configuration.SaveConfig(); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                         EULADownloaded = true;
                     }
                 }
+                else EULADownloaded = true;
             }
         }
     }

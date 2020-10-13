@@ -75,6 +75,7 @@ namespace emmVRC.Objects
         public bool UIColorChangingEnabled = false;
         public string UIColorHex = "#0EA6AD";
         public bool UIActionMenuColorChangingEnabled = true;
+        public bool UIExpansionKitColorChangingEnabled = true;
         public bool UIMicIconColorChangingEnabled = false;
         public bool UIMicIconPulsingEnabled = true;
 
