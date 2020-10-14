@@ -120,7 +120,7 @@ namespace emmVRC.Network
             {
                 string result = await HTTPRequest.get(NetworkClient.configURL + "/configuration.php");
                 NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
-                CustomAvatarFavorites.MigrateButton.SetActive(NetworkConfig.Instance.APICallsAllowed);
+                Hacks.CustomAvatarFavorites.MigrateButton.SetActive(NetworkConfig.Instance.APICallsAllowed && File.Exists(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json")));
             }
             catch (Exception exception)
             {
