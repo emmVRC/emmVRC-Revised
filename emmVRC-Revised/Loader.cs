@@ -78,11 +78,6 @@ namespace emmVRCLoader
                 Bootstrapper.mod.OnApplicationQuit();
             // MelonModLogger.Log("OnApplicationQuit");
         }
-
-        public override void OnModSettingsApplied()
-        {
-            //MelonModLogger.Log("OnModSettingsApplied");
-        }
         public override void VRChat_OnUiManagerInit()
         {
             if (Bootstrapper.mod != null)

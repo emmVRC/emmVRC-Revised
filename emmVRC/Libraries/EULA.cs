@@ -26,9 +26,10 @@ namespace emmVRC.Libraries
                     var eulaDownload = HTTPRequest.get("https://www.thetrueyoshifan.com/downloads/emmvrcresources/eula.txt");
                     while (!eulaDownload.IsCompleted && !eulaDownload.IsFaulted)
                         yield return new WaitForSeconds(1f);
-                    if (eulaDownload.IsFaulted)
+                    if (eulaDownload.IsFaulted || (eulaDownload.IsCompleted && eulaDownload.Result.ToLower().Contains("nullreferenceexception")))
                     {
                         emmVRCLoader.Logger.LogError("EULA could not be downloaded.");
+                        yield return new WaitForSeconds(2.5f);
                     }
                     else if (eulaDownload.IsCompleted)
                     {

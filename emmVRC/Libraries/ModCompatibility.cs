@@ -41,7 +41,7 @@ namespace emmVRC.Libraries
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "UI Expansion Kit") != -1)
                 UIExpansionKit = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "FBT Saver") != -1)
-                UIExpansionKit = true;
+                FBTSaver = true;
 
             if (MultiplayerDynamicBones)
                 emmVRCLoader.Logger.LogDebug("Detected MultiplayerDynamicBones");

@@ -8,16 +8,16 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.0.0p4";
+        public static string Version = "2.0.3";
         public static string EULAVersion = "1.0.0";
         public static bool Beta = false;
-        public static string DateUpdated = "10/13/2020";
+        public static string DateUpdated = "10/15/2020";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "<color=#FF6347>This is an pre-release build! Do not distribute to others.</color>\n" +
+            //"<color=#FF6347>This is an pre-release build! Do not distribute to others.</color>\n" +
             "There are too many changes to list here! However, here\n" +
             "are the highlights:\n" +
             "• Oculus support\n" +
@@ -26,10 +26,7 @@ namespace emmVRC.Objects
             "• Avatar 3.0 Parameter saving\n" +
             "• In-game button position configuration\n" +
             "• Head-mounted flashlights\n" +
-            "• Full body improvements, such as calibration and height\n" +
-            "saving\n" +
-            "\n" +
-            "See the emmVRC #updates channel for the full changelog!";
+            "• Full body improvements, like calibration and height saving";
         /*public static string Changelog =
             "• Fixed the Social Menu teleport button. No\n" +
             "longer will it make an insanely loud sound!\n" +

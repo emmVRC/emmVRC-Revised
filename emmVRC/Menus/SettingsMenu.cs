@@ -1188,6 +1188,12 @@ namespace emmVRC.Menus
                 unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Toggle\nRank", new Vector2(5, 0)));
             if (!Configuration.JSONConfig.DisableReportWorldButton)
                 unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Report\nWorld", new Vector2(5, 1)));
+            if (!menu.menuTitle.Contains("Functions"))
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("<color=#FF69B4>emmVRC</color>\nFunctions", new Vector2(Configuration.JSONConfig.FunctionsButtonX, Configuration.JSONConfig.FunctionsButtonY)));
+            if (!menu.menuTitle.Contains("Logo") && Configuration.JSONConfig.LogoButtonEnabled)
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("<color=#FF69B4>emmVRC</color>\nLogo", new Vector2(Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY)));
+            if (!menu.menuTitle.Contains("Notification"))
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("<color=#FF69B4>emmVRC</color>\nNotification", new Vector2(Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY)));
             menu.ChangeDisabledButtons(unavailableButtons);
         }
 

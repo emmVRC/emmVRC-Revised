@@ -175,12 +175,14 @@ namespace emmVRC.Hacks
                 if (Configuration.JSONConfig.UIMicIconColorChangingEnabled && Configuration.JSONConfig.UIColorChangingEnabled)
                 {
                     foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
-                        img.color = color;
+                        if (img.gameObject.name != "PushToTalkKeybd" && img.gameObject.name != "PushToTalkXbox")
+                            img.color = color;
                 }
                 else
                 {
                     foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
-                        img.color = Color.red;
+                        if (img.gameObject.name != "PushToTalkKeybd" && img.gameObject.name != "PushToTalkXbox")
+                            img.color = Color.red;
                 }
                 foreach (HudVoiceIndicator indicator in GameObject.FindObjectsOfType<HudVoiceIndicator>())
                 {

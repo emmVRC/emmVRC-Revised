@@ -112,7 +112,7 @@ namespace emmVRC.Libraries
                 {
                     emmVRCLoader.Logger.LogError("VRCTrackingSteam hooking failed: " + ex.ToString());
                 }
-                try
+                /*try
                 {
 
                     instanceHarmony.Patch(typeof(VRCTrackingManager).GetMethods()
@@ -121,7 +121,7 @@ namespace emmVRC.Libraries
                 catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError("SetControllerVisibility hooking failed: " + ex.ToString());
-                }
+                }*/
             }
         }
 
