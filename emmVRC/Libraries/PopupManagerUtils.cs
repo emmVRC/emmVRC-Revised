@@ -14,7 +14,7 @@ namespace emmVRC.Libraries
         // Special thanks to Knah for xref scanning, as well as UiExpansionKit
         public static void HideCurrentPopup(this VRCUiPopupManager vrcUiPopupManager)
         {
-            VRCUiManager.field_Protected_Static_VRCUiManager_0.HideScreen("POPUP"); // Old code from build 864
+            VRCUiManager.prop_VRCUiManager_0.HideScreen("POPUP"); // Old code from build 864
         }
 
         public static void ShowStandardPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string content, Action<VRCUiPopup> onCreated = null) =>

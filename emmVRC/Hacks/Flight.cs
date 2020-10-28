@@ -70,7 +70,6 @@ namespace emmVRC.Hacks
                         }
                         if (FlightEnabled)
                         {
-                            
                             var cameraRotation = Camera.main.transform;
                             if (UnityEngine.XR.XRDevice.isPresent && Configuration.JSONConfig.VRFlightControls) // VR is enabled
                             {

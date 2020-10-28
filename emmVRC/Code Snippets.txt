@@ -1,6 +1,6 @@
 ﻿// Code Snippets
 // These are things I was playing around with, and felt the need to document for future reference
 
-// Change Mute Icon color
-
-
+// Duplicate keyboard buttons
+// This could be used for my idea of adding a separate caps lock button to the keyboard. Enjoy!
+GameObject.Instantiate(GameObject.Find("/UserInterface/MenuContent/Popups/InputPopup/Keyboard/Keys/Row 4/Row:3 Column:10"), GameObject.Find("/UserInterface/MenuContent/Popups/InputPopup/Keyboard/Keys/Row 4/Row:3 Column:10").transform.parent);

@@ -24,12 +24,10 @@ namespace emmVRC.Libraries
             instanceHarmony = Harmony.HarmonyInstance.Create("emmVRCHarmony");
             try
             {
-                if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
-                {
+
                     IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
                     Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
                     onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
-                }
             }
             catch (Exception ex)
             {
@@ -179,7 +177,10 @@ namespace emmVRC.Libraries
                     GameObject avatarObj = new GameObject(avatarPtr);
                     VRCAvatarManager avatarMgr = new VRCAvatarManager(@this);
                     Managers.AvatarPermissionManager.ProcessAvatar(avatarObj, descriptor);
-                    Hacks.GlobalDynamicBones.ProcessDynamicBones(avatarObj, descriptor, avatarMgr);
+                    if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
+                    {
+                        Hacks.GlobalDynamicBones.ProcessDynamicBones(avatarObj, descriptor, avatarMgr);
+                    }
                     MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(descriptor));
                 }
             }

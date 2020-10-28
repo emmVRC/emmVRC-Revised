@@ -119,6 +119,7 @@
     <Compile Include="Menus\DebugMenu.cs" />
     <Compile Include="Menus\FlashlightMenu.cs" />
     <Compile Include="Menus\PlayerHistoryMenu.cs" />
+    <Compile Include="Menus\ReportWorldMenu.cs" />
     <Compile Include="Menus\VRHUD.cs" />
     <Compile Include="Menus\DesktopHUD.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
@@ -207,7 +208,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\Il2CppSystem.Xml.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="MelonLoader.ModHandler, Version=0.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MelonLoader.ModHandler, Version=0.2.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\MelonLoader.ModHandler.dll</HintPath>
     </Reference>

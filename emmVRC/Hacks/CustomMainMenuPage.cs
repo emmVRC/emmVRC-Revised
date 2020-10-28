@@ -34,7 +34,7 @@ namespace emmVRC.Hacks
             customMenuPages = new List<CustomMainMenuPage>();
             topCorner = TitleBar.transform.position;
         }
-        public static void ShowCustomMenu(CustomMainMenuPage targetPage)
+        /*public static void ShowCustomMenu(CustomMainMenuPage targetPage)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace emmVRC.Hacks
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
-        }
+        }*/
 
         public GameObject menuRoot;
         public string Title;

@@ -17,7 +17,7 @@ namespace emmVRC.Libraries
             if (Configuration.JSONConfig.PlayerHistoryEnable && plr.field_Private_APIUser_0 != null && plr.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
             {
 
-                PlayerHistoryMenu.currentPlayers.Add(new InstancePlayer { Name = plr.field_Private_APIUser_0.displayName, UserID = plr.field_Private_APIUser_0.id });
+                PlayerHistoryMenu.currentPlayers.Add(new InstancePlayer { Name = plr.field_Private_APIUser_0.displayName, UserID = plr.field_Private_APIUser_0.id, TimeJoinedStamp = DateTime.Now.ToShortTimeString() });
                 emmVRCLoader.Logger.Log("Player joined: " + plr.field_Private_APIUser_0.displayName);
             }
         }

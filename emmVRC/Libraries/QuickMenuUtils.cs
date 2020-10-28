@@ -96,7 +96,7 @@ namespace emmVRC.Libraries
         // Fetch the VRCUiManager instance
         public static VRCUiManager GetVRCUiMInstance()
         {
-            return VRCUiManager.field_Protected_Static_VRCUiManager_0;
+            return VRCUiManager.prop_VRCUiManager_0;
         }
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!

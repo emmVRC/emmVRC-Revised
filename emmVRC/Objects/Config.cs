@@ -51,6 +51,7 @@ namespace emmVRC.Objects
         public int NotificationButtonPositionY = -1;
         public int PlayerActionsButtonX = 4;
         public int PlayerActionsButtonY = 2;
+        public bool StealthMode = false;
 
         // Hack options
 

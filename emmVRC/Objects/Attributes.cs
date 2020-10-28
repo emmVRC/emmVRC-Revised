@@ -8,25 +8,20 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.0.3";
+        public static string Version = "2.1.0";
         public static string EULAVersion = "1.0.0";
         public static bool Beta = false;
-        public static string DateUpdated = "10/15/2020";
+        public static string DateUpdated = "10/27/2020";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            //"<color=#FF6347>This is an pre-release build! Do not distribute to others.</color>\n" +
-            "There are too many changes to list here! However, here\n" +
-            "are the highlights:\n" +
-            "• Oculus support\n" +
-            "• Mod compatibility modules\n" +
-            "• User List refresh button\n" +
-            "• Avatar 3.0 Parameter saving\n" +
-            "• In-game button position configuration\n" +
-            "• Head-mounted flashlights\n" +
-            "• Full body improvements, like calibration and height saving";
+            //"This is an pre-release build! Do not distribute to others\n" +
+            "• Added stealth mode! This disables most of emmVRC's visual\n" +
+            "functions, while allowing you to still use the mod in secret!\n" +
+            "• Player History now shows the time a player joined your\n" +
+            "instance";
         /*public static string Changelog =
             "• Fixed the Social Menu teleport button. No\n" +
             "longer will it make an insanely loud sound!\n" +

@@ -50,6 +50,7 @@ namespace emmVRC.Menus
         private static ButtonConfigurationMenu FunctionsMenuPositionMenu;
         private static ButtonConfigurationMenu LogoPositionMenu;
         private static ButtonConfigurationMenu NotificationPositionMenu;
+        private static PageItem StealthMode;
 
         // Page 4
         private static PageItem UIColorChanging;
@@ -321,7 +322,6 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(RiskyFunctions);
             baseMenu.pageItems.Add(emmVRCNetwork);
             baseMenu.pageItems.Add(AvatarFavoriteList);
-            
             baseMenu.pageItems.Add(GlobalDynamicBones);
             baseMenu.pageItems.Add(FriendGlobalDynamicBones);
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
@@ -451,15 +451,17 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Changes the VRChat FPS limit to 144, in desktop only.");
-           
-            baseMenu.pageItems.Add(InfoBar);
-            baseMenu.pageItems.Add(Clock);
-            baseMenu.pageItems.Add(MasterIcon);
-            baseMenu.pageItems.Add(HUD);
-            baseMenu.pageItems.Add(ChooseHUD);
-            baseMenu.pageItems.Add(MoveVRHUD);
-            baseMenu.pageItems.Add(LogoButton);
-            baseMenu.pageItems.Add(ForceRestart);
+            if (!Configuration.JSONConfig.StealthMode)
+            {
+                baseMenu.pageItems.Add(InfoBar);
+                baseMenu.pageItems.Add(Clock);
+                baseMenu.pageItems.Add(MasterIcon);
+                baseMenu.pageItems.Add(HUD);
+                baseMenu.pageItems.Add(ChooseHUD);
+                baseMenu.pageItems.Add(MoveVRHUD);
+                baseMenu.pageItems.Add(LogoButton);
+                baseMenu.pageItems.Add(ForceRestart);
+            }
             baseMenu.pageItems.Add(UnlimitedFPS);
             //baseMenu.pageItems.Add(PageItem.Space);
 
@@ -509,15 +511,33 @@ namespace emmVRC.Menus
                 Managers.NotificationManager.NotificationMenu.getMainButton().setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
                 Managers.NotificationManager.AddNotification("Your new button position has been saved.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
             }, "", "Select the new position for the Notification button", null);
-            baseMenu.pageItems.Add(FunctionsMenuPosition);
-            baseMenu.pageItems.Add(LogoPosition);
-            baseMenu.pageItems.Add(NotificationPosition);
+            StealthMode = new PageItem("Stealth Mode", () =>
+            {
+                Configuration.JSONConfig.StealthMode = true;
+                Configuration.SaveConfig();
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must restart your game for this change to apply.\nRestart now?", "Yes", () => { DestructiveActions.ForceRestart(); }, "No", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.StealthMode = false;
+                Configuration.SaveConfig();
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must restart your game for this change to apply.\nRestart now?", "Yes", () => { DestructiveActions.ForceRestart(); }, "No", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+            }, "TOGGLE: Enables emmVRC's stealth mode. This disables most of the visual features, in order to blend in with vanilla VRChat. The Functions button is available in the \"Report World\" menu.");
+            if (!Configuration.JSONConfig.StealthMode)
+            {
+                baseMenu.pageItems.Add(FunctionsMenuPosition);
+                baseMenu.pageItems.Add(LogoPosition);
+                baseMenu.pageItems.Add(NotificationPosition);
+            } else
+            {
+                for (int i = 0; i < 2; i++)
+                    baseMenu.pageItems.Add(PageItem.Space);
+            }
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
-            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(StealthMode);
 
             UIColorChanging = new PageItem("UI Color\nChange", () =>
             {
@@ -592,12 +612,12 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.UIExpansionKitColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("You must restart VRChat for your changes to apply");
+                VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("You must restart VRChat for your changes to apply");
             }, "Disabled", () => {
                 Configuration.JSONConfig.UIExpansionKitColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("You must restart VRChat for your changes to apply");
+                VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("You must restart VRChat for your changes to apply");
             }, "TOGGLE: Enables changing the color of UIExpansionKit's menu. Requires a restart to apply");
             InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
             {
@@ -695,18 +715,21 @@ namespace emmVRC.Menus
 
                 }), null, "Enter spoof name....");
             }, "Allows you to change your spoofed name to one that never changes");
-            baseMenu.pageItems.Add(UIColorChanging);
-            baseMenu.pageItems.Add(UIColorChangePickerButton);
-            baseMenu.pageItems.Add(UIActionMenuColorChanging);
-            baseMenu.pageItems.Add(UIMicIconColorChanging);
-            baseMenu.pageItems.Add(UIMicIconPulse);
-            if (ModCompatibility.UIExpansionKit)
-                baseMenu.pageItems.Add(UIExpansionKitColorChanging);
-            else
-                baseMenu.pageItems.Add(PageItem.Space);
-            baseMenu.pageItems.Add(InfoSpoofing);
-            baseMenu.pageItems.Add(InfoHiding);
-            baseMenu.pageItems.Add(InfoSpooferNamePicker);
+            if (!Configuration.JSONConfig.StealthMode)
+            {
+                baseMenu.pageItems.Add(UIColorChanging);
+                baseMenu.pageItems.Add(UIColorChangePickerButton);
+                baseMenu.pageItems.Add(UIActionMenuColorChanging);
+                baseMenu.pageItems.Add(UIMicIconColorChanging);
+                baseMenu.pageItems.Add(UIMicIconPulse);
+                if (ModCompatibility.UIExpansionKit)
+                    baseMenu.pageItems.Add(UIExpansionKitColorChanging);
+                else
+                    baseMenu.pageItems.Add(PageItem.Space);
+                baseMenu.pageItems.Add(InfoSpoofing);
+                baseMenu.pageItems.Add(InfoHiding);
+                baseMenu.pageItems.Add(InfoSpooferNamePicker);
+            }
 
             FriendNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1000, "Friend Nameplate Color", "Select the color for Friend Nameplate colors", (UnityEngine.Color newColor) =>
             {
@@ -795,22 +818,25 @@ namespace emmVRC.Menus
             TrustedUserNameplateColorPickerButton = new PageItem("Trusted User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(TrustedUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Trusted User Nameplate colors");
             VeteranUserNameplateColorPickerButton = new PageItem("Veteran User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(VeteranUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Veteran User Nameplate colors (via OGTrustRanks)");
             LegendaryUserNameplateColorPickerButton = new PageItem("Legendary User\nNameplate\nColor", () => { QuickMenuUtils.ShowQuickmenuPage(LegendaryUserNameplateColorPicker.baseMenu.getMenuName()); }, "Select the color for Legendary User Nameplate colors (via OGTrustRanks)");
-            baseMenu.pageItems.Add(NameplateColorChanging);
-            if (!Libraries.ModCompatibility.OGTrustRank)
+            if (!Configuration.JSONConfig.StealthMode)
             {
-                baseMenu.pageItems.Add(PageItem.Space);
-                baseMenu.pageItems.Add(PageItem.Space);
-            }
-            baseMenu.pageItems.Add(FriendNameplateColorPickerButton);
-            baseMenu.pageItems.Add(VisitorNameplateColorPickerButton);
-            baseMenu.pageItems.Add(NewUserNameplateColorPickerButton);
-            baseMenu.pageItems.Add(UserNameplateColorPickerButton);
-            baseMenu.pageItems.Add(KnownUserNameplateColorPickerButton);
-            baseMenu.pageItems.Add(TrustedUserNameplateColorPickerButton);
-            if (Libraries.ModCompatibility.OGTrustRank)
-            {
-                baseMenu.pageItems.Add(VeteranUserNameplateColorPickerButton);
-                baseMenu.pageItems.Add(LegendaryUserNameplateColorPickerButton);
+                baseMenu.pageItems.Add(NameplateColorChanging);
+                if (!Libraries.ModCompatibility.OGTrustRank)
+                {
+                    baseMenu.pageItems.Add(PageItem.Space);
+                    baseMenu.pageItems.Add(PageItem.Space);
+                }
+                baseMenu.pageItems.Add(FriendNameplateColorPickerButton);
+                baseMenu.pageItems.Add(VisitorNameplateColorPickerButton);
+                baseMenu.pageItems.Add(NewUserNameplateColorPickerButton);
+                baseMenu.pageItems.Add(UserNameplateColorPickerButton);
+                baseMenu.pageItems.Add(KnownUserNameplateColorPickerButton);
+                baseMenu.pageItems.Add(TrustedUserNameplateColorPickerButton);
+                if (Libraries.ModCompatibility.OGTrustRank)
+                {
+                    baseMenu.pageItems.Add(VeteranUserNameplateColorPickerButton);
+                    baseMenu.pageItems.Add(LegendaryUserNameplateColorPickerButton);
+                }
             }
             DisableReportWorld = new PageItem("Disable\nReport World", () =>
             {
@@ -916,15 +942,18 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 UserInteractMenuButtons.Initialize();
             }, "TOGGLE: Combines the Warn and Kick buttons into one space, to make room for more buttons");
-            baseMenu.pageItems.Add(DisableReportWorld);
-            baseMenu.pageItems.Add(DisableEmoji);
-            baseMenu.pageItems.Add(DisableEmote);
-            baseMenu.pageItems.Add(DisableRankToggle);
-            baseMenu.pageItems.Add(DisablePlaylists);
-            baseMenu.pageItems.Add(DisableReportUser);
-            baseMenu.pageItems.Add(DisableAvatarStats);
-            baseMenu.pageItems.Add(MinimalWarnKick);
-            baseMenu.pageItems.Add(PageItem.Space);
+            if (!Configuration.JSONConfig.StealthMode)
+            {
+                baseMenu.pageItems.Add(DisableReportWorld);
+                baseMenu.pageItems.Add(DisableEmoji);
+                baseMenu.pageItems.Add(DisableEmote);
+                baseMenu.pageItems.Add(DisableRankToggle);
+                baseMenu.pageItems.Add(DisablePlaylists);
+                baseMenu.pageItems.Add(DisableReportUser);
+                baseMenu.pageItems.Add(DisableAvatarStats);
+                baseMenu.pageItems.Add(MinimalWarnKick);
+                baseMenu.pageItems.Add(PageItem.Space);
+            }
 
             DisableAvatarHotWorlds = new PageItem("Disable Hot Avatar\nWorld List", () =>
             {
@@ -1090,14 +1119,18 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(GoHomeKeybind);
 
 
-            baseMenu.pageTitles.Add("Core Features");
-            baseMenu.pageTitles.Add("Visual Features");
-            baseMenu.pageTitles.Add("Button Positions");
-            baseMenu.pageTitles.Add("UI Changing");
-            baseMenu.pageTitles.Add("Nameplate Color Changing");
-            baseMenu.pageTitles.Add("Disable VRChat Buttons");
-            baseMenu.pageTitles.Add("Disable Avatar Menu Lists");
-            baseMenu.pageTitles.Add("Keybinds");
+
+            baseMenu.pageTitles.Add("Core Features"+(Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
+            baseMenu.pageTitles.Add("Visual Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
+            if (!Configuration.JSONConfig.StealthMode)
+            {
+                baseMenu.pageTitles.Add("Button Positions");
+                baseMenu.pageTitles.Add("UI Changing");
+                baseMenu.pageTitles.Add("Nameplate Color Changing");
+                baseMenu.pageTitles.Add("Disable VRChat Buttons");
+            }
+            baseMenu.pageTitles.Add("Disable Avatar Menu Lists" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
+            baseMenu.pageTitles.Add("Keybinds" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
         }
         public static void RefreshMenu()
         {
@@ -1123,6 +1156,8 @@ namespace emmVRC.Menus
                 LogoButton.SetToggleState(Configuration.JSONConfig.LogoButtonEnabled);
                 ForceRestart.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
                 UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
+
+                StealthMode.SetToggleState(Configuration.JSONConfig.StealthMode);
 
                 UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
                 UIActionMenuColorChanging.SetToggleState(Configuration.JSONConfig.UIActionMenuColorChangingEnabled);

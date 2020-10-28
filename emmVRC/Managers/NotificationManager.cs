@@ -7,6 +7,7 @@ using emmVRC.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using emmVRC.Menus;
 
 namespace emmVRC.Managers
 {
@@ -43,12 +44,13 @@ namespace emmVRC.Managers
                 emmVRCLoader.Logger.LogError("Failed to fetch all vanilla notification icons: " + ex.ToString());
                 emmVRCLoader.Logger.Log("This isn't a major error, it most likely means that the icons were changed around or removed in this build of VRChat, or assemblies need to be regenerated.");
             }
-            NotificationMenu = new QMNestedButton("ShortcutMenu", Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY, "\nemmVRC\nNotifications", "  new emmVRC Notifications are available!");
+            NotificationMenu = new QMNestedButton(!Configuration.JSONConfig.StealthMode ? "ShortcutMenu" : ReportWorldMenu.baseMenu.getMenuName(), Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY, "\nemmVRC\nNotifications", "  new emmVRC Notifications are available!");
             NotificationButton1 = new QMSingleButton(NotificationMenu, 1, 0, "Accept", null, "Accept");
             NotificationButton2 = new QMSingleButton(NotificationMenu, 2, 0, "Decline", null, "Decline");
 
             // Set up the entering menu action
-            NotificationMenu.getMainButton().setAction(() => {
+            NotificationMenu.getMainButton().setAction(() =>
+            {
                 QuickMenuUtils.ShowQuickmenuPage(NotificationMenu.getMenuName());
                 QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_PDM_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.Notification, null, Notifications[0].Message);
                 if (Notifications[0].Button1Action != null)
@@ -82,7 +84,7 @@ namespace emmVRC.Managers
             while (Enabled)
             {
                 Thread.Sleep(1000);
-                if (RoomManagerBase.field_Internal_Static_ApiWorld_0 != null)
+                if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
                     try
                     {
@@ -94,7 +96,7 @@ namespace emmVRC.Managers
                             foreach (GameObject icon in VanillaIcons)
                                 if (icon.activeSelf)
                                     vanillaIconsActive = true;
-                            if (!vanillaIconsActive)
+                            if (!vanillaIconsActive && !Configuration.JSONConfig.StealthMode)
                                 NotificationIcon.SetActive(true);
                             else
                                 NotificationIcon.SetActive(false);
@@ -111,7 +113,6 @@ namespace emmVRC.Managers
                             NotificationMenu.getMainButton().setActive(false);
                             notificationActiveTimer = 0;
                         }
-
                         if (Notifications.Count > 0 && Notifications[0].Timeout != -1)
                         {
                             // Increment the notification active timer, until the timeout is met

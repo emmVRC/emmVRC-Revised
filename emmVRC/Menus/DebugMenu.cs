@@ -93,7 +93,7 @@ namespace emmVRC.Menus
                 try
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter test text here", "", UnityEngine.UI.InputField.InputType.Standard, false, "Foobar", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string str, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
-                        VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("Text entered: " + str);
+                        VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Text entered: " + str);
                     }), null);
                 } catch (Exception ex)
                 {
@@ -105,7 +105,7 @@ namespace emmVRC.Menus
             {
                 try
                 {
-                    VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("This is a test message");
+                    VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("This is a test message");
                 }
                 catch (Exception ex)
                 {
@@ -122,7 +122,7 @@ namespace emmVRC.Menus
                 catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError("Notification manager error: " + ex.ToString());
-                    VRCUiManager.field_Protected_Static_VRCUiManager_0.QueueHUDMessage("A notification manager error occured.");
+                    VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("A notification manager error occured.");
                 }
             }, "Add a test notification to the Notification Manager");
 

@@ -34,6 +34,10 @@ namespace emmVRC
             // Load the config for emmVRC
             Configuration.Initialize();
 
+            // Enable stealth mode if the launch option is present
+            if (Environment.CommandLine.Contains("--emmvrc.stealthmode"))
+                Configuration.JSONConfig.StealthMode = true;
+
         }
 
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
@@ -115,7 +119,8 @@ namespace emmVRC
                 emmVRCLoader.Logger.LogDebug("UI manager initialized");
 
                 // Start trying to set up the menu music
-                MelonLoader.MelonCoroutines.Start(Hacks.CustomMenuMusic.Initialize());
+                if (!Configuration.JSONConfig.StealthMode)
+                    MelonLoader.MelonCoroutines.Start(Hacks.CustomMenuMusic.Initialize());
 
                 // Load resources for emmVRC, including downloading them if needed
                 //Resources.LoadResources();
@@ -126,6 +131,10 @@ namespace emmVRC
 
                 // Initialize the Mod Compatibility system
                 Libraries.ModCompatibility.Initialize();
+
+                // If stealth mode is on, initialize the "Report World" menu
+                if (Configuration.JSONConfig.StealthMode)
+                    Menus.ReportWorldMenu.Initialize();
 
                 // Initialize the "Functions" menu
                 emmVRCLoader.Logger.LogDebug("Initializing functions menu...");
@@ -172,28 +181,31 @@ namespace emmVRC
                 Menus.DebugMenu.Initialize();
 
                 // Initialize the "Social Menu Functions" menu
-                Hacks.SocialMenuFunctions.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.SocialMenuFunctions.Initialize();
 
                 // Initialize the User List Refresh button on the Social Menu
-                Hacks.UserListRefresh.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.UserListRefresh.Initialize();
 
                 // Initialize the "World Functions" menu
-                Hacks.WorldFunctions.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.WorldFunctions.Initialize();
 
                 // Initialize Player Notes
-                Hacks.PlayerNotes.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.PlayerNotes.Initialize();
 
                 // Initialize World Notes
-                Hacks.WorldNotes.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.WorldNotes.Initialize();
 
                 // Initialize Avatar Property Saving
                 Hacks.AvatarPropertySaving.Initialize();
 
-                // Initialize the new Emote menu
-                Hacks.EmoteMenuReborn.Initialize();
-
                 // Initialize the "Loading Screen Functions" menu
-                Menus.LoadingScreenMenu.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Menus.LoadingScreenMenu.Initialize();
 
                 // Initialize the Keybind Changing UI
                 Libraries.KeybindChanger.Initialize();
@@ -206,7 +218,8 @@ namespace emmVRC
                 Managers.NotificationManager.Initialize();
 
                 // Process the "Hacks" for the Shortcut Menu
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                if (!Configuration.JSONConfig.StealthMode)
+                    MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
 
                 // Process the "Hacks" for the User Interact Menu
                 UserInteractMenuButtons.Initialize();
@@ -215,10 +228,12 @@ namespace emmVRC
                 Hacks.LogoutPatch.Initialize();
 
                 // Initialize the Quick Menu clock
-                Hacks.InfoBarClock.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.InfoBarClock.Initialize();
 
                 // Initialize the Quick Menu status
-                Hacks.InfoBarStatus.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.InfoBarStatus.Initialize();
 
                 // Initialize the FBT saving system
                 Hacks.FBTSaving.Initialize();
@@ -242,10 +257,12 @@ namespace emmVRC
                 Hacks.AvatarMenu.Initialize();
 
                 // Initialize the Info Spoof/Hider
-                Hacks.InfoSpoofing.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.InfoSpoofing.Initialize();
 
                 // Initialize the Nameplate color changer
-                Hacks.Nameplates.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.Nameplates.Initialize();
 
                 // Initialize the Flashlight system
                 Menus.FlashlightMenu.Initialize();
@@ -257,7 +274,8 @@ namespace emmVRC
                 Hacks.FPS.Initialize();
 
                 // Initialize the Volume hooker
-                Hacks.Volume.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.Volume.Initialize();
 
                 // Initialize the message system
                 Managers.MessageManager.Initialize();
@@ -266,10 +284,13 @@ namespace emmVRC
                 Hacks.CustomMainMenuPage.Initialize();
 
                 // Initialize the emmVRC HUD
-                if (Configuration.JSONConfig.VRHUDInDesktop || UnityEngine.XR.XRDevice.isPresent)
-                    MelonLoader.MelonCoroutines.Start(Menus.VRHUD.Initialize());
-                else
-                    MelonLoader.MelonCoroutines.Start(Menus.DesktopHUD.Initialize());
+                if (!Configuration.JSONConfig.StealthMode)
+                {
+                    if (Configuration.JSONConfig.VRHUDInDesktop || UnityEngine.XR.XRDevice.isPresent)
+                        MelonLoader.MelonCoroutines.Start(Menus.VRHUD.Initialize());
+                    else
+                        MelonLoader.MelonCoroutines.Start(Menus.DesktopHUD.Initialize());
+                }
 
                 // Initialize the Third Person mode
                 try
@@ -282,7 +303,8 @@ namespace emmVRC
                 }
 
                 // Start the Master Icon Crown
-                Hacks.MasterCrown.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.MasterCrown.Initialize();
                 // Start the Avatar Favorite system
                 Hacks.CustomAvatarFavorites.Initialize();
 
@@ -305,10 +327,11 @@ namespace emmVRC
                     // Ensure that everything through here is after the game has loaded
                     // Reset the instance clock when you switch instances
                     MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
-                    if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null)
+                    if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null && !Configuration.JSONConfig.StealthMode)
                         Hacks.InfoBarClock.instanceTime = 0;
                     MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
-                    MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
+                    if (!Configuration.JSONConfig.StealthMode)
+                        MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
                     MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
                     if (Configuration.JSONConfig.LastVersion != Attributes.Version)
                     {
@@ -333,7 +356,8 @@ namespace emmVRC
                 UserPermissionManager.Initialize();
 
                 // Apply color changing
-                Hacks.ColorChanger.ApplyIfApplicable();
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.ColorChanger.ApplyIfApplicable();
 
                 // Initialize hooking, for things such as Global Dynamic Bones
                 Libraries.Hooking.Initialize();
@@ -342,6 +366,14 @@ namespace emmVRC
                 watch.Stop();
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
+                if (Configuration.JSONConfig.StealthMode)
+                {
+                    emmVRCLoader.Logger.Log("You have emmVRC's Stealth Mode enabled. To access the functions menu, press the \"Report World\" button. Most visual functions of emmVRC have been disabled.");
+                    if (Environment.CommandLine.Contains("--emmvrc.stealthmode"))
+                        emmVRCLoader.Logger.Log("To disable stealth mode, remove '--emmvrc.stealthmode' from your launch options. Then, disable \"Stealth Mode\" in the emmVRC Settings, and restart the game.");
+                    else
+                        emmVRCLoader.Logger.Log("To disable stealth mode, disable \"Stealth Mode\" in the emmVRC Settings, and restart the game.");
+                }
                 Initialized = true;
 
                 // Debug actions need to go before this
