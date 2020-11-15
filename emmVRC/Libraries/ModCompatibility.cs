@@ -22,6 +22,7 @@ namespace emmVRC.Libraries
         public static bool OGTrustRank = false;
         public static bool UIExpansionKit = false;
         public static bool FBTSaver = false;
+        public static bool BetterLoadingScreen = false;
 
         public static GameObject FlightButton;
         public static GameObject NoclipButton;
@@ -42,6 +43,8 @@ namespace emmVRC.Libraries
                 UIExpansionKit = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "FBT Saver") != -1)
                 FBTSaver = true;
+            if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "BetterLoadingScreen") != -1)
+                BetterLoadingScreen = true;
 
             if (MultiplayerDynamicBones)
                 emmVRCLoader.Logger.LogDebug("Detected MultiplayerDynamicBones");
@@ -55,19 +58,19 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogDebug("Detected UIExpansionKit");
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nFlight", new System.Action(() => {
-                            if (RiskyFunctionsManager.RiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                            if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                         PlayerTweaksMenu.FlightToggle.setToggleState(!Flight.FlightEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { FlightButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); })});
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nNoclip", new System.Action(() => {
-                                if (RiskyFunctionsManager.RiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                                if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                         PlayerTweaksMenu.NoclipToggle.setToggleState(!Flight.NoclipEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { NoclipButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nSpeed", new System.Action(() => {
-                                if (RiskyFunctionsManager.RiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                                if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                         PlayerTweaksMenu.SpeedToggle.setToggleState(!Speed.SpeedModified, true);
                         }), new Action<GameObject>((GameObject obj) => { SpeedButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nESP", new System.Action(() => {
-                                if (RiskyFunctionsManager.RiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                                if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                         PlayerTweaksMenu.ESPToggle.setToggleState(!ESP.ESPEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { ESPButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
@@ -78,6 +81,8 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogDebug("Detected FBTSaver");
             }
+            if (BetterLoadingScreen)
+                emmVRCLoader.Logger.LogDebug("Detected BetterLoadingScreen");
         }
         public static IEnumerator ColorUIExpansionKit()
         {
@@ -95,7 +100,8 @@ namespace emmVRC.Libraries
             Transform uiExpansionRoot = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ModUiPreloadedBundleContents");
             foreach (Image img in uiExpansionRoot.GetComponentsInChildren<Image>(true))
             {
-                img.color = new Color(clr.r*0.5f, clr.g*0.5f, clr.b*0.5f);
+                if (img.transform.parent.name != "PinToggle" && img.transform.parent.parent.name != "PinToggle")
+                    img.color = new Color(clr.r*0.5f, clr.g*0.5f, clr.b*0.5f);
             }
             foreach (Button btn in uiExpansionRoot.GetComponentsInChildren<Button>(true))
             {
@@ -103,7 +109,8 @@ namespace emmVRC.Libraries
             }
             foreach (Toggle tgl in uiExpansionRoot.GetComponentsInChildren<Toggle>(true))
             {
-                tgl.colors = theme;
+                if (tgl.gameObject.name != "PinToggle")
+                    tgl.colors = theme;
             }
         }
     }

@@ -20,6 +20,7 @@ namespace emmVRC.Menus
         public static QMSingleButton TeleportButton;
         public static QMSingleButton SendMessageButton;
         public static QMSingleButton FavoriteAvatarButton;
+        public static QMSingleButton BlockUserButton;
         public static void Initialize()
         {
             UserTweaks = new QMNestedButton("UserInteractMenu", Configuration.JSONConfig.PlayerActionsButtonX, Configuration.JSONConfig.PlayerActionsButtonY, "<color=#FF69B4>emmVRC</color>\nActions", "Provides functions and tweaks with the selected user");
@@ -52,8 +53,17 @@ namespace emmVRC.Menus
                 else
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "This avatar is not public, or the user does not have cloning turned on.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
             }, "Allows you to favorite this user's avatar, if the avatar is public and cloning is on");
+            BlockUserButton = new QMSingleButton(UserTweaks, 3, 1, "<color=#FF69B4>emmVRC</color>\nBlock", () => {
+                if (Network.NetworkClient.authToken != null)
+                {
+                    string targetId = QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.id;
+                    Network.HTTPRequest.post(Network.NetworkClient.baseURL + "/api/blocked/" + targetId, null);
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "The block state for this user has been toggled.", "Okay", new System.Action(() => { VRCUiPopupManager.prop_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                    //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
+                }
+            }, "Toggles the block status of this user");
         }
-        public static void SetRiskyFunctions(bool status)
+        public static void SetRiskyFuncsAllowed(bool status)
         {
             TeleportButton.getGameObject().GetComponent<Button>().enabled = status;
         }

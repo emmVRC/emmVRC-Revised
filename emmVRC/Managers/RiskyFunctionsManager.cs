@@ -9,28 +9,50 @@ using UnityEngine.Networking;
 using emmVRC.Network;
 using UnityEngine.UI;
 using emmVRC.Menus;
+using System.Security;
+using RootMotion.Dynamics;
 
 namespace emmVRC.Managers
 {
-    public class RiskyFunctionsManager
+    [SecurityCritical]
+    internal class RiskyFunctionsManager
     {
+        internal static bool riskyFunctionsDisable = false;
+        internal static bool riskyFuncsDisable = false;
+        internal static bool disableAllowed = false;
+        internal static bool disableChecked = false;
         private static bool riskyFuncsAllowed = false;
-        public static bool RiskyFunctionsAllowed { get { return riskyFuncsAllowed; } }
-        private static bool RiskyFunctionsChecked = false;
-        public static Il2CppSystem.Action<string> worldTagsCheck = null;
+        internal static bool RiskyFuncsAreAllowed { get { return riskyFuncsAllowed; } }
+
+        private static bool RiskyFuncsAreChecked = false;
+        internal static Il2CppSystem.Action<string> worldTagsCheck = null;
 
         private static Button FlightButton;
         private static Button NoclipButton;
         private static Button SpeedButton;
         private static Button ESPButton;
 
-        public static void Initialize()
+        internal static void Initialize()
         {
             MelonLoader.MelonCoroutines.Start(Loop());
         }
 
-        public static IEnumerator Loop()
+        internal static IEnumerator Loop()
         {
+            if (riskyFuncsDisable || riskyFunctionsDisable || disableAllowed || disableChecked)
+            {
+                Menus.PlayerTweaksMenu.FlightToggle.DestroyMe();
+                Menus.PlayerTweaksMenu.NoclipToggle.DestroyMe();
+                Menus.PlayerTweaksMenu.SpeedMinusButton.DestroyMe();
+                Menus.PlayerTweaksMenu.SpeedPlusButton.DestroyMe();
+                Menus.PlayerTweaksMenu.SpeedReset.DestroyMe();
+                Menus.PlayerTweaksMenu.WaypointMenu.DestroyMe();
+                Menus.PlayerTweaksMenu.ESPToggle.DestroyMe();
+                Menus.PlayerTweaksMenu.EnableJumpButton.DestroyMe();
+                Menus.PlayerTweaksMenu.SpeedToggle.DestroyMe();
+                GameObject.Destroy(Menus.PlayerTweaksMenu.SpeedText);
+                GameObject.Destroy(Menus.PlayerTweaksMenu.SpeedSlider.slider);
+            } else if (!riskyFuncsDisable && !riskyFunctionsDisable && !disableAllowed && !disableChecked)
             while (true)
             {
 
@@ -38,18 +60,18 @@ namespace emmVRC.Managers
                 if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
                     // Check if we have processed what the status of Risky Functions should be
-                    if (!RiskyFunctionsChecked)
+                    if (!RiskyFuncsAreChecked)
                     {
-                        if (RiskyFunctionsAllowed)
+                        if (RiskyFuncsAreAllowed)
                         {
-                            Menus.PlayerTweaksMenu.SetRiskyFunctions(true);
-                            Menus.UserTweaksMenu.SetRiskyFunctions(true);
+                            Menus.PlayerTweaksMenu.SetRiskyFuncsAllowed(true);
+                            Menus.UserTweaksMenu.SetRiskyFuncsAllowed(true);
                         } else
                         {
-                            Menus.PlayerTweaksMenu.SetRiskyFunctions(false);
-                            Menus.UserTweaksMenu.SetRiskyFunctions(false);
+                            Menus.PlayerTweaksMenu.SetRiskyFuncsAllowed(false);
+                            Menus.UserTweaksMenu.SetRiskyFuncsAllowed(false);
                         }
-                        RiskyFunctionsChecked = true;
+                        RiskyFuncsAreChecked = true;
                     }
                     try
                     {
@@ -64,9 +86,9 @@ namespace emmVRC.Managers
                             ESPButton = PlayerTweaksMenu.ESPToggle.getGameObject().GetComponent<Button>();
                         else
                         {
-                            if ((FlightButton.enabled || NoclipButton.enabled || SpeedButton.enabled || ESPButton.enabled) && (!RiskyFunctionsAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled))
+                            if ((FlightButton.enabled || NoclipButton.enabled || SpeedButton.enabled || ESPButton.enabled) && (!RiskyFuncsAreAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled))
                             {
-                                RiskyFunctionsChecked = false;
+                                RiskyFuncsAreChecked = false;
                             }
                         }
                     }
@@ -79,7 +101,11 @@ namespace emmVRC.Managers
                 yield return new WaitForEndOfFrame();
             }
         }
-        public static IEnumerator CheckWorld()
+        internal static IEnumerator CheckWorld()
+        {
+            yield return null;
+        }
+        internal static IEnumerator CheckThisWrld()
         {
             // Wait for the room manager to become available, meaning the player is in the world
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
@@ -89,7 +115,7 @@ namespace emmVRC.Managers
             if (Configuration.JSONConfig.RiskyFunctionsEnabled)
             {
                 riskyFuncsAllowed = false;
-                RiskyFunctionsChecked = false;
+                RiskyFuncsAreChecked = false;
                 // Temporary boolean that we will set if the world is whitelisted or blacklisted, to disable our later check.
                 bool temp = false;
 
@@ -142,7 +168,7 @@ namespace emmVRC.Managers
                     lowerTags.Clear();
                 }
                 // Now have Risky Functions reprocess based on this result
-                RiskyFunctionsChecked = false;
+                RiskyFuncsAreChecked = false;
             }
         }
     }

@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
+    <Compile Include="Hacks\ActionMenuTweaks.cs" />
     <Compile Include="Hacks\AvatarMenu.cs" />
     <Compile Include="Hacks\AvatarPropertySaving.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />

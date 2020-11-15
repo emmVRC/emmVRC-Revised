@@ -9,6 +9,7 @@ using emmVRC.Libraries;
 using emmVRC.Hacks;
 using UnityEngine;
 using UnityEngine.UI;
+using emmVRC.Objects;
 
 #pragma warning disable 4014
 
@@ -88,12 +89,11 @@ namespace emmVRC.Menus
         private static PageItem DisableEmoji;
         private static PageItem DisableEmote;
         private static PageItem DisableRankToggle;
-
-        // Page 7
         private static PageItem DisablePlaylists;
         private static PageItem DisableAvatarStats;
         private static PageItem DisableReportUser;
         private static PageItem MinimalWarnKick;
+        private static PageItem DisableOneHandMovement;
 
         // Page 8
         private static PageItem DisableAvatarHotWorlds;
@@ -145,7 +145,7 @@ namespace emmVRC.Menus
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
                     Configuration.JSONConfig.RiskyFunctionsWarningShown = true;
                     Configuration.SaveConfig();
-                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
+                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckThisWrld());
                     RefreshMenu();
                 }), "Decline", new System.Action(() =>
                 {
@@ -157,7 +157,7 @@ namespace emmVRC.Menus
                 {
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
                     Configuration.SaveConfig();
-                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
+                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckThisWrld());
                     RefreshMenu();
                 }
             }, "Disabled", () =>
@@ -165,7 +165,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.RiskyFunctionsEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                PlayerTweaksMenu.SetRiskyFunctions(false);
+                PlayerTweaksMenu.SetRiskyFuncsAllowed(false);
                 if (Flight.FlightEnabled || Flight.NoclipEnabled)
                     PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
                 if (Speed.SpeedModified)
@@ -942,6 +942,19 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 UserInteractMenuButtons.Initialize();
             }, "TOGGLE: Combines the Warn and Kick buttons into one space, to make room for more buttons");
+            DisableOneHandMovement = new PageItem("Disable\nHand Movement", () =>
+            {
+                Configuration.JSONConfig.DisableOneHandMovement = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ActionMenuTweaks.Apply();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableOneHandMovement = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.ActionMenuTweaks.Apply();
+            }, "TOGGLE: Disables the one-handed movement indicator when one of your VR Controllers has lost tracking");
             if (!Configuration.JSONConfig.StealthMode)
             {
                 baseMenu.pageItems.Add(DisableReportWorld);
@@ -952,7 +965,7 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(DisableReportUser);
                 baseMenu.pageItems.Add(DisableAvatarStats);
                 baseMenu.pageItems.Add(MinimalWarnKick);
-                baseMenu.pageItems.Add(PageItem.Space);
+                baseMenu.pageItems.Add(DisableOneHandMovement);
             }
 
             DisableAvatarHotWorlds = new PageItem("Disable Hot Avatar\nWorld List", () =>
@@ -1178,6 +1191,7 @@ namespace emmVRC.Menus
                 DisableAvatarStats.SetToggleState(Configuration.JSONConfig.DisableAvatarStatsButton);
                 DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);
                 MinimalWarnKick.SetToggleState(Configuration.JSONConfig.MinimalWarnKickButton);
+                DisableOneHandMovement.SetToggleState(Configuration.JSONConfig.DisableOneHandMovement);
 
                 DisableAvatarHotWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarHotWorlds);
                 DisableAvatarRandomWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarRandomWorlds);

@@ -18,6 +18,7 @@ namespace emmVRC.Managers
         public static QMNestedButton NotificationMenu;
         private static QMSingleButton NotificationButton1;
         private static QMSingleButton NotificationButton2;
+        private static QMSingleButton NotificationButton3;
         private static GameObject NotificationIcon;
         private static List<GameObject> VanillaIcons = new List<GameObject>();
         private static Thread NotificationManagerThread;
@@ -47,6 +48,7 @@ namespace emmVRC.Managers
             NotificationMenu = new QMNestedButton(!Configuration.JSONConfig.StealthMode ? "ShortcutMenu" : ReportWorldMenu.baseMenu.getMenuName(), Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY, "\nemmVRC\nNotifications", "  new emmVRC Notifications are available!");
             NotificationButton1 = new QMSingleButton(NotificationMenu, 1, 0, "Accept", null, "Accept");
             NotificationButton2 = new QMSingleButton(NotificationMenu, 2, 0, "Decline", null, "Decline");
+            NotificationButton3 = new QMSingleButton(NotificationMenu, 3, 0, "Block", null, "Block");
 
             // Set up the entering menu action
             NotificationMenu.getMainButton().setAction(() =>
@@ -69,6 +71,14 @@ namespace emmVRC.Managers
                 }
                 else
                     NotificationButton2.setActive(false);
+                if (Notifications[0].Button3Action != null)
+                {
+                    NotificationButton3.setButtonText(Notifications[0].Button3Text);
+                    NotificationButton3.setAction(Notifications[0].Button3Action);
+                    NotificationButton3.setActive(true);
+                }
+                else
+                    NotificationButton3.setActive(false);
             });
 
             // Create the separate thread that will manage the notification system
@@ -133,20 +143,23 @@ namespace emmVRC.Managers
             }
         }
 
-        public static void AddNotification(string text, string button1Text, System.Action button1Action, string button2Text, System.Action button2Action, Sprite notificationIcon = null, int timeout = -1)
+        public static void AddNotification(string text, string button1Text, System.Action button1Action, string button2Text, System.Action button2Action, string button3Text, System.Action button3Action, Sprite notificationIcon = null, int timeout = -1)
         {
             Notification newNotification = new Notification()
             {
                 Message = text,
                 Button1Text = button1Text,
                 Button2Text = button2Text,
+                Button3Text = button3Text,
                 Button1Action = button1Action,
                 Button2Action = button2Action,
+                Button3Action = button3Action,
                 Icon = (notificationIcon == null ? Resources.errorSprite : notificationIcon),
                 Timeout = timeout
             };
             Notifications.Add(newNotification);
         }
+        public static void AddNotification(string text, string button1Text, System.Action button1Action, string button2Text, System.Action button2Action, Sprite notificationIcon = null, int timeout = -1) => AddNotification(text, button1Text, button1Action, button2Text, button2Action, "", null, notificationIcon, timeout);
         public static void DismissCurrentNotification()
         {
             if (Notifications.Count > 0)

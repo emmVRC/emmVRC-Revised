@@ -133,7 +133,7 @@ namespace emmVRC.Hacks
             foreach (Text txt in normalColorText)
                 txt.color = color;
 
-            if (!setupSkybox)
+            if (!setupSkybox && !ModCompatibility.BetterLoadingScreen)
             {
                 try
                 {
@@ -156,7 +156,7 @@ namespace emmVRC.Hacks
                     emmVRCLoader.Logger.LogError(ex.ToString());
                 }
             }
-            if (setupSkybox && loadingBackground != null)
+            if (setupSkybox && loadingBackground != null && !ModCompatibility.BetterLoadingScreen)
                 loadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
             ColorBlock buttonTheme = new ColorBlock()
             {

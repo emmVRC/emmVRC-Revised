@@ -11,29 +11,29 @@ using VRC.Animation;
 
 namespace emmVRC.Menus
 {
-    public class PlayerTweaksMenu
+    internal class PlayerTweaksMenu
     {
-        public static QMNestedButton baseMenu;
-        public static GameObject SpeedText;
-        public static QMSingleButton UnloadDynamicBonesButton;
-        public static QMSingleButton SelectCurrentUserButton;
-        public static QMSingleButton SaveAvatarParameters;
-        public static QMSingleButton ReloadAllAvatars;
-        public static QMSingleButton AvatarOptionsMenu;
-        public static QMSingleButton EnableJumpButton;
-        public static QMSingleButton WaypointMenu;
-        public static QMToggleButton AvatarClone;
-        public static QMToggleButton FlightToggle;
-        public static QMToggleButton NoclipToggle;
-        public static QMToggleButton ESPToggle;
-        public static QMToggleButton SpeedToggle;
-        public static QMSingleButton SpeedReset;
-        public static QMSingleButton SpeedMinusButton;
-        public static QMSingleButton SpeedPlusButton;
-        public static Objects.Slider SpeedSlider;
+        internal static QMNestedButton baseMenu;
+        internal static GameObject SpeedText;
+        internal static QMSingleButton UnloadDynamicBonesButton;
+        internal static QMSingleButton SelectCurrentUserButton;
+        internal static QMSingleButton SaveAvatarParameters;
+        internal static QMSingleButton ReloadAllAvatars;
+        internal static QMSingleButton AvatarOptionsMenu;
+        internal static QMSingleButton EnableJumpButton;
+        internal static QMSingleButton WaypointMenu;
+        internal static QMToggleButton AvatarClone;
+        internal static QMToggleButton FlightToggle;
+        internal static QMToggleButton NoclipToggle;
+        internal static QMToggleButton ESPToggle;
+        internal static QMToggleButton SpeedToggle;
+        internal static QMSingleButton SpeedReset;
+        internal static QMSingleButton SpeedMinusButton;
+        internal static QMSingleButton SpeedPlusButton;
+        internal static Objects.Slider SpeedSlider;
 
 
-        public static void Initialize()
+        internal static void Initialize()
         {
             baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 192948, 102394, "Player\nTweaks", "");
             baseMenu.getMainButton().DestroyMe();
@@ -63,8 +63,7 @@ namespace emmVRC.Menus
 
             EnableJumpButton = new QMSingleButton(baseMenu, 1, 1, "Jumping", () =>
             {
-                if (VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<PlayerModComponentJump>() == null)
-                    VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.AddComponent<PlayerModComponentJump>();
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.SetJumpImpulse(2.8f);
                 EnableJumpButton.getGameObject().GetComponent<Button>().enabled = false;
             }, "Enables jumping for this world. Requires Risky Functions");
             EnableJumpButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
@@ -171,7 +170,7 @@ namespace emmVRC.Menus
             SpeedText.GetComponent<UnityEngine.UI.Text>().text = "Speed: Disabled";
             SpeedText.GetComponent<RectTransform>().anchoredPosition = SpeedMinusButton.getGameObject().GetComponent<RectTransform>().anchoredPosition + new Vector2(192f, 192f);
         }
-        public static void SetRiskyFunctions(bool state)
+        internal static void SetRiskyFuncsAllowed(bool state)
         {
             if (state)
             {

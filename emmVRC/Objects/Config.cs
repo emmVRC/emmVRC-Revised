@@ -65,6 +65,8 @@ namespace emmVRC.Objects
         public bool DisableAvatarStatsButton = false;
         public bool DisableReportUserButton = false;
         public bool MinimalWarnKickButton = false;
+        // Sub section: Action Menu
+        public bool DisableOneHandMovement = false;
 
         // Sub section: Avatar Menu
         public bool DisableAvatarHotWorlds = false;

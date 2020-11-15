@@ -127,6 +127,19 @@ namespace emmVRC.Managers
                                         emmVRCLoader.Logger.LogError(ex.ToString());
                                     }
                                 NotificationManager.DismissCurrentNotification();
+                            }, "Block\nUser", () => {
+                                if (NetworkClient.authToken != null)
+                                    try
+                                    {
+                                        HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
+                                        HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + msg.message.rest_message_sender_id, null);
+                                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "The block state for this user has been toggled.", "Okay", new System.Action(() => { VRCUiPopupManager.prop_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        emmVRCLoader.Logger.LogError(ex.ToString());
+                                    }
+                                NotificationManager.DismissCurrentNotification();
                             }, Resources.messageSprite, -1);
                             msg.read = true;
                         }

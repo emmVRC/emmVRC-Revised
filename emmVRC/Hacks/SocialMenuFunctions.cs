@@ -58,22 +58,22 @@ namespace emmVRC.Hacks
             AvatarSearchButton.GetComponentInChildren<Text>().text = "Search Avatars";
             AvatarSearchButton.SetActive(false);
 
-
-            PortalToUserButton = GameObject.Instantiate(AvatarSearchButton, SocialFunctionsButton.transform.parent);
-            PortalToUserButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
-            PortalToUserButton.GetComponentInChildren<Text>().text = "Drop Portal";
-            PortalToUserButton.SetActive(false);
-
-            ToggleBlockButton = GameObject.Instantiate(PortalToUserButton, SocialFunctionsButton.transform.parent);
+            ToggleBlockButton = GameObject.Instantiate(AvatarSearchButton, SocialFunctionsButton.transform.parent);
             ToggleBlockButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             ToggleBlockButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Block";
             ToggleBlockButton.SetActive(false);
 
+            PortalToUserButton = GameObject.Instantiate(ToggleBlockButton, SocialFunctionsButton.transform.parent);
+            PortalToUserButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            PortalToUserButton.GetComponentInChildren<Text>().text = "Drop Portal";
+            PortalToUserButton.SetActive(false);
+
+
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 UserSendMessage.SetActive(!UserSendMessage.activeSelf);
                 UserNotes.SetActive(!UserNotes.activeSelf);
-                //ToggleBlockButton.SetActive(!ToggleBlocklButton.activeSelf);
-                if (RiskyFunctionsManager.RiskyFunctionsAllowed)
+                ToggleBlockButton.SetActive(!ToggleBlockButton.activeSelf);
+                if (RiskyFunctionsManager.RiskyFuncsAreAllowed)
                     TeleportButton.SetActive(!TeleportButton.activeSelf);
                 else
                     TeleportButton.SetActive(false);
@@ -111,11 +111,18 @@ namespace emmVRC.Hacks
                 {
                     ex = new Exception();
                 }
+                try
+                {
+                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").activeSelf);
+                } 
+                catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
             }));
 
             UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => {
-                    
                         MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
                 }), null, "Enter message...");
             }));
@@ -125,7 +132,7 @@ namespace emmVRC.Hacks
             }));
 
             TeleportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
-                if (RiskyFunctionsManager.RiskyFunctionsAllowed)
+                if (RiskyFunctionsManager.RiskyFuncsAreAllowed)
                 {
                     Player plrToTP = null;
                     Libraries.PlayerUtils.GetEachPlayer((Player plr) => {
@@ -163,7 +170,6 @@ namespace emmVRC.Hacks
                         if (PortalCooldownTimer == 0)
                         {
                             string[] instanceInfo = QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Split(':');
-                            emmVRCLoader.Logger.Log(instanceInfo[1]);
                             GameObject portal = VRC.SDKBase.Networking.Instantiate(VRC.SDKBase.VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position + VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.forward * 2, VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation);
                             VRC.SDKBase.Networking.RPC(VRC.SDKBase.RPC.Destination.AllBufferOne, portal, "ConfigurePortal", new Il2CppSystem.Object[]
                             {
@@ -189,6 +195,16 @@ namespace emmVRC.Hacks
                 else
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You cannot drop a portal to this user.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                }
+            }));
+
+            ToggleBlockButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                if (NetworkClient.authToken != null)
+                {
+                    HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, null);
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "The block state for this user has been toggled.", 5f);
+                    //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
                 }
             }));
 
@@ -236,6 +252,14 @@ namespace emmVRC.Hacks
                         {
                             GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").SetActive(true);
                         }
+                        catch (Exception ex)
+                        {
+                            ex = new Exception();
+                        }
+                        try
+                        {
+                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").SetActive(true);
+                        } 
                         catch (Exception ex)
                         {
                             ex = new Exception();

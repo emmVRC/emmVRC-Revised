@@ -11,6 +11,7 @@ using System.Net;
 using System.Windows.Forms;
 using emmVRC.Libraries;
 using VRC.Core;
+using Il2CppSystem.Reflection;
 
 
 #pragma warning disable 4014
@@ -43,6 +44,8 @@ namespace emmVRC
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better
         public static void OnUIManagerInit()
         {
+            int VRCBuildNumber = UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber;
+            emmVRCLoader.Logger.Log("VRChat build is: " + VRCBuildNumber);
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             /*bool HarmonyPresent = false;
@@ -96,7 +99,13 @@ namespace emmVRC
                 }
                 return;
             }
-
+            else if (VRCBuildNumber < Attributes.LastTestedBuildNumber)
+            {
+                emmVRCLoader.Logger.LogError("You are using an older version of VRChat than supported by emmVRC: " + VRCBuildNumber + ". Please update VRChat through Steam or Oculus to build " + Attributes.LastTestedBuildNumber + ". emmVRC will not start.");
+                System.Windows.Forms.MessageBox.Show("You are using an older version of VRChat than supported by emmVRC: " + VRCBuildNumber + ". Please update VRChat through Steam or Oculus to build " + Attributes.LastTestedBuildNumber + ". emmVRC will not start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                watch.Stop();
+                return;
+            }
 
             else
             {
@@ -273,6 +282,10 @@ namespace emmVRC
                 // Change the target FPS to 200
                 Hacks.FPS.Initialize();
 
+                // Initialize the Action Menu hacks
+                if (!Configuration.JSONConfig.StealthMode)
+                    Hacks.ActionMenuTweaks.Apply();
+
                 // Initialize the Volume hooker
                 if (!Configuration.JSONConfig.StealthMode)
                     Hacks.Volume.Initialize();
@@ -329,7 +342,7 @@ namespace emmVRC
                     MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
                     if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null && !Configuration.JSONConfig.StealthMode)
                         Hacks.InfoBarClock.instanceTime = 0;
-                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckWorld());
+                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckThisWrld());
                     if (!Configuration.JSONConfig.StealthMode)
                         MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
                     MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
