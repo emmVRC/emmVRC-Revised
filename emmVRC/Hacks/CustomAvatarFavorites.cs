@@ -9,6 +9,7 @@ using emmVRC.Network;
 using System.Linq;
 using System.IO;
 using emmVRC.Objects;
+using System.Reflection;
 
 namespace emmVRC.Hacks
 {
@@ -39,9 +40,22 @@ namespace emmVRC.Hacks
         private static UnityAction<string> searchBoxAction;
         //private static System.Collections.Generic.List<Objects.SerializedAvatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Objects.SerializedAvatar>();
 
+        private static MethodInfo renderElementMethod;
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
         {
-            uivrclist.Method_Protected_Void_List_1_T_Int32_Boolean_0<ApiAvatar>(AvatarList, 0, true);
+            if (renderElementMethod == null)
+            {
+                renderElementMethod = typeof(UiVRCList).GetMethods().FirstOrDefault(a => a.Name.Contains("Method_Protected_Void_List_1_T_Int32_Boolean")).MakeGenericMethod(typeof(ApiAvatar));
+            }
+            if (!Attributes.VRCPlusVersion)
+                renderElementMethod.Invoke(uivrclist, new object[] { AvatarList, 0, true });
+            else
+                renderElementMethod.Invoke(uivrclist, new object[] { AvatarList, 0, true, null });
+
+            //emmVRCLoader.Logger.LogDebug("Calling RenderElement...");
+
+            //uivrclist.Method_Protected_Void_List_1_T_Int32_Boolean_VRCUiContentButton_0<ApiAvatar>(AvatarList, 0, true, null);
+            //uivrclist.Method_Protected_Void_List_1_T_Int32_Boolean_0<ApiAvatar>(AvatarList, 0, true);
             //uivrclist.Method_Protected_List_1_T_Int32_Boolean_1<ApiAvatar>(AvatarList, 0, true);
         }
 
@@ -96,6 +110,19 @@ namespace emmVRC.Hacks
 
             FavoriteButtonNew.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0, 165f);
             FavoriteButtonNewText = FavoriteButtonNew.GetComponentInChildren<Text>();
+            FavoriteButtonNewText.supportRichText = true;
+            if (Attributes.VRCPlusVersion)
+            {try
+                {
+                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountSpacingText").gameObject.SetActive(false);
+                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
+                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountDividerText").gameObject.SetActive(false);
+                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);
+                } catch (System.Exception ex)
+                {
+                    emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
+                }
+            }
 
             MigrateButton = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
             MigrateButton.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0f, 765f);
@@ -207,10 +234,6 @@ namespace emmVRC.Hacks
 
             SearchedAvatars = new List<ApiAvatar>();
 
-        }
-        public static void Refresh()
-        {
-            MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
         }
         public static System.Collections.IEnumerator FavoriteAvatar(ApiAvatar avtr)
         {
@@ -463,9 +486,11 @@ namespace emmVRC.Hacks
 
             var tempLis = new List<ApiAvatar>();
             tempLis.Add(models[0]);
-            avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(tempLis, 0, true);
+            avatars.RenderElement(tempLis);
+            //avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(tempLis, 0, true);
             yield return new WaitForSeconds(1f);
-            avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(models, 0, true);
+            avatars.RenderElement(models);
+            //avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(models, 0, true);
         }
 
         internal static void Hide()

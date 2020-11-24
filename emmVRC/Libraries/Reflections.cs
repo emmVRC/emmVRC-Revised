@@ -9,6 +9,7 @@ using VRC.UI;
 using UnityEngine;
 using VRC;
 using VRC.Animation;
+using VRC.Core;
 
 namespace emmVRC.Libraries
 {
@@ -215,5 +216,24 @@ namespace emmVRC.Libraries
         }
         #endregion
 
+        #region QuickMenu SetQuickMenuContext
+        private static MethodInfo ourSetQuickMenuContextMethod;
+        public static MethodInfo SetQuickMenuContextMethod
+        {
+            get
+            {
+                if (ourSetQuickMenuContextMethod != null) return ourSetQuickMenuContextMethod;
+                var targetMethod = typeof(QuickMenu).GetMethods()
+                    .First(it => it != null && it.Name.Contains("Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String"));
+                ourSetQuickMenuContextMethod = targetMethod;
+                return ourSetQuickMenuContextMethod;
+            }
+        }
+
+        public static void SetQuickMenuContext(this QuickMenu instance, QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique context, APIUser user = null, string text = "")
+        {
+            SetQuickMenuContextMethod.Invoke(instance, new object[] { context, user, text });
+        }
+        #endregion
     }
 }

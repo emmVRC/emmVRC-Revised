@@ -13,6 +13,7 @@ namespace emmVRC.Objects
         public bool DeleteAndDisableAuthFile = false;
         public bool DisableAvatarChecks = false;
         public bool APICallsAllowed = true;
+        public bool MessagingAllowed = true;
         public static NetworkConfig Instance = new NetworkConfig();
     }
 }

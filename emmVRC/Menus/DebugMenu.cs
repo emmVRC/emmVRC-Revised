@@ -125,12 +125,7 @@ namespace emmVRC.Menus
                     VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("A notification manager error occured.");
                 }
             }, "Add a test notification to the Notification Manager");
-
-            testNetworkPingButton = new QMSingleButton(menuBase, 4, 1, "Ping\nemmVRC\nNetwork", () =>
-            {
-                MelonLoader.MelonCoroutines.Start(PingNetwork());
-            }, "Test the ping of the emmVRC Network server");
-            benchmarkMenu = new QMNestedButton(menuBase, 1, 2, "Benchmarks", "Test the performance of various sections of emmVRC");
+            benchmarkMenu = new QMNestedButton(menuBase, 4, 1, "Benchmarks", "Test the performance of various sections of emmVRC");
             colorChangeBenchmark = new QMSingleButton(benchmarkMenu, 1, 0, "Color\nChanging\nBenchmark", () =>
             {
                 System.Diagnostics.Stopwatch[] watches = new System.Diagnostics.Stopwatch[5] { new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch(), new System.Diagnostics.Stopwatch() };
@@ -211,7 +206,7 @@ namespace emmVRC.Menus
                 iterateAverage = iterateAverage / 5;
                 Managers.NotificationManager.AddNotification("Mono Average fill time: " + fillAverage + "ms, average iterate time: " + iterateAverage + "ms.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
             }, "Tests Mono lists for efficiency");
-            debugActionsMenu = new PaginatedMenu(menuBase, 2, 2, "Registered\nDebug\nActions", "Shows all of the registered debug actions registered in this build of emmVRC, if any", null);
+            debugActionsMenu = new PaginatedMenu(menuBase, 1, 2, "Registered\nDebug\nActions", "Shows all of the registered debug actions registered in this build of emmVRC, if any", null);
 
         }
         public static void PopulateDebugMenu()
@@ -226,15 +221,7 @@ namespace emmVRC.Menus
                     debugActionsMenu.pageItems.Add(new PageItem(actionName, newAction, action.Description));
                 }
         }
-        public static IEnumerator PingNetwork()
-        {
-            Ping sender = new Ping("51.68.189.195");
-            while (!sender.isDone)
-                yield return null;
-
-            Managers.NotificationManager.AddNotification("The ping from the emmVRC Network is currently: " + sender.time + "ms", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
-        }
-        public static IEnumerator loadDebugModule()
+        /*public static IEnumerator loadDebugModule()
         {
             string modulePath = Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRCTest.dll");
             if (File.Exists(modulePath))
@@ -254,7 +241,7 @@ namespace emmVRC.Menus
                     /*AppDomain newDomain = AppDomain.CreateDomain("emmVRC Debug environment");
                     byte[] buffer = File.ReadAllBytes(modulePath);
                     Assembly debugModule = newDomain.Load(buffer);
-                    */
+                    -- End of comment goes here
                     Managers.NotificationManager.AddNotification("Debug module execution complete.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
                 }
                 catch (Exception ex)
@@ -277,7 +264,7 @@ namespace emmVRC.Menus
                 emmVRCLoader.Logger.LogError("An error occured while getting types from assembly " + assembly.GetName().Name + ". Returning types from error.\n" + e);
                 return e.Types.Where(t => t != null);
             }
-        }
+        }*/
 
     }
 }

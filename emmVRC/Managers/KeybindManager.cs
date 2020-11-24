@@ -25,7 +25,7 @@ namespace emmVRC.Managers
             {
                 if (Configuration.JSONConfig.EnableKeybinds)
                 {
-                    if (RiskyFunctionsManager.RiskyFuncsAreAllowed)
+                    if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                     {
                         // If the flight keybind is pressed...
                         if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) || (KeyCode)Configuration.JSONConfig.FlightKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !keyFlag)

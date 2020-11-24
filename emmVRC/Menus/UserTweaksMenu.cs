@@ -35,6 +35,7 @@ namespace emmVRC.Menus
                     MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, targetId));
                 }), null, "Enter message....");
             }, "Send a message to this player, either through emmVRC Network, or invites");
+            SendMessageButton.getGameObject().GetComponent<Button>().interactable = false;
             FavoriteAvatarButton = new QMSingleButton(UserTweaks, 2, 1, "Favorite\nAvatar", () =>
             {
                 bool flag = false;

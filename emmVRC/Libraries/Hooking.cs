@@ -3,18 +3,18 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using emmVRC.Hacks;
+using emmVRC.TinyJSON;
 using Harmony;
 using MelonLoader;
 using Transmtn.DTO;
 using UnityEngine;
 using VRC;
+using VRC.Core;
 
 namespace emmVRC.Libraries
 {
     public class Hooking
     {
-        private delegate void AvatarInstantiatedDelegate(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded);
-        private static AvatarInstantiatedDelegate onAvatarInstantiatedDelegate;
         private static Harmony.HarmonyInstance instanceHarmony;
         private static Action<Player> event1Action;
         private static Action<Player> event2Action;
@@ -24,10 +24,12 @@ namespace emmVRC.Libraries
             instanceHarmony = Harmony.HarmonyInstance.Create("emmVRCHarmony");
             try
             {
-
-                    IntPtr funcToHookAvtr = (IntPtr)typeof(VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique).GetField("NativeMethodInfoPtr_Invoke_Public_Virtual_New_Void_GameObject_VRC_AvatarDescriptor_Boolean_0", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null);
-                    Imports.Hook(funcToHookAvtr, new System.Action<IntPtr, IntPtr, IntPtr, bool>(OnAvatarInstantiated).Method.MethodHandle.GetFunctionPointer());
-                    onAvatarInstantiatedDelegate = Marshal.GetDelegateForFunctionPointer<AvatarInstantiatedDelegate>(*(IntPtr*)funcToHookAvtr);
+                foreach (MethodInfo inf in typeof(VRCPlayer).GetMethods())
+                {
+                    if (inf.Name.Contains("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_PDM_") && !UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(inf).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == "Avatar is Ready, Initializing")){
+                        instanceHarmony.Patch(inf, new HarmonyMethod(typeof(Hooking).GetMethod("OnAvatarInstantiated", BindingFlags.NonPublic | BindingFlags.Static)));
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -110,19 +112,8 @@ namespace emmVRC.Libraries
                 {
                     emmVRCLoader.Logger.LogError("VRCTrackingSteam hooking failed: " + ex.ToString());
                 }
-                /*try
-                {
-
-                    instanceHarmony.Patch(typeof(VRCTrackingManager).GetMethods()
-                        .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(bool) && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType != null && jt.TryResolve().ReflectedType.Name == "Whiteboard")), new HarmonyMethod(typeof(Hooking).GetMethod("SetControllerVisibility", BindingFlags.NonPublic | BindingFlags.Static)));
-                }
-                catch (Exception ex)
-                {
-                    emmVRCLoader.Logger.LogError("SetControllerVisibility hooking failed: " + ex.ToString());
-                }*/
             }
         }
-
         private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
         {
             if (__0 != null && FBTSaving.IsPreviouslyCalibrated(__0) && RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.TrackingSaving)
@@ -148,7 +139,7 @@ namespace emmVRC.Libraries
             }
             return true;
         }
-        
+
         private static bool SetControllerVisibility(VRCTrackingManager __instance, bool __0)
         {
             //if (UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>().Count != 0 && UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>()[0].field_Private_String_0 == null && !__0)
@@ -165,30 +156,20 @@ namespace emmVRC.Libraries
             }
             return true;
         }
-
-        private static void OnAvatarInstantiated(IntPtr @this, IntPtr avatarPtr, IntPtr avatarDescriptorPtr, bool loaded)
+        private static void OnAvatarInstantiated(GameObject __0, VRC.SDKBase.VRC_AvatarDescriptor __1, bool __2)
         {
-            onAvatarInstantiatedDelegate(@this, avatarPtr, avatarDescriptorPtr, loaded);
-            try
+            if (__2)
             {
-                if (loaded)
+                emmVRCLoader.Logger.LogDebug("Avatar loaded");
+                Managers.AvatarPermissionManager.ProcessAvatar(__0, __1);
+                if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
                 {
-                    VRC.SDKBase.VRC_AvatarDescriptor descriptor = new VRC.SDKBase.VRC_AvatarDescriptor(avatarDescriptorPtr);
-                    GameObject avatarObj = new GameObject(avatarPtr);
-                    VRCAvatarManager avatarMgr = new VRCAvatarManager(@this);
-                    Managers.AvatarPermissionManager.ProcessAvatar(avatarObj, descriptor);
-                    if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
-                    {
-                        Hacks.GlobalDynamicBones.ProcessDynamicBones(avatarObj, descriptor, avatarMgr);
-                    }
-                    MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(descriptor));
+                    Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, __1);
                 }
-            }
-            catch (System.Exception ex)
-            {
-                emmVRCLoader.Logger.LogError(ex.ToString());
+                MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(__1));
             }
         }
+        
         private static bool OnPortalEntered(PortalInternal __instance)
         {
             if (!Configuration.JSONConfig.PortalBlockingEnable)

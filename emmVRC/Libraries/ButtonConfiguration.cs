@@ -77,7 +77,7 @@ namespace emmVRC.Libraries
         {
             openAction.Invoke(this);
             QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
-            QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String_PDM_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.Notification, null, menuTitle);
+            QuickMenuUtils.GetQuickMenuInstance().SetQuickMenuContext(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.Notification, null, menuTitle);
         }
         public void ChangeDisabledButtons(List<KeyValuePair<string, Vector2>> newDisabledButtons)
         {

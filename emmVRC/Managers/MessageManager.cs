@@ -58,7 +58,7 @@ namespace emmVRC.Managers
         }
         public static IEnumerator CheckLoop()
         {
-            while (true)
+            while (true == false)
             {
                 if (NetworkClient.authToken != null)
                 {

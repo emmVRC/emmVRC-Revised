@@ -16,6 +16,7 @@ using emmVRC.Libraries;
 using VRC.Core;
 using System.Linq.Expressions;
 using emmVRC.Hacks;
+using emmVRC.Menus;
 
 namespace emmVRC.Network
 {

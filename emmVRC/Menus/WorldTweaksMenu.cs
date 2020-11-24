@@ -39,7 +39,7 @@ namespace emmVRC.Menus
             PortalBlockToggle = new QMToggleButton(baseMenu, 4, 0, "Portals On", () => { Configuration.JSONConfig.PortalBlockingEnable = false; Configuration.SaveConfig(); }, "Portals Off", () => { Configuration.JSONConfig.PortalBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables portals in the current world", null, null, false, true);
             PortalBlockToggle.setToggleState(!Configuration.JSONConfig.PortalBlockingEnable);
             ChairBlockToggle = new QMToggleButton(baseMenu, 4, 1, "Chairs On", () => { Configuration.JSONConfig.ChairBlockingEnable = false; Configuration.SaveConfig(); }, "Chairs Off", () => { Configuration.JSONConfig.ChairBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables chairs in the current world", null, null, false, true);
-            ChairBlockToggle.setToggleState(!Configuration.JSONConfig.ChairBlockingEnable);
+            ChairBlockToggle.setToggleState(!Configuration.JSONConfig.ChairBlockingEnable);;
         }
     }
 }

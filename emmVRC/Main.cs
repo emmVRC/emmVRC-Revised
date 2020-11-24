@@ -46,6 +46,8 @@ namespace emmVRC
         {
             int VRCBuildNumber = UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber;
             emmVRCLoader.Logger.Log("VRChat build is: " + VRCBuildNumber);
+            if (VRCBuildNumber >= 1019)
+                Attributes.VRCPlusVersion = true;
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             /*bool HarmonyPresent = false;
@@ -136,7 +138,8 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(Resources.LoadResources());
 
                 // Initialize the "UI Elements" replacement buttons
-                MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
+                if (!Attributes.VRCPlusVersion)
+                    MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
 
                 // Initialize the Mod Compatibility system
                 Libraries.ModCompatibility.Initialize();
@@ -270,8 +273,7 @@ namespace emmVRC
                     Hacks.InfoSpoofing.Initialize();
 
                 // Initialize the Nameplate color changer
-                if (!Configuration.JSONConfig.StealthMode)
-                    Hacks.Nameplates.Initialize();
+                Hacks.Nameplates.Initialize();
 
                 // Initialize the Flashlight system
                 Menus.FlashlightMenu.Initialize();
@@ -294,7 +296,11 @@ namespace emmVRC
                 Managers.MessageManager.Initialize();
 
                 // Initialize the custom Main Menu page system
-                Hacks.CustomMainMenuPage.Initialize();
+                //Hacks.CustomMainMenuPage.Initialize();
+
+                // Initialize the Main Menu Tweaks
+                if (Attributes.VRCPlusVersion)
+                    Hacks.MainMenuTweaks.Initialize();
 
                 // Initialize the emmVRC HUD
                 if (!Configuration.JSONConfig.StealthMode)
@@ -316,7 +322,7 @@ namespace emmVRC
                 }
 
                 // Start the Master Icon Crown
-                if (!Configuration.JSONConfig.StealthMode)
+                if (!Configuration.JSONConfig.StealthMode && !Attributes.VRCPlusVersion)
                     Hacks.MasterCrown.Initialize();
                 // Start the Avatar Favorite system
                 Hacks.CustomAvatarFavorites.Initialize();
@@ -416,8 +422,6 @@ namespace emmVRC
                     Configuration.SaveConfig();
                 }
             }
-
-            
             Hacks.CustomAvatarFavorites.OnUpdate();
         }
         public static void OnApplicationQuit()

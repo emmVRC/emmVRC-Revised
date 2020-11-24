@@ -67,6 +67,11 @@ namespace emmVRC.Objects
         public bool MinimalWarnKickButton = false;
         // Sub section: Action Menu
         public bool DisableOneHandMovement = false;
+        // Sub section: VRChat Minus
+        public bool DisableVRCPlusAds = false;
+        public bool DisableVRCPlusQMButtons = false;
+        public bool DisableVRCPlusMenuTabs = false;
+        public bool DisableVRCPlusUserInfo = false;
 
         // Sub section: Avatar Menu
         public bool DisableAvatarHotWorlds = false;

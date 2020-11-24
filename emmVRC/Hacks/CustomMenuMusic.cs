@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using emmVRC.Libraries;
 
 namespace emmVRC.Hacks
 {
@@ -13,7 +14,7 @@ namespace emmVRC.Hacks
     {
         public static IEnumerator Initialize()
         {
-            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/custommenu.ogg"))){
+            if (!ModCompatibility.BetterLoadingScreen && File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/custommenu.ogg"))){
                 emmVRCLoader.Logger.Log("Processing custom menu music...");
                 GameObject loadingMusic1 = GameObject.Find("LoadingBackground_TealGradient_Music/LoadingSound");
                 GameObject loadingMusic2 = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Popups/LoadingPopup/LoadingSound").gameObject;

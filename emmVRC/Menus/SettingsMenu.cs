@@ -95,6 +95,12 @@ namespace emmVRC.Menus
         private static PageItem MinimalWarnKick;
         private static PageItem DisableOneHandMovement;
 
+        // Page 7
+        private static PageItem DisableVRCPlusAds;
+        private static PageItem DisableVRCPlusQMButtons;
+        private static PageItem DisableVRCPlusMenuTabs;
+        private static PageItem DisableVRCPlusUserInfo;
+
         // Page 8
         private static PageItem DisableAvatarHotWorlds;
         private static PageItem DisableAvatarRandomWorlds;
@@ -968,6 +974,68 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(DisableOneHandMovement);
             }
 
+            DisableVRCPlusAds = new PageItem("Disable VRC+\nQuick Menu Ads", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusAds = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusAds = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "TOGGLE: Disables the VRChat Plus adverts in the Quick Menu");
+            DisableVRCPlusQMButtons = new PageItem("Disable VRC+\nQuick Menu Buttons", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusQMButtons = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusQMButtons = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "TOGGLE: Disables the VRChat Plus buttons in the Quick Menu");
+            DisableVRCPlusMenuTabs = new PageItem("Disable VRC+\nMenu Tabs", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusMenuTabs = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusMenuTabs = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+
+            }, "TOGGLE: Disables the VRChat Plus menu tabs, and adjusts the rest of the tabs to fit again");
+            DisableVRCPlusUserInfo = new PageItem("Disable VRC+\nUser Info", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusUserInfo = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableVRCPlusUserInfo = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+
+            }, "TOGGLE: Disables the VRChat Plus User Info additions");
+            if (!Configuration.JSONConfig.StealthMode && Attributes.VRCPlusVersion)
+            {
+                baseMenu.pageItems.Add(DisableVRCPlusAds);
+                baseMenu.pageItems.Add(DisableVRCPlusQMButtons);
+                baseMenu.pageItems.Add(DisableVRCPlusMenuTabs);
+                baseMenu.pageItems.Add(DisableVRCPlusUserInfo);
+                for (int i = 0; i < 5; i++)
+                    baseMenu.pageItems.Add(PageItem.Space);
+            }
+
             DisableAvatarHotWorlds = new PageItem("Disable Hot Avatar\nWorld List", () =>
             {
                 Configuration.JSONConfig.DisableAvatarHotWorlds = true;
@@ -1141,6 +1209,8 @@ namespace emmVRC.Menus
                 baseMenu.pageTitles.Add("UI Changing");
                 baseMenu.pageTitles.Add("Nameplate Color Changing");
                 baseMenu.pageTitles.Add("Disable VRChat Buttons");
+                if (Attributes.VRCPlusVersion)
+                    baseMenu.pageTitles.Add("Disable VRChat Plus Buttons");
             }
             baseMenu.pageTitles.Add("Disable Avatar Menu Lists" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Keybinds" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
@@ -1192,6 +1262,11 @@ namespace emmVRC.Menus
                 DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);
                 MinimalWarnKick.SetToggleState(Configuration.JSONConfig.MinimalWarnKickButton);
                 DisableOneHandMovement.SetToggleState(Configuration.JSONConfig.DisableOneHandMovement);
+
+                DisableVRCPlusAds.SetToggleState(Configuration.JSONConfig.DisableVRCPlusAds);
+                DisableVRCPlusQMButtons.SetToggleState(Configuration.JSONConfig.DisableVRCPlusQMButtons);
+                DisableVRCPlusMenuTabs.SetToggleState(Configuration.JSONConfig.DisableVRCPlusMenuTabs);
+                DisableVRCPlusUserInfo.SetToggleState(Configuration.JSONConfig.DisableVRCPlusUserInfo);
 
                 DisableAvatarHotWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarHotWorlds);
                 DisableAvatarRandomWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarRandomWorlds);

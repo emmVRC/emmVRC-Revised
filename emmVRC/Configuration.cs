@@ -19,11 +19,22 @@ namespace emmVRC
                 Directory.CreateDirectory(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC"));
             if (File.Exists(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"))){
                 //JSONConfig = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json")));
-                JSONConfig = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"))).Make<Config>();
-                if (JSONConfig == null)
+                try
                 {
+                    JSONConfig = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"))).Make<Config>();
+                    if (JSONConfig == null)
+                    {
+                        emmVRCLoader.Logger.LogError("An error occured while parsing the config file. It has been moved to config.old.json, and a new one has been created.");
+                        emmVRCLoader.Logger.LogError("Error: The parsed config was null...");
+                        File.Move(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"), Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.old.json"));
+                        JSONConfig = new Config();
+                    }
+                } catch (System.Exception ex)
+                {
+                    emmVRCLoader.Logger.LogError("An error occured while parsing the config file. It has been moved to config.old.json, and a new one has been created.");
+                    emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
+                    File.Move(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"), Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.old.json"));
                     JSONConfig = new Config();
-                    emmVRCLoader.Logger.LogError("The configuration file was null. Resetting...");
                 }
             }
             else

@@ -12,19 +12,25 @@ using System.Collections;
 using emmVRC.Managers;
 using emmVRC.Libraries;
 using emmVRC.Network;
+using emmVRC.Objects;
 
 namespace emmVRC.Hacks
 {
     internal class SocialMenuFunctions
     {
         private static GameObject SocialFunctionsButton;
-        private static GameObject UserSendMessage;
+        public static GameObject UserSendMessage;
         private static GameObject UserNotes;
         private static GameObject TeleportButton;
         private static GameObject AvatarSearchButton;
+        private static GameObject VRCPlusSupporterButton;
+        private static GameObject VRCPlusEarlyAdopterButton;
 
         private static GameObject ToggleBlockButton;
         private static GameObject PortalToUserButton;
+
+        private static bool menuOpen;
+        private static bool menuJustOpened;
 
         private static int PortalCooldownTimer = 0;
 
@@ -32,7 +38,8 @@ namespace emmVRC.Hacks
         {
             SocialFunctionsButton = GameObject.Instantiate(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists/PlaylistsButton"), GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").transform);
             SocialFunctionsButton.transform.SetParent(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/").transform);
-            GameObject.Destroy(SocialFunctionsButton.transform.Find("Image/Icon_New").gameObject);
+            if (!Attributes.VRCPlusVersion)
+                GameObject.Destroy(SocialFunctionsButton.transform.Find("Image/Icon_New").gameObject);
             SocialFunctionsButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Functions";
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
             SocialFunctionsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(50, 150);
@@ -71,6 +78,7 @@ namespace emmVRC.Hacks
 
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 UserSendMessage.SetActive(!UserSendMessage.activeSelf);
+                UserSendMessage.GetComponent<Button>().interactable = false;
                 UserNotes.SetActive(!UserNotes.activeSelf);
                 ToggleBlockButton.SetActive(!ToggleBlockButton.activeSelf);
                 if (RiskyFunctionsManager.RiskyFuncsAreAllowed)
@@ -224,6 +232,35 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
                 if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
+                    if (Attributes.VRCPlusVersion)
+                    {
+                        if (VRCPlusSupporterButton == null)
+                        {
+                            VRCPlusSupporterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Supporter");
+                            VRCPlusEarlyAdopterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/VRCPlusEarlyAdopter");
+                        }
+                        if (!menuOpen && GameObject.Find("MenuContent/Screens/UserInfo").activeInHierarchy)
+                        {
+                            menuOpen = true;
+                            menuJustOpened = true;
+                        }
+                        if (menuOpen && menuJustOpened)
+                        {
+                            if (Configuration.JSONConfig.DisableVRCPlusUserInfo)
+                            {
+                                VRCPlusSupporterButton.transform.localScale = new Vector3(0f, 0f, 0f);
+                                VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(0f, 0f, 0f);
+                            }
+                            else
+                            {
+                                VRCPlusSupporterButton.transform.localScale = new Vector3(1f, 1f, 1f);
+                                VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(1f, 1f, 1f);
+                            }
+                            menuJustOpened = false;
+                        }
+                        if (menuOpen && !GameObject.Find("MenuContent/Screens/UserInfo").activeInHierarchy)
+                            menuOpen = false;
+                    }
                     if (!GameObject.Find("MenuContent/Screens/UserInfo").activeSelf)
                     {
                         UserSendMessage.SetActive(false);

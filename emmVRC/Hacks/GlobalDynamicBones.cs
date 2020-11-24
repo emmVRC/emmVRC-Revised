@@ -18,7 +18,7 @@ namespace emmVRC.Hacks
         // Cache for all the current dynamic bone colliders in the world
         private static List<DynamicBoneCollider> currentWorldDynamicBoneColliders = new List<DynamicBoneCollider>();
 
-        public static void ProcessDynamicBones(GameObject avatarObject, VRC_AvatarDescriptor avatarDescriptor, VRCAvatarManager avatarManager)
+        public static void ProcessDynamicBones(GameObject avatarObject, VRC_AvatarDescriptor avatarDescriptor)
         {
             // Check if we should do anything at all
             if (Configuration.JSONConfig.GlobalDynamicBonesEnabled)

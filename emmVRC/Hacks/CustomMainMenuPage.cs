@@ -1,4 +1,4 @@
-﻿using emmVRC.Libraries;
+﻿/*using emmVRC.Libraries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,8 @@ namespace emmVRC.Hacks
             customMenuPages = new List<CustomMainMenuPage>();
             topCorner = TitleBar.transform.position;
         }
-        /*public static void ShowCustomMenu(CustomMainMenuPage targetPage)
+        // THIS DOES NOT WORK. COMMENT OUT!
+        public static void ShowCustomMenu(CustomMainMenuPage targetPage)
         {
             try
             {
@@ -49,7 +50,7 @@ namespace emmVRC.Hacks
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
-        }*/
+        }
 
         public GameObject menuRoot;
         public string Title;
@@ -90,3 +91,4 @@ namespace emmVRC.Hacks
         }
     }
 }
+*/
