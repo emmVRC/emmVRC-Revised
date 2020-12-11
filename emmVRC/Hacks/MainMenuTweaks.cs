@@ -53,11 +53,17 @@ namespace emmVRC.Hacks
                     if (Configuration.JSONConfig.DisableVRCPlusMenuTabs)
                     {
                         vrcPlusButton.SetActive(false);
+                        userIconsButton.GetComponent<LayoutElement>().enabled = false;
+                        userIconsButton.GetComponent<Image>().enabled = false;
+                        userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(false);
                         userIconsButton.SetActive(false);
                     }
                     else
                     {
                         vrcPlusButton.SetActive(true);
+                        userIconsButton.GetComponent<LayoutElement>().enabled = true;
+                        userIconsButton.GetComponent<Image>().enabled = true;
+                        userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(true);
                         userIconsButton.SetActive(true);
                     }
                     menuJustOpened = false;

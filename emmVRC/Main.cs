@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using emmVRC.Libraries;
 using VRC.Core;
 using Il2CppSystem.Reflection;
+using Harmony;
 
 
 #pragma warning disable 4014
@@ -299,7 +300,7 @@ namespace emmVRC
                 //Hacks.CustomMainMenuPage.Initialize();
 
                 // Initialize the Main Menu Tweaks
-                if (Attributes.VRCPlusVersion)
+                if (Attributes.VRCPlusVersion && !ModCompatibility.VRCMinus)
                     Hacks.MainMenuTweaks.Initialize();
 
                 // Initialize the emmVRC HUD
@@ -392,6 +393,22 @@ namespace emmVRC
                         emmVRCLoader.Logger.Log("To disable stealth mode, remove '--emmvrc.stealthmode' from your launch options. Then, disable \"Stealth Mode\" in the emmVRC Settings, and restart the game.");
                     else
                         emmVRCLoader.Logger.Log("To disable stealth mode, disable \"Stealth Mode\" in the emmVRC Settings, and restart the game.");
+                }
+                if (Configuration.JSONConfig.FunctionsButtonX == 5 && Configuration.JSONConfig.FunctionsButtonY == 2 && !Configuration.JSONConfig.DisableRankToggleButton)
+                {
+                    QMSingleButton tempPosition = new QMSingleButton("ShortcutMenu", 1, 0, "", null, "");
+                    FunctionsMenu.baseMenu.menuEntryButton.getGameObject().GetComponent<RectTransform>().anchoredPosition = tempPosition.getGameObject().GetComponent<RectTransform>().anchoredPosition;
+                    tempPosition.DestroyMe();
+                    Configuration.JSONConfig.FunctionsButtonX = 0;
+                    Configuration.JSONConfig.FunctionsButtonY = 1;
+                    Configuration.SaveConfig();
+                    FunctionsMenu.baseMenu.menuEntryButton.setLocation(Mathf.FloorToInt(0), Mathf.FloorToInt(1));
+                }
+                if (Configuration.JSONConfig.LogoButtonX == 5 && Configuration.JSONConfig.LogoButtonY == -1 && !Configuration.JSONConfig.DisableVRCPlusQMButtons)
+                {
+                    Configuration.JSONConfig.LogoButtonEnabled = false;
+                    Configuration.SaveConfig();
+                    MelonLoader.MelonCoroutines.Start(ShortcutMenuButtons.Process());
                 }
                 Initialized = true;
 

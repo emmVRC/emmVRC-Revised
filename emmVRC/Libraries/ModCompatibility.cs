@@ -23,6 +23,7 @@ namespace emmVRC.Libraries
         public static bool UIExpansionKit = false;
         public static bool FBTSaver = false;
         public static bool BetterLoadingScreen = false;
+        public static bool VRCMinus = false;
 
         public static GameObject FlightButton;
         public static GameObject NoclipButton;
@@ -45,6 +46,9 @@ namespace emmVRC.Libraries
                 FBTSaver = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "BetterLoadingScreen") != -1)
                 BetterLoadingScreen = true;
+            if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "VRC-Minus") != -1)
+                VRCMinus = true;
+
 
             if (MultiplayerDynamicBones)
                 emmVRCLoader.Logger.LogDebug("Detected MultiplayerDynamicBones");
@@ -83,6 +87,8 @@ namespace emmVRC.Libraries
             }
             if (BetterLoadingScreen)
                 emmVRCLoader.Logger.LogDebug("Detected BetterLoadingScreen");
+            if (VRCMinus)
+                emmVRCLoader.Logger.LogDebug("Detected VRCMinus");
         }
         public static IEnumerator ColorUIExpansionKit()
         {

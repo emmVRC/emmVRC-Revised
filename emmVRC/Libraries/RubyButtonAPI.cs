@@ -192,9 +192,15 @@ namespace emmVRC.Libraries
 
             btnOn = button.transform.Find("Toggle_States_Visible/ON").gameObject;
             btnOff = button.transform.Find("Toggle_States_Visible/OFF").gameObject;
-
-            initShift[0] = -4;
-            initShift[1] = 0;
+            if (UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber < 1028)
+            {
+                initShift[0] = -4;
+                initShift[1] = 0;
+            } else
+            {
+                initShift[0] = -3;
+                initShift[1] = -1;
+            }
             setLocation(btnXLocation, btnYLocation);
 
             setOnText(btnTextOn);

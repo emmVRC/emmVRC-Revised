@@ -42,14 +42,14 @@ namespace emmVRC
         public static void RestartAfterQuit()
         {
             Application.Quit();
-            Thread.Sleep(1000);
+            Thread.Sleep(2500);
             try { Process.Start(@Environment.CurrentDirectory + "\\VRChat.exe", Environment.CommandLine.ToString()); } catch (Exception ex) { ex = new Exception(); }
             Process.GetCurrentProcess().Kill();
         }
         public static void QuitAfterQuit()
         {
             Application.Quit();
-            Thread.Sleep(1000);
+            Thread.Sleep(2500);
             Process.GetCurrentProcess().Kill();
         }
     }

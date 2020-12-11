@@ -66,13 +66,13 @@ namespace emmVRC.Hacks
             {
                 if (Configuration.JSONConfig.DisableVRCPlusAds)
                 {
-                    vrcPlusMiniBanner.transform.localScale = new Vector3(0f, 0f, 0f);
-                    vrcPlusMainBanner.transform.localScale = new Vector3(0f, 0f, 0f);
+                    vrcPlusMiniBanner.GetComponent<Canvas>().enabled = false;
+                    vrcPlusMainBanner.GetComponent<Canvas>().enabled = false;
                 }
                 else
                 {
-                    vrcPlusMiniBanner.transform.localScale = new Vector3(1f, 1f, 1f);
-                    vrcPlusMainBanner.transform.localScale = new Vector3(1f, 1f, 1f);
+                    vrcPlusMiniBanner.GetComponent<Canvas>().enabled = true;
+                    vrcPlusMainBanner.GetComponent<Canvas>().enabled = true;
                 }
 
                 if (Configuration.JSONConfig.DisableVRCPlusQMButtons)

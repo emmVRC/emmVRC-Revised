@@ -58,7 +58,7 @@ namespace emmVRC.Menus
                 PageItem player = new PageItem(plr.Name, () => {
                     if (Timeout == 0 && NetworkConfig.Instance.APICallsAllowed)
                     {
-                        APIUser.FetchUser(plr.UserID, new System.Action<APIUser>((VRC.Core.APIUser usr) => { QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0 = usr; QuickMenu.prop_QuickMenu_0.Method_Public_Void_Int32_Boolean_PDM_0(4, false); }), new System.Action<string>((string str) => {
+                        APIUser.FetchUser(plr.UserID, new System.Action<APIUser>((VRC.Core.APIUser usr) => { QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0 = usr; QuickMenu.prop_QuickMenu_0.Method_Public_Void_Int32_Boolean_0(4, false); }), new System.Action<string>((string str) => {
                             emmVRCLoader.Logger.LogError("API returned an error: " + str);
                         }));
                         Timeout = 5;

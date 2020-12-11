@@ -41,14 +41,14 @@ namespace emmVRC.Objects
         public int FPSLimit = 144;
 
         // Button positions
-        public int FunctionsButtonX = 5;
-        public int FunctionsButtonY = 2;
-        public int LogoButtonX = 5;
+        public int FunctionsButtonX = 0;
+        public int FunctionsButtonY = 1;
+        public int LogoButtonX = 0;
         public int LogoButtonY = -1;
         public int UserInteractButtonX = 4;
         public int UserInteractButtonY = 2;
         public int NotificationButtonPositionX = 0;
-        public int NotificationButtonPositionY = -1;
+        public int NotificationButtonPositionY = 0;
         public int PlayerActionsButtonX = 4;
         public int PlayerActionsButtonY = 2;
         public bool StealthMode = false;

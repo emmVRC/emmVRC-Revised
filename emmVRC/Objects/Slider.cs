@@ -17,6 +17,17 @@ namespace emmVRC.Objects
             basePosition.setActive(false);
 
             slider = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/AudioDevicePanel/VolumeSlider"), QuickMenuUtils.GetQuickMenuInstance().transform.Find(parentPath)).gameObject;
+            if (UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber >= 1028)
+            {
+                try
+                {
+                    slider.transform.Find("Fill Area/Label").gameObject.SetActive(false);
+                }
+                catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
+            }
             slider.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             slider.transform.localPosition = basePosition.getGameObject().transform.localPosition;
             slider.GetComponentInChildren<RectTransform>().anchorMin += new Vector2(0.06f, 0);
