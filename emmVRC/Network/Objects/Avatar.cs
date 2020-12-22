@@ -53,7 +53,7 @@ namespace emmVRC.Network.Objects
                 version = 1,
                 apiVersion = 1,
                 Endpoint = "avatars",
-                Populated = true,
+                Populated = false,
                 assetVersion = new AssetVersion("2018.4.20f1", 0),
                 tags =  avatar_tags
             };

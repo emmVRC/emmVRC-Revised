@@ -16,7 +16,7 @@ namespace emmVRC.Hacks
 {
     public class AvatarPropertySaving
     {
-        public static System.Collections.Generic.List<string> vrcBlacklist = new System.Collections.Generic.List<string> { "Viseme", "GestureLeft", "GestureLeftWeight", "GestureRight", "GestureRightWeight", "VelocityX", "VelocityY", "VelocityZ", "AngularY", "Grounded", "Seated", "Upright", "Supine", "GroundProximity", "AFK", "IsLocal", "VRCEmote", "VRCFaceBlendH", "VRCFaceBlendV" };
+        public static System.Collections.Generic.List<string> vrcBlacklist = new System.Collections.Generic.List<string> { "Viseme", "GestureLeft", "GestureLeftWeight", "GestureRight", "GestureRightWeight", "VelocityX", "VelocityY", "VelocityZ", "AngularY", "Grounded", "Seated", "Upright", "Supine", "GroundProximity", "AFK", "IsLocal", "VRCEmote", "VRCFaceBlendH", "VRCFaceBlendV", "TrackingType", "VRMode", "AvatarVersion" };
         public static void Initialize()
         {
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/")))

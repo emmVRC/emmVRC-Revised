@@ -300,7 +300,7 @@ namespace emmVRC
                 //Hacks.CustomMainMenuPage.Initialize();
 
                 // Initialize the Main Menu Tweaks
-                if (Attributes.VRCPlusVersion && !ModCompatibility.VRCMinus)
+                if (!ModCompatibility.VRCMinus)
                     Hacks.MainMenuTweaks.Initialize();
 
                 // Initialize the emmVRC HUD
@@ -323,8 +323,9 @@ namespace emmVRC
                 }
 
                 // Start the Master Icon Crown
-                if (!Configuration.JSONConfig.StealthMode && !Attributes.VRCPlusVersion)
-                    Hacks.MasterCrown.Initialize();
+                //if (!Configuration.JSONConfig.StealthMode)
+                //    Hacks.MasterCrown.Initialize();
+
                 // Start the Avatar Favorite system
                 Hacks.CustomAvatarFavorites.Initialize();
 

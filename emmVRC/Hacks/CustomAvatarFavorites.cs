@@ -10,6 +10,7 @@ using System.Linq;
 using System.IO;
 using emmVRC.Objects;
 using System.Reflection;
+using System.Collections;
 
 namespace emmVRC.Hacks
 {
@@ -38,11 +39,13 @@ namespace emmVRC.Hacks
         private static bool menuJustActivated = false;
         private static UiInputField searchBox;
         private static UnityAction<string> searchBoxAction;
-        //private static System.Collections.Generic.List<Objects.SerializedAvatar> LoadedSerializedAvatars = new System.Collections.Generic.List<Objects.SerializedAvatar>();
 
         private static MethodInfo renderElementMethod;
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
         {
+            if (!uivrclist.gameObject.activeInHierarchy || !uivrclist.isActiveAndEnabled || uivrclist.isOffScreen || !uivrclist.enabled) return;
+            uivrclist.usePagination = true;
+            uivrclist.deferInitialFetch = true;
             if (renderElementMethod == null)
             {
                 renderElementMethod = typeof(UiVRCList).GetMethods().FirstOrDefault(a => a.Name.Contains("Method_Protected_Void_List_1_T_Int32_Boolean")).MakeGenericMethod(typeof(ApiAvatar));
@@ -51,14 +54,7 @@ namespace emmVRC.Hacks
                 renderElementMethod.Invoke(uivrclist, new object[] { AvatarList, 0, true });
             else
                 renderElementMethod.Invoke(uivrclist, new object[] { AvatarList, 0, true, null });
-
-            //emmVRCLoader.Logger.LogDebug("Calling RenderElement...");
-
-            //uivrclist.Method_Protected_Void_List_1_T_Int32_Boolean_VRCUiContentButton_0<ApiAvatar>(AvatarList, 0, true, null);
-            //uivrclist.Method_Protected_Void_List_1_T_Int32_Boolean_0<ApiAvatar>(AvatarList, 0, true);
-            //uivrclist.Method_Protected_List_1_T_Int32_Boolean_1<ApiAvatar>(AvatarList, 0, true);
         }
-
         internal static void Initialize()
         {
             pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
