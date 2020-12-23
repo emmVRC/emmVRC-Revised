@@ -114,5 +114,10 @@ namespace emmVRC.Hacks
                 File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", selectedPlayer.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id + ".json"), TinyJSON.Encoder.Encode(parameters, TinyJSON.EncodeOptions.PrettyPrint));
             }
         }
+        public static void ClearAvatarParameters()
+        {
+            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id + ".json")))
+                File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id + ".json"));
+        }
     }
 }

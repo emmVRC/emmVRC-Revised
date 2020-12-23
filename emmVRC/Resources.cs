@@ -37,6 +37,7 @@ namespace emmVRC
         public static Sprite alertSprite;
         public static Sprite errorSprite;
         public static Sprite messageSprite;
+        public static Sprite rpSprite;
         public static Sprite crownSprite;
         public static Sprite Media_Nav;
         public static Sprite Media_PlayPause;
@@ -48,6 +49,13 @@ namespace emmVRC
 
         // Texture for use on the emmVRC Network panel
         public static Texture2D panelTexture;
+
+        public static Texture2D saveTexture;
+        public static Texture2D deleteTexture;
+        public static Texture2D flyTexture;
+
+        public static Texture2D toggleOnTexture;
+        public static Texture2D toggleOffTexture;
 
         // Quick Method for making adding sprites easier
         private static Sprite LoadSprite(string sprite) {
@@ -131,6 +139,7 @@ namespace emmVRC
             alertSprite = LoadSprite("Alert.png");
             errorSprite = LoadSprite("Error.png");
             messageSprite = LoadSprite("Message.png");
+            rpSprite = LoadSprite("RP.png");
 
             crownSprite = LoadSprite("Crown.png");
 
@@ -142,6 +151,14 @@ namespace emmVRC
             HUD_Minimized = LoadSprite("UIMinimized.png");
             
             panelTexture = LoadTexture("Panel.png");
+
+            saveTexture = LoadTexture("Save.png");
+            deleteTexture = LoadTexture("Delete.png");
+            flyTexture = LoadTexture("Fly.png");
+
+            toggleOnTexture = LoadTexture("E_GUI_Toggle_ON.png"); 
+            toggleOffTexture = LoadTexture("E_GUI_Toggle_OFF.png");
+
         }
     }
 }

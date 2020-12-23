@@ -38,8 +38,6 @@ namespace emmVRC.Hacks
         {
             SocialFunctionsButton = GameObject.Instantiate(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists/PlaylistsButton"), GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").transform);
             SocialFunctionsButton.transform.SetParent(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/").transform);
-            if (!Attributes.VRCPlusVersion)
-                GameObject.Destroy(SocialFunctionsButton.transform.Find("Image/Icon_New").gameObject);
             SocialFunctionsButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Functions";
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
             SocialFunctionsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(50, 150);
@@ -76,7 +74,8 @@ namespace emmVRC.Hacks
             PortalToUserButton.SetActive(false);
 
 
-            SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
+            SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
                 UserSendMessage.SetActive(!UserSendMessage.activeSelf);
                 UserSendMessage.GetComponent<Button>().interactable = false;
                 UserNotes.SetActive(!UserNotes.activeSelf);
@@ -93,21 +92,24 @@ namespace emmVRC.Hacks
                         PortalToUserButton.SetActive(!PortalToUserButton.activeSelf);
                     else
                         PortalToUserButton.SetActive(false);
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     ex = new Exception();
                 }
                 try
                 {
                     GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").activeSelf);
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     ex = new Exception();
                 }
                 try
                 {
                     GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     ex = new Exception();
                 }
@@ -122,28 +124,33 @@ namespace emmVRC.Hacks
                 try
                 {
                     GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").activeSelf);
-                } 
+                }
                 catch (Exception ex)
                 {
                     ex = new Exception();
                 }
             }));
 
-            UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => {
-                        MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
+            UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+                {
+                    MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
                 }), null, "Enter message...");
             }));
 
-            UserNotes.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
+            UserNotes.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
                 Hacks.PlayerNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName);
             }));
 
-            TeleportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
+            TeleportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
                 if (RiskyFunctionsManager.RiskyFuncsAreAllowed)
                 {
                     Player plrToTP = null;
-                    Libraries.PlayerUtils.GetEachPlayer((Player plr) => {
+                    Libraries.PlayerUtils.GetEachPlayer((Player plr) =>
+                    {
                         if (plr.field_Private_APIUser_0.id == QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id)
                             plrToTP = plr;
                     });
@@ -157,7 +164,8 @@ namespace emmVRC.Hacks
                         CustomAvatarFavorites.pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0 = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0;
                         CustomAvatarFavorites.baseChooseEvent.Invoke();
                         //Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Change Button").gameObject.GetComponentInChildren<Button>().onClick.Invoke();
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         ex = new Exception();
                     }
@@ -171,9 +179,11 @@ namespace emmVRC.Hacks
                     MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName != "" ? QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName : QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.username));
                 }
             }));
-            PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
+            PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
                 if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
-                {try
+                {
+                    try
                     {
                         if (PortalCooldownTimer == 0)
                         {
@@ -193,9 +203,10 @@ namespace emmVRC.Hacks
                         }
                         else
                         {
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait "+PortalCooldownTimer+" seconds before dropping another portal.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait " + PortalCooldownTimer + " seconds before dropping another portal.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         }
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
@@ -218,8 +229,9 @@ namespace emmVRC.Hacks
 
             MelonLoader.MelonCoroutines.Start(Loop());
         }
-        public static IEnumerator PortalCooldown() { 
-        while (PortalCooldownTimer > 0)
+        public static IEnumerator PortalCooldown()
+        {
+            while (PortalCooldownTimer > 0)
             {
                 yield return new WaitForSeconds(1f);
                 PortalCooldownTimer--;
@@ -232,35 +244,32 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
                 if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
-                    if (Attributes.VRCPlusVersion)
+                    if (VRCPlusSupporterButton == null)
                     {
-                        if (VRCPlusSupporterButton == null)
-                        {
-                            VRCPlusSupporterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Supporter");
-                            VRCPlusEarlyAdopterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/VRCPlusEarlyAdopter");
-                        }
-                        if (!menuOpen && GameObject.Find("MenuContent/Screens/UserInfo").activeInHierarchy)
-                        {
-                            menuOpen = true;
-                            menuJustOpened = true;
-                        }
-                        if (menuOpen && menuJustOpened)
-                        {
-                            if (Configuration.JSONConfig.DisableVRCPlusUserInfo)
-                            {
-                                VRCPlusSupporterButton.transform.localScale = new Vector3(0f, 0f, 0f);
-                                VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(0f, 0f, 0f);
-                            }
-                            else
-                            {
-                                VRCPlusSupporterButton.transform.localScale = new Vector3(1f, 1f, 1f);
-                                VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(1f, 1f, 1f);
-                            }
-                            menuJustOpened = false;
-                        }
-                        if (menuOpen && !GameObject.Find("MenuContent/Screens/UserInfo").activeInHierarchy)
-                            menuOpen = false;
+                        VRCPlusSupporterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Supporter");
+                        VRCPlusEarlyAdopterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/VRCPlusEarlyAdopter");
                     }
+                    if (!menuOpen && GameObject.Find("MenuContent/Screens/UserInfo").activeInHierarchy)
+                    {
+                        menuOpen = true;
+                        menuJustOpened = true;
+                    }
+                    if (menuOpen && menuJustOpened)
+                    {
+                        if (Configuration.JSONConfig.DisableVRCPlusUserInfo)
+                        {
+                            VRCPlusSupporterButton.transform.localScale = new Vector3(0f, 0f, 0f);
+                            VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(0f, 0f, 0f);
+                        }
+                        else
+                        {
+                            VRCPlusSupporterButton.transform.localScale = new Vector3(1f, 1f, 1f);
+                            VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(1f, 1f, 1f);
+                        }
+                        menuJustOpened = false;
+                    }
+                    if (menuOpen && !GameObject.Find("MenuContent/Screens/UserInfo").activeInHierarchy)
+                        menuOpen = false;
                     if (!GameObject.Find("MenuContent/Screens/UserInfo").activeSelf)
                     {
                         UserSendMessage.SetActive(false);
@@ -272,8 +281,9 @@ namespace emmVRC.Hacks
                         try
                         {
                             GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(true);
-                            
-                        } catch (Exception ex)
+
+                        }
+                        catch (Exception ex)
                         {
                             ex = new Exception();
                         }
@@ -296,7 +306,7 @@ namespace emmVRC.Hacks
                         try
                         {
                             GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").SetActive(true);
-                        } 
+                        }
                         catch (Exception ex)
                         {
                             ex = new Exception();

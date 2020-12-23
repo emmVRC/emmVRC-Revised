@@ -50,10 +50,7 @@ namespace emmVRC.Hacks
             {
                 renderElementMethod = typeof(UiVRCList).GetMethods().FirstOrDefault(a => a.Name.Contains("Method_Protected_Void_List_1_T_Int32_Boolean")).MakeGenericMethod(typeof(ApiAvatar));
             }
-            if (!Attributes.VRCPlusVersion)
-                renderElementMethod.Invoke(uivrclist, new object[] { AvatarList, 0, true });
-            else
-                renderElementMethod.Invoke(uivrclist, new object[] { AvatarList, 0, true, null });
+            renderElementMethod.Invoke(uivrclist, new object[] { AvatarList, 0, true, null });
         }
         internal static void Initialize()
         {
@@ -107,8 +104,7 @@ namespace emmVRC.Hacks
             FavoriteButtonNew.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0, 165f);
             FavoriteButtonNewText = FavoriteButtonNew.GetComponentInChildren<Text>();
             FavoriteButtonNewText.supportRichText = true;
-            if (Attributes.VRCPlusVersion)
-            {try
+            try
                 {
                     FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountSpacingText").gameObject.SetActive(false);
                     FavoriteButtonNew.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
@@ -118,7 +114,6 @@ namespace emmVRC.Hacks
                 {
                     emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
                 }
-            }
 
             MigrateButton = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
             MigrateButton.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0f, 765f);

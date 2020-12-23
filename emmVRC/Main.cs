@@ -47,22 +47,8 @@ namespace emmVRC
         {
             int VRCBuildNumber = UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber;
             emmVRCLoader.Logger.Log("VRChat build is: " + VRCBuildNumber);
-            if (VRCBuildNumber >= 1019)
-                Attributes.VRCPlusVersion = true;
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
-            /*bool HarmonyPresent = false;
-            string[] ModsFolderFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Mods"));
-            foreach (string str in ModsFolderFiles)
-            {
-                if (str.Contains("harmony") || str.Contains("Harmony"))
-                    HarmonyPresent = true;
-            }
-            if (HarmonyPresent)
-            {
-                System.Windows.Forms.MessageBox.Show("You have an incompatible copy of Harmony in your Mods folder. Please remove it for emmVRC to function correctly.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                emmVRCLoader.Logger.LogError("Harmony detected in the Mods folder. Please remove it for emmVRC to function correctly.");
-            }*/
             string currentVersion = (string)typeof(MelonLoader.BuildInfo).GetField("Version").GetValue(null);
             string currentEmmVRCLoaderVersion = (string)typeof(emmVRCLoader.BuildInfo).GetField("Version").GetValue(null);
             if (Attributes.IncompatibleMelonLoaderVersions.Contains(currentVersion))
@@ -139,8 +125,7 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(Resources.LoadResources());
 
                 // Initialize the "UI Elements" replacement buttons
-                if (!Attributes.VRCPlusVersion)
-                    MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
+              //MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
 
                 // Initialize the Mod Compatibility system
                 Libraries.ModCompatibility.Initialize();
@@ -297,11 +282,16 @@ namespace emmVRC
                 Managers.MessageManager.Initialize();
 
                 // Initialize the custom Main Menu page system
-                //Hacks.CustomMainMenuPage.Initialize();
+              //Hacks.CustomMainMenuPage.Initialize();
 
                 // Initialize the Main Menu Tweaks
                 if (!ModCompatibility.VRCMinus)
                     Hacks.MainMenuTweaks.Initialize();
+
+                if (!Configuration.JSONConfig.StealthMode)
+                {
+                    MelonLoader.MelonCoroutines.Start(Menus.ActionMenuFunctions.Initialize());
+                }
 
                 // Initialize the emmVRC HUD
                 if (!Configuration.JSONConfig.StealthMode)
@@ -323,8 +313,8 @@ namespace emmVRC
                 }
 
                 // Start the Master Icon Crown
-                //if (!Configuration.JSONConfig.StealthMode)
-                //    Hacks.MasterCrown.Initialize();
+              //if (!Configuration.JSONConfig.StealthMode)
+              //Hacks.MasterCrown.Initialize();
 
                 // Start the Avatar Favorite system
                 Hacks.CustomAvatarFavorites.Initialize();

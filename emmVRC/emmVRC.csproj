@@ -72,6 +72,7 @@
     <Compile Include="Hacks\UIElementsMenu.cs" />
     <Compile Include="Hacks\WorldFunctions.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
+    <Compile Include="Libraries\CustomActionMenu.cs" />
     <Compile Include="Libraries\Analysis.cs" />
     <Compile Include="Libraries\AvatarUtilities.cs" />
     <Compile Include="Libraries\ButtonConfiguration.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Managers\MessageManager.cs" />
     <Compile Include="Managers\NotificationManager.cs" />
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
+    <Compile Include="Menus\ActionMenuFunctions.cs" />
     <Compile Include="Menus\ChangelogMenu.cs" />
     <Compile Include="Menus\CreditsMenu.cs" />
     <Compile Include="Menus\DebugMenu.cs" />

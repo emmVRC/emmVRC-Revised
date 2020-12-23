@@ -21,19 +21,18 @@ namespace emmVRC.Menus
         public static PaginatedMenu baseMenu;
         public static QMSingleButton ResetSettingsButton;
 
-        // Page 1
-        private static PageItem RiskyFunctions;
+        // Page 1 - Core Features
+        
         private static PageItem VRFlightControls;
         private static PageItem GlobalDynamicBones;
         private static PageItem FriendGlobalDynamicBones;
         private static PageItem EveryoneGlobalDynamicBones;
-        private static PageItem emmVRCNetwork;
-        private static PageItem GlobalChat;
-        private static PageItem AvatarFavoriteList;
         private static PageItem UIExpansionKitIntegration;
         private static PageItem TrackingSaving;
+        private static PageItem ActionMenuIntegration;
 
-        // Page 2
+        // Page 2 - Visual Features
+        private static PageItem RiskyFunctions;
         private static PageItem InfoBar;
         private static PageItem Clock;
         private static PageItem MasterIcon;
@@ -44,7 +43,12 @@ namespace emmVRC.Menus
         private static PageItem ForceRestart;
         private static PageItem UnlimitedFPS;
 
-        // Page 3
+        // Page 3 - Network Features
+        private static PageItem emmVRCNetwork;
+        private static PageItem GlobalChat;
+        private static PageItem AvatarFavoriteList;
+
+        // Page 4 - Button Positions
         private static PageItem FunctionsMenuPosition;
         private static PageItem LogoPosition;
         private static PageItem NotificationPosition;
@@ -53,7 +57,7 @@ namespace emmVRC.Menus
         private static ButtonConfigurationMenu NotificationPositionMenu;
         private static PageItem StealthMode;
 
-        // Page 4
+        // Page 5 - UI Color Changing
         private static PageItem UIColorChanging;
         private static PageItem UIColorChangePickerButton;
         private static ColorPicker UIColorChangePicker;
@@ -241,54 +245,6 @@ namespace emmVRC.Menus
                 LoadMenu();
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
             }, "TOGGLE: Enables Global Dynamic Bones for everyone. Note that this might cause lag in large instances");
-            emmVRCNetwork = new PageItem("emmVRC Network\nEnabled", () =>
-            {
-                if (canToggleNetwork)
-                {
-                    Configuration.JSONConfig.emmVRCNetworkEnabled = true;
-                    Configuration.SaveConfig();
-                    RefreshMenu();
-                    Network.NetworkClient.InitializeClient();
-                    //Network.NetworkClient.PromptLogin();
-                    MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
-                }else
-                {
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait 5 seconds before toggling the network on again.", "Okay", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();}));
-                    emmVRCNetwork.SetToggleState(false, false);
-                }
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.emmVRCNetworkEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-                if (Network.NetworkClient.authToken != null)
-                    Network.HTTPRequest.get(Network.NetworkClient.baseURL + "/api/authentication/logout");
-                Network.NetworkClient.authToken = null;
-                canToggleNetwork = false;
-                MelonLoader.MelonCoroutines.Start(WaitForDelayNetwork());
-            }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
-            GlobalChat = new PageItem("Global Chat", () =>
-            {
-                Configuration.JSONConfig.GlobalChatEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.GlobalChatEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
-            AvatarFavoriteList = new PageItem("emmVRC\nFavorite List", () =>
-            {
-                Configuration.JSONConfig.AvatarFavoritesEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.AvatarFavoritesEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network");
             UIExpansionKitIntegration = new PageItem("UI Expansion\nKit Integration", () =>
             {
                 Configuration.JSONConfig.UIExpansionKitIntegration = true;
@@ -325,14 +281,22 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.TrackingSaving = false;
                 Configuration.SaveConfig();
             }, "TOGGLE: Saves calibration between avatar switches for Full Body Tracking");
+            ActionMenuIntegration = new PageItem("Action Menu\nIntegration", () =>
+            {
+                Configuration.JSONConfig.ActionMenuIntegration = true;
+                Configuration.SaveConfig();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.ActionMenuIntegration = false;
+                Configuration.SaveConfig();
+            }, "TOGGLE: Integrates an emmVRC menu into the Action (Radial) Menu, for easy access");
+
             baseMenu.pageItems.Add(RiskyFunctions);
-            baseMenu.pageItems.Add(emmVRCNetwork);
-            baseMenu.pageItems.Add(AvatarFavoriteList);
             baseMenu.pageItems.Add(GlobalDynamicBones);
             baseMenu.pageItems.Add(FriendGlobalDynamicBones);
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(VRFlightControls);
-            //baseMenu.pageItems.Add(GlobalChat);
+            baseMenu.pageItems.Add(ActionMenuIntegration);
             if (!ModCompatibility.FBTSaver)
                 baseMenu.pageItems.Add(TrackingSaving);
             else
@@ -341,6 +305,7 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(UIExpansionKitIntegration);
             else
                 baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(PageItem.Space);
 
             InfoBar = new PageItem("Info Bar", () =>
             {
@@ -469,7 +434,67 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(ForceRestart);
             }
             baseMenu.pageItems.Add(UnlimitedFPS);
-            //baseMenu.pageItems.Add(PageItem.Space);
+            if (Configuration.JSONConfig.StealthMode)
+                for (int i = 0; i < 8; i++)
+                    baseMenu.pageItems.Add(PageItem.Space);
+
+            emmVRCNetwork = new PageItem("emmVRC Network\nEnabled", () =>
+            {
+                if (canToggleNetwork)
+                {
+                    Configuration.JSONConfig.emmVRCNetworkEnabled = true;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                    Network.NetworkClient.InitializeClient();
+                    //Network.NetworkClient.PromptLogin();
+                    MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
+                }
+                else
+                {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must wait 5 seconds before toggling the network on again.", "Okay", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                    emmVRCNetwork.SetToggleState(false, false);
+                }
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.emmVRCNetworkEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                if (Network.NetworkClient.authToken != null)
+                    Network.HTTPRequest.get(Network.NetworkClient.baseURL + "/api/authentication/logout");
+                Network.NetworkClient.authToken = null;
+                canToggleNetwork = false;
+                MelonLoader.MelonCoroutines.Start(WaitForDelayNetwork());
+            }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
+            GlobalChat = new PageItem("Global Chat", () =>
+            {
+                Configuration.JSONConfig.GlobalChatEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.GlobalChatEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the fetching and use of the Global Chat using the emmVRC Network", false); // TODO: Remove false at the end when emmVRC Network is ready
+
+            AvatarFavoriteList = new PageItem("emmVRC\nFavorite List", () =>
+            {
+                Configuration.JSONConfig.AvatarFavoritesEnabled = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.AvatarFavoritesEnabled = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network");
+
+            baseMenu.pageItems.Add(emmVRCNetwork);
+            //baseMenu.pageItems.Add(GlobalChat);
+            baseMenu.pageItems.Add(AvatarFavoriteList);
+            for (int i = 0; i < 7; i++)
+                baseMenu.pageItems.Add(PageItem.Space);
+
 
             FunctionsMenuPosition = new PageItem("Functions\nMenu\nButton", () => { FunctionsMenuPositionMenu.OpenMenu(); }, "Allows changing the position of the Functions button");
             LogoPosition = new PageItem("Logo\nButton", () => { LogoPositionMenu.OpenMenu(); }, "Allows changing the position of the Logo button");
@@ -535,7 +560,7 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(NotificationPosition);
             } else
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 3; i++)
                     baseMenu.pageItems.Add(PageItem.Space);
             }
             baseMenu.pageItems.Add(PageItem.Space);
@@ -980,7 +1005,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "Enabled", () =>
+            }, "Allowed", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusAds = false;
                 Configuration.SaveConfig();
@@ -1026,7 +1051,7 @@ namespace emmVRC.Menus
                 RefreshMenu();
 
             }, "TOGGLE: Disables the VRChat Plus User Info additions");
-            if (!Configuration.JSONConfig.StealthMode && Attributes.VRCPlusVersion)
+            if (!Configuration.JSONConfig.StealthMode)
             {
                 baseMenu.pageItems.Add(DisableVRCPlusAds);
                 baseMenu.pageItems.Add(DisableVRCPlusQMButtons);
@@ -1203,14 +1228,15 @@ namespace emmVRC.Menus
 
             baseMenu.pageTitles.Add("Core Features"+(Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Visual Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
+            baseMenu.pageTitles.Add("Network Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
+            baseMenu.pageTitles.Add("Button Positions" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             if (!Configuration.JSONConfig.StealthMode)
             {
-                baseMenu.pageTitles.Add("Button Positions");
+                
                 baseMenu.pageTitles.Add("UI Changing");
                 baseMenu.pageTitles.Add("Nameplate Color Changing");
                 baseMenu.pageTitles.Add("Disable VRChat Buttons");
-                if (Attributes.VRCPlusVersion)
-                    baseMenu.pageTitles.Add("Disable VRChat Plus Buttons");
+                baseMenu.pageTitles.Add("Disable VRChat Plus Buttons");
             }
             baseMenu.pageTitles.Add("Disable Avatar Menu Lists" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Keybinds" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));

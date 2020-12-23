@@ -33,6 +33,7 @@ namespace emmVRC.Objects
         public bool ChairBlockingEnable = false;
         public bool PlayerHistoryEnable = false;
         public bool TrackingSaving = true;
+        public bool ActionMenuIntegration = true;
 
         // FOV value
         public int CustomFOV = 60;
