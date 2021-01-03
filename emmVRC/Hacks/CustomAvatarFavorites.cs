@@ -44,8 +44,6 @@ namespace emmVRC.Hacks
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
         {
             if (!uivrclist.gameObject.activeInHierarchy || !uivrclist.isActiveAndEnabled || uivrclist.isOffScreen || !uivrclist.enabled) return;
-            uivrclist.usePagination = true;
-            uivrclist.deferInitialFetch = true;
             if (renderElementMethod == null)
             {
                 renderElementMethod = typeof(UiVRCList).GetMethods().FirstOrDefault(a => a.Name.Contains("Method_Protected_Void_List_1_T_Int32_Boolean")).MakeGenericMethod(typeof(ApiAvatar));

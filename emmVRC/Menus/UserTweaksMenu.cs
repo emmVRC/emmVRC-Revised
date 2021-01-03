@@ -63,6 +63,7 @@ namespace emmVRC.Menus
                     //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
                 }
             }, "Toggles the block status of this user");
+            BlockUserButton.getGameObject().GetComponent<Button>().interactable = false;
         }
         public static void SetRiskyFuncsAllowed(bool status)
         {

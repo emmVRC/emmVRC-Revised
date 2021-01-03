@@ -31,10 +31,11 @@ namespace emmVRC.Hacks
                             {
                                 if (masterIconObj == null && player.prop_VRCPlayerApi_0.isMaster && player.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
                                 {
-                                    GameObject templateObject = player.field_Internal_VRCPlayer_0.nameplate.uiUserIconFriend;
+                                    GameObject templateObject = player.field_Internal_VRCPlayer_0.nameplate.transform.Find("Contents/Friend Marker").gameObject;
                                     masterIconObj = GameObject.Instantiate(templateObject, templateObject.transform.parent);
-                                    masterIconObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(768f, 0f);
+                                    masterIconObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(256f, 24f);
                                     masterIconObj.GetComponent<Image>().sprite = Resources.crownSprite;
+                                    masterIconObj.SetActive(true);
 
                                 }
                             });
@@ -44,13 +45,8 @@ namespace emmVRC.Hacks
                             masterIconObj = null;
                         }
                     }
-                    else if (masterIconObj != null)
-                    {
-                        if (Configuration.JSONConfig.NameplatesVisible)
-                            masterIconObj.SetActive(true);
-                        else
-                            masterIconObj.SetActive(false);
-                    }
+                    else if (masterIconObj != null && !Configuration.JSONConfig.MasterIconEnabled)
+                        GameObject.Destroy(masterIconObj);
                 }
                 catch (System.Exception ex)
                 {

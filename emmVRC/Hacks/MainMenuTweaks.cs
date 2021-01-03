@@ -20,6 +20,7 @@ namespace emmVRC.Hacks
         public static GameObject socialButton;
         public static GameObject settingsButton;
         public static GameObject safetyButton;
+        public static GameObject vrcPlusGetMoreFavorites;
         public static void Initialize()
         {
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -37,6 +38,7 @@ namespace emmVRC.Hacks
                     socialButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/SocialPageTab/");
                     settingsButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/SettingsPageTab/");
                     safetyButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/SafetyPageTab/");
+                    vrcPlusGetMoreFavorites = GameObject.Find("/UserInterface/MenuContent/Screens/Avatar/Vertical Scroll View/Viewport/Content/Favorite Avatar List/GetMoreFavorites/");
                     worldButton.GetComponent<LayoutElement>().preferredWidth = 250f;
                     avatarButton.GetComponent<LayoutElement>().preferredWidth = 250f;
                     socialButton.GetComponent<LayoutElement>().preferredWidth = 250f;
@@ -57,6 +59,7 @@ namespace emmVRC.Hacks
                         userIconsButton.GetComponent<Image>().enabled = false;
                         userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(false);
                         userIconsButton.SetActive(false);
+                        vrcPlusGetMoreFavorites.transform.localScale = Vector3.zero;
                     }
                     else
                     {
@@ -65,6 +68,7 @@ namespace emmVRC.Hacks
                         userIconsButton.GetComponent<Image>().enabled = true;
                         userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(true);
                         userIconsButton.SetActive(true);
+                        vrcPlusGetMoreFavorites.transform.localScale = Vector3.one;
                     }
                     menuJustOpened = false;
                 }

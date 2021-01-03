@@ -132,6 +132,7 @@ namespace emmVRC.Menus
             }, 0.5f);
             SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().enabled = false;
             SpeedSlider.slider.GetComponent<RectTransform>().anchoredPosition += new Vector2(256f, -104f);
+            SpeedSlider.slider.GetComponent<RectTransform>().sizeDelta *= new Vector2(0.85f, 1f);
             SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().maxValue = Configuration.JSONConfig.MaxSpeedIncrease;
 
             SpeedReset = new QMSingleButton(baseMenu, 3, 2, "Reset", () =>

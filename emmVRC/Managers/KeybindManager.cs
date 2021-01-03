@@ -23,6 +23,12 @@ namespace emmVRC.Managers
         {
             while (true)
             {
+                if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.H))
+                {
+                    Configuration.JSONConfig.HUDEnabled = !Configuration.JSONConfig.HUDEnabled;
+                    Configuration.SaveConfig();
+                    Hacks.UIElementsMenu.ToggleHUD.setToggleState(Configuration.JSONConfig.HUDEnabled);
+                }
                 if (Configuration.JSONConfig.EnableKeybinds)
                 {
                     if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
@@ -46,7 +52,7 @@ namespace emmVRC.Managers
                             keyFlag = true;
                         }
                     }
-                    if (Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !keyFlag)
+                    if ((Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !keyFlag)
                     {
                         if (Hacks.ThirdPerson.CameraSetup != 2)
                         {
@@ -65,12 +71,12 @@ namespace emmVRC.Managers
                             keyFlag = true;
                         }
                     }
-                    if (Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
+                    if ((Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
                     {
                         QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GoHomeButton").GetComponent<Button>().onClick.Invoke();
                         keyFlag = true;
                     }
-                    if (Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[1]) && Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && !keyFlag)
+                    if ((Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && !keyFlag)
                     {
                         QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/RespawnButton").GetComponent<Button>().onClick.Invoke();
                         keyFlag = true;

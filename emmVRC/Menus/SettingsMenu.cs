@@ -1335,7 +1335,7 @@ namespace emmVRC.Menus
             if (!Configuration.JSONConfig.DisableEmojiButton)
                 unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Emoji", new Vector2(4, 2)));
             if (!Configuration.JSONConfig.DisableRankToggleButton)
-                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Toggle\nRank", new Vector2(5, 0)));
+                unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Toggle\nRank", new Vector2(5, 2)));
             if (!Configuration.JSONConfig.DisableReportWorldButton)
                 unavailableButtons.Add(new System.Collections.Generic.KeyValuePair<string, Vector2>("Report\nWorld", new Vector2(5, 1)));
             if (!menu.menuTitle.Contains("Functions"))

@@ -56,9 +56,9 @@ namespace emmVRC.Hacks
             else
                 reportWorldButton.SetActive(true);
             if (Configuration.JSONConfig.DisableRankToggleButton)
-                trustRankButton.transform.localScale = new Vector3(0f, 0f, 0f);
+                trustRankButton.transform.localScale = Vector3.zero;
             else
-                trustRankButton.transform.localScale = new Vector3(1f, 1f, 1f);
+                trustRankButton.transform.localScale = Vector3.one;
             if (Configuration.JSONConfig.DisableVRCPlusAds)
             {
                 vrcPlusMiniBanner.GetComponent<Canvas>().enabled = false;
@@ -72,15 +72,15 @@ namespace emmVRC.Hacks
 
             if (Configuration.JSONConfig.DisableVRCPlusQMButtons)
             {
-                vrcPlusThankYouButton.transform.localScale = new Vector3(0f, 0f, 0f);
-                vrcPlusUserIconButton.transform.localScale = new Vector3(0f, 0f, 0f);
-                vrcPlusUserIconCameraButton.transform.localScale = new Vector3(0f, 0f, 0f);
+                vrcPlusThankYouButton.transform.localScale = Vector3.zero;
+                vrcPlusUserIconButton.transform.localScale = Vector3.zero;
+                vrcPlusUserIconCameraButton.transform.localScale = Vector3.zero;
             }
             else
             {
-                vrcPlusThankYouButton.transform.localScale = new Vector3(1f, 1f, 1f);
-                vrcPlusUserIconButton.transform.localScale = new Vector3(1f, 1f, 1f);
-                vrcPlusUserIconCameraButton.transform.localScale = new Vector3(1f, 1f, 1f);
+                vrcPlusThankYouButton.transform.localScale = Vector3.one;
+                vrcPlusUserIconButton.transform.localScale = Vector3.one;
+                vrcPlusUserIconCameraButton.transform.localScale = Vector3.one;
             }
         }
     }

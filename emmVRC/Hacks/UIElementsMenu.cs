@@ -13,11 +13,11 @@ namespace emmVRC.Hacks
 {
     public class UIElementsMenu
     {
-        private static QMToggleButton ToggleNameplates;
-        private static QMToggleButton ToggleHUD;
+        //private static QMToggleButton ToggleNameplates;
+        public static QMToggleButton ToggleHUD;
         public static IEnumerator Initialize()
         {
-            ToggleHUD = new QMToggleButton("UIElementsMenu", 1, 0, "HUD On", () =>
+            ToggleHUD = new QMToggleButton("UIElementsMenu", 1, 1, "HUD On", () =>
             {
                 Configuration.JSONConfig.UIVisible = true;
                 Configuration.SaveConfig();
@@ -28,7 +28,7 @@ namespace emmVRC.Hacks
                 Configuration.SaveConfig();
                 QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").GetComponent<Button>().onClick.Invoke();
             }, "TOGGLE: Select to Turn the HUD On/Off");
-            ToggleNameplates = new QMToggleButton("UIElementsMenu", 2, 0, "Nameplates\nOn", delegate ()
+            /*ToggleNameplates = new QMToggleButton("UIElementsMenu", 2, 0, "Nameplates\nOn", delegate ()
             {
                 Configuration.JSONConfig.NameplatesVisible = true;
                 Configuration.SaveConfig();
@@ -38,9 +38,9 @@ namespace emmVRC.Hacks
                 Configuration.JSONConfig.NameplatesVisible = false;
                 Configuration.SaveConfig();
                 QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();
-            }, "TOGGLE: Select to Turn the Nameplates On/Off");
+            }, "TOGGLE: Select to Turn the Nameplates On/Off");*/
             ToggleHUD.setToggleState(Configuration.JSONConfig.UIVisible);
-            ToggleNameplates.setToggleState(Configuration.JSONConfig.NameplatesVisible);
+            //ToggleNameplates.setToggleState(Configuration.JSONConfig.NameplatesVisible);
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
                 yield return new UnityEngine.WaitForSeconds(0.1f);
             new System.Action(() =>
@@ -49,19 +49,19 @@ namespace emmVRC.Hacks
                 {
                     if (!Configuration.JSONConfig.UIVisible)
                         QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").GetComponent<Button>().onClick.Invoke();
-                    if (!Configuration.JSONConfig.NameplatesVisible)
-                        QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();
+                    /*if (!Configuration.JSONConfig.NameplatesVisible)
+                        QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").GetComponent<Button>().onClick.Invoke();*/
                 } catch (Exception ex)
                 {
                     ex = new Exception();
                 }
             }).Invoke();
 
-            QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").gameObject.SetActive(false);
+            //QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleNameplatesButton").gameObject.SetActive(false);
             QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").gameObject.SetActive(false);
             yield return null;
         }
-        public static IEnumerator OnSceneLoaded()
+        /*public static IEnumerator OnSceneLoaded()
         {
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
                 yield return new UnityEngine.WaitForSeconds(0.1f);
@@ -77,6 +77,6 @@ namespace emmVRC.Hacks
                         ex = new Exception();
                     }
                 }).Invoke();
-        }
+        }*/
     }
 }

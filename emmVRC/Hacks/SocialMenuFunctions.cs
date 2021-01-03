@@ -258,13 +258,13 @@ namespace emmVRC.Hacks
                     {
                         if (Configuration.JSONConfig.DisableVRCPlusUserInfo)
                         {
-                            VRCPlusSupporterButton.transform.localScale = new Vector3(0f, 0f, 0f);
-                            VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(0f, 0f, 0f);
+                            VRCPlusSupporterButton.transform.localScale = Vector3.zero;
+                            VRCPlusEarlyAdopterButton.transform.localScale = Vector3.zero;
                         }
                         else
                         {
-                            VRCPlusSupporterButton.transform.localScale = new Vector3(1f, 1f, 1f);
-                            VRCPlusEarlyAdopterButton.transform.localScale = new Vector3(1f, 1f, 1f);
+                            VRCPlusSupporterButton.transform.localScale = Vector3.one;
+                            VRCPlusEarlyAdopterButton.transform.localScale = Vector3.one;
                         }
                         menuJustOpened = false;
                     }

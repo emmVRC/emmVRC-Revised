@@ -34,13 +34,13 @@ namespace emmVRC.Hacks
                 kickButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("UserInteractMenu/KickButton").gameObject;
             if (HalfWarnButton == null)
             {
-                HalfWarnButton = new QMSingleButton("UserInteractMenu", 2, 2, "Warn", () => { QuickMenuUtils.GetQuickMenuInstance().transform.Find("UserInteractMenu/WarnButton").GetComponent<Button>().onClick.Invoke(); }, "World Owner Only: Warn this User of Bad Behavior");
+                HalfWarnButton = new QMSingleButton("UserInteractMenu", 2, 3, "Warn", () => { QuickMenuUtils.GetQuickMenuInstance().transform.Find("UserInteractMenu/WarnButton").GetComponent<Button>().onClick.Invoke(); }, "World Owner Only: Warn this User of Bad Behavior");
                 HalfWarnButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
                 HalfWarnButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 96f);
             }
             if (HalfKickButton == null)
             {
-                HalfKickButton = new QMSingleButton("UserInteractMenu", 2, 2, "Kick", () => { QuickMenuUtils.GetQuickMenuInstance().transform.Find("UserInteractMenu/KickButton").GetComponent<Button>().onClick.Invoke(); }, "World Owner Only: Kick this User from The World");
+                HalfKickButton = new QMSingleButton("UserInteractMenu", 2, 3, "Kick", () => { QuickMenuUtils.GetQuickMenuInstance().transform.Find("UserInteractMenu/KickButton").GetComponent<Button>().onClick.Invoke(); }, "World Owner Only: Kick this User from The World");
                 HalfKickButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
                 HalfKickButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
             }

@@ -125,7 +125,7 @@ namespace emmVRC
                 MelonLoader.MelonCoroutines.Start(Resources.LoadResources());
 
                 // Initialize the "UI Elements" replacement buttons
-              //MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
+                MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.Initialize());
 
                 // Initialize the Mod Compatibility system
                 Libraries.ModCompatibility.Initialize();
@@ -313,8 +313,8 @@ namespace emmVRC
                 }
 
                 // Start the Master Icon Crown
-              //if (!Configuration.JSONConfig.StealthMode)
-              //Hacks.MasterCrown.Initialize();
+                if (!Configuration.JSONConfig.StealthMode)
+                  Hacks.MasterCrown.Initialize();
 
                 // Start the Avatar Favorite system
                 Hacks.CustomAvatarFavorites.Initialize();
@@ -332,6 +332,7 @@ namespace emmVRC
                     Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(false, true);
                     Menus.PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
                     Menus.FlashlightMenu.toggleFlashlight.setToggleState(false);
+                    Menus.FlashlightMenu.toggleHeadlight.setToggleState(false);
 
                     MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
                     MelonLoader.MelonCoroutines.Start(EULA.Initialize());
@@ -343,7 +344,7 @@ namespace emmVRC
                     MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckThisWrld());
                     if (!Configuration.JSONConfig.StealthMode)
                         MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
-                    MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
+                    //MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
                     if (Configuration.JSONConfig.LastVersion != Attributes.Version)
                     {
                         Configuration.JSONConfig.LastVersion = Attributes.Version;

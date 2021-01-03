@@ -116,7 +116,7 @@ namespace emmVRC.Menus
             flashlightStrengthSlider.slider.GetComponent<UnityEngine.UI.Slider>().maxValue = 100;
             flashlightStrengthSlider.slider.GetComponent<UnityEngine.UI.Slider>().minValue = 10;
             flashlightStrengthSlider.slider.GetComponent<RectTransform>().anchoredPosition += new Vector2(480f, -104f);
-            flashlightStrengthSlider.slider.GetComponent<RectTransform>().sizeDelta *= new Vector2(2.5f, 1f);
+            flashlightStrengthSlider.slider.GetComponent<RectTransform>().sizeDelta *= new Vector2(2f, 1f);
 
             MelonLoader.MelonCoroutines.Start(Loop());
         }

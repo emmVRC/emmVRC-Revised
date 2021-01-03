@@ -32,8 +32,10 @@ namespace emmVRC.Objects
         public bool PortalBlockingEnable = false;
         public bool ChairBlockingEnable = false;
         public bool PlayerHistoryEnable = false;
+        public bool LogPlayerJoin = false;
         public bool TrackingSaving = true;
         public bool ActionMenuIntegration = true;
+        public bool MigrationButtonVisible = true;
 
         // FOV value
         public int CustomFOV = 60;
@@ -50,8 +52,8 @@ namespace emmVRC.Objects
         public int UserInteractButtonY = 2;
         public int NotificationButtonPositionX = 0;
         public int NotificationButtonPositionY = 0;
-        public int PlayerActionsButtonX = 4;
-        public int PlayerActionsButtonY = 2;
+        public int PlayerActionsButtonX = 1;
+        public int PlayerActionsButtonY = 3;
         public bool StealthMode = false;
 
         // Hack options

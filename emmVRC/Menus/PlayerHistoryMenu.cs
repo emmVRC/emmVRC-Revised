@@ -22,6 +22,7 @@ namespace emmVRC.Menus
     {
         public static PaginatedMenu baseMenu;
         private static PageItem toggleHistory;
+        private static PageItem toggleJoinLeaveLog;
         //public static List<string> currentPlayersNames;
         public static List<InstancePlayer> currentPlayers;
         public static int Timeout = 0;
@@ -37,7 +38,16 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.PlayerHistoryEnable = false;
                 Configuration.SaveConfig();
             }, "TOGGLE: Enables or disables the Player History");
+            toggleJoinLeaveLog = new PageItem("Log Join\nand Leaves", () =>
+            {
+                Configuration.JSONConfig.LogPlayerJoin = true;
+                Configuration.SaveConfig();
+            }, "Disable", () => {
+                Configuration.JSONConfig.LogPlayerJoin = false;
+                Configuration.SaveConfig();
+            }, "TOGGLE: Enables the logging of the names of players to the console and the emmVRC log upon joining and leaving. Please disable this before sending support requests!");
             baseMenu.pageItems.Add(toggleHistory);
+            baseMenu.pageItems.Add(toggleJoinLeaveLog);
             currentInstancePlayers = new List<PageItem>();
             //currentPlayersNames = new List<string>();
             currentPlayers = new List<InstancePlayer>();

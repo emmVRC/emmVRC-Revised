@@ -102,12 +102,7 @@ namespace emmVRC
 
             // Fetch the resources asset bundle, for things like sprites.
             if (Environment.CommandLine.Contains("--emmvrc.assetdev") && Environment.CommandLine.Contains("--emmvrc.devmode")) {
-                if (Environment.CommandLine.Contains("--emmvrc.anniversarymode"))
-                    emmVRCBundle = AssetBundle.LoadFromFile(Path.Combine(dependenciesPath, "anniversary.emm"));
-                else if (Environment.CommandLine.Contains("--emmvrc.pridemode"))
-                    emmVRCBundle = AssetBundle.LoadFromFile(Path.Combine(dependenciesPath, "pride.emm"));
-                else
-                    emmVRCBundle = AssetBundle.LoadFromFile(Path.Combine(dependenciesPath, "normal.emm"));
+                emmVRCBundle = AssetBundle.LoadFromFile(Path.Combine(dependenciesPath, "normal.emm"));
             }
             else {
                 UnityWebRequest assetBundleRequest;
@@ -119,6 +114,8 @@ namespace emmVRC
                     assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Normal.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.halloweenmode"))
                     assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Halloween.emm");
+                else if (Environment.CommandLine.Contains("--emmvrc.xmasmode"))
+                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Xmas.emm");
                 else
                     assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
 

@@ -33,7 +33,7 @@ namespace emmVRC.Objects
 
             var vertices = new Vector3[4]
             {
-                new Vector3(0, 0, 0),
+                Vector3.zero,
                 new Vector3(1.65f, 0, 0),
                 new Vector3(0, 1, 0),
                 new Vector3(1.65f, 1, 0)
