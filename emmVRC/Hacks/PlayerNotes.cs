@@ -32,7 +32,7 @@ namespace emmVRC.Hacks
                     loadedNote = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserNotes/" + userID + ".json"))).Make<PlayerNote>();
                 else
                     loadedNote = new PlayerNote { UserID = userID, NoteText = "" };
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopupV2("Note for " + displayName, loadedNote.NoteText == "" ? "There is currently no note for this user." : loadedNote.NoteText, "Change Note", () =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopupV2("Note for " + displayName, string.IsNullOrWhiteSpace(loadedNote.NoteText) ? "There is currently no note for this user." : loadedNote.NoteText, "Change Note", () =>
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter a note for "+displayName+":", loadedNote.NoteText, UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string newNoteText, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => {
                         PlayerNote newNote = new PlayerNote { UserID = userID, NoteText = newNoteText };

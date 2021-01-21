@@ -10,6 +10,7 @@ using emmVRC.Hacks;
 using UnityEngine;
 using UnityEngine.UI;
 using emmVRC.Objects;
+using VRC.Core;
 
 #pragma warning disable 4014
 
@@ -22,7 +23,7 @@ namespace emmVRC.Menus
         public static QMSingleButton ResetSettingsButton;
 
         // Page 1 - Core Features
-        
+
         private static PageItem VRFlightControls;
         private static PageItem GlobalDynamicBones;
         private static PageItem FriendGlobalDynamicBones;
@@ -47,6 +48,7 @@ namespace emmVRC.Menus
         private static PageItem emmVRCNetwork;
         private static PageItem GlobalChat;
         private static PageItem AvatarFavoriteList;
+        private static PageItem AvatarFavoriteJumpToStart;
 
         // Page 4 - Button Positions
         private static PageItem FunctionsMenuPosition;
@@ -108,6 +110,7 @@ namespace emmVRC.Menus
         // Page 8
         private static PageItem DisableAvatarHotWorlds;
         private static PageItem DisableAvatarRandomWorlds;
+        private static PageItem DisableAvatarPersonalList;
         private static PageItem DisableAvatarLegacyList;
         private static PageItem DisableAvatarPublicList;
 
@@ -141,7 +144,8 @@ namespace emmVRC.Menus
                     ShortcutMenuButtons.Process();
                     emmVRCLoader.Logger.Log("emmVRC settings have been reverted.");
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                }), "No", new System.Action(() => {
+                }), "No", new System.Action(() =>
+                {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 }));
             }, "Resets all emmVRC Settings to their default values. This requires a restart to fully take effect");
@@ -200,7 +204,8 @@ namespace emmVRC.Menus
                     Configuration.SaveConfig();
                     RefreshMenu();
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
-                } else
+                }
+                else
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Global Dynamic Bones are not compatible with MultiplayerDynamicBones. You must remove this mod to use Global Dynamic Bones.", "Dismiss", VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup);
                 }
@@ -222,7 +227,8 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 LoadMenu();
                 VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -340,16 +346,19 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the crown icon above the instance master");
-            HUD = new PageItem("HUD", () => {
+            HUD = new PageItem("HUD", () =>
+            {
                 Configuration.JSONConfig.HUDEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.HUDEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the HUD, which shows players in the room and instance information");
-            ChooseHUD = new PageItem("Show Quick Menu HUD\n in desktop", () => {
+            ChooseHUD = new PageItem("Show Quick Menu HUD\n in desktop", () =>
+            {
                 if (!VRHUD.Initialized)
                 {
                     MelonLoader.MelonCoroutines.Start(VRHUD.Initialize());
@@ -363,7 +372,8 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.VRHUDInDesktop = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 if (!DesktopHUD.Initialized)
                 {
                     MelonLoader.MelonCoroutines.Start(DesktopHUD.Initialize());
@@ -378,23 +388,27 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Switch between the Quick Menu HUD or normal HUD while in Desktop Mode");
-            MoveVRHUD = new PageItem("Closer Quick Menu\nHUD", () => {
+            MoveVRHUD = new PageItem("Closer Quick Menu\nHUD", () =>
+            {
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = true;
                 Configuration.SaveConfig();
                 VRHUD.RefreshPosition();
                 RefreshMenu();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.MoveVRHUDIfSpaceFree = false;
                 Configuration.SaveConfig();
                 VRHUD.RefreshPosition();
                 RefreshMenu();
             }, "TOGGLE: Allows the Quick Menu HUD to move inwards by one row if no emmVRC or Vanilla Buttons occupy the space (requires restart)");
-            LogoButton = new PageItem("Logo Button", () => {
+            LogoButton = new PageItem("Logo Button", () =>
+            {
                 Configuration.JSONConfig.LogoButtonEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.LogoButtonEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -459,9 +473,9 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.emmVRCNetworkEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                if (Network.NetworkClient.authToken != null)
+                if (Network.NetworkClient.webToken != null)
                     Network.HTTPRequest.get(Network.NetworkClient.baseURL + "/api/authentication/logout");
-                Network.NetworkClient.authToken = null;
+                Network.NetworkClient.webToken = null;
                 canToggleNetwork = false;
                 MelonLoader.MelonCoroutines.Start(WaitForDelayNetwork());
             }, "TOGGLE: Enables the emmVRC Network, which provides more functionality, like Global Chat and Messaging");
@@ -488,11 +502,23 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Enables the emmVRC Custom Avatar Favorite list, using the emmVRC Network");
+            AvatarFavoriteJumpToStart = new PageItem("Jump to\nStart", () =>
+            {
+                Configuration.JSONConfig.AvatarFavoritesJumpToStart = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.AvatarFavoritesJumpToStart = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: In the emmVRC Favorites, automatically jumps back to the start when switching pages or reloading favorites");
 
             baseMenu.pageItems.Add(emmVRCNetwork);
             //baseMenu.pageItems.Add(GlobalChat);
             baseMenu.pageItems.Add(AvatarFavoriteList);
-            for (int i = 0; i < 7; i++)
+            baseMenu.pageItems.Add(AvatarFavoriteJumpToStart);
+            for (int i = 0; i < 6; i++)
                 baseMenu.pageItems.Add(PageItem.Space);
 
 
@@ -500,7 +526,8 @@ namespace emmVRC.Menus
             LogoPosition = new PageItem("Logo\nButton", () => { LogoPositionMenu.OpenMenu(); }, "Allows changing the position of the Logo button");
             NotificationPosition = new PageItem("Notification\nButton", () => { NotificationPositionMenu.OpenMenu(); }, "Allows changing the position of the Notification button");
 
-            FunctionsMenuPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 312312, 654632, "", (ButtonConfigurationMenu menu) => {
+            FunctionsMenuPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 312312, 654632, "", (ButtonConfigurationMenu menu) =>
+            {
                 GetUsedMenuSpaces(menu);
             }, (Vector2 vec) =>
             {
@@ -514,7 +541,8 @@ namespace emmVRC.Menus
                 FunctionsMenu.baseMenu.menuEntryButton.setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
             }, "", "Select the new position for the Functions button", null);
 
-            LogoPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 520394, 296321, "", (ButtonConfigurationMenu menu) => {
+            LogoPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 520394, 296321, "", (ButtonConfigurationMenu menu) =>
+            {
                 GetUsedMenuSpaces(menu);
             }, (Vector2 vec) =>
             {
@@ -528,7 +556,8 @@ namespace emmVRC.Menus
                 ShortcutMenuButtons.logoButton.setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
             }, "", "Select the new position for the Logo button", null);
 
-            NotificationPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 322222, 255423, "", (ButtonConfigurationMenu menu) => {
+            NotificationPositionMenu = new ButtonConfigurationMenu(baseMenu.menuBase.getMenuName(), 322222, 255423, "", (ButtonConfigurationMenu menu) =>
+            {
                 GetUsedMenuSpaces(menu);
             }, (Vector2 vec) =>
             {
@@ -558,7 +587,8 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(FunctionsMenuPosition);
                 baseMenu.pageItems.Add(LogoPosition);
                 baseMenu.pageItems.Add(NotificationPosition);
-            } else
+            }
+            else
             {
                 for (int i = 0; i < 3; i++)
                     baseMenu.pageItems.Add(PageItem.Space);
@@ -639,12 +669,14 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 Hacks.ColorChanger.ApplyIfApplicable();
             }, "TOGGLE: Enables or disables VRChat's new pulsating effect on the Microphone icon");
-            UIExpansionKitColorChanging = new PageItem("UI Expansion\nKit Coloring", () => {
+            UIExpansionKitColorChanging = new PageItem("UI Expansion\nKit Coloring", () =>
+            {
                 Configuration.JSONConfig.UIExpansionKitColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
                 VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("You must restart VRChat for your changes to apply");
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.UIExpansionKitColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -670,16 +702,16 @@ namespace emmVRC.Menus
                 {
                     if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
-                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
                 foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
                 {
                     if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
-                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
             }, "TOGGLE: Enables local info spoofing, which can protect your identity in screenshots, recordings, and streams");
@@ -704,16 +736,16 @@ namespace emmVRC.Menus
                 {
                     if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
-                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
                 foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
                 {
                     if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
-                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
+                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
             }, "TOGGLE: Enables local info hiding, which can protect your identity in screenshots, recordings, and streams");
@@ -727,16 +759,16 @@ namespace emmVRC.Menus
                         {
                             if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                             {
-                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
-                                text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
+                                text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                             }
                         }
                         foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
                         {
                             if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                             {
-                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
-                                text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, (VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName));
+                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
+                                text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                             }
                         }
                     }
@@ -933,7 +965,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 UserInteractMenuButtons.Initialize();
-            }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu"); 
+            }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu");
             DisablePlaylists = new PageItem("Disable\nPlaylists", () =>
             {
                 Configuration.JSONConfig.DisablePlaylistsButton = true;
@@ -946,7 +978,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 UserInteractMenuButtons.Initialize();
-            }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu"); 
+            }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu");
             DisableAvatarStats = new PageItem("Disable\nAvatar Stats", () =>
             {
                 Configuration.JSONConfig.DisableAvatarStatsButton = true;
@@ -1005,7 +1037,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-            }, "Allowed", () =>
+            }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusAds = false;
                 Configuration.SaveConfig();
@@ -1083,6 +1115,17 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Disables the 'Random Avatar Worlds' list in your Avatars menu");
+            DisableAvatarPersonalList = new PageItem("Disable Personal\nAvatar List", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarPersonal = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarPersonal = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Disables the 'Personal Avatars' list in your Avatars menu");
             DisableAvatarLegacyList = new PageItem("Disable Legacy\nAvatar List", () =>
             {
                 Configuration.JSONConfig.DisableAvatarLegacy = true;
@@ -1107,19 +1150,21 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the 'Public Avatars' list in your Avatars menu");
             baseMenu.pageItems.Add(DisableAvatarHotWorlds);
             baseMenu.pageItems.Add(DisableAvatarRandomWorlds);
+            baseMenu.pageItems.Add(DisableAvatarPersonalList);
             baseMenu.pageItems.Add(DisableAvatarLegacyList);
             baseMenu.pageItems.Add(DisableAvatarPublicList);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
-            baseMenu.pageItems.Add(PageItem.Space);
 
 
-            EnableKeybinds = new PageItem("Enable\nKeybinds", () => {
+            EnableKeybinds = new PageItem("Enable\nKeybinds", () =>
+            {
                 Configuration.JSONConfig.EnableKeybinds = true;
                 Configuration.SaveConfig();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 Configuration.JSONConfig.EnableKeybinds = false;
                 Configuration.SaveConfig();
             }, "TOGGLE: Enables or disables the desktop-mode keybinds for emmVRC");
@@ -1226,13 +1271,13 @@ namespace emmVRC.Menus
 
 
 
-            baseMenu.pageTitles.Add("Core Features"+(Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
+            baseMenu.pageTitles.Add("Core Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Visual Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Network Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Button Positions" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             if (!Configuration.JSONConfig.StealthMode)
             {
-                
+
                 baseMenu.pageTitles.Add("UI Changing");
                 baseMenu.pageTitles.Add("Nameplate Color Changing");
                 baseMenu.pageTitles.Add("Disable VRChat Buttons");
@@ -1253,9 +1298,10 @@ namespace emmVRC.Menus
                 emmVRCNetwork.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
                 GlobalChat.SetToggleState(Configuration.JSONConfig.GlobalChatEnabled);
                 AvatarFavoriteList.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);
+                AvatarFavoriteJumpToStart.SetToggleState(Configuration.JSONConfig.AvatarFavoritesJumpToStart);
                 UIExpansionKitIntegration.SetToggleState(Configuration.JSONConfig.UIExpansionKitIntegration);
                 TrackingSaving.SetToggleState(Configuration.JSONConfig.TrackingSaving);
-                
+
                 InfoBar.SetToggleState(Configuration.JSONConfig.InfoBarDisplayEnabled);
                 Clock.SetToggleState(Configuration.JSONConfig.ClockEnabled);
                 MasterIcon.SetToggleState(Configuration.JSONConfig.MasterIconEnabled);
@@ -1296,6 +1342,7 @@ namespace emmVRC.Menus
 
                 DisableAvatarHotWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarHotWorlds);
                 DisableAvatarRandomWorlds.SetToggleState(Configuration.JSONConfig.DisableAvatarRandomWorlds);
+                DisableAvatarPersonalList.SetToggleState(Configuration.JSONConfig.DisableAvatarPersonal);
                 DisableAvatarLegacyList.SetToggleState(Configuration.JSONConfig.DisableAvatarLegacy);
                 DisableAvatarPublicList.SetToggleState(Configuration.JSONConfig.DisableAvatarPublic);
 
@@ -1305,7 +1352,7 @@ namespace emmVRC.Menus
                 SpeedKeybind.Name = "Speed:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0])));
                 ThirdPersonKeybind.Name = "Third\nPerson:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0])));
                 ToggleHUDEnabledKeybind.Name = "Toggle HUD\nEnabled:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0])));
-                RespawnKeybind.Name = "Respawn:\n"+ (((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[0])));
+                RespawnKeybind.Name = "Respawn:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[0])));
                 GoHomeKeybind.Name = "Go Home:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[0])));
 
 

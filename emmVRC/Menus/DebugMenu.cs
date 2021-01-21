@@ -17,7 +17,6 @@ namespace emmVRC.Menus
     public class DebugMenu
     {
         public static QMNestedButton menuBase;
-        private static QMSingleButton loadDebugModuleButton;
         private static QMSingleButton testPopupV1OneButtonButton;
         private static QMSingleButton testPopupV1TwoButtonsButton;
         private static QMSingleButton testPopupV2OneButtonButton;
@@ -25,8 +24,6 @@ namespace emmVRC.Menus
         private static QMSingleButton testInputPopupButton;
         private static QMSingleButton testHUDMessageButton;
         private static QMSingleButton testNotificationButton;
-        private static QMSingleButton testNetworkPingButton;
-        private static QMSingleButton debugActionsMenuButton;
 
         private static QMNestedButton benchmarkMenu;
         private static QMSingleButton colorChangeBenchmark;
@@ -216,7 +213,7 @@ namespace emmVRC.Menus
                 {
                     string actionName = action.Name;
                     Action newAction = action.ActionAction;
-                    if (actionName == "")
+                    if (string.IsNullOrWhiteSpace(actionName))
                         actionName = "Action " + (debugActionsMenu.pageItems.Count + 1);
                     debugActionsMenu.pageItems.Add(new PageItem(actionName, newAction, action.Description));
                 }

@@ -97,7 +97,7 @@ namespace emmVRC.Hacks
                     if (Configuration.JSONConfig.emmVRCNetworkEnabled)
                     {
                         // If the client is actually logged in, set the status to "Connected"
-                        if (Network.NetworkClient.authToken != null)
+                        if (Network.NetworkClient.webToken != null)
                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "    Network Status: <color=lime>Connected</color>";
                         // If the client is not logged in, set the status to "Disconnected"
                         else

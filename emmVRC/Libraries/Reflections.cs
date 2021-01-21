@@ -25,8 +25,6 @@ namespace emmVRC.Libraries
             get
             {
                 if (ourResetLastPositionAction != null) return ourResetLastPositionAction;
-
-                UnhollowerRuntimeLib.XrefScans.XrefScanMethodDb.RegisterType<Transform>();
                 var targetMethod = typeof(InputStateController).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | BindingFlags.DeclaredOnly)
                     .Single(it => XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Method && jt.TryResolve() != null && jt.TryResolve().Name == "get_transform"));
 
@@ -52,9 +50,6 @@ namespace emmVRC.Libraries
             get
             {
                 if (ourResetAction != null) return ourResetAction;
-
-                UnhollowerRuntimeLib.XrefScans.XrefScanMethodDb.RegisterType<Transform>();
-                UnhollowerRuntimeLib.XrefScans.XrefScanMethodDb.RegisterType<Vector3>();
                 var targetMethod = typeof(VRCMotionState).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | BindingFlags.DeclaredOnly)
                     .Single(it => XrefScanner.XrefScan(it).Count(jt => jt.Type == XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType == typeof(Vector3)) == 4);
 
@@ -202,7 +197,6 @@ namespace emmVRC.Libraries
             get
             {
                 if (ourSetControllerVisibilityMethod != null) return ourSetControllerVisibilityMethod;
-                XrefScanMethodDb.RegisterType(typeof(VRCTracking));
                 var targetMethod = typeof(VRCTrackingManager).GetMethods()
                     .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(bool) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType != null && jt.TryResolve().ReflectedType.Name == "Whiteboard"));
                 ourSetControllerVisibilityMethod = targetMethod;

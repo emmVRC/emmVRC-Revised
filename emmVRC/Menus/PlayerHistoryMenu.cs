@@ -55,6 +55,7 @@ namespace emmVRC.Menus
         public static void ShowMenu()
         {
             toggleHistory.SetToggleState(Configuration.JSONConfig.PlayerHistoryEnable);
+            toggleJoinLeaveLog.SetToggleState(Configuration.JSONConfig.LogPlayerJoin);
             if (currentInstancePlayers.Count > 0)
             {
                 foreach (PageItem itm in currentInstancePlayers)

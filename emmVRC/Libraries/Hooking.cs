@@ -166,7 +166,7 @@ namespace emmVRC.Libraries
                 {
                     Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, __1);
                 }
-                MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(__1));
+                //MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(__1));
             }
         }
         

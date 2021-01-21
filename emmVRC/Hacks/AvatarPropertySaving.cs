@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,6 @@ namespace emmVRC.Hacks
                                         //mngr.field_Private_AvatarPlayableController_0.Method_Private_Void_0();
                                     }
                                 }
-                                emmVRCLoader.Logger.LogDebug("Calling update. Does this crash...?");
                                 mngr.field_Private_AvatarPlayableController_0.ApplyParameters(0);
 
                             }
@@ -120,4 +120,4 @@ namespace emmVRC.Hacks
                 File.Delete(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarProperties/", VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id + ".json"));
         }
     }
-}
+}*/

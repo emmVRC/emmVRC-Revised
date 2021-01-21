@@ -45,29 +45,35 @@ namespace emmVRC.Hacks
                         // If hand colliders specifically is on, fetch all the colliders for each hand and add them to cache
                         if (aperms.HandColliders)
                         {
-                            foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftHand).GetComponentsInChildren<DynamicBoneCollider>())
+                            if (avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftHand) != null && avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand) != null)
                             {
-                                if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
-                                    currentWorldDynamicBoneColliders.Add(coll);
-                            }
-                            foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand).GetComponentsInChildren<DynamicBoneCollider>())
-                            {
-                                if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
-                                    currentWorldDynamicBoneColliders.Add(coll);
+                                foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftHand).GetComponentsInChildren<DynamicBoneCollider>())
+                                {
+                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                        currentWorldDynamicBoneColliders.Add(coll);
+                                }
+                                foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand).GetComponentsInChildren<DynamicBoneCollider>())
+                                {
+                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                        currentWorldDynamicBoneColliders.Add(coll);
+                                }
                             }
                         }
                         // If feet folliders specifically is on, fetch all the colliders for each foot and add them to cache
                         if (aperms.FeetColliders)
                         {
-                            foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftFoot).GetComponentsInChildren<DynamicBoneCollider>())
+                            if (avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftFoot) != null && avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightFoot) != null)
                             {
-                                if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
-                                    currentWorldDynamicBoneColliders.Add(coll);
-                            }
-                            foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightFoot).GetComponentsInChildren<DynamicBoneCollider>())
-                            {
-                                if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
-                                    currentWorldDynamicBoneColliders.Add(coll);
+                                foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftFoot).GetComponentsInChildren<DynamicBoneCollider>())
+                                {
+                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                        currentWorldDynamicBoneColliders.Add(coll);
+                                }
+                                foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightFoot).GetComponentsInChildren<DynamicBoneCollider>())
+                                {
+                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                        currentWorldDynamicBoneColliders.Add(coll);
+                                }
                             }
                         }
                     }

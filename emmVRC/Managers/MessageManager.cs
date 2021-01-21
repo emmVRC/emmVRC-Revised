@@ -1,7 +1,6 @@
 ﻿using emmVRC.Libraries;
 using emmVRC.Network;
 using emmVRC.Network.Objects;
-using Il2CppSystem.Xml.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,10 +35,10 @@ namespace emmVRC.Managers
         public static void Initialize()
         {
             MelonLoader.MelonCoroutines.Start(CheckLoop());
-        }
+        }/*
         public static IEnumerator SendMessage(string message, string targetId)
         {
-            if (NetworkClient.authToken != null && Configuration.JSONConfig.emmVRCNetworkEnabled)
+            if (NetworkClient.webToken != null && Configuration.JSONConfig.emmVRCNetworkEnabled)
             {
                 SerializableMessage msg = new SerializableMessage { body = message, recipient = targetId, icon = "None" };
                 var request = HTTPRequest.post(NetworkClient.baseURL + "/api/message", msg);
@@ -55,12 +54,14 @@ namespace emmVRC.Managers
             {
                 NotificationManager.AddNotification("You must be connected to the emmVRC Network in order to send messages. We are sorry for the inconvenience.", "Dismiss", NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
             }
-        }
+        }*/
         public static IEnumerator CheckLoop()
         {
-            while (true == false)
+            yield return null;
+            /*
+            while (true)
             {
-                if (NetworkClient.authToken != null)
+                if (NetworkClient.webToken != null)
                 {
                     Message[] messageArray = null;
 
@@ -98,7 +99,7 @@ namespace emmVRC.Managers
                         {
                             NotificationManager.AddNotification("Message from " + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_sender_name)) + ", sent " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortDateString() + " " + new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(Double.Parse(msg.message.rest_message_created)).ToLocalTime().ToShortTimeString() + "\n" + Encoding.UTF8.GetString(Convert.FromBase64String(msg.message.rest_message_body)), "Go to\nMessages", () =>
                             {
-                                if (NetworkClient.authToken != null)
+                                if (NetworkClient.webToken != null)
                                 {
                                     try
                                     {
@@ -117,7 +118,7 @@ namespace emmVRC.Managers
                                 }
                             }, "Mark as\nRead", () =>
                             {
-                                if (NetworkClient.authToken != null)
+                                if (NetworkClient.webToken != null)
                                     try
                                     {
                                         HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
@@ -128,7 +129,7 @@ namespace emmVRC.Managers
                                     }
                                 NotificationManager.DismissCurrentNotification();
                             }, "Block\nUser", () => {
-                                if (NetworkClient.authToken != null)
+                                if (NetworkClient.webToken != null)
                                     try
                                     {
                                         HTTPRequest.patch(NetworkClient.baseURL + "/api/message/" + msg.message.rest_message_id, null);
@@ -149,7 +150,7 @@ namespace emmVRC.Managers
                         }
                 }
                 yield return new WaitForSeconds(Objects.NetworkConfig.Instance.MessageUpdateRate);
-            }
+            }*/
         }
     }
 }

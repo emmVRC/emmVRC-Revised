@@ -53,7 +53,7 @@ namespace emmVRC.Network
                     string json = TinyJSON.Encoder.Encode(obj);
                     requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
                 }
-
+                
                 return await Task.Run(() =>
                 {
                     using (HttpResponseMessage responseMessage = NetworkClient.httpClient.SendAsync(requestMessage).Result)

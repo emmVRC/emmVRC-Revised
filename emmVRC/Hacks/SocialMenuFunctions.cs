@@ -84,7 +84,7 @@ namespace emmVRC.Hacks
                     TeleportButton.SetActive(!TeleportButton.activeSelf);
                 else
                     TeleportButton.SetActive(false);
-                if (NetworkClient.authToken != null && Configuration.JSONConfig.AvatarFavoritesEnabled)
+                if (NetworkClient.webToken != null && Configuration.JSONConfig.AvatarFavoritesEnabled)
                     AvatarSearchButton.SetActive(!AvatarSearchButton.activeSelf);
                 try
                 {
@@ -133,15 +133,15 @@ namespace emmVRC.Hacks
 
             UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.GetName() + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
                 {
-                    MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
+                    //MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
                 }), null, "Enter message...");
             }));
 
             UserNotes.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                Hacks.PlayerNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName);
+                Hacks.PlayerNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.GetName());
             }));
 
             TeleportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
@@ -176,7 +176,7 @@ namespace emmVRC.Hacks
                 if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null)
                 {
                     VRCUiManager.prop_VRCUiManager_0.ShowScreen(VRCUiManager.prop_VRCUiManager_0.menuContent.transform.Find("Screens/Avatar").GetComponent<VRCUiPage>());
-                    MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName != "" ? QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.displayName : QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.username));
+                    MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.GetName()));
                 }
             }));
             PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
@@ -219,7 +219,7 @@ namespace emmVRC.Hacks
 
             ToggleBlockButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                if (NetworkClient.authToken != null)
+                if (NetworkClient.webToken != null)
                 {
                     HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, null);
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "The block state for this user has been toggled.", 5f);

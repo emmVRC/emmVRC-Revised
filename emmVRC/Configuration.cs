@@ -50,7 +50,6 @@ namespace emmVRC
         {
             Color col;
             col = Libraries.ColorConversion.HexToColor(JSONConfig.UIColorHex);
-            //ColorUtility.TryParseHtmlString(resources.jsonConfig.uiColor, out col);
             return col;
         }
         public static Color defaultMenuColor()

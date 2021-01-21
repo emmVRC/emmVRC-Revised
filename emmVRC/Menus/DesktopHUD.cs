@@ -32,7 +32,7 @@ namespace emmVRC.Menus
                             if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
                                 if (tempCount != 22)
                                 {
-                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + ColorUtility.ToHtmlStringRGB(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.displayName + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 +" ms\n";
+                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 +" ms\n";
                                     tempCount++;
                                 }
                         }
@@ -99,7 +99,7 @@ namespace emmVRC.Menus
         public static bool enabled = true;
         public static IEnumerator Initialize()
         {
-            emmVRCLoader.Logger.Log("[emmVRC] Initializing HUD canvas");
+            emmVRCLoader.Logger.LogDebug("Initializing Desktop HUD");
             // UI Init
             while (Resources.HUD_Minimized == null) yield return null;
             CanvasObject = new GameObject("emmVRCUICanvas");
@@ -139,6 +139,7 @@ namespace emmVRC.Menus
             CanvasObject.SetActive(false);
 
             Initialized = true;
+            emmVRCLoader.Logger.LogDebug("Desktop HUD initialized fully.");
             MelonLoader.MelonCoroutines.Start(Loop());
         }
 
@@ -187,10 +188,10 @@ namespace emmVRC.Menus
                             "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
                             "\n" +
                             "\n" +
-                            (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
+                            (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.webToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
                             "\n";
                         if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
-                            TextText.text = TextText.text.Replace((VRC.Core.APIUser.CurrentUser.displayName == "" ? VRC.Core.APIUser.CurrentUser.username : VRC.Core.APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
+                            TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                     }
                     else if (!UIExpanded)
                     {

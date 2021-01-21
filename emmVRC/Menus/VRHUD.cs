@@ -130,10 +130,10 @@ namespace emmVRC.Menus
                         "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
                         "\n" +
                         "\n" +
-                        (Configuration.JSONConfig.emmVRCNetworkEnabled ? (Network.NetworkClient.authToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
+                        (Configuration.JSONConfig.emmVRCNetworkEnabled ? (Network.NetworkClient.webToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
                         "\n";
                     if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled))
-                        TextText.text = TextText.text.Replace((APIUser.CurrentUser.displayName == "" ? APIUser.CurrentUser.username : APIUser.CurrentUser.displayName), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
+                        TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (Configuration.JSONConfig.InfoHidingEnabled ? "⛧⛧⛧⛧⛧⛧⛧⛧⛧" : NameSpoofGenerator.spoofedName));
                 }
             }
         }

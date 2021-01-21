@@ -60,8 +60,7 @@ namespace emmVRC.Hacks
             string newLine = "\n";
             string context = "";
 
-            //TODO showing in wrong order UGH
-            foreach (Message message in convo)
+            foreach (Message message in convo.Reverse())
             {
                 context += "[ " + message.rest_message_created + " ]" + spacer + Encoding.UTF8.GetString(Convert.FromBase64String(message.rest_message_sender_name)) + spacer + newLine + spacer + Encoding.UTF8.GetString(Convert.FromBase64String(message.rest_message_body)) + newLine;
             }
@@ -74,7 +73,7 @@ namespace emmVRC.Hacks
 
         public static void SendMessage(SocialMessage message)
         {
-            MessageManager.SendMessage(message.MessageText, message.UserID);
+            //MessageManager.SendMessage(message.MessageText, message.UserID);
         }
 
     }

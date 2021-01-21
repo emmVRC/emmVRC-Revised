@@ -15,7 +15,7 @@ namespace emmVRC.Hacks
         {
             QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/Footer/Logout").GetComponent<Button>().onClick.AddListener(new System.Action(() => {
                 HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
-                NetworkClient.authToken = null;
+                NetworkClient.webToken = null;
                 
                 CustomAvatarFavorites.LoadedAvatars = null;
             }));

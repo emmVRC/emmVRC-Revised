@@ -33,11 +33,6 @@ namespace emmVRC.Network.Authentication
         public static void CreateTokenFile(string userID, string data)
         {
             string fileName = userID + extension;
-            if (File.Exists(Path.Combine(path, fileName)))
-            {
-                File.Delete(Path.Combine(path,fileName));
-            };
-
             File.WriteAllBytes(Path.Combine(path, fileName), Encoding.UTF8.GetBytes(data));
         }
     }

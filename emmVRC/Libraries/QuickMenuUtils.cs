@@ -25,12 +25,6 @@ namespace emmVRC.Libraries
         // Internal cache of the Nested Menu Template for the Quick Menu
         private static Transform NestedButtonReference;
 
-        // Internal cache of the QuickMenu
-        private static QuickMenu quickmenuInstance;
-
-        // Internal cache of the VRCUiManager
-        private static VRCUiManager vrcuimInstance;
-
         private static Vector3 QuickMenuColliderSizeNormal = Vector3.zero;
         private static Vector3 QuickMenuColliderPositionNormal = Vector3.zero;
 

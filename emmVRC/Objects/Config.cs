@@ -23,6 +23,7 @@ namespace emmVRC.Objects
         public bool InfoBarDisplayEnabled = true;
         public bool ClockEnabled = true;
         public bool AvatarFavoritesEnabled = true;
+        public bool AvatarFavoritesJumpToStart = true;
         public bool MasterIconEnabled = true;
         public bool LogoButtonEnabled = true;
         public bool HUDEnabled = true;
@@ -36,6 +37,10 @@ namespace emmVRC.Objects
         public bool TrackingSaving = true;
         public bool ActionMenuIntegration = true;
         public bool MigrationButtonVisible = true;
+
+        // Avatar List render limits
+        public int FavoriteRenderLimit = 50;
+        public int SearchRenderLimit = 100;
 
         // FOV value
         public int CustomFOV = 60;
@@ -79,6 +84,7 @@ namespace emmVRC.Objects
         // Sub section: Avatar Menu
         public bool DisableAvatarHotWorlds = false;
         public bool DisableAvatarRandomWorlds = false;
+        public bool DisableAvatarPersonal = false;
         public bool DisableAvatarLegacy = false;
         public bool DisableAvatarPublic = false;
 

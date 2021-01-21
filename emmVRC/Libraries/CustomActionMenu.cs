@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace emmVRC.Libraries
 {
-    public class CustomActionMenu
+    public static class CustomActionMenu
     {
         private static List<Page> customPages = new List<Page>();
         private static List<Button> mainMenuButtons = new List<Button>();
@@ -18,6 +18,31 @@ namespace emmVRC.Libraries
 
         public static Texture2D ToggleOffTexture;
         public static Texture2D ToggleOnTexture;
+
+        public static bool isOpen(this ActionMenuOpener actionMenuOpener)
+        {
+            return actionMenuOpener.field_Private_Boolean_0;
+        }
+        private static ActionMenuOpener GetActionMenuOpener()
+        {
+            if (!ActionMenuDriver._instance.openerL.isOpen() && ActionMenuDriver._instance.openerR.isOpen())
+            {
+                return ActionMenuDriver._instance.openerR;
+            }
+            else if (ActionMenuDriver._instance.openerL.isOpen() && !ActionMenuDriver._instance.openerR.isOpen())
+            {
+                return ActionMenuDriver._instance.openerL;
+            }
+            else return null;
+            /*
+            else if (ActionMenuDriver._instance.openerL.isOpen() && ActionMenuDriver._instance.openerR.isOpen())
+            {
+                return null; //Which one to return ¯\_(ツ)_/¯ Mystery till I figure something smart out
+            }
+            */
+
+
+        }
 
         private static void Initialize()
         {
@@ -68,15 +93,16 @@ namespace emmVRC.Libraries
                 previousPage = basePage;
                 new Button(previousPage, buttonText, delegate { OpenMenu(basePage); }, buttonIcon);
             }
+            
             public void OpenMenu(Page currentPage)
             {
                 if (!Initialized)
                     Initialize();
-                activeActionMenu.Method_Public_ObjectNPublicAcTeAcStGaUnique_Action_Action_Texture2D_String_0((new Action(delegate
+                GetActionMenuOpener().actionMenu.Method_Public_ObjectNPublicAcTeAcStGaUnique_Action_Action_Texture2D_String_0((new Action(delegate
                 {
                     foreach(Button btn in buttons)
                     {
-                        var newButton = activeActionMenu.Method_Private_PedalOption_0();
+                        var newButton = GetActionMenuOpener().actionMenu.Method_Private_PedalOption_0();
                         newButton.prop_String_0 = btn.ButtonText; // Button Text
                         newButton.triggerEvent = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
                         newButton.prop_Boolean_0 = btn.IsEnabled;

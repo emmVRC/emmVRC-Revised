@@ -29,6 +29,7 @@ namespace emmVRC.Hacks
 
             if (normalColorImage == null || normalColorImage.Count == 0)
             {
+                emmVRCLoader.Logger.LogDebug("Gathering elements to color normally...");
                 normalColorImage = new List<Image>();
                 GameObject quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent;
                 normalColorImage.Add(quickMenu.transform.Find("Screens/Settings_Safety/_Description_SafetyLevel").GetComponent<Image>());
@@ -78,6 +79,7 @@ namespace emmVRC.Hacks
             }
             if (dimmerColorImage == null || dimmerColorImage.Count == 0)
             {
+                emmVRCLoader.Logger.LogDebug("Gathering elements to color lighter...");
                 dimmerColorImage = new List<Image>();
                 GameObject quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent;
                 dimmerColorImage.Add(quickMenu.transform.Find("Screens/Settings_Safety/_Buttons_SafetyLevel/Button_Custom/ON/TopPanel_SafetyLevel").GetComponent<Image>());
@@ -92,6 +94,7 @@ namespace emmVRC.Hacks
             }
             if (darkerColorImage == null || darkerColorImage.Count == 0)
             {
+                emmVRCLoader.Logger.LogDebug("Gathering elements to color darker...");
                 darkerColorImage = new List<Image>();
                 GameObject quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent;
                 darkerColorImage.Add(quickMenu.transform.Find("Popups/InputKeypadPopup/Rectangle").GetComponent<Image>());
@@ -117,6 +120,7 @@ namespace emmVRC.Hacks
             }
             if (normalColorText == null || normalColorText.Count == 0)
             {
+                emmVRCLoader.Logger.LogDebug("Gathering text elements to color...");
                 normalColorText = new List<Text>();
                 GameObject quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent;
                 foreach (Text txt in quickMenu.transform.Find("Popups/InputPopup/Keyboard/Keys").GetComponentsInChildren<Text>(true))
@@ -124,12 +128,17 @@ namespace emmVRC.Hacks
                 foreach (Text txt in quickMenu.transform.Find("Popups/InputKeypadPopup/Keyboard/Keys").GetComponentsInChildren<Text>(true))
                     normalColorText.Add(txt);
             }
+
+            emmVRCLoader.Logger.LogDebug("Coloring normal elements...");
             foreach (Image img in normalColorImage)
                 img.color = colorT;
+            emmVRCLoader.Logger.LogDebug("Coloring lighter elements...");
             foreach (Image img in dimmerColorImage)
                 img.color = dimmerT;
+            emmVRCLoader.Logger.LogDebug("Coloring darker elements...");
             foreach (Image img in darkerColorImage)
                 img.color = darkerT;
+            emmVRCLoader.Logger.LogDebug("Coloring text elements...");
             foreach (Text txt in normalColorText)
                 txt.color = color;
 
@@ -137,6 +146,7 @@ namespace emmVRC.Hacks
             {
                 try
                 {
+                    emmVRCLoader.Logger.LogDebug("Setting up skybox coloring...");                  
                     Resources.blankGradient = new Texture2D(16, 16);
                     UnityEngine.ImageConversion.LoadImage(Resources.blankGradient, Convert.FromBase64String(B64Textures.Gradient), false);
                     GameObject quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent;
@@ -157,7 +167,10 @@ namespace emmVRC.Hacks
                 }
             }
             if (setupSkybox && loadingBackground != null && !ModCompatibility.BetterLoadingScreen)
+            {
+                emmVRCLoader.Logger.LogDebug("Coloring skybox...");
                 loadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
+            }
             ColorBlock buttonTheme = new ColorBlock()
             {
                 colorMultiplier = 1f,
@@ -174,12 +187,14 @@ namespace emmVRC.Hacks
             {
                 if (Configuration.JSONConfig.UIMicIconColorChangingEnabled && Configuration.JSONConfig.UIColorChangingEnabled)
                 {
+                    emmVRCLoader.Logger.LogDebug("Coloring Push To Talk icons...");
                     foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
                         if (img.gameObject.name != "PushToTalkKeybd" && img.gameObject.name != "PushToTalkXbox")
                             img.color = color;
                 }
                 else
                 {
+                    emmVRCLoader.Logger.LogDebug("Decoloring Push To Talk icons...");
                     foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
                         if (img.gameObject.name != "PushToTalkKeybd" && img.gameObject.name != "PushToTalkXbox")
                             img.color = Color.red;
@@ -198,6 +213,7 @@ namespace emmVRC.Hacks
             {
                 {
                     GameObject quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent;
+                    emmVRCLoader.Logger.LogDebug("Coloring input popup...");
                     try
                     {
                         var inputHolder = quickMenu.transform.Find("Popups/InputPopup");
@@ -215,6 +231,7 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
+                    emmVRCLoader.Logger.LogDebug("Coloring QM buttons...");
                     try
                     {
                         ColorBlock theme = new ColorBlock()
@@ -273,12 +290,13 @@ namespace emmVRC.Hacks
                         ex = new Exception();
                         //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
+                    emmVRCLoader.Logger.LogDebug("Coloring cursor...");
                     VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.mouseCursor.UiColor = color;
                     VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handRightCursor.UiColor = color;
                     VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handLeftCursor.UiColor = color;
 
 
-
+                    emmVRCLoader.Logger.LogDebug("Coloring Quick Menu header text...");
                     foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_CONTEXT").GetComponentsInChildren<Text>(true))
                     {
                         if (text.transform.name == "Text" && text.transform.parent.name != "AvatarImage")
@@ -287,6 +305,7 @@ namespace emmVRC.Hacks
                     if (Configuration.JSONConfig.UIActionMenuColorChangingEnabled)
                         try
                         {
+                            emmVRCLoader.Logger.LogDebug("Coloring Action Menu...");
                             Color referenceColor = (Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : new Color(Configuration.defaultMenuColor().r * 1.5f, Configuration.defaultMenuColor().g * 1.5f, Configuration.defaultMenuColor().b * 1.5f));
                             Color transparent = new Color(referenceColor.r, referenceColor.g, referenceColor.b, referenceColor.a / 1.25f);
                             foreach (PedalGraphic grph in UnityEngine.Resources.FindObjectsOfTypeAll<PedalGraphic>())

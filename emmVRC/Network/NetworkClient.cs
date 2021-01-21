@@ -29,37 +29,35 @@ namespace emmVRC.Network
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         public const string configURL = "https://thetrueyoshifan.com"; // TODO: Integrate this with the API
         private static string LoginKey;
-        private static string _authToken;
+        private static string _webToken;
         private static bool userIDTried = false;
         private static bool keyFileTried = false;
         private static bool passwordTried = false;
-        public static string authToken
+        private static string message = "To those interested; this class is very much temporary. The entire network is going to be rewritten at some point soon.";
+        public static string webToken
         {
-            get { return _authToken; }
+            get { return _webToken; }
             set
             {
-                _authToken = value;
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
+                _webToken = value;
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _webToken);
             }
         }
         public static HttpClient httpClient { get; set; }
-        //private static void voidFunc() { }
-        //public static T InitializeClient<T>(Func<T> callback = voidFunc())
         public static void InitializeClient()
         {
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/" + Attributes.Version + ")");
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/" + Attributes.Version + ", Headset; "+(UnityEngine.XR.XRDevice.isPresent ? UnityEngine.XR.XRDevice.model : "None")+")");
             fetchConfig();
             login();
-            //return callback();
         }
 
         public static T DestroyClient<T>(Func<T> callback = null)
         {
             httpClient = null;
-            authToken = null;
+            webToken = null;
             return callback();
         }
 
@@ -138,35 +136,44 @@ namespace emmVRC.Network
         private static async void sendRequest(string password = "")
         {
             if (NetworkConfig.Instance.DeleteAndDisableAuthFile)
-            {
                 Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
-            }
-            if (password == "" && !userIDTried)
+            if (string.IsNullOrWhiteSpace(password) && !userIDTried)
             {
                 LoginKey = VRC.Core.APIUser.CurrentUser.id;
                 userIDTried = true;
             }
-            else if (password == "" && userIDTried && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
-            {
+            else if (string.IsNullOrWhiteSpace(password ) && userIDTried && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
                 LoginKey = Authentication.Authentication.ReadTokenFile(APIUser.CurrentUser.id);
-            }
             else
-            {
                 LoginKey = password;
-            }
 
             string createFile = "0";
             if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
                 createFile = "1";
             string response = "undefined";
+            string tagIdentifier = "";
+            /*System.Random rand = new System.Random();
+            const string availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            int stringLength = rand.Next(5, 7);
+            for (int i = 0; i < stringLength; i++)
+            {
+                tagIdentifier += availableChars[rand.Next(availableChars.Length)];
+            }
+            emmVRCLoader.Logger.LogDebug("Current status identifier is: " + tagIdentifier);
+            string currentBio = VRC.Core.APIUser.CurrentUser.bio;
+            Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> dictionary = new Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>();
+            dictionary["bio"] = tagIdentifier;
+            API.SendPutRequest("users/" + VRC.Core.APIUser.CurrentUser.id, null, dictionary, null);*/
             try
             {
-                //emmVRCLoader.Logger.LogDebug("User ID Tried: " + userIDTried);
-                //emmVRCLoader.Logger.LogDebug("Keyfile Tried: " + keyFileTried);
-                //emmVRCLoader.Logger.LogDebug("Password Tried: " + passwordTried);
-                response = await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.displayName, ["password"] = LoginKey, ["loginKey"] = createFile });
+                response = await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.GetName(), ["password"] = LoginKey, ["loginKey"] = createFile, ["tagIdentifier"] = tagIdentifier });
                 TinyJSON.Variant result = HTTPResponse.Serialize(response);
-                NetworkClient.authToken = result["token"];
+                NetworkClient.webToken = result["token"];
+
+                /*Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> dictionary2 = new Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>();
+                dictionary["bio"] = currentBio;
+                API.SendPutRequest("users/" + VRC.Core.APIUser.CurrentUser.id, null, dictionary, null);*/
+
                 if (result["reset"])
                 {
                     Managers.NotificationManager.AddNotification("You need to set a pin to protect your emmVRC account.", "Set\nPin", () => {
@@ -176,6 +183,7 @@ namespace emmVRC.Network
                 }
                 if (createFile == "1" && LoginKey != APIUser.CurrentUser.id)
                 {
+                    
                     try
                     {
                         Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
@@ -192,6 +200,9 @@ namespace emmVRC.Network
             }
             catch (Exception exception)
             {
+                /*Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> dictionary2 = new Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>();
+                dictionary["bio"] = currentBio;
+                API.SendPutRequest("users/" + VRC.Core.APIUser.CurrentUser.id, null, dictionary, null);*/
                 if (response.ToLower().Contains("unauthorized"))
                 {
                     if (response.ToLower().Contains("banned"))
@@ -215,7 +226,7 @@ namespace emmVRC.Network
                         }
                         else
                         {
-                            Managers.NotificationManager.AddNotification("You need to log in to emmVRC.\nIf you have forgotten, or do not have a pin, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                            Managers.NotificationManager.AddNotification("You need to log in to the emmVRC Network. Please log in and enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
                         }
                     }
                 }

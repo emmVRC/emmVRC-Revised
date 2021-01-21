@@ -26,7 +26,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Janni9009</color>", null, "Developer and supporter"));
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Supah</color>", null, "Major supporter and moderator"));
             baseMenu.pageItems.Add(new PageItem("<color=#C67228>mrgw98</color>", null, "Helper in the community"));
-            baseMenu.pageItems.Add(new PageItem("<color=#C67228>Provania</color>", null, "Helper in the community"));
+            baseMenu.pageItems.Add(new PageItem("<color=#C67228>Provania</color>", null, "Moderator and Helper in the community"));
             baseMenu.pageItems.Add(new PageItem("<color=#C67228>rakosi2</color>", null, "Helper in the community"));
             baseMenu.pageItems.Add(new PageItem("<color=#C67228>RiskiVR</color>", null, "Helper in the community"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>Herp\nDerpinstine</color>", null, "Major coding help, developer of MelonLoader"));

@@ -24,7 +24,7 @@ namespace emmVRC.Menus
         public static CustomActionMenu.Button saveAvatarParameters;
         public static CustomActionMenu.Button clearAvatarParameters;
 
-        private static bool justBecameActive = true;
+        //private static bool justBecameActive = true;
         public static IEnumerator Initialize()
         {
             while (Resources.onlineSprite == null || Resources.onlineSprite.texture == null)
@@ -51,7 +51,7 @@ namespace emmVRC.Menus
                     PlayerTweaksMenu.ESPToggle.setToggleState(!ESP.ESPEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
 
-            avatarParametersMenu = new CustomActionMenu.Page(functionsMenu, "Avatar 3.0\nParameters", Resources.rpSprite.texture);
+            /*avatarParametersMenu = new CustomActionMenu.Page(functionsMenu, "Avatar 3.0\nParameters", Resources.rpSprite.texture);
             saveAvatarParameters = new CustomActionMenu.Button(avatarParametersMenu, "Save", () =>
             {
                 Hacks.AvatarPropertySaving.SaveAvatarParameters();
@@ -61,7 +61,7 @@ namespace emmVRC.Menus
             {
                 Hacks.AvatarPropertySaving.ClearAvatarParameters();
                 VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Avatar parameters have been cleared.");
-            }, Resources.deleteTexture);
+            }, Resources.deleteTexture);*/
             MelonLoader.MelonCoroutines.Start(Loop());
         }
         public static IEnumerator Loop()

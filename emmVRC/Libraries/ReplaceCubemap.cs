@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace emmVRC
+namespace emmVRC.Libraries
 {
     public class ReplaceCubemap
     {

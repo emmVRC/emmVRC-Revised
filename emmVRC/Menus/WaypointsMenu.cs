@@ -59,14 +59,17 @@ namespace emmVRC.Menus
             selectedWaypointMenu = new QMNestedButton(baseMenu, 1024, 768, "Selected Waypoint", "");
             selectedWaypointMenu.getMainButton().DestroyMe();
             teleportButton = new QMSingleButton(selectedWaypointMenu, 1, 0, "Teleport", () => { VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(worldWaypoints[selectedWaypoint].x, worldWaypoints[selectedWaypoint].y, worldWaypoints[selectedWaypoint].z); VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation = new Quaternion(worldWaypoints[selectedWaypoint].rx, worldWaypoints[selectedWaypoint].ry, worldWaypoints[selectedWaypoint].rz, worldWaypoints[selectedWaypoint].rw); }, "Teleport to this waypoint");
-            renameButton = new QMSingleButton(selectedWaypointMenu, 2, 0, "Rename", () => {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Type a name (or none for default)", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string name, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) => { 
-                worldWaypoints[selectedWaypoint].Name = name; SaveWaypoints();
-            }), null, "Enter name...");
+            renameButton = new QMSingleButton(selectedWaypointMenu, 2, 0, "Rename", () =>
+            {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Type a name (or none for default)", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string name, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+                {
+                    worldWaypoints[selectedWaypoint].Name = name; SaveWaypoints();
+                }), null, "Enter name...");
             }, "Rename this waypoint (currently unnamed)");
-            setLocationButton = new QMSingleButton(selectedWaypointMenu, 3, 0, "Set\nLocation", () => { 
-                worldWaypoints[selectedWaypoint].x = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.x; 
-                worldWaypoints[selectedWaypoint].y = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.y; 
+            setLocationButton = new QMSingleButton(selectedWaypointMenu, 3, 0, "Set\nLocation", () =>
+            {
+                worldWaypoints[selectedWaypoint].x = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.x;
+                worldWaypoints[selectedWaypoint].y = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.y;
                 worldWaypoints[selectedWaypoint].z = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position.z;
                 worldWaypoints[selectedWaypoint].rx = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation.x;
                 worldWaypoints[selectedWaypoint].ry = VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation.y;
@@ -77,7 +80,8 @@ namespace emmVRC.Menus
                 renameButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = true;
                 removeButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = true;
             }, "Set the waypoint location");
-            removeButton = new QMSingleButton(selectedWaypointMenu, 4, 0, "Remove", () => {
+            removeButton = new QMSingleButton(selectedWaypointMenu, 4, 0, "Remove", () =>
+            {
                 worldWaypoints[selectedWaypoint] = new Waypoint();
                 SaveWaypoints();
                 teleportButton.getGameObject().GetComponent<UnityEngine.UI.Button>().enabled = false;
@@ -97,7 +101,8 @@ namespace emmVRC.Menus
             if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints/" + currentWorldID + ".json")))
             {
                 worldWaypoints = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints/" + currentWorldID + ".json"))).Make<List<Waypoint>>();
-            } else
+            }
+            else
             {
                 worldWaypoints = new List<Waypoint> { new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint(), new Waypoint() };
                 //File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints/"+currentWorldID+".json"), TinyJSON.Encoder.Encode(worldWaypoints));
@@ -106,14 +111,14 @@ namespace emmVRC.Menus
 
         public static void LoadWaypointList()
         {
-            waypoint1Button.setButtonText(worldWaypoints[0].Name == "" ? "Waypoint\n1" : worldWaypoints[0].Name);
-            waypoint2Button.setButtonText(worldWaypoints[1].Name == "" ? "Waypoint\n2" : worldWaypoints[1].Name);
-            waypoint3Button.setButtonText(worldWaypoints[2].Name == "" ? "Waypoint\n3" : worldWaypoints[2].Name);
-            waypoint4Button.setButtonText(worldWaypoints[3].Name == "" ? "Waypoint\n4" : worldWaypoints[3].Name);
-            waypoint5Button.setButtonText(worldWaypoints[4].Name == "" ? "Waypoint\n5" : worldWaypoints[4].Name);
-            waypoint6Button.setButtonText(worldWaypoints[5].Name == "" ? "Waypoint\n6" : worldWaypoints[5].Name);
-            waypoint7Button.setButtonText(worldWaypoints[6].Name == "" ? "Waypoint\n7" : worldWaypoints[6].Name);
-            waypoint8Button.setButtonText(worldWaypoints[7].Name == "" ? "Waypoint\n8" : worldWaypoints[7].Name);
+            waypoint1Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[0].Name) ? "Waypoint\n1" : worldWaypoints[0].Name);
+            waypoint2Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[1].Name) ? "Waypoint\n2" : worldWaypoints[1].Name);
+            waypoint3Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[2].Name) ? "Waypoint\n3" : worldWaypoints[2].Name);
+            waypoint4Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[3].Name) ? "Waypoint\n4" : worldWaypoints[3].Name);
+            waypoint5Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[4].Name) ? "Waypoint\n5" : worldWaypoints[4].Name);
+            waypoint6Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[5].Name) ? "Waypoint\n6" : worldWaypoints[5].Name);
+            waypoint7Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[6].Name) ? "Waypoint\n7" : worldWaypoints[6].Name);
+            waypoint8Button.setButtonText(string.IsNullOrWhiteSpace(worldWaypoints[7].Name) ? "Waypoint\n8" : worldWaypoints[7].Name);
             QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
         }
 
@@ -138,6 +143,6 @@ namespace emmVRC.Menus
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Waypoints/" + currentWorldID + ".json"), TinyJSON.Encoder.Encode(worldWaypoints));
         }
 
-        
+
     }
 }

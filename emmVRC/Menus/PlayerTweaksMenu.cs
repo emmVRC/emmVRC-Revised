@@ -17,12 +17,11 @@ namespace emmVRC.Menus
         internal static GameObject SpeedText;
         internal static QMSingleButton UnloadDynamicBonesButton;
         internal static QMSingleButton SelectCurrentUserButton;
-        internal static QMSingleButton SaveAvatarParameters;
+        //internal static QMSingleButton SaveAvatarParameters;
         internal static QMSingleButton ReloadAllAvatars;
         internal static QMSingleButton AvatarOptionsMenu;
         internal static QMSingleButton EnableJumpButton;
         internal static QMSingleButton WaypointMenu;
-        internal static QMToggleButton AvatarClone;
         internal static QMToggleButton FlightToggle;
         internal static QMToggleButton NoclipToggle;
         internal static QMToggleButton ESPToggle;
@@ -46,10 +45,10 @@ namespace emmVRC.Menus
                     GameObject.Destroy(coll);
             }, "Unload all the current dynamic bones in the instance");
 
-            SaveAvatarParameters = new QMSingleButton(baseMenu, 2, 0, "Save\nAvatar\nParameters", () =>
+            /*SaveAvatarParameters = new QMSingleButton(baseMenu, 2, 0, "Save\nAvatar\nParameters", () =>
             {
                 Hacks.AvatarPropertySaving.SaveAvatarParameters();
-            }, "Saves all of the current parameters for your avatar. Only works with Avatars 3.0 content");
+            }, "Saves all of the current parameters for your avatar. Only works with Avatars 3.0 content");*/
 
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
             {

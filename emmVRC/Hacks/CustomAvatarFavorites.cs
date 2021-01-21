@@ -19,7 +19,6 @@ namespace emmVRC.Hacks
 
         internal static GameObject PublicAvatarList;
         internal static UiAvatarList NewAvatarList;
-        internal static UiAvatarList SearchAvatarList;
         private static GameObject avText;
         private static Text avTextText;
         private static GameObject ChangeButton;
@@ -39,6 +38,12 @@ namespace emmVRC.Hacks
         private static bool menuJustActivated = false;
         private static UiInputField searchBox;
         private static UnityAction<string> searchBoxAction;
+        private static GameObject refreshButton;
+        private static GameObject backButton;
+        private static GameObject forwardButton;
+        private static GameObject pageTicker;
+        private static bool waitingForSearch = false;
+        public static int currentPage = 0;
 
         private static MethodInfo renderElementMethod;
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
@@ -71,15 +76,7 @@ namespace emmVRC.Hacks
                 {
                     if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))
                     {
-                        if (LoadedAvatars.Count < 500)
-                        {
-                            MelonLoader.MelonCoroutines.Start(FavoriteAvatar(apiAvatar));
-                        }
-                        else
-                        {
-                            emmVRCLoader.Logger.LogError("[emmVRC] Could not favorite avatar because you have reached the maximum favorites");
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You have reached the maximum emmVRC favorites size.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                        }
+                        MelonLoader.MelonCoroutines.Start(FavoriteAvatar(apiAvatar));
                     }
                     else
                     {
@@ -199,23 +196,55 @@ namespace emmVRC.Hacks
             NewAvatarList.clearUnseenListOnCollapse = false;
             NewAvatarList.category = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
 
-            SearchAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
-            SearchAvatarList.clearUnseenListOnCollapse = false;
             currPageAvatar.avatar.avatarScale *= 0.85f;
 
 
-            GameObject refreshButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
+            refreshButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
             refreshButton.GetComponentInChildren<Text>().text = "↻";
             refreshButton.GetComponent<Button>().onClick.RemoveAllListeners();
             refreshButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
             {
                 Searching = false;
+                MelonLoader.MelonCoroutines.Start(JumpToStart());
                 MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
-                avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
             }));
             refreshButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
             refreshButton.transform.SetParent(avText.transform, true);
             refreshButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(975f, 0f);
+
+            backButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
+            backButton.GetComponentInChildren<Text>().text = "←";
+            backButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            backButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                currentPage--;
+                MelonLoader.MelonCoroutines.Start(JumpToStart());
+                MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
+            }));
+            backButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
+            backButton.transform.SetParent(avText.transform, true);
+            backButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(725f, 0f);
+
+            forwardButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
+            forwardButton.GetComponentInChildren<Text>().text = "→";
+            forwardButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            forwardButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                currentPage++;
+                MelonLoader.MelonCoroutines.Start(JumpToStart());
+                MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
+            }));
+            forwardButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
+            forwardButton.transform.SetParent(avText.transform, true);
+            forwardButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(875f, 0f);
+
+            pageTicker = GameObject.Instantiate(ChangeButton, avText.transform.parent);
+            pageTicker.GetComponentInChildren<Text>().text = "0 / 0";
+            GameObject.Destroy(pageTicker.GetComponent<Button>());
+            GameObject.Destroy(pageTicker.GetComponent<Image>());
+            pageTicker.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
+            pageTicker.transform.SetParent(avText.transform, true);
+            pageTicker.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(800f, 0f);
 
             pageAvatar.transform.Find("AvatarModel").transform.localPosition += new Vector3(0f, 60f, 0f);
 
@@ -238,7 +267,8 @@ namespace emmVRC.Hacks
                 {
                     if (!Searching)
                     {
-                        avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                        currentPage = 0;
+                        MelonLoader.MelonCoroutines.Start(JumpToStart());
                         MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
                     }
                 }
@@ -265,7 +295,7 @@ namespace emmVRC.Hacks
             {
                 if (!Searching)
                 {
-                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                    MelonLoader.MelonCoroutines.Start(JumpToStart());
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
                 }
             }
@@ -304,7 +334,7 @@ namespace emmVRC.Hacks
                     {
                         LoadedAvatars.Add(avtr.apiAvatar());
                     }
-                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                    MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
                 }
             }
             else
@@ -320,64 +350,118 @@ namespace emmVRC.Hacks
         {
             if (NewAvatarList.scrollRect != null)
             {
-                NewAvatarList.scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
                 yield return new WaitForSeconds(delay);
-                NewAvatarList.RenderElement(LoadedAvatars);
 
-                NewAvatarList.scrollRect.movementType = ScrollRect.MovementType.Elastic;
+                if (Searching)
+                {
+                    if (currentPage > SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit)
+                        currentPage = (int)SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit;
+                    if (currentPage < 0)
+                        currentPage = 0;
+                    pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit + 1);
+                    List<ApiAvatar> avatarsToRender = SearchedAvatars.GetRange(currentPage * Configuration.JSONConfig.SearchRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.SearchRenderLimit - SearchedAvatars.Count));
+                    if (avatarsToRender.Count > Configuration.JSONConfig.SearchRenderLimit) 
+                        avatarsToRender.RemoveRange(Configuration.JSONConfig.SearchRenderLimit,  avatarsToRender.Count - Configuration.JSONConfig.SearchRenderLimit);
+                    NewAvatarList.RenderElement(new List<ApiAvatar>());
+                    NewAvatarList.RenderElement(avatarsToRender);
+                    avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Search Results";
+                    if (currentPage == 0)
+                        backButton.GetComponent<Button>().interactable = false;
+                    else
+                        backButton.GetComponent<Button>().interactable = true;
+                    if (currentPage >= SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit)
+                        forwardButton.GetComponent<Button>().interactable = false;
+                    else
+                        forwardButton.GetComponent<Button>().interactable = true;
+                } else
+                {
+                    if (currentPage > LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit)
+                        currentPage = (int)LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit;
+                    if (currentPage < 0)
+                        currentPage = 0;
+                    pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit + 1);
+                    List<ApiAvatar> avatarsToRender = LoadedAvatars.GetRange(currentPage * Configuration.JSONConfig.FavoriteRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.FavoriteRenderLimit - LoadedAvatars.Count));
+                    if (avatarsToRender.Count > Configuration.JSONConfig.FavoriteRenderLimit)
+                        avatarsToRender.RemoveRange(Configuration.JSONConfig.FavoriteRenderLimit, avatarsToRender.Count -  Configuration.JSONConfig.FavoriteRenderLimit);
+                    NewAvatarList.RenderElement(new List<ApiAvatar>());
+                    NewAvatarList.RenderElement(avatarsToRender);
+                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                    if (currentPage == 0)
+                        backButton.GetComponent<Button>().interactable = false;
+                    else
+                        backButton.GetComponent<Button>().interactable = true;
+                    if (currentPage >= LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit)
+                        forwardButton.GetComponent<Button>().interactable = false;
+                    else
+                        forwardButton.GetComponent<Button>().interactable = true;
+                }
             }
-            /*if (NewAvatarList.avatarPedestal != null)
-                emmVRCLoader.Logger.LogDebug(GameObjectUtils.GetPath(NewAvatarList.avatarPedestal.gameObject));
-            else
-                emmVRCLoader.Logger.LogDebug("Avatar pedestal is null!");
-            if (NewAvatarList.myPage != null)
-                emmVRCLoader.Logger.LogDebug(GameObjectUtils.GetPath(NewAvatarList.myPage.gameObject));
-            else
-                emmVRCLoader.Logger.LogDebug("My Page is null!");
-            emmVRCLoader.Logger.LogDebug(NewAvatarList.pickers[0].contentId);*/
+        }
+        public static System.Collections.IEnumerator JumpToStart()
+        {
+            if (Configuration.JSONConfig.AvatarFavoritesJumpToStart)
+            {
+                while (NewAvatarList.scrollRect.normalizedPosition.x > 0)
+                {
+                    NewAvatarList.scrollRect.normalizedPosition = new Vector2(NewAvatarList.scrollRect.normalizedPosition.x - 0.1f, 0);
+                    yield return new WaitForEndOfFrame();
+                }
+            }
         }
         public static System.Collections.IEnumerator SearchAvatarsAfterDelay(string query)
         {
             yield return new WaitForSecondsRealtime(1f);
+            if (Configuration.JSONConfig.AvatarFavoritesJumpToStart)
+            {
+                while (NewAvatarList.scrollRect.normalizedPosition.x > 0)
+                {
+                    NewAvatarList.scrollRect.normalizedPosition = new Vector2(NewAvatarList.scrollRect.normalizedPosition.x - 0.1f, 0);
+                    yield return new WaitForEndOfFrame();
+                }
+            }
             MelonLoader.MelonCoroutines.Start(SearchAvatars(query));
         }
-
         public static System.Collections.IEnumerator SearchAvatars(string query)
         {
-            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null)
+            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null)
             {
                 yield return new WaitForEndOfFrame();
             }
-
-            SearchedAvatars.Clear();
-            Network.Objects.Avatar[] avatarArray = null;
-
-            var request = HTTPRequest.post(NetworkClient.baseURL + "/api/avatar/search", new System.Collections.Generic.Dictionary<string, string> { ["query"] = query });
-            while (!request.IsCompleted && !request.IsFaulted)
-                yield return new WaitForEndOfFrame();
-            if (!request.IsFaulted)
-            {
-                avatarArray = TinyJSON.Decoder.Decode(request.Result).Make<Network.Objects.Avatar[]>();
-                if (avatarArray != null)
-                {
-                    foreach (Network.Objects.Avatar avatar in avatarArray)
-                    {
-                        SearchedAvatars.Add(avatar.apiAvatar());
-                    }
-                }
-                avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Result(s): " + query;
-            }
+            if (waitingForSearch)
+                VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Please wait for your current search\nto finish before starting a new one.", "Okay", () => { VRCUiPopupManager.prop_VRCUiPopupManager_0.HideCurrentPopup(); });
             else
             {
-                emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                avText.GetComponentInChildren<Text>().text = "Searching. Please wait...";
+                SearchedAvatars.Clear();
+                Network.Objects.Avatar[] avatarArray = null;
+
+                waitingForSearch = true;
+                var request = HTTPRequest.post(NetworkClient.baseURL + "/api/avatar/search", new System.Collections.Generic.Dictionary<string, string> { ["query"] = query });
+                while (!request.IsCompleted && !request.IsFaulted)
+                    yield return new WaitForEndOfFrame();
+                waitingForSearch = false;
+                if (!request.IsFaulted && !request.Result.Contains("Bad Request"))
+                {
+                    avatarArray = TinyJSON.Decoder.Decode(request.Result).Make<Network.Objects.Avatar[]>();
+                    if (avatarArray != null)
+                    {
+                        foreach (Network.Objects.Avatar avatar in avatarArray)
+                        {
+                            SearchedAvatars.Add(avatar.apiAvatar());
+                        }
+                    }
+                    currentPage = 0;
+                    Searching = true;
+                    MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+                }
+                else
+                {
+                    emmVRCLoader.Logger.LogError("Asynchronous net post failed: " + request.Exception);
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                }
+                if (NewAvatarList.expandButton.gameObject.transform.Find("ToggleIcon").GetComponentInChildren<Image>().sprite == NewAvatarList.expandSprite)
+                    NewAvatarList.ToggleExtend();
             }
-            SearchAvatarList.scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
-            SearchAvatarList.RenderElement(SearchedAvatars);
-            SearchAvatarList.scrollRect.movementType = ScrollRect.MovementType.Elastic;
-            if (SearchAvatarList.expandButton.gameObject.transform.Find("ToggleIcon").GetComponentInChildren<Image>().sprite == SearchAvatarList.expandSprite)
-                SearchAvatarList.ToggleExtend();
-            Searching = true;
         }
         internal static void OnUpdate()
         {
@@ -394,38 +478,25 @@ namespace emmVRC.Hacks
             {
                 searchBoxAction = UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<string>>((System.Action<string>)((string searchTerm) =>
                 {
-                    if (searchTerm == "" || searchTerm.Length < 2)
+                    if (string.IsNullOrWhiteSpace(searchTerm) || searchTerm.Length < 2)
                         return;
                     MelonLoader.MelonCoroutines.Start(SearchAvatars(searchTerm));
                 }));
             }
-            if (searchBox != null && searchBox.editButton != null && !searchBox.editButton.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+            if (searchBox != null && searchBox.editButton != null && !searchBox.editButton.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
                 searchBox.editButton.interactable = true;
                 searchBox.onDoneInputting = searchBoxAction;
-                //searchBox.placeholder.text = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search...</color>";
-                //searchBox.placeholderInputText = "<color=" + Configuration.JSONConfig.UIColorHex + "> Search emmVRC Network...</color>";
             }
 
 
-            if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
+            if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
             {
-                NewAvatarList.collapsedCount = 500;
-                NewAvatarList.expandedCount = 500;
-
-
-                /*if (!PublicAvatarList.activeInHierarchy)
-                {
-                    menuJustActivated = false;
-                    menuWasActivated = false;
-                }
-                if (PublicAvatarList.activeInHierarchy && !menuWasActivated && !menuJustActivated)
-                    menuJustActivated = true;*/
+                NewAvatarList.collapsedCount = Configuration.JSONConfig.FavoriteRenderLimit + Configuration.JSONConfig.SearchRenderLimit;
+                NewAvatarList.expandedCount = Configuration.JSONConfig.FavoriteRenderLimit + Configuration.JSONConfig.SearchRenderLimit;
 
                 if (!menuJustActivated)
                 {
-                    Searching = false;
-                    avTextText.text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(1f));
                     menuJustActivated = true;
                 }
@@ -452,12 +523,12 @@ namespace emmVRC.Hacks
                     }
                 }
             }
-            if ((!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.authToken == null) && (PublicAvatarList.activeSelf || FavoriteButtonNew.activeSelf))
+            if ((!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null) && (PublicAvatarList.activeSelf || FavoriteButtonNew.activeSelf))
             {
                 PublicAvatarList.SetActive(false);
                 FavoriteButtonNew.SetActive(false);
             }
-            else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.authToken != null)
+            else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
             {
                 PublicAvatarList.SetActive(true);
                 FavoriteButtonNew.SetActive(true);
@@ -467,19 +538,6 @@ namespace emmVRC.Hacks
                 Managers.NotificationManager.AddNotification("Your emmVRC avatars could not be loaded. Please contact yoshifan#9550 to resolve this.", "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, "", null, Resources.errorSprite, -1);
                 errorWarned = true;
             }
-        }
-
-        private static System.Collections.IEnumerator SetAvatarListAfterDelay(UiAvatarList avatars, List<ApiAvatar> models)
-        {
-            if (models.Count == 0) yield break;
-
-            var tempLis = new List<ApiAvatar>();
-            tempLis.Add(models[0]);
-            avatars.RenderElement(tempLis);
-            //avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(tempLis, 0, true);
-            yield return new WaitForSeconds(1f);
-            avatars.RenderElement(models);
-            //avatars.Method_Protected_Void_List_1_T_Int32_Boolean_0(models, 0, true);
         }
 
         internal static void Hide()

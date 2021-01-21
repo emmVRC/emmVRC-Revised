@@ -82,9 +82,7 @@ namespace emmVRC.Libraries
 
             }
             if (FBTSaver)
-            {
                 emmVRCLoader.Logger.LogDebug("Detected FBTSaver");
-            }
             if (BetterLoadingScreen)
                 emmVRCLoader.Logger.LogDebug("Detected BetterLoadingScreen");
             if (VRCMinus)

@@ -15,6 +15,7 @@ namespace emmVRC.Hacks
         private static GameObject hotWorldsButton;
         private static GameObject randomWorldsViewPort;
         private static GameObject randomWorldsButton;
+        private static GameObject personalList;
         private static GameObject legacyList;
         private static GameObject publicList;
         public static void Initialize()
@@ -25,6 +26,7 @@ namespace emmVRC.Hacks
             hotWorldsButton = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Avatar Worlds (What's Hot)/Button").gameObject;
             randomWorldsViewPort = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Avatar Worlds (Random)/ViewPort").gameObject;
             randomWorldsButton = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Avatar Worlds (Random)/Button").gameObject;
+            personalList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Personal Avatar List").gameObject;
             legacyList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             publicList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Public Avatar List").gameObject;
 
@@ -57,6 +59,16 @@ namespace emmVRC.Hacks
                 {
                     randomWorldsViewPort.SetActive(true);
                     randomWorldsButton.SetActive(true);
+                }
+
+                // Disable or enable the "Personal Avatars" category
+                if (Configuration.JSONConfig.DisableAvatarPersonal)
+                {
+                    personalList.SetActive(false);
+                }
+                else
+                {
+                    personalList.SetActive(true);
                 }
 
                 // Disable or enable the "Legacy Avatars" category
