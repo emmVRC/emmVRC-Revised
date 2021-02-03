@@ -229,5 +229,10 @@ namespace emmVRC.Libraries
             SetQuickMenuContextMethod.Invoke(instance, new object[] { context, user, text });
         }
         #endregion
+
+        public static GameObject menuContent(this VRCUiManager mngr)
+        {
+            return mngr.field_Public_GameObject_0;
+        }
     }
 }

@@ -68,6 +68,7 @@ namespace emmVRC.Objects
         public bool DisableEmojiButton = false;
         public bool DisableEmoteButton = false;
         public bool DisableRankToggleButton = false;
+        public bool DisableOldInviteButtons = false;
         // Sub section: User Interact Menu
         public bool DisablePlaylistsButton = false;
         public bool DisableAvatarStatsButton = false;

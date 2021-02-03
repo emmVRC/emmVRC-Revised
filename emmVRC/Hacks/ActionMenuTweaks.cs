@@ -12,8 +12,8 @@ namespace emmVRC.Hacks
     {
         public static void Apply()
         {
-            QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.parent.Find("ActionMenu/MoveMenuL").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
-            QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.parent.Find("ActionMenu/MoveMenuR").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
+            QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.parent.Find("ActionMenu/MoveMenuL").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
+            QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.parent.Find("ActionMenu/MoveMenuR").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
         }
     }
 }

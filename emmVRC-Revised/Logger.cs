@@ -81,7 +81,7 @@ namespace emmVRCLoader
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] " + s);
             if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] " + s);*/
-            MelonLoader.MelonLogger.Log(s);
+            MelonLoader.MelonLogger.Msg(s);
         }
 
         public static void Log(string s, params object[] args)
@@ -99,7 +99,7 @@ namespace emmVRCLoader
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] "+ s, args);
             if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] " + formatted);*/
-            MelonLoader.MelonLogger.Log(formatted);
+            MelonLoader.MelonLogger.Msg(formatted);
         }
 
         public static void LogError(string s)
@@ -122,7 +122,7 @@ namespace emmVRCLoader
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] "+ s);
                 if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] " + s);*/
-                MelonLoader.MelonLogger.LogError(s);
+                MelonLoader.MelonLogger.Error(s);
                 errorCount++;
             }
             if (errorCount == 255)
@@ -142,7 +142,7 @@ namespace emmVRCLoader
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] The console error limit has been reached. Please report this issue to Emilia!");
                 if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] The log file error limit has been reached. Please report this issue to Emilia!");*/
-                MelonLoader.MelonLogger.LogError("The error limit has been reached. Please report this issue to Emilia!");
+                MelonLoader.MelonLogger.Error("The error limit has been reached. Please report this issue to Emilia!");
                 errorCount++;
             }
         }
@@ -168,7 +168,7 @@ namespace emmVRCLoader
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] " + formatted);
                 if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] " + formatted);*/
-                MelonLoader.MelonLogger.LogError(formatted);
+                MelonLoader.MelonLogger.Error(formatted);
                 errorCount++;
             }
             if (errorCount == 255)
@@ -188,7 +188,7 @@ namespace emmVRCLoader
                 Console.ForegroundColor = normalConsoleColor;
                 Console.WriteLine("] The console error limit has been reached. Please report this issue to Emilia!");
                 if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Error] The log file error limit has been reached. Please report this issue to Emilia!");*/
-                MelonLoader.MelonLogger.LogError("The error limit has been reached. Please report this issue to Emilia!");
+                MelonLoader.MelonLogger.Error("The error limit has been reached. Please report this issue to Emilia!");
                 errorCount++;
             }
         }
@@ -211,7 +211,7 @@ namespace emmVRCLoader
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] " + s);
             if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Debug] " + s);*/
-            MelonLoader.MelonLogger.Log("[Debug] " + s);
+            MelonLoader.MelonLogger.Msg("[Debug] " + s);
         }
 
         public static void LogDebug(string s, params object[] args)
@@ -234,7 +234,7 @@ namespace emmVRCLoader
             Console.ForegroundColor = normalConsoleColor;
             Console.WriteLine("] " + s, args);
             if (log != null) log.WriteLine("[" + timestamp + "] [emmVRC] [Debug] " + formatted);*/
-            MelonLoader.MelonLogger.Log("[Debug] " + formatted);
+            MelonLoader.MelonLogger.Msg("[Debug] " + formatted);
         }
     }
 }

@@ -96,6 +96,9 @@ namespace emmVRC.Libraries
         // Cache the FieldInfo for getting the current page. Hope to god this works!
         private static FieldInfo currentPageGetter;
 
+        private static GameObject shortcutMenu;
+        private static GameObject userInteractMenu;
+
         // Show a Quick Menu page via the Page Name. Hope to god this works!
         public static void ShowQuickmenuPage(string pagename)
         {
@@ -105,6 +108,11 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogError("pageTransform is null!");
             }
+            if (shortcutMenu == null)
+                shortcutMenu = QuickMenu.prop_QuickMenu_0.transform.Find("ShortcutMenu")?.gameObject;
+
+            if (userInteractMenu == null)
+                userInteractMenu = QuickMenu.prop_QuickMenu_0.transform.Find("UserInteractMenu")?.gameObject;
 
             if (currentPageGetter == null)
             {
@@ -156,6 +164,8 @@ namespace emmVRC.Libraries
             else
             {
                 SetIndex(-1);
+                shortcutMenu?.SetActive(false);
+                userInteractMenu?.SetActive(false);
             }
         }
 

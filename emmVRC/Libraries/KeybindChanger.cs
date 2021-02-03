@@ -31,12 +31,12 @@ namespace emmVRC.Libraries
 
             acceptButton = new QMSingleButton(baseMenu, 1, 2, "Accept", () => { acceptAction.Invoke(mainKey, modifierKey1); fetchingKeys = false; modifierKey1 = KeyCode.None; mainKey = KeyCode.None; }, "Accept this keybind");
             cancelButton = new QMSingleButton(baseMenu, 4, 2, "Cancel", () => { cancelAction.Invoke(); fetchingKeys = false; modifierKey1 = KeyCode.None; mainKey = KeyCode.None; }, "Cancel keybind setup");
-            textObject = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EarlyAccessText").gameObject, baseMenu.getBackButton().getGameObject().transform.parent);
+            textObject = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/EarlyAccessText").gameObject, baseMenu.getBackButton().getGameObject().transform.parent);
             baseMenu.getBackButton().DestroyMe();
             textObject.GetComponent<Text>().fontStyle = FontStyle.Normal;
             textObject.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
             textObject.GetComponent<Text>().text = "Press a key...";
-            textObject.GetComponent<RectTransform>().anchoredPosition += new Vector2(580f, 400f);
+            textObject.GetComponent<RectTransform>().anchoredPosition += new Vector2(580f, -920f);
             MelonLoader.MelonCoroutines.Start(Loop());
         }
         public static void Show(string title, Action<KeyCode, KeyCode> acceptAction, Action cancelAction)

@@ -36,17 +36,18 @@ namespace emmVRC.Hacks
                 }
                 else
                 {
+                    
                     if (SpeedModified && (originalRunSpeed == 0f || originalWalkSpeed == 0f || originalStrafeSpeed == 0f))
                     {
-                        originalWalkSpeed = locomotionController.walkSpeed;
-                        originalRunSpeed = locomotionController.runSpeed;
-                        originalStrafeSpeed = locomotionController.strafeSpeed;
+                        originalWalkSpeed = locomotionController.field_Public_Single_1;
+                        originalRunSpeed = locomotionController.field_Public_Single_0;
+                        originalStrafeSpeed = locomotionController.field_Public_Single_2;
                     }
                     if (!SpeedModified && originalRunSpeed != 0f && originalWalkSpeed != 0f && originalStrafeSpeed != 0f)
                     {
-                        locomotionController.walkSpeed = originalWalkSpeed;
-                        locomotionController.runSpeed = originalRunSpeed;
-                        locomotionController.strafeSpeed = originalStrafeSpeed;
+                        locomotionController.field_Public_Single_1 = originalWalkSpeed;
+                        locomotionController.field_Public_Single_0 = originalRunSpeed;
+                        locomotionController.field_Public_Single_2 = originalStrafeSpeed;
                         originalRunSpeed = 0f;
                         originalWalkSpeed = 0f;
                         originalStrafeSpeed = 0f;
@@ -54,10 +55,11 @@ namespace emmVRC.Hacks
                     }
                     if (SpeedModified && originalWalkSpeed != 0f && originalRunSpeed != 0f && originalStrafeSpeed != 0f)
                     {
-                        locomotionController.walkSpeed = (originalWalkSpeed * Modifier);
-                        locomotionController.runSpeed = (originalRunSpeed * Modifier);
-                        locomotionController.strafeSpeed = (originalStrafeSpeed * Modifier);
+                        locomotionController.field_Public_Single_1 = (originalWalkSpeed * Modifier);
+                        locomotionController.field_Public_Single_0 = (originalRunSpeed * Modifier);
+                        locomotionController.field_Public_Single_2 = (originalStrafeSpeed * Modifier);
                     }
+                    
                 }
                 
 

@@ -22,6 +22,7 @@ namespace emmVRC.Libraries
         public static bool OGTrustRank = false;
         public static bool UIExpansionKit = false;
         public static bool FBTSaver = false;
+        public static bool IKTweaks = false;
         public static bool BetterLoadingScreen = false;
         public static bool VRCMinus = false;
 
@@ -44,6 +45,8 @@ namespace emmVRC.Libraries
                 UIExpansionKit = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "FBT Saver") != -1)
                 FBTSaver = true;
+            if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "IKTweaks") != -1)
+                IKTweaks = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "BetterLoadingScreen") != -1)
                 BetterLoadingScreen = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "VRC-Minus") != -1)
@@ -83,6 +86,8 @@ namespace emmVRC.Libraries
             }
             if (FBTSaver)
                 emmVRCLoader.Logger.LogDebug("Detected FBTSaver");
+            if (IKTweaks)
+                emmVRCLoader.Logger.LogDebug("Detected IKTweaks");
             if (BetterLoadingScreen)
                 emmVRCLoader.Logger.LogDebug("Detected BetterLoadingScreen");
             if (VRCMinus)

@@ -22,13 +22,13 @@ namespace emmVRC.Hacks
         public static void Initialize()
         {
             customMenuRoot = new GameObject("CustomMenu", new Il2CppSystem.Type[]{ Il2CppType.Of<VRCUiPage>(), Il2CppType.Of<RectTransform>() });
-            customMenuRoot.transform.SetParent(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens"));
+            customMenuRoot.transform.SetParent(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens"));
             customPage = customMenuRoot.GetComponent<VRCUiPage>();
             customPage.screenType = "SCREEN";
             customPage.displayName = "Custom Menu";
-            customPage.AudioShow = QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").GetComponent<PageAvatar>().AudioShow;
-            customPage.AudioHide = QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").GetComponent<PageAvatar>().AudioHide;
-            TitleBar = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/TitlePanel").gameObject, customMenuRoot.transform, true);
+            customPage.AudioShow = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar").GetComponent<PageAvatar>().AudioShow;
+            customPage.AudioHide = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar").GetComponent<PageAvatar>().AudioHide;
+            TitleBar = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/TitlePanel").gameObject, customMenuRoot.transform, true);
             GameObject.Destroy(TitleBar.transform.Find("VersionText").gameObject);
             titleBarText = TitleBar.GetComponentInChildren<Text>(true);
             customMenuPages = new List<CustomMainMenuPage>();
@@ -65,7 +65,7 @@ namespace emmVRC.Hacks
         }
         public GameObject CreateCheckbox(string name, Vector2 offset, Action<bool> onCheck)
         {
-            GameObject customCheckbox = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/ComfortSafetyPanel/HoloportToggle").gameObject, this.menuRoot.transform, true);
+            GameObject customCheckbox = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/ComfortSafetyPanel/HoloportToggle").gameObject, this.menuRoot.transform, true);
             customCheckbox.transform.position = TitleBar.transform.position;
             customCheckbox.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0.6f, 0.2f);
             customCheckbox.GetComponent<RectTransform>().anchoredPosition += offset;
@@ -79,7 +79,7 @@ namespace emmVRC.Hacks
         }
         public GameObject CreateButton(string name, Vector2 offset, Action buttonPressed)
         {
-            GameObject customButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Social/Current Status/StatusButton").gameObject, this.menuRoot.transform, true);
+            GameObject customButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social/Current Status/StatusButton").gameObject, this.menuRoot.transform, true);
             customButton.transform.position = TitleBar.transform.position;
             customButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0.55f, 0.2f);
             customButton.GetComponent<RectTransform>().anchoredPosition += offset;

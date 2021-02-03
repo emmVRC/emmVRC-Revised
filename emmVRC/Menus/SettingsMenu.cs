@@ -71,7 +71,7 @@ namespace emmVRC.Menus
         private static PageItem InfoHiding;
         private static PageItem InfoSpooferNamePicker;
 
-        // Page 5
+        // Page 5 - Nameplate Color Changing (pretty much useless)
         private static PageItem NameplateColorChanging;
         private static PageItem FriendNameplateColorPickerButton;
         private static ColorPicker FriendNameplateColorPicker;
@@ -90,31 +90,34 @@ namespace emmVRC.Menus
         private static PageItem LegendaryUserNameplateColorPickerButton;
         private static ColorPicker LegendaryUserNameplateColorPicker;
 
-        // Page 6
+        // Page 6 - Disable Quick Menu buttons
         private static PageItem DisableReportWorld;
         private static PageItem DisableEmoji;
         private static PageItem DisableEmote;
         private static PageItem DisableRankToggle;
+        private static PageItem DisableOldInviteButtons;
+
+        // Page 7 - Disable VRChat buttons
         private static PageItem DisablePlaylists;
         private static PageItem DisableAvatarStats;
         private static PageItem DisableReportUser;
         private static PageItem MinimalWarnKick;
         private static PageItem DisableOneHandMovement;
 
-        // Page 7
+        // Page 8 - Disable VRC+ Stuff
         private static PageItem DisableVRCPlusAds;
         private static PageItem DisableVRCPlusQMButtons;
         private static PageItem DisableVRCPlusMenuTabs;
         private static PageItem DisableVRCPlusUserInfo;
 
-        // Page 8
+        // Page 9 - Disable Avatar Lists
         private static PageItem DisableAvatarHotWorlds;
         private static PageItem DisableAvatarRandomWorlds;
         private static PageItem DisableAvatarPersonalList;
         private static PageItem DisableAvatarLegacyList;
         private static PageItem DisableAvatarPublicList;
 
-        // Page 9
+        // Page 10 - Keybind Configuration
         private static PageItem EnableKeybinds;
         private static PageItem FlightKeybind;
         private static PageItem NoclipKeybind;
@@ -698,7 +701,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
 
-                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<UnityEngine.UI.Text>())
+                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentsInChildren<UnityEngine.UI.Text>())
                 {
                     if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
@@ -732,7 +735,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
 
-                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<UnityEngine.UI.Text>())
+                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentsInChildren<UnityEngine.UI.Text>())
                 {
                     if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
@@ -755,7 +758,7 @@ namespace emmVRC.Menus
                 {
                     if (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled)
                     {
-                        foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentsInChildren<UnityEngine.UI.Text>())
+                        foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentsInChildren<UnityEngine.UI.Text>())
                         {
                             if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                             {
@@ -953,6 +956,28 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "TOGGLE: Disables the 'Rank Toggle' switch in the Quick Menu. Its functionality can be found in the Disabled Buttons menu");
+            DisableOldInviteButtons = new PageItem("Disable Old\nInvite Buttons", () =>
+            {
+                Configuration.JSONConfig.DisableOldInviteButtons = true;
+                Configuration.SaveConfig();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableOldInviteButtons = false;
+                Configuration.SaveConfig();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+            }, "TOGGLE: Disables the old invite buttons from pre-build 1046 versions of VRChat");
+
+            if (!Configuration.JSONConfig.StealthMode)
+            {
+                baseMenu.pageItems.Add(DisableReportWorld);
+                baseMenu.pageItems.Add(DisableEmoji);
+                baseMenu.pageItems.Add(DisableEmote);
+                baseMenu.pageItems.Add(DisableRankToggle);
+                baseMenu.pageItems.Add(DisableOldInviteButtons);
+                for (int i = 0; i < 4; i++)
+                    baseMenu.pageItems.Add(PageItem.Space);
+            }
             DisableReportUser = new PageItem("Disable\nReport User", () =>
             {
                 Configuration.JSONConfig.DisableReportUserButton = true;
@@ -1020,17 +1045,14 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the one-handed movement indicator when one of your VR Controllers has lost tracking");
             if (!Configuration.JSONConfig.StealthMode)
             {
-                baseMenu.pageItems.Add(DisableReportWorld);
-                baseMenu.pageItems.Add(DisableEmoji);
-                baseMenu.pageItems.Add(DisableEmote);
-                baseMenu.pageItems.Add(DisableRankToggle);
                 baseMenu.pageItems.Add(DisablePlaylists);
                 baseMenu.pageItems.Add(DisableReportUser);
                 baseMenu.pageItems.Add(DisableAvatarStats);
                 baseMenu.pageItems.Add(MinimalWarnKick);
                 baseMenu.pageItems.Add(DisableOneHandMovement);
+                for (int i = 0; i < 4; i++)
+                    baseMenu.pageItems.Add(PageItem.Space);
             }
-
             DisableVRCPlusAds = new PageItem("Disable VRC+\nQuick Menu Ads", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusAds = true;
@@ -1280,7 +1302,8 @@ namespace emmVRC.Menus
 
                 baseMenu.pageTitles.Add("UI Changing");
                 baseMenu.pageTitles.Add("Nameplate Color Changing");
-                baseMenu.pageTitles.Add("Disable VRChat Buttons");
+                baseMenu.pageTitles.Add("Disable Quick Menu Buttons");
+                baseMenu.pageTitles.Add("Disable Other Buttons");
                 baseMenu.pageTitles.Add("Disable VRChat Plus Buttons");
             }
             baseMenu.pageTitles.Add("Disable Avatar Menu Lists" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
@@ -1329,6 +1352,8 @@ namespace emmVRC.Menus
                 DisableEmoji.SetToggleState(Configuration.JSONConfig.DisableEmojiButton);
                 DisableEmote.SetToggleState(Configuration.JSONConfig.DisableEmoteButton);
                 DisableRankToggle.SetToggleState(Configuration.JSONConfig.DisableRankToggleButton);
+                DisableOldInviteButtons.SetToggleState(Configuration.JSONConfig.DisableOldInviteButtons);
+
                 DisablePlaylists.SetToggleState(Configuration.JSONConfig.DisablePlaylistsButton);
                 DisableAvatarStats.SetToggleState(Configuration.JSONConfig.DisableAvatarStatsButton);
                 DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);

@@ -34,10 +34,10 @@ namespace emmVRC.Hacks
                 {
                     emmVRCLoader.Logger.Log("Processing custom menu music...");
                     System.Random rndm = new System.Random();
-                    int randomIndex = rndm.Next(availableCustomMenuMusics.Length - 1);
+                    int randomIndex = rndm.Next(availableCustomMenuMusics.Length);
                     emmVRCLoader.Logger.LogDebug("Picked track: " + availableCustomMenuMusics[randomIndex]);
                     GameObject loadingMusic1 = GameObject.Find("LoadingBackground_TealGradient_Music/LoadingSound");
-                    GameObject loadingMusic2 = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Popups/LoadingPopup/LoadingSound").gameObject;
+                    GameObject loadingMusic2 = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Popups/LoadingPopup/LoadingSound").gameObject;
                     if (loadingMusic1 != null)
                         loadingMusic1.GetComponent<AudioSource>().Stop();
                     if (loadingMusic2 != null)

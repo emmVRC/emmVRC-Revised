@@ -21,7 +21,7 @@ namespace emmVRC.Hacks
         public static void Initialize()
         {
             // Grab the Ping text from the Quick Menu, as the base position for our new object
-            Transform baseTextTransform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/PingText");
+            Transform baseTextTransform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/PingText");
             if (baseTextTransform != null)
             {
                 // Instantiate the clock object with a RectTransform and UnityEngine.UI.Text

@@ -23,7 +23,7 @@ namespace emmVRC.Hacks
             {
                 try
                 {
-                    worldNotes.openWorldNoteFuncMainMenu(VRCUiManagerUtils.GetVRCUiManager().menuContent.GetComponentInChildren<PageWorldInfo>().worldInstance.instanceWorld.id);
+                    worldNotes.openWorldNoteFuncMainMenu(VRCUiManagerUtils.GetVRCUiManager().menuContent().GetComponentInChildren<PageWorldInfo>().worldInstance.instanceWorld.id);
                 }
                 catch (Exception ex)
                 {

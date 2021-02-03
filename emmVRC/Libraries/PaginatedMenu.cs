@@ -89,9 +89,9 @@ namespace emmVRC.Libraries
 
         public PaginatedMenu(string parentPath, int x, int y, string menuName, string menuTooltip, Color? buttonColor)
         {
+            emmVRCLoader.Logger.LogDebug("Initializing paginated menu...");
             menuBase = new QMNestedButton(parentPath, x, y, menuName, "");
             menuBase.getMainButton().DestroyMe();
-
 
             menuEntryButton = new QMSingleButton(parentPath, x, y, menuName, this.OpenMenu, menuTooltip, buttonColor);
 
@@ -101,11 +101,11 @@ namespace emmVRC.Libraries
                     currentPage--;
                 UpdateMenu();
             }, "Move to the previous page", buttonColor);
-            menuTitle = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EarlyAccessText").gameObject, this.menuBase.getBackButton().getGameObject().transform.parent);
+            menuTitle = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/EarlyAccessText").gameObject, this.menuBase.getBackButton().getGameObject().transform.parent);
             menuTitle.GetComponent<Text>().fontStyle = FontStyle.Normal;
             menuTitle.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
             menuTitle.GetComponent<Text>().text = "";
-            menuTitle.GetComponent<RectTransform>().anchoredPosition += new Vector2(580f, -440f);
+            menuTitle.GetComponent<RectTransform>().anchoredPosition += new Vector2(580f, -1700f /*-440f*/);
             previousPageButton.getGameObject().GetComponent<Image>().sprite = QuickMenuUtils.GetQuickMenuInstance().transform.Find("EmojiMenu/PageUp").GetComponent<Image>().sprite;
             pageCount = new QMSingleButton(menuBase, 4, 1, "Page\n0/0", null, "Indicates the page you are on");
             GameObject.DestroyObject(pageCount.getGameObject().GetComponentInChildren<ButtonReaction>());

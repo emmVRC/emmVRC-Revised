@@ -88,7 +88,7 @@ namespace emmVRC.Hacks
                     AvatarSearchButton.SetActive(!AvatarSearchButton.activeSelf);
                 try
                 {
-                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
+                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0 != null && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location.Contains("friends"))
                         PortalToUserButton.SetActive(!PortalToUserButton.activeSelf);
                     else
                         PortalToUserButton.SetActive(false);
@@ -133,15 +133,15 @@ namespace emmVRC.Hacks
 
             UserSendMessage.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.GetName() + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Send a message to " + QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.GetName() + ":", "", UnityEngine.UI.InputField.InputType.Standard, false, "Send", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string msg, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
                 {
-                    //MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id));
+                    //MelonLoader.MelonCoroutines.Start(MessageManager.SendMessage(msg, QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id));
                 }), null, "Enter message...");
             }));
 
             UserNotes.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                Hacks.PlayerNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.GetName());
+                Hacks.PlayerNotes.LoadNote(QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id, QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.GetName());
             }));
 
             TeleportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
@@ -151,7 +151,7 @@ namespace emmVRC.Hacks
                     Player plrToTP = null;
                     Libraries.PlayerUtils.GetEachPlayer((Player plr) =>
                     {
-                        if (plr.field_Private_APIUser_0.id == QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id)
+                        if (plr.field_Private_APIUser_0.id == QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id)
                             plrToTP = plr;
                     });
                     if (plrToTP != null)
@@ -161,9 +161,9 @@ namespace emmVRC.Hacks
                     try
                     {
                         //QuickMenuUtils.GetVRCUiMInstance().Method_Public_Void_Boolean_3();
-                        CustomAvatarFavorites.pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0 = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0;
+                        CustomAvatarFavorites.pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_ApiAvatar_0;
                         CustomAvatarFavorites.baseChooseEvent.Invoke();
-                        //Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Change Button").gameObject.GetComponentInChildren<Button>().onClick.Invoke();
+                        //Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Change Button").gameObject.GetComponentInChildren<Button>().onClick.Invoke();
                     }
                     catch (Exception ex)
                     {
@@ -173,21 +173,21 @@ namespace emmVRC.Hacks
             }));
             AvatarSearchButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user != null)
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0 != null)
                 {
-                    VRCUiManager.prop_VRCUiManager_0.ShowScreen(VRCUiManager.prop_VRCUiManager_0.menuContent.transform.Find("Screens/Avatar").GetComponent<VRCUiPage>());
-                    MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.GetName()));
+                    VRCUiManager.prop_VRCUiManager_0.ShowScreen(VRCUiManager.prop_VRCUiManager_0.menuContent().transform.Find("Screens/Avatar").GetComponent<VRCUiPage>());
+                    MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.SearchAvatarsAfterDelay(QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.GetName()));
                 }
             }));
             PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                if (QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Contains("friends"))
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location.Contains("friends"))
                 {
                     try
                     {
                         if (PortalCooldownTimer == 0)
                         {
-                            string[] instanceInfo = QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.location.Split(':');
+                            string[] instanceInfo = QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location.Split(':');
                             GameObject portal = VRC.SDKBase.Networking.Instantiate(VRC.SDKBase.VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position + VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.forward * 2, VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation);
                             VRC.SDKBase.Networking.RPC(VRC.SDKBase.RPC.Destination.AllBufferOne, portal, "ConfigurePortal", new Il2CppSystem.Object[]
                             {
@@ -221,7 +221,7 @@ namespace emmVRC.Hacks
             {
                 if (NetworkClient.webToken != null)
                 {
-                    HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent.GetComponentInChildren<PageUserInfo>().user.id, null);
+                    HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id, null);
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "The block state for this user has been toggled.", 5f);
                     //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
                 }

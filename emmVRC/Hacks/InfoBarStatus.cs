@@ -20,7 +20,7 @@ namespace emmVRC.Hacks
         public static void Initialize()
         {
             // Grab the Ping text from the Quick Menu, as the base position for our new object
-            Transform transform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/BuildNumText");
+            Transform transform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/BuildNumText");
             if (transform != null)
             {
                 // Instantiate the status object with a RectTransform and UnityEngine.UI.Text

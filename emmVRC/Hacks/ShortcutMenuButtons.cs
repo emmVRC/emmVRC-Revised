@@ -19,6 +19,7 @@ namespace emmVRC.Hacks
         public static GameObject emoteButton;
         public static GameObject reportWorldButton;
         public static GameObject trustRankButton;
+        public static GameObject socialNotifications;
         public static GameObject vrcPlusThankYouButton;
         public static GameObject vrcPlusUserIconButton;
         public static GameObject vrcPlusUserIconCameraButton;
@@ -38,50 +39,23 @@ namespace emmVRC.Hacks
             emoteButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmoteButton").gameObject;
             reportWorldButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/ReportWorldButton").gameObject;
             trustRankButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors").gameObject;
+            socialNotifications = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/SocialNotifications").gameObject;
             vrcPlusThankYouButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusThankYou").gameObject;
             vrcPlusUserIconButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/UserIconButton").gameObject;
             vrcPlusUserIconCameraButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/UserIconCameraButton").gameObject;
             vrcPlusMiniBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusMiniBanner").gameObject;
             vrcPlusMainBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/VRCPlusBanner").gameObject;
-            if (Configuration.JSONConfig.DisableEmojiButton)
-                emojiButton.SetActive(false);
-            else
-                emojiButton.SetActive(true);
-            if (Configuration.JSONConfig.DisableEmoteButton)
-                emoteButton.SetActive(false);
-            else
-                emoteButton.SetActive(true);
-            if (Configuration.JSONConfig.DisableReportWorldButton)
-                reportWorldButton.SetActive(false);
-            else
-                reportWorldButton.SetActive(true);
-            if (Configuration.JSONConfig.DisableRankToggleButton)
-                trustRankButton.transform.localScale = Vector3.zero;
-            else
-                trustRankButton.transform.localScale = Vector3.one;
-            if (Configuration.JSONConfig.DisableVRCPlusAds)
-            {
-                vrcPlusMiniBanner.GetComponent<Canvas>().enabled = false;
-                vrcPlusMainBanner.GetComponent<Canvas>().enabled = false;
-            }
-            else
-            {
-                vrcPlusMiniBanner.GetComponent<Canvas>().enabled = true;
-                vrcPlusMainBanner.GetComponent<Canvas>().enabled = true;
-            }
-
-            if (Configuration.JSONConfig.DisableVRCPlusQMButtons)
-            {
-                vrcPlusThankYouButton.transform.localScale = Vector3.zero;
-                vrcPlusUserIconButton.transform.localScale = Vector3.zero;
-                vrcPlusUserIconCameraButton.transform.localScale = Vector3.zero;
-            }
-            else
-            {
-                vrcPlusThankYouButton.transform.localScale = Vector3.one;
-                vrcPlusUserIconButton.transform.localScale = Vector3.one;
-                vrcPlusUserIconCameraButton.transform.localScale = Vector3.one;
-            }
+            
+            emojiButton.SetActive(!Configuration.JSONConfig.DisableEmojiButton);
+            emoteButton.SetActive(!Configuration.JSONConfig.DisableEmoteButton);
+            reportWorldButton.SetActive(!Configuration.JSONConfig.DisableReportWorldButton);
+            trustRankButton.transform.localScale = (Configuration.JSONConfig.DisableRankToggleButton ? Vector3.zero : Vector3.one);
+            socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
+            vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+            vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+            vrcPlusThankYouButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+            vrcPlusUserIconButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+            vrcPlusUserIconCameraButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
         }
     }
 }

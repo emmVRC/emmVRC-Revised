@@ -184,7 +184,7 @@
     </Reference>
     <Reference Include="emmVRCLoader, Version=0.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\emmVRC-Revised\bin\Release\emmVRCLoader.dll</HintPath>
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\Mods\emmVRCLoader.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -200,10 +200,6 @@
     </Reference>
     <Reference Include="MelonLoader">
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\MelonLoader.dll</HintPath>
-    </Reference>
-    <Reference Include="MelonLoader.ModHandler, Version=0.2.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\MelonLoader.ModHandler.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net" />

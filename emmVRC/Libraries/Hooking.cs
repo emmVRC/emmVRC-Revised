@@ -49,8 +49,8 @@ namespace emmVRC.Libraries
             try
             {
                 instanceHarmony.Patch(typeof(VRC_StationInternal).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                instanceHarmony.Patch(typeof(VRC_StationInternal2).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                instanceHarmony.Patch(typeof(VRC_StationInternal3).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                //instanceHarmony.Patch(typeof(VRC_StationInternal2).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                //instanceHarmony.Patch(typeof(VRC_StationInternal3).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace emmVRC.Libraries
             }
             try
             {
-                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_0.Method_Public_Void_UnityAction_1_T_0(new System.Action<Player>((Player plr) =>
+                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_VRCEventDelegate_1_Player_0.Method_Public_Void_UnityAction_1_T_0(new System.Action<Player>((Player plr) =>
                 {
                     if (event1Action == null && event2Action == null)
                     {
@@ -71,7 +71,7 @@ namespace emmVRC.Libraries
                         event1Action.Invoke(plr);
                     }
                 }));
-                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_0.Method_Public_Void_UnityAction_1_T_1(new System.Action<Player>((Player plr) =>
+                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_VRCEventDelegate_1_Player_1.Method_Public_Void_UnityAction_1_T_1(new System.Action<Player>((Player plr) =>
                 {
                     if (event1Action == null && event2Action == null)
                     {
@@ -89,7 +89,7 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogError("Network Manager hooking failed: " + ex.ToString());
             }
-            if (!ModCompatibility.FBTSaver)
+            if (!ModCompatibility.FBTSaver && !ModCompatibility.IKTweaks)
             {
                 try
                 {

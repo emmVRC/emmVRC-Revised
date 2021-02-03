@@ -16,7 +16,7 @@ namespace emmVRC.Hacks
         public static GameObject refreshButton;
         public static void Initialize()
         {
-            refreshButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Social/Current Status/StatusButton").gameObject, QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Social/Current Status"));
+            refreshButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social/Current Status/StatusButton").gameObject, QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social/Current Status"));
             refreshButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(1260f, 0f);
             refreshButton.GetComponentInChildren<Text>().text = "<color=#FFFFFF>Refresh</color>";
             refreshButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();

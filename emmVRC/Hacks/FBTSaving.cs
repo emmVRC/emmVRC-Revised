@@ -25,10 +25,19 @@ namespace emmVRC.Hacks
     {
         public static List<FBTAvatarCalibrationInfo> calibratedAvatars;
         public static UnityEngine.UI.Button.ButtonClickedEvent originalCalibrateButton;
+        public static System.Reflection.PropertyInfo leftFootInf;
+        public static System.Reflection.PropertyInfo rightFootInf;
+        public static System.Reflection.PropertyInfo hipInf;
         public static void Initialize()
         {
             calibratedAvatars = new List<FBTAvatarCalibrationInfo>();
             originalCalibrateButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick;
+
+            VRCTrackingSteam steam = UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>().First();
+            leftFootInf = typeof(VRCTrackingSteam).GetProperties().First(a => a.PropertyType == typeof(Transform) && ((Transform)a.GetValue(steam)).parent.name == "Puck1");
+            rightFootInf = typeof(VRCTrackingSteam).GetProperties().First(a => a.PropertyType == typeof(Transform) && ((Transform)a.GetValue(steam)).parent.name == "Puck2");
+            hipInf = typeof(VRCTrackingSteam).GetProperties().First(a => a.PropertyType == typeof(Transform) && ((Transform)a.GetValue(steam)).parent.name == "Puck3");
+
             QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
             QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(new System.Action(() => { 
                 if (Configuration.JSONConfig.TrackingSaving)
@@ -45,12 +54,20 @@ namespace emmVRC.Hacks
             FBTAvatarCalibrationInfo info = new FBTAvatarCalibrationInfo
             {
                 AvatarID = avatarID,
-                LeftFootTrackerPosition = trackingSteam.leftFoot.localPosition,
-                LeftFootTrackerRotation = trackingSteam.leftFoot.localRotation,
-                RightFootTrackerPosition = trackingSteam.rightFoot.localPosition,
-                RightFootTrackerRotation = trackingSteam.rightFoot.localRotation,
-                HipTrackerPosition = trackingSteam.hip.localPosition,
-                HipTrackerRotation = trackingSteam.hip.localRotation,
+                LeftFootTrackerPosition = ((Transform)leftFootInf.GetValue(trackingSteam)).localPosition,
+                LeftFootTrackerRotation = ((Transform)leftFootInf.GetValue(trackingSteam)).localRotation,
+                RightFootTrackerPosition = ((Transform)rightFootInf.GetValue(trackingSteam)).localPosition,
+                RightFootTrackerRotation = ((Transform)rightFootInf.GetValue(trackingSteam)).localRotation,
+                HipTrackerPosition = ((Transform)hipInf.GetValue(trackingSteam)).localPosition,
+                HipTrackerRotation = ((Transform)hipInf.GetValue(trackingSteam)).localRotation,
+
+                //LeftFootTrackerPosition = trackingSteam.leftFoot.localPosition,
+                //LeftFootTrackerRotation = trackingSteam.leftFoot.localRotation,
+                //RightFootTrackerPosition = trackingSteam.rightFoot.localPosition,
+                //RightFootTrackerRotation = trackingSteam.rightFoot.localRotation,
+                //HipTrackerPosition = trackingSteam.hip.localPosition,
+                //HipTrackerRotation = trackingSteam.hip.localRotation,
+
                 PlayerHeight = VRCTrackingManager.field_Private_Static_VRCTrackingManager_0.GetPlayerHeight()
             };
             calibratedAvatars.Add(info);
@@ -61,12 +78,13 @@ namespace emmVRC.Hacks
             if (calibratedAvatars.FindIndex(a => a.AvatarID == avatarID) != -1)
             {
                 FBTAvatarCalibrationInfo info = calibratedAvatars.Find(a => a.AvatarID == avatarID);
-                trackingSteam.leftFoot.localPosition = info.LeftFootTrackerPosition;
-                trackingSteam.leftFoot.localRotation = info.LeftFootTrackerRotation;
-                trackingSteam.rightFoot.localPosition = info.RightFootTrackerPosition;
-                trackingSteam.rightFoot.localRotation = info.RightFootTrackerRotation;
-                trackingSteam.hip.localPosition = info.HipTrackerPosition;
-                trackingSteam.hip.localRotation = info.HipTrackerRotation;
+
+                ((Transform)leftFootInf.GetValue(trackingSteam)).localPosition = info.LeftFootTrackerPosition;
+                ((Transform)leftFootInf.GetValue(trackingSteam)).localRotation = info.LeftFootTrackerRotation;
+                ((Transform)rightFootInf.GetValue(trackingSteam)).localPosition = info.RightFootTrackerPosition;
+                ((Transform)rightFootInf.GetValue(trackingSteam)).localRotation = info.RightFootTrackerRotation;
+                ((Transform)hipInf.GetValue(trackingSteam)).localPosition = info.HipTrackerPosition;
+                ((Transform)hipInf.GetValue(trackingSteam)).localRotation = info.HipTrackerRotation;
                 VRCTrackingManager.field_Private_Static_VRCTrackingManager_0.SetPlayerHeight(info.PlayerHeight);
             }
             emmVRCLoader.Logger.LogDebug("Loaded calibration info");

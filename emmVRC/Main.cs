@@ -46,8 +46,27 @@ namespace emmVRC
         public static void OnUIManagerInit()
         {
             emmVRCLoader.Logger.LogDebug("UI manager initialized");
-            int VRCBuildNumber = UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber;
-            emmVRCLoader.Logger.Log("VRChat build is: " + VRCBuildNumber);
+
+            VRCApplicationSetup setup = UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First();
+            System.Reflection.PropertyInfo buildNumber = null;
+            int VRCBuildNumber = 1040;
+            foreach (System.Reflection.PropertyInfo inf in typeof(VRCApplicationSetup).GetProperties())
+            {
+                if (inf.PropertyType == typeof(int))
+                {
+                    int check = (int)inf.GetValue(setup);
+                    if (check > 1000 && check < 2000)
+                        buildNumber = inf;
+                }
+            }
+            if (buildNumber != null)
+            {
+                VRCBuildNumber = (int)buildNumber.GetValue(setup);// UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber;
+                emmVRCLoader.Logger.Log("VRChat build is: " + VRCBuildNumber);
+            } else
+            {
+                emmVRCLoader.Logger.Log("Could not determine the VRChat build number...");
+            }
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             string currentVersion = (string)typeof(MelonLoader.BuildInfo).GetField("Version").GetValue(null);

@@ -24,11 +24,11 @@ namespace emmVRC.Hacks
         {
             try
             {
-                UIVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/VolumePanel/VolumeUi").GetComponent<Slider>();
-                WorldVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/VolumePanel/VolumeGameWorld").GetComponent<Slider>();
-                VoicesVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/VolumePanel/VolumeGameVoice").GetComponent<Slider>();
-                AvatarVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/VolumePanel/VolumeGameAvatars").GetComponent<Slider>();
-                UIVolumeMuteButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/Footer/Exit").gameObject, QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Settings/VolumePanel").transform);
+                UIVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeUi").GetComponent<Slider>();
+                WorldVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeGameWorld").GetComponent<Slider>();
+                VoicesVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeGameVoice").GetComponent<Slider>();
+                AvatarVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeGameAvatars").GetComponent<Slider>();
+                UIVolumeMuteButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/Footer/Exit").gameObject, QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel").transform);
                 UIVolumeMuteButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(5.25f, 1.75f);
                 UIVolumeMuteButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(180f, 468.5f);
                 UIVolumeMuteButton.GetComponentInChildren<Text>().fontSize =  (int)(UIVolumeMuteButton.GetComponentInChildren<Text>().fontSize / 1.75);

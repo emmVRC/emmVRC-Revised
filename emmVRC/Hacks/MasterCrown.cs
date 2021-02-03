@@ -31,7 +31,7 @@ namespace emmVRC.Hacks
                             {
                                 if (masterIconObj == null && player.prop_VRCPlayerApi_0.isMaster && player.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
                                 {
-                                    GameObject templateObject = player.field_Internal_VRCPlayer_0.nameplate.transform.Find("Contents/Friend Marker").gameObject;
+                                    GameObject templateObject = player.field_Internal_VRCPlayer_0.field_Internal_GameObject_0.transform.Find("Contents/Friend Marker").gameObject;
                                     masterIconObj = GameObject.Instantiate(templateObject, templateObject.transform.parent);
                                     masterIconObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(256f, 24f);
                                     masterIconObj.GetComponent<Image>().sprite = Resources.crownSprite;

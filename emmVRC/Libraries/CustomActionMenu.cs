@@ -25,13 +25,13 @@ namespace emmVRC.Libraries
         }
         private static ActionMenuOpener GetActionMenuOpener()
         {
-            if (!ActionMenuDriver._instance.openerL.isOpen() && ActionMenuDriver._instance.openerR.isOpen())
+            if (!ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0.isOpen() && ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1.isOpen())
             {
-                return ActionMenuDriver._instance.openerR;
+                return ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1;
             }
-            else if (ActionMenuDriver._instance.openerL.isOpen() && !ActionMenuDriver._instance.openerR.isOpen())
+            else if (ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0.isOpen() && !ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1.isOpen())
             {
-                return ActionMenuDriver._instance.openerL;
+                return ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0;
             }
             else return null;
             /*
@@ -61,7 +61,7 @@ namespace emmVRC.Libraries
                 {
                     var newButton = activeActionMenu.Method_Private_PedalOption_0();
                     newButton.prop_String_0 = btn.ButtonText;
-                    newButton.triggerEvent = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
+                    newButton.field_Public_MulticastDelegateNPublicSealedBoUnique_0 = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
                     if (btn.ButtonIcon != null)
                         newButton.prop_Texture2D_0 = btn.ButtonIcon;
                     btn.currentPedalOption = newButton;
@@ -98,13 +98,13 @@ namespace emmVRC.Libraries
             {
                 if (!Initialized)
                     Initialize();
-                GetActionMenuOpener().actionMenu.Method_Public_ObjectNPublicAcTeAcStGaUnique_Action_Action_Texture2D_String_0((new Action(delegate
+                GetActionMenuOpener().field_Public_ActionMenu_0.Method_Public_ObjectNPublicAcTeAcStGaUnique_Action_Action_Texture2D_String_0((new Action(delegate
                 {
                     foreach(Button btn in buttons)
                     {
-                        var newButton = GetActionMenuOpener().actionMenu.Method_Private_PedalOption_0();
+                        var newButton = GetActionMenuOpener().field_Public_ActionMenu_0.Method_Private_PedalOption_0();
                         newButton.prop_String_0 = btn.ButtonText; // Button Text
-                        newButton.triggerEvent = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
+                        newButton.field_Public_MulticastDelegateNPublicSealedBoUnique_0 = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
                         newButton.prop_Boolean_0 = btn.IsEnabled;
                         if (btn.ButtonIcon != null)
                             newButton.prop_Texture2D_0 = btn.ButtonIcon; // Button Texture

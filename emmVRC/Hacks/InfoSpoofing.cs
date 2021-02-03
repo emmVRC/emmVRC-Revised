@@ -190,14 +190,14 @@ namespace emmVRC.Hacks
                 yield return new WaitForEndOfFrame();
                 if (objectRoots == null)
                 {
-                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Social") != null)
-                        if (QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/WorldInfo") != null)
-                            if (QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/UserInfo") != null)
+                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social") != null)
+                        if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo") != null)
+                            if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo") != null)
                             {
                                 objectRoots = new List<Transform>();
-                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Social"));
-                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/WorldInfo"));
-                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/UserInfo"));
+                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social"));
+                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo"));
+                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo"));
                             }
                 }
                 if ((Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled) && objectRoots != null)

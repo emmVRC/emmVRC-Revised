@@ -165,7 +165,7 @@ namespace emmVRC.Menus
             SpeedPlusButton.getGameObject().GetComponent<Button>().enabled = false;
 
 
-            SpeedText = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EarlyAccessText").gameObject, SpeedMinusButton.getGameObject().transform.parent);
+            SpeedText = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/EarlyAccessText").gameObject, SpeedMinusButton.getGameObject().transform.parent);
             SpeedText.GetComponent<UnityEngine.UI.Text>().fontStyle = FontStyle.Normal;
             SpeedText.GetComponent<UnityEngine.UI.Text>().text = "Speed: Disabled";
             SpeedText.GetComponent<RectTransform>().anchoredPosition = SpeedMinusButton.getGameObject().GetComponent<RectTransform>().anchoredPosition + new Vector2(192f, 192f);

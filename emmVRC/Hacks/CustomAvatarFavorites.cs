@@ -57,15 +57,15 @@ namespace emmVRC.Hacks
         }
         internal static void Initialize()
         {
-            pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar").gameObject;
-            FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Favorite Button").gameObject;
-            FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
+            pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar").gameObject;
+            FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Favorite Button").gameObject;
+            FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
             FavoriteButtonNewButton = FavoriteButtonNew.GetComponent<Button>();
             FavoriteButtonNewButton.onClick.RemoveAllListeners();
             FavoriteButtonNewButton.onClick.AddListener(new System.Action(() =>
             {
 
-                ApiAvatar apiAvatar = pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0;
+                ApiAvatar apiAvatar = pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
                 bool flag = false;
                 for (int i = 0; i < LoadedAvatars.Count; i++)
                 {
@@ -100,22 +100,25 @@ namespace emmVRC.Hacks
             FavoriteButtonNewText = FavoriteButtonNew.GetComponentInChildren<Text>();
             FavoriteButtonNewText.supportRichText = true;
             try
-                {
-                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountSpacingText").gameObject.SetActive(false);
-                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
-                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountDividerText").gameObject.SetActive(false);
-                    FavoriteButtonNew.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);
-                } catch (System.Exception ex)
-                {
-                    emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
-                }
+            {
+                FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountSpacingText").gameObject.SetActive(false);
+                FavoriteButtonNew.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
+                FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountDividerText").gameObject.SetActive(false);
+                FavoriteButtonNew.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);
+            }
+            catch (System.Exception ex)
+            {
+                emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
+            }
 
-            MigrateButton = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/"));
+            MigrateButton = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
             MigrateButton.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0f, 765f);
             MigrateButton.GetComponentInChildren<Text>().text = "Migrate";
             MigrateButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-            MigrateButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Do you want to migrate your AviFav+ avatars to emmVRC?", "Yes", () => {
+            MigrateButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Do you want to migrate your AviFav+ avatars to emmVRC?", "Yes", () =>
+                {
                     System.Collections.Generic.List<AviFavAvatar> aviFavAvatars = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json"))).Make<System.Collections.Generic.List<AviFavAvatar>>();
                     System.Collections.Generic.List<string> ids = new System.Collections.Generic.List<string>();
                     foreach (AviFavAvatar avtr in aviFavAvatars)
@@ -133,7 +136,8 @@ namespace emmVRC.Hacks
                             MelonLoader.MelonCoroutines.Start(AvatarUtilities.FavoriteAvatars(avatars, errored));
                         }));
                     }
-                }, "No", () => {
+                }, "No", () =>
+                {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 });
             }));
@@ -148,25 +152,27 @@ namespace emmVRC.Hacks
             }
 
             GameObject oldPublicAvatarList;
-            oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
+            oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
             PublicAvatarList.transform.SetAsFirstSibling();
 
-            ChangeButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent.transform.Find("Screens/Avatar/Change Button").gameObject;
+            ChangeButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Change Button").gameObject;
             baseChooseEvent = ChangeButton.GetComponent<Button>().onClick;
             ChangeButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
             ChangeButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
             {
-                ApiAvatar selectedAvatar = pageAvatar.GetComponent<PageAvatar>().avatar.field_Internal_ApiAvatar_0;
+                ApiAvatar selectedAvatar = pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
                 if (NetworkConfig.Instance.APICallsAllowed && !selectedAvatar.id.Contains("local"))
                 {
-                    API.Fetch<ApiAvatar>(selectedAvatar.id, new System.Action<ApiContainer>((ApiContainer cont) => {
+                    API.Fetch<ApiAvatar>(selectedAvatar.id, new System.Action<ApiContainer>((ApiContainer cont) =>
+                    {
                         ApiAvatar fetchedAvatar = cont.Model.Cast<ApiAvatar>();
                         if (fetchedAvatar.releaseStatus == "private" && fetchedAvatar.authorId != APIUser.CurrentUser.id && fetchedAvatar.authorName != "tafi_licensed")
                             VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { MelonLoader.MelonCoroutines.Start(UnfavoriteAvatar(selectedAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         else
                             baseChooseEvent.Invoke();
-                    }), new System.Action<ApiContainer>((ApiContainer cont) => {
+                    }), new System.Action<ApiContainer>((ApiContainer cont) =>
+                    {
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { MelonLoader.MelonCoroutines.Start(UnfavoriteAvatar(selectedAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     }));
                 }
@@ -194,9 +200,9 @@ namespace emmVRC.Hacks
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
             NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             NewAvatarList.clearUnseenListOnCollapse = false;
-            NewAvatarList.category = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
+            NewAvatarList.field_Public_EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique_0 = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
 
-            currPageAvatar.avatar.avatarScale *= 0.85f;
+            currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Public_Single_0 *= 0.85f;
 
 
             refreshButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
@@ -360,8 +366,8 @@ namespace emmVRC.Hacks
                         currentPage = 0;
                     pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit + 1);
                     List<ApiAvatar> avatarsToRender = SearchedAvatars.GetRange(currentPage * Configuration.JSONConfig.SearchRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.SearchRenderLimit - SearchedAvatars.Count));
-                    if (avatarsToRender.Count > Configuration.JSONConfig.SearchRenderLimit) 
-                        avatarsToRender.RemoveRange(Configuration.JSONConfig.SearchRenderLimit,  avatarsToRender.Count - Configuration.JSONConfig.SearchRenderLimit);
+                    if (avatarsToRender.Count > Configuration.JSONConfig.SearchRenderLimit)
+                        avatarsToRender.RemoveRange(Configuration.JSONConfig.SearchRenderLimit, avatarsToRender.Count - Configuration.JSONConfig.SearchRenderLimit);
                     NewAvatarList.RenderElement(new List<ApiAvatar>());
                     NewAvatarList.RenderElement(avatarsToRender);
                     avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Search Results";
@@ -373,7 +379,8 @@ namespace emmVRC.Hacks
                         forwardButton.GetComponent<Button>().interactable = false;
                     else
                         forwardButton.GetComponent<Button>().interactable = true;
-                } else
+                }
+                else
                 {
                     if (currentPage > LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit)
                         currentPage = (int)LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit;
@@ -382,7 +389,7 @@ namespace emmVRC.Hacks
                     pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit + 1);
                     List<ApiAvatar> avatarsToRender = LoadedAvatars.GetRange(currentPage * Configuration.JSONConfig.FavoriteRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.FavoriteRenderLimit - LoadedAvatars.Count));
                     if (avatarsToRender.Count > Configuration.JSONConfig.FavoriteRenderLimit)
-                        avatarsToRender.RemoveRange(Configuration.JSONConfig.FavoriteRenderLimit, avatarsToRender.Count -  Configuration.JSONConfig.FavoriteRenderLimit);
+                        avatarsToRender.RemoveRange(Configuration.JSONConfig.FavoriteRenderLimit, avatarsToRender.Count - Configuration.JSONConfig.FavoriteRenderLimit);
                     NewAvatarList.RenderElement(new List<ApiAvatar>());
                     NewAvatarList.RenderElement(avatarsToRender);
                     avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
@@ -465,13 +472,14 @@ namespace emmVRC.Hacks
         }
         internal static void OnUpdate()
         {
+
             if (PublicAvatarList == null || FavoriteButtonNew == null || RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
             if (searchBox == null && NewAvatarList.gameObject.activeInHierarchy)
             {
                 VRCUiPageHeader pageheader = QuickMenuUtils.GetVRCUiMInstance().GetComponentInChildren<VRCUiPageHeader>(true);
                 if (pageheader != null)
                 {
-                    searchBox = pageheader.searchBar;
+                    searchBox = pageheader.field_Public_UiInputField_0;
                 }
             }
             if (searchBoxAction == null)
@@ -483,10 +491,10 @@ namespace emmVRC.Hacks
                     MelonLoader.MelonCoroutines.Start(SearchAvatars(searchTerm));
                 }));
             }
-            if (searchBox != null && searchBox.editButton != null && !searchBox.editButton.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+            if (searchBox != null && searchBox.field_Public_Button_0 != null && !searchBox.field_Public_Button_0.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
-                searchBox.editButton.interactable = true;
-                searchBox.onDoneInputting = searchBoxAction;
+                searchBox.field_Public_Button_0.interactable = true;
+                searchBox.field_Public_UnityAction_1_String_0 = searchBoxAction;
             }
 
 
@@ -502,12 +510,12 @@ namespace emmVRC.Hacks
                 }
                 if (menuJustActivated && (NewAvatarList.pickers.Count < LoadedAvatars.Count || NewAvatarList.isOffScreen))
                     menuJustActivated = false;
-                if (currPageAvatar != null && currPageAvatar.avatar != null && currPageAvatar.avatar.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
+                if (currPageAvatar != null && currPageAvatar.field_Public_SimpleAvatarPedestal_0 != null && currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
                 {
                     bool flag = false;
                     for (int i = 0; i < LoadedAvatars.Count; i++)
                     {
-                        if (LoadedAvatars[i].id == currPageAvatar.avatar.field_Internal_ApiAvatar_0.id)
+                        if (LoadedAvatars[i].id == currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.id)
                         {
                             flag = true;
                         }

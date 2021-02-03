@@ -20,19 +20,23 @@ namespace emmVRC.Managers
         private static QMSingleButton NotificationButton2;
         private static QMSingleButton NotificationButton3;
         private static GameObject NotificationIcon;
-        private static List<GameObject> VanillaIcons = new List<GameObject>();
+        //private static List<GameObject> VanillaIcons = new List<GameObject>();
         private static Thread NotificationManagerThread;
         private static List<Notification> Notifications = new List<Notification>();
         private static bool blink = false;
         public static void Initialize()
         {
+
             // Initialize the emmVRC Notification icon, based on the vanilla Notification icon
-            NotificationIcon vanillaIcon = GameObject.FindObjectOfType<NotificationIcon>();
-            NotificationManager.NotificationIcon = GameObject.Instantiate(vanillaIcon.notificationIcon, vanillaIcon.notificationIcon.transform.parent);
+            //HudVoiceIndicator vanillaIcon = GameObject.FindObjectOfType<HudVoiceIndicator>();
+            GameObject referenceObject = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud/NotificationDotParent/NotificationDot");
+            NotificationManager.NotificationIcon = GameObject.Instantiate(referenceObject, referenceObject.transform.parent);
+            //NotificationManager.NotificationIcon.GetComponent<RectTransform>().anchoredPosition += new Vector2(128f, 0f);
             NotificationManager.NotificationIcon.name = "emmVRCNotificationIcon";
             NotificationIcon.GetComponent<Image>().sprite = Resources.alertSprite;
+            //NotificationIcon.GetComponent<Image>().color = Color.white;
             // Populate the list of vanilla icons, for use in checks later
-            try
+            /*try
             {
                 VanillaIcons.Add(vanillaIcon.notificationIcon);
                 VanillaIcons.Add(vanillaIcon.InviteRequestIcon);
@@ -44,7 +48,7 @@ namespace emmVRC.Managers
             {
                 emmVRCLoader.Logger.LogError("Failed to fetch all vanilla notification icons: " + ex.ToString());
                 emmVRCLoader.Logger.Log("This isn't a major error, it most likely means that the icons were changed around or removed in this build of VRChat, or assemblies need to be regenerated.");
-            }
+            }*/
             NotificationMenu = new QMNestedButton(!Configuration.JSONConfig.StealthMode ? "ShortcutMenu" : ReportWorldMenu.baseMenu.getMenuName(), Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY, "\nemmVRC\nNotifications", "  new emmVRC Notifications are available!");
             NotificationButton1 = new QMSingleButton(NotificationMenu, 1, 0, "Accept", null, "Accept");
             NotificationButton2 = new QMSingleButton(NotificationMenu, 2, 0, "Decline", null, "Decline");
@@ -88,6 +92,7 @@ namespace emmVRC.Managers
                 IsBackground = true
             };
             NotificationManagerThread.Start();
+            
         }
         private static void Loop()
         {
@@ -103,9 +108,9 @@ namespace emmVRC.Managers
                         {
                             // Checking if a vanilla icon (such as an invite) is already present, to avoid overlapping
                             bool vanillaIconsActive = false;
-                            foreach (GameObject icon in VanillaIcons)
+                            /*foreach (GameObject icon in VanillaIcons)
                                 if (icon.activeSelf)
-                                    vanillaIconsActive = true;
+                                    vanillaIconsActive = true;*/
                             if (!vanillaIconsActive && !Configuration.JSONConfig.StealthMode)
                                 NotificationIcon.SetActive(true);
                             else
