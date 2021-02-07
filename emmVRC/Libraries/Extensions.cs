@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VRC.Core;
 using VRC.UI;
+using Logger = emmVRCLoader.Logger;
 
 namespace emmVRC
 {
@@ -20,6 +21,15 @@ namespace emmVRC
                 return user.displayName;
             else
                 return user.username;
+        }
+        
+        public static void NoAwait(this Task task, string taskDescription = null)
+        {
+            task.ContinueWith(tsk =>
+            {
+                if (tsk.IsFaulted)
+                    Logger.LogError($"Free-floating Task {(taskDescription == null ? "" : $"({taskDescription})")}}} failed with exception: {tsk.Exception}");
+            });
         }
     }
 }

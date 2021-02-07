@@ -12,35 +12,20 @@ namespace emmVRC.Network
 {
     public class HTTPRequest
     {
-        public static string get_sync(string url) =>
-            request(HttpMethod.Get, url).Result;
+        public static Task<string> get(string url) =>
+             request(HttpMethod.Get, url);
 
-        public static string post_sync(string url, object obj) =>
-            request(HttpMethod.Post, url, obj).Result;
+        public static Task<string> post(string url, object obj) =>
+             request(HttpMethod.Post, url, obj);
 
-        public static string put_sync(string url, object obj) =>
-            request(HttpMethod.Put, url, obj).Result;
+        public static Task<string> put(string url, object obj) =>
+             request(HttpMethod.Put, url, obj);
 
-        public static string patch_sync(string url, object obj) =>
-             request(new HttpMethod("PATCH"), url, obj).Result;
+        public static Task<string> patch(string url, object obj) =>
+             request(new HttpMethod("PATCH"), url, obj);
 
-        public static string delete_sync(string url, object obj) =>
-             request(HttpMethod.Delete, url, obj).Result;
-
-        public static async Task<string> get(string url) =>
-             await request(HttpMethod.Get, url);
-
-        public static async Task<string> post(string url, object obj) =>
-             await request(HttpMethod.Post, url, obj);
-
-        public static async Task<string> put(string url, object obj) =>
-             await request(HttpMethod.Put, url, obj);
-
-        public static async Task<string> patch(string url, object obj) =>
-             await request(new HttpMethod("PATCH"), url, obj);
-
-        public static async Task<string> delete(string url, object obj) =>
-             await request(HttpMethod.Delete, url, obj);
+        public static Task<string> delete(string url, object obj) =>
+             request(HttpMethod.Delete, url, obj);
 
         private static async Task<string> request(HttpMethod method, string url, object obj = null)
         {
@@ -54,21 +39,14 @@ namespace emmVRC.Network
                     requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
                 }
                 
-                return await Task.Run(() =>
+                using (HttpResponseMessage responseMessage = await NetworkClient.httpClient.SendAsync(requestMessage))
                 {
-                    using (HttpResponseMessage responseMessage = NetworkClient.httpClient.SendAsync(requestMessage).Result)
-                    {
-                        if (responseMessage.IsSuccessStatusCode)
-                        {
-                            return responseMessage.Content.ReadAsStringAsync();
-                        }
-                        else
-                        {
-                            emmVRCLoader.Logger.LogDebug(responseMessage.ReasonPhrase);
-                            return Task.FromResult(responseMessage.ReasonPhrase);
-                        }
-                    }
-                });
+                    if (responseMessage.IsSuccessStatusCode)
+                        return await responseMessage.Content.ReadAsStringAsync();
+
+                    emmVRCLoader.Logger.LogDebug(responseMessage.ReasonPhrase);
+                    return responseMessage.ReasonPhrase;
+                }
             }
             catch (Exception conception)
             {

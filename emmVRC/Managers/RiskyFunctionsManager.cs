@@ -14,7 +14,6 @@ using RootMotion.Dynamics;
 
 namespace emmVRC.Managers
 {
-    [SecurityCritical]
     internal class RiskyFunctionsManager
     {
         internal static bool riskyFunctionsDisable = false;
@@ -105,11 +104,11 @@ namespace emmVRC.Managers
         {
             yield return null;
         }
-        internal static IEnumerator CheckThisWrld()
+        internal static async Task CheckThisWrld()
         {
             // Wait for the room manager to become available, meaning the player is in the world
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
-                yield return new WaitForEndOfFrame();
+                await emmVRC.AwaitUpdate.Yield();
 
             // Check if we are in a VRCSDK3 world, or if Risky Functions are even on; Risky Functions are (currently) not compatible with VRCSDK3 worlds, so we will not enable risky functions if this is the case
             if (Configuration.JSONConfig.RiskyFunctionsEnabled)
@@ -119,56 +118,46 @@ namespace emmVRC.Managers
                 // Temporary boolean that we will set if the world is whitelisted or blacklisted, to disable our later check.
                 bool temp = false;
 
-                var thing = HTTPRequest.get("https://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" + VRC.Core.APIUser.CurrentUser.id + "&worldid=" + RoomManager.field_Internal_Static_ApiWorld_0.id);
-                while (!thing.IsCompleted && !thing.IsFaulted)
-                    yield return new WaitForEndOfFrame();
-
-                if (!thing.IsFaulted)
+                try
                 {
-                    try
+                    var result = await HTTPRequest.get("https://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" +
+                                                       VRC.Core.APIUser.CurrentUser.id + "&worldid=" +
+                                                       RoomManager.field_Internal_Static_ApiWorld_0.id);
+                    
+                    // If the world is whitelisted, "allowed" will be returned. This skips the tag check and enables Risky Functions outright
+                    if (result == "allowed")
                     {
-                        // If the world is whitelisted, "allowed" will be returned. This skips the tag check and enables Risky Functions outright
-                        if (thing.Result == "allowed")
-                        {
-                            temp = true;
-                            riskyFuncsAllowed = true;
-                        }
-                        // If the world is blacklisted, or the user is banned, "denied" is returned. This skips the tag check and disables Risky Functions outright
-                        else if (thing.Result == "denied")
-                        {
-                            temp = true;
-                            riskyFuncsAllowed = false;
-                        }
-                    }
-                    catch (System.Exception ex)
-                    {
-                        emmVRCLoader.Logger.LogError(ex.ToString());
-                    }
-                }
-                else
-                {
-                    emmVRCLoader.Logger.LogError("Asynchronous net request failed: " + thing.Exception);
-
-                }
-
-                // If the temp flag isn't set, perform the tag check
-                if (!temp)
-                {
-                    List<string> lowerTags = new List<string>();
-                    foreach (string str in RoomManager.field_Internal_Static_ApiWorld_0.tags)
-                        lowerTags.Add(str.ToLower());
-                    if (lowerTags.IndexOf("author_tag_game") != -1 || lowerTags.IndexOf("author_tag_games") != -1 || lowerTags.IndexOf("author_tag_club") != -1 || lowerTags.IndexOf("admin_game") != -1)
-                    {
-                        riskyFuncsAllowed = false;
-                    }
-                    else
-                    {
+                        temp = true;
                         riskyFuncsAllowed = true;
                     }
-                    lowerTags.Clear();
+                    // If the world is blacklisted, or the user is banned, "denied" is returned. This skips the tag check and disables Risky Functions outright
+                    else if (result == "denied")
+                    {
+                        temp = true;
+                        riskyFuncsAllowed = false;
+                    }
                 }
-                // Now have Risky Functions reprocess based on this result
-                RiskyFuncsAreChecked = false;
+                finally
+                {
+                    // If the temp flag isn't set, perform the tag check
+                    if (!temp)
+                    {
+                        List<string> lowerTags = new List<string>();
+                        foreach (string str in RoomManager.field_Internal_Static_ApiWorld_0.tags)
+                            lowerTags.Add(str.ToLower());
+                        if (lowerTags.IndexOf("author_tag_game") != -1 || lowerTags.IndexOf("author_tag_games") != -1 || lowerTags.IndexOf("author_tag_club") != -1 || lowerTags.IndexOf("admin_game") != -1)
+                        {
+                            riskyFuncsAllowed = false;
+                        }
+                        else
+                        {
+                            riskyFuncsAllowed = true;
+                        }
+                        lowerTags.Clear();
+                    }
+                    // Now have Risky Functions reprocess based on this result
+                    RiskyFuncsAreChecked = false;
+                }
             }
         }
     }

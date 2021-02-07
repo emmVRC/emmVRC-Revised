@@ -31,13 +31,13 @@ namespace emmVRC.Menus
             try
             {
                 baseMenu.OpenMenu();
-                MelonLoader.MelonCoroutines.Start(EnterMenu());
+                EnterMenu().NoAwait(nameof(SupporterMenu));
             } catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
         }
-        public static IEnumerator EnterMenu()
+        public static async Task EnterMenu()
         {
             baseMenu.OpenMenu();
             baseMenu.pageItems.Clear();
@@ -46,15 +46,15 @@ namespace emmVRC.Menus
             baseMenu.pageTitles.Add("Fetching, please wait...");
             baseMenu.UpdateMenu();
 
-            var thing = HTTPRequest.get("http://www.thetrueyoshifan.com/supporters.json");
-            while (!thing.IsCompleted && !thing.IsFaulted)
-                yield return new WaitForEndOfFrame();
-
-            if (!thing.IsFaulted)
+            try
             {
+                var result = await HTTPRequest.get("http://www.thetrueyoshifan.com/supporters.json");
+                List<Supporter> supporters = TinyJSON.Decoder.Decode(result).Make<List<Supporter>>();
+
+                await emmVRC.AwaitUpdate.Yield();
+                
                 baseMenu.pageItems.Clear();
                 baseMenu.pageTitles.Clear();
-                List<Supporter> supporters = TinyJSON.Decoder.Decode(thing.Result).Make<List<Supporter>>();
                 foreach (Supporter supp in supporters)
                 {
                     baseMenu.pageItems.Add(new PageItem(supp.Name, null, supp.Tooltip));
@@ -65,12 +65,14 @@ namespace emmVRC.Menus
                 }
                 baseMenu.UpdateMenu();
             }
-            else
+            catch
             {
                 baseMenu.pageTitles[0] = "Network error...";
                 baseMenu.UpdateMenu();
-                emmVRCLoader.Logger.LogError("Network error occured while grabbing supporters: " + thing.Exception);
-
+                
+                await emmVRC.AwaitUpdate.Yield();
+                
+                throw;
             }
         }
 

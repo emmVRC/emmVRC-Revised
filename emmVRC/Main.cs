@@ -22,6 +22,8 @@ namespace emmVRC
     public static class emmVRC
     {
         public static bool Initialized = false;
+        public static readonly AwaitProvider AwaitUpdate = new AwaitProvider();
+        
         // OnApplicationStart is called when emmVRCLoader passes over control to the emmVRC assembly.
         private static void OnApplicationStart()
         {
@@ -478,7 +480,7 @@ namespace emmVRC
         {
             while (NetworkClient.webToken == null)
                 yield return new WaitForSeconds(1.5f);
-            MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.PopulateList());
+            CustomAvatarFavorites.PopulateList().NoAwait(nameof(CustomAvatarFavorites.PopulateList));
         }
         public static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode)
         {
@@ -498,7 +500,7 @@ namespace emmVRC
             MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
             if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null && !Configuration.JSONConfig.StealthMode)
                 Hacks.InfoBarClock.instanceTime = 0;
-            MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckThisWrld());
+            Managers.RiskyFunctionsManager.CheckThisWrld().NoAwait(nameof(RiskyFunctionsManager.CheckThisWrld));
             if (!Configuration.JSONConfig.StealthMode)
                 MelonLoader.MelonCoroutines.Start(Hacks.CustomWorldObjects.OnRoomEnter());
             //MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
@@ -519,6 +521,8 @@ namespace emmVRC
 
         public static void OnUpdate()
         {
+            AwaitUpdate.Flush();
+
             if (!Initialized)
                 return;
             // Check if resources have finished initializing
@@ -539,7 +543,7 @@ namespace emmVRC
             if (!Initialized)
                 return;
             if (NetworkClient.webToken != null)
-                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
+                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout").NoAwait("Logout");
         }
     }
 }

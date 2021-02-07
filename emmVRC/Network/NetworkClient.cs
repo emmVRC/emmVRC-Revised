@@ -17,6 +17,7 @@ using VRC.Core;
 using System.Linq.Expressions;
 using emmVRC.Hacks;
 using emmVRC.Menus;
+using Logger = emmVRCLoader.Logger;
 
 namespace emmVRC.Network
 {
@@ -50,8 +51,8 @@ namespace emmVRC.Network
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("emmVRC/1.0 (Client; emmVRCClient/" + Attributes.Version + ", Headset; "+(UnityEngine.XR.XRDevice.isPresent ? UnityEngine.XR.XRDevice.model : "None")+")");
-            fetchConfig();
-            login();
+            fetchConfig().NoAwait(nameof(fetchConfig));
+            login().NoAwait(nameof(login));
         }
 
         public static T DestroyClient<T>(Func<T> callback = null)
@@ -61,27 +62,18 @@ namespace emmVRC.Network
             return callback();
         }
 
-        public static void fetchConfig()
-        {
-            MelonLoader.MelonCoroutines.Start(goFetchConfig());
-        }
-
-        private static IEnumerator goFetchConfig()
+        private static async Task fetchConfig()
         {
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
-                yield return new WaitForEndOfFrame();
-            getConfigAsync();
-        }
-        public static void login(string password = "")
-        {
-            MelonLoader.MelonCoroutines.Start(sendLogin(password));
+                await emmVRC.AwaitUpdate.Yield();
+            await getConfigAsync();
         }
 
-        private static IEnumerator sendLogin(string password)
+        private static async Task login(string password = "")
         {
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
-                yield return new WaitForEndOfFrame();
-            sendRequest(password);
+                await emmVRC.AwaitUpdate.Yield();
+            await sendRequest(password);
         }
 
         public static void PromptLogin()
@@ -94,7 +86,7 @@ namespace emmVRC.Network
             VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("To login, please enter your pin", "", UnityEngine.UI.InputField.InputType.Standard, true, "Login", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string password, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
             {
                 passwordTried = false;
-                login(password);
+                login(password).NoAwait(nameof(login));
             }), null, "Enter pin....");
         }
         private static void RequestNewPin()
@@ -103,7 +95,7 @@ namespace emmVRC.Network
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Please confirm your new pin", "", UnityEngine.UI.InputField.InputType.Standard, true, "Set Pin", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string pin2, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk2, UnityEngine.UI.Text tx2) => {
                     if (pin == pin2)
                     {
-                        MelonLoader.MelonCoroutines.Start(sendLogin(pin2));
+                        login(pin2).NoAwait(nameof(login));
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                     }
                     else
@@ -113,27 +105,28 @@ namespace emmVRC.Network
                 }), null, "Enter pin....", false, null);
             }), null, "Enter pin....", false, null);
         }
-        private static async void getConfigAsync()
+        private static async Task getConfigAsync()
         {
             try
             {
                 string result = await HTTPRequest.get(NetworkClient.configURL + "/configuration.php");
                 NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
+                await emmVRC.AwaitUpdate.Yield();
                 try
                 {
                     Hacks.CustomAvatarFavorites.MigrateButton.SetActive(NetworkConfig.Instance.APICallsAllowed && File.Exists(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json")));
                 } catch (Exception ex)
                 {
-                    ex = new Exception();
+                    emmVRCLoader.Logger.LogError("Can't enable AviFav migration button. Error: " + ex);
                 }
             }
             catch (Exception exception)
             {
-                emmVRCLoader.Logger.LogError("Client configuration could not be fetched from emmVRC. Assuming default values. Error: " + exception.ToString());
+                emmVRCLoader.Logger.LogError("Client configuration could not be fetched from emmVRC. Assuming default values. Error: " + exception);
                 NetworkConfig.Instance = new NetworkConfig();
             }
         }
-        private static async void sendRequest(string password = "")
+        private static async Task sendRequest(string password = "")
         {
             if (NetworkConfig.Instance.DeleteAndDisableAuthFile)
                 Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
@@ -168,6 +161,8 @@ namespace emmVRC.Network
 
 
 
+                await emmVRC.AwaitUpdate.Yield();
+
                 if (result["reset"])
                 {
                     Managers.NotificationManager.AddNotification("You need to set a pin to protect your emmVRC account.", "Set\nPin", () => {
@@ -194,6 +189,8 @@ namespace emmVRC.Network
             }
             catch (Exception exception)
             {
+                await emmVRC.AwaitUpdate.Yield();
+                
                 if (response.ToLower().Contains("unauthorized"))
                 {
                     if (response.ToLower().Contains("banned"))
@@ -207,16 +204,18 @@ namespace emmVRC.Network
                             Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
                         if (userIDTried && !keyFileTried)
                         {
-                            sendRequest();
                             keyFileTried = true;
+                            await sendRequest();
                         }
                         else if (userIDTried && keyFileTried && password != "" && !passwordTried && !NetworkConfig.Instance.DisableAuthFile && !NetworkConfig.Instance.DeleteAndDisableAuthFile)
                         {
-                            sendRequest(password);
                             passwordTried = true;
+                            await sendRequest(password);
                         }
                         else
                         {
+                            await emmVRC.AwaitUpdate.Yield();
+                            
                             Managers.NotificationManager.AddNotification("You need to log in to the emmVRC Network. Please log in or enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
                         }
                     }
@@ -224,7 +223,6 @@ namespace emmVRC.Network
                 else if (response.ToLower().Contains("forbidden"))
                 {
                     Managers.NotificationManager.AddNotification("You have tried to log in too many times. Please try again later.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
-                    exception = new Exception();
                 }
                 else
                 {

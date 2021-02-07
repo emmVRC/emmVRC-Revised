@@ -72,6 +72,7 @@
     <Compile Include="Hacks\UIElementsMenu.cs" />
     <Compile Include="Hacks\WorldFunctions.cs" />
     <Compile Include="Hacks\WorldMenuFunctions.cs" />
+    <Compile Include="Libraries\AwaitProvider.cs" />
     <Compile Include="Libraries\CustomActionMenu.cs" />
     <Compile Include="Libraries\Analysis.cs" />
     <Compile Include="Libraries\AvatarUtilities.cs" />

@@ -2,8 +2,10 @@
 using Il2CppSystem.Reflection;
 using Il2CppSystem.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnhollowerRuntimeLib.XrefScans;
 

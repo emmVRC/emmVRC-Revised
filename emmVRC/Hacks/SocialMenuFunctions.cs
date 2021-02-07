@@ -221,7 +221,7 @@ namespace emmVRC.Hacks
             {
                 if (NetworkClient.webToken != null)
                 {
-                    HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id, null);
+                    HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id, null).NoAwait("emmVRC block");
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "The block state for this user has been toggled.", 5f);
                     //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
                 }

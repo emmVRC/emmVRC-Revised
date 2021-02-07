@@ -49,7 +49,7 @@ namespace emmVRC.Menus
                     if (flag)
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You already have this avatar favorited", "Dismiss", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     else
-                        MelonLoader.MelonCoroutines.Start(CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.field_Internal_VRCPlayer_0.prop_ApiAvatar_0));
+                        CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.field_Internal_VRCPlayer_0.prop_ApiAvatar_0).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
                 }
                 else
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "This avatar is not public, or the user does not have cloning turned on.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
@@ -58,7 +58,7 @@ namespace emmVRC.Menus
                 if (Network.NetworkClient.webToken != null)
                 {
                     string targetId = QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.id;
-                    Network.HTTPRequest.post(Network.NetworkClient.baseURL + "/api/blocked/" + targetId, null);
+                    Network.HTTPRequest.post(Network.NetworkClient.baseURL + "/api/blocked/" + targetId, null).NoAwait("emmVRC block");
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "The block state for this user has been toggled.", "Okay", new System.Action(() => { VRCUiPopupManager.prop_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
                 }

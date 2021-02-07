@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine.Events;
 using emmVRC.Libraries;
 using emmVRC.Hacks;
+using emmVRC.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 using emmVRC.Objects;
@@ -162,7 +163,7 @@ namespace emmVRC.Menus
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
                     Configuration.JSONConfig.RiskyFunctionsWarningShown = true;
                     Configuration.SaveConfig();
-                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckThisWrld());
+                    RiskyFunctionsManager.CheckThisWrld().NoAwait(nameof(RiskyFunctionsManager.CheckThisWrld));
                     RefreshMenu();
                 }), "Decline", new System.Action(() =>
                 {
@@ -174,7 +175,7 @@ namespace emmVRC.Menus
                 {
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
                     Configuration.SaveConfig();
-                    MelonLoader.MelonCoroutines.Start(Managers.RiskyFunctionsManager.CheckThisWrld());
+                    RiskyFunctionsManager.CheckThisWrld().NoAwait(nameof(RiskyFunctionsManager.CheckThisWrld));
                     RefreshMenu();
                 }
             }, "Disabled", () =>
@@ -477,7 +478,7 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 if (Network.NetworkClient.webToken != null)
-                    Network.HTTPRequest.get(Network.NetworkClient.baseURL + "/api/authentication/logout");
+                    Network.HTTPRequest.get(Network.NetworkClient.baseURL + "/api/authentication/logout").NoAwait("Logout");
                 Network.NetworkClient.webToken = null;
                 canToggleNetwork = false;
                 MelonLoader.MelonCoroutines.Start(WaitForDelayNetwork());

@@ -20,7 +20,7 @@ namespace emmVRC
         public static void ForceQuit()
         {
             if (NetworkClient.webToken != null)
-                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
+                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout").NoAwait("Logout");
             Thread quitThread = new Thread(QuitAfterQuit)
             {
                 IsBackground = true,
@@ -31,7 +31,7 @@ namespace emmVRC
         public static void ForceRestart()
         {
             if (NetworkClient.webToken != null)
-                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout");
+                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout").NoAwait("Logout");
             Thread restartThread = new Thread(RestartAfterQuit)
             {
                 IsBackground = true,
