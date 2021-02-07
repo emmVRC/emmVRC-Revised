@@ -152,27 +152,21 @@ namespace emmVRC.Network
                 createFile = "1";
             string response = "undefined";
             string tagIdentifier = "";
-            /*System.Random rand = new System.Random();
+            System.Random rand = new System.Random();
             const string availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             int stringLength = rand.Next(5, 7);
             for (int i = 0; i < stringLength; i++)
             {
                 tagIdentifier += availableChars[rand.Next(availableChars.Length)];
             }
-            emmVRCLoader.Logger.LogDebug("Current status identifier is: " + tagIdentifier);
-            string currentBio = VRC.Core.APIUser.CurrentUser.bio;
-            Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> dictionary = new Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>();
-            dictionary["bio"] = tagIdentifier;
-            API.SendPutRequest("users/" + VRC.Core.APIUser.CurrentUser.id, null, dictionary, null);*/
+
             try
             {
                 response = await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.GetName(), ["password"] = LoginKey, ["loginKey"] = createFile, ["tagIdentifier"] = tagIdentifier });
                 TinyJSON.Variant result = HTTPResponse.Serialize(response);
                 NetworkClient.webToken = result["token"];
 
-                /*Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> dictionary2 = new Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>();
-                dictionary["bio"] = currentBio;
-                API.SendPutRequest("users/" + VRC.Core.APIUser.CurrentUser.id, null, dictionary, null);*/
+
 
                 if (result["reset"])
                 {
@@ -200,9 +194,6 @@ namespace emmVRC.Network
             }
             catch (Exception exception)
             {
-                /*Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> dictionary2 = new Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>();
-                dictionary["bio"] = currentBio;
-                API.SendPutRequest("users/" + VRC.Core.APIUser.CurrentUser.id, null, dictionary, null);*/
                 if (response.ToLower().Contains("unauthorized"))
                 {
                     if (response.ToLower().Contains("banned"))
@@ -226,7 +217,7 @@ namespace emmVRC.Network
                         }
                         else
                         {
-                            Managers.NotificationManager.AddNotification("You need to log in to the emmVRC Network. Please log in and enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                            Managers.NotificationManager.AddNotification("You need to log in to the emmVRC Network. Please log in or enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
                         }
                     }
                 }

@@ -17,7 +17,7 @@ namespace emmVRC.Hacks
         private static float originalWalkSpeed = 0f;
         private static float originalRunSpeed = 0f;
         private static float originalStrafeSpeed = 0f;
-        private static LocomotionInputController locomotionController = null;
+        //private static LocomotionInputController locomotionController = null;
         public static float Modifier = 1f;
         public static bool SpeedModified = false;
         public static void Initialize()
@@ -28,26 +28,29 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-                yield return new WaitForEndOfFrame();
-                if (locomotionController == null)
+                if (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                 {
-                    if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
-                        locomotionController = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<LocomotionInputController>();
+                    originalRunSpeed = 0f;
+                    originalWalkSpeed = 0f;
+                    originalStrafeSpeed = 0f;
                 }
-                else
+                while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                    yield return new WaitForSeconds(1f);
+                yield return new WaitForEndOfFrame();
+                if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null && VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0 != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
                     
                     if (SpeedModified && (originalRunSpeed == 0f || originalWalkSpeed == 0f || originalStrafeSpeed == 0f))
                     {
-                        originalWalkSpeed = locomotionController.field_Public_Single_1;
-                        originalRunSpeed = locomotionController.field_Public_Single_0;
-                        originalStrafeSpeed = locomotionController.field_Public_Single_2;
+                        originalWalkSpeed = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.GetWalkSpeed();
+                        originalRunSpeed = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.GetRunSpeed();
+                        originalStrafeSpeed = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.GetStrafeSpeed();
                     }
                     if (!SpeedModified && originalRunSpeed != 0f && originalWalkSpeed != 0f && originalStrafeSpeed != 0f)
                     {
-                        locomotionController.field_Public_Single_1 = originalWalkSpeed;
-                        locomotionController.field_Public_Single_0 = originalRunSpeed;
-                        locomotionController.field_Public_Single_2 = originalStrafeSpeed;
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.SetWalkSpeed(originalWalkSpeed);
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.SetRunSpeed(originalRunSpeed);
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.SetStrafeSpeed(originalStrafeSpeed);
                         originalRunSpeed = 0f;
                         originalWalkSpeed = 0f;
                         originalStrafeSpeed = 0f;
@@ -55,9 +58,9 @@ namespace emmVRC.Hacks
                     }
                     if (SpeedModified && originalWalkSpeed != 0f && originalRunSpeed != 0f && originalStrafeSpeed != 0f)
                     {
-                        locomotionController.field_Public_Single_1 = (originalWalkSpeed * Modifier);
-                        locomotionController.field_Public_Single_0 = (originalRunSpeed * Modifier);
-                        locomotionController.field_Public_Single_2 = (originalStrafeSpeed * Modifier);
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.SetWalkSpeed(originalWalkSpeed * Modifier);
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.SetRunSpeed(originalRunSpeed * Modifier);
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.SetStrafeSpeed(originalStrafeSpeed * Modifier);
                     }
                     
                 }

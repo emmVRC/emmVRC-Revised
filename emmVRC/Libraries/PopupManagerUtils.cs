@@ -51,7 +51,7 @@ namespace emmVRC.Libraries
                 if (ourShowUiInputPopupAction != null) return ourShowUiInputPopupAction;
 
                 var targetMethod = typeof(VRCUiPopupManager).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                    .Single(it => it.GetParameters().Length == 10 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/InputPopup"));
+                    .FirstOrDefault(it => it.GetParameters().Length == 10 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/InputPopup"));
 
                 ourShowUiInputPopupAction = (ShowUiInputPopupAction)Delegate.CreateDelegate(typeof(ShowUiInputPopupAction), VRCUiPopupManager.prop_VRCUiPopupManager_0, targetMethod);
 

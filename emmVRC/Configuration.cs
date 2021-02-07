@@ -15,8 +15,7 @@ namespace emmVRC
         public static Config JSONConfig;
         public static void Initialize()
         {
-            if (!Directory.Exists(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC")))
-                Directory.CreateDirectory(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC"));
+            Directory.CreateDirectory(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC"));
             if (File.Exists(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"))){
                 //JSONConfig = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json")));
                 try
@@ -33,6 +32,8 @@ namespace emmVRC
                 {
                     emmVRCLoader.Logger.LogError("An error occured while parsing the config file. It has been moved to config.old.json, and a new one has been created.");
                     emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
+                    if (File.Exists(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.old.json")))
+                        File.Delete(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.old.json"));
                     File.Move(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"), Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.old.json"));
                     JSONConfig = new Config();
                 }

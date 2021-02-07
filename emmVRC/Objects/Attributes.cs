@@ -8,7 +8,7 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.6.6";
+        public static string Version = "2.6.8";
         public static int LastTestedBuildNumber = 1046;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;

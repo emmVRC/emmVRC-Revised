@@ -6,6 +6,7 @@ using VRC;
 using VRC.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using emmVRC.Libraries;
 
 namespace emmVRC.Hacks
 {
@@ -31,11 +32,17 @@ namespace emmVRC.Hacks
                             {
                                 if (masterIconObj == null && player.prop_VRCPlayerApi_0.isMaster && player.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
                                 {
-                                    GameObject templateObject = player.field_Internal_VRCPlayer_0.field_Internal_GameObject_0.transform.Find("Contents/Friend Marker").gameObject;
+                                    emmVRCLoader.Logger.LogDebug("Initializing master icon...");
+                                    GameObject templateObject = player.field_Internal_VRCPlayer_0.field_Private_Transform_0.parent.transform.Find("Player Nameplate/Canvas/Nameplate/Contents/Friend Marker").gameObject;
+                                    emmVRCLoader.Logger.LogDebug("1");
                                     masterIconObj = GameObject.Instantiate(templateObject, templateObject.transform.parent);
+                                    emmVRCLoader.Logger.LogDebug("2");
                                     masterIconObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(256f, 24f);
+                                    emmVRCLoader.Logger.LogDebug("3");
                                     masterIconObj.GetComponent<Image>().sprite = Resources.crownSprite;
+                                    emmVRCLoader.Logger.LogDebug("4");
                                     masterIconObj.SetActive(true);
+                                    emmVRCLoader.Logger.LogDebug("Master icon initialized");
 
                                 }
                             });
