@@ -297,6 +297,11 @@ namespace emmVRC.Hacks
                             if (img.transform.name == "Background")
                                 img.color = color;
                         };
+                        foreach (MonoBehaviourPublicObCoGaCoObCoObCoUnique tab in GameObject.Find("UserInterface/QuickMenu/QuickModeTabs").GetComponentsInChildren<MonoBehaviourPublicObCoGaCoObCoObCoUnique>())
+                        {
+                            Color lightlydarker = new Color(color.r / 2.25f, color.g / 2.25f, color.b / 2.25f);
+                            tab.field_Public_Color32_0 = lightlydarker;
+                        }
                     }
                     catch (Exception ex)
                     {

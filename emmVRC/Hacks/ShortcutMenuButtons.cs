@@ -35,6 +35,7 @@ namespace emmVRC.Hacks
                 logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
             }
             logoButton.setActive(Configuration.JSONConfig.LogoButtonEnabled);
+            logoButton.getGameObject().transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.zero : Vector3.one);
             emojiButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmojiButton").gameObject;
             emoteButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmoteButton").gameObject;
             reportWorldButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/ReportWorldButton").gameObject;

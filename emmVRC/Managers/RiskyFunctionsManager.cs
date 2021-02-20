@@ -9,17 +9,13 @@ using UnityEngine.Networking;
 using emmVRC.Network;
 using UnityEngine.UI;
 using emmVRC.Menus;
-using System.Security;
-using RootMotion.Dynamics;
+using VRC;
+using VRC.Core;
 
 namespace emmVRC.Managers
 {
     internal class RiskyFunctionsManager
     {
-        internal static bool riskyFunctionsDisable = false;
-        internal static bool riskyFuncsDisable = false;
-        internal static bool disableAllowed = false;
-        internal static bool disableChecked = false;
         private static bool riskyFuncsAllowed = false;
         internal static bool RiskyFuncsAreAllowed { get { return riskyFuncsAllowed; } }
 
@@ -38,7 +34,9 @@ namespace emmVRC.Managers
 
         internal static IEnumerator Loop()
         {
-            if (riskyFuncsDisable || riskyFunctionsDisable || disableAllowed || disableChecked)
+            // This giant block of crap was an attempt to break mods that try to modify the Risky Functions checks.
+            // It's unused because... well... I don't particularly care anymore. We have HarmonyShield, and if people are using those kinds of mods, we just simply don't have to support 'em.
+            /*if (riskyFuncsDisable || riskyFunctionsDisable || disableAllowed || disableChecked)
             {
                 Menus.PlayerTweaksMenu.FlightToggle.DestroyMe();
                 Menus.PlayerTweaksMenu.NoclipToggle.DestroyMe();
@@ -51,7 +49,7 @@ namespace emmVRC.Managers
                 Menus.PlayerTweaksMenu.SpeedToggle.DestroyMe();
                 GameObject.Destroy(Menus.PlayerTweaksMenu.SpeedText);
                 GameObject.Destroy(Menus.PlayerTweaksMenu.SpeedSlider.slider);
-            } else if (!riskyFuncsDisable && !riskyFunctionsDisable && !disableAllowed && !disableChecked)
+            } else if (!riskyFuncsDisable && !riskyFunctionsDisable && !disableAllowed && !disableChecked)*/
             while (true)
             {
 
@@ -74,7 +72,7 @@ namespace emmVRC.Managers
                     }
                     try
                     {
-                        // This does stuff
+                        // Grabs the Risky Functions buttons and caches them for future use. "This does stuff" is what the previous comment was. Come on Emmy.
                         if (FlightButton == null)
                             FlightButton = PlayerTweaksMenu.FlightToggle.getGameObject().GetComponent<Button>();
                         else if (NoclipButton == null)
@@ -85,6 +83,7 @@ namespace emmVRC.Managers
                             ESPButton = PlayerTweaksMenu.ESPToggle.getGameObject().GetComponent<Button>();
                         else
                         {
+                            // Ensures that Risky Functions buttons are not enabled when they shouldn't be
                             if ((FlightButton.enabled || NoclipButton.enabled || SpeedButton.enabled || ESPButton.enabled) && (!RiskyFuncsAreAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled))
                             {
                                 RiskyFuncsAreChecked = false;
@@ -99,10 +98,6 @@ namespace emmVRC.Managers
                 }
                 yield return new WaitForEndOfFrame();
             }
-        }
-        internal static IEnumerator CheckWorld()
-        {
-            yield return null;
         }
         internal static async Task CheckThisWrld()
         {
@@ -155,6 +150,20 @@ namespace emmVRC.Managers
                         }
                         lowerTags.Clear();
                     }
+
+                    // If you are the creator of the world, you get to use Risky Functions in it, unless the root objects below exist.
+                    if (RoomManager.field_Internal_Static_ApiWorld_0.authorId == APIUser.CurrentUser.id)
+                        riskyFuncsAllowed = true;
+
+
+                    // As a final check, and to allow world creators more choice over Risky Functions without relying on our whitelist, we are looking for "eVRCRiskFuncDisable" or "eVRCRiskFuncEnable"
+                    // If these are present, they will completely override our choice from tags and the online list, and manually disable or enable Risky Functions
+                    GameObject[] rootObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+                    if (rootObjects.Any(a => a.name == "eVRCRiskFuncDisable"))
+                        riskyFuncsAllowed = false;
+                    else if (rootObjects.Any(a => a.name == "eVRCRiskFuncEnable"))
+                        riskyFuncsAllowed = true;
+
                     // Now have Risky Functions reprocess based on this result
                     RiskyFuncsAreChecked = false;
                 }

@@ -84,8 +84,12 @@ namespace emmVRC.Hacks
                     // Enable the clock text, if it is disabled
                     clockText.gameObject.SetActive(true);
 
+                    // Determine if time should be AM or PM, based on the system culture information.
+                    // The alternative is to read the actual current value from Registry, which I really don't want to do, particularly per frame
+                    bool amPm = System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortTimePattern.ToLower().Contains("h");
+
                     // Build a time string based on the current time
-                    var timeString = DateTime.Now.ToShortTimeString();
+                    var timeString = DateTime.Now.ToString(amPm ? "hh:mm tt" : "HH:mm");
 
                     // Set up the instance timer string to be updated later
                     string instanceTimeString = "00:00:00";

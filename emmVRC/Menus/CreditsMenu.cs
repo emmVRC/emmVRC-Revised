@@ -26,11 +26,11 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Janni9009</color>", null, "Developer and supporter"));
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Supah</color>", null, "Major supporter and moderator"));
             baseMenu.pageItems.Add(new PageItem("<color=#C67228>mrgw98</color>", null, "Helper in the community"));
-            baseMenu.pageItems.Add(new PageItem("<color=#C67228>Provania</color>", null, "Moderator and Helper in the community"));
-            baseMenu.pageItems.Add(new PageItem("<color=#C67228>rakosi2</color>", null, "Helper in the community"));
+            baseMenu.pageItems.Add(new PageItem("<color=#0091FF>Provania</color>", null, "Moderator and Helper in the community"));
+            baseMenu.pageItems.Add(new PageItem("<color=#0091FF>rakosi2</color>", null, "Moderator and Helper in the community"));
             baseMenu.pageItems.Add(new PageItem("<color=#C67228>RiskiVR</color>", null, "Helper in the community"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>Herp\nDerpinstine</color>", null, "Major coding help, developer of MelonLoader"));
-            baseMenu.pageItems.Add(new PageItem("<color=#71368A>knah</color>", null, "Developer of the Unhollower, the most essential part of IL2CPP modding"));
+            baseMenu.pageItems.Add(new PageItem("<color=#71368A>knah</color>", null, "Netcode developer, as well as developer of the Unhollower, the most important part of MelonLoader"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>Slaynash</color>", null, "Original developer of VRCModLoader, the entire reason why emmVRC exists today"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>DubyaDude</color>", null, "Developer of the Ruby Button API"));
             baseMenu.pageItems.Add(new PageItem("<color=#88d184>DltDat</color>", null, "Developer of the hooking method used for various functions across emmVRC"));

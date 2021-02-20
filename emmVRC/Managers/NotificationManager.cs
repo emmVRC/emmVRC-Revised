@@ -22,7 +22,7 @@ namespace emmVRC.Managers
         private static GameObject NotificationIcon;
         //private static List<GameObject> VanillaIcons = new List<GameObject>();
         private static Thread NotificationManagerThread;
-        private static List<Notification> Notifications = new List<Notification>();
+        internal static List<Notification> Notifications = new List<Notification>();
         private static bool blink = false;
         public static void Initialize()
         {
@@ -84,6 +84,8 @@ namespace emmVRC.Managers
                 else
                     NotificationButton3.setActive(false);
             });
+            if (Configuration.JSONConfig.TabMode)
+                NotificationMenu.getMainButton().getGameObject().transform.localScale = Vector3.zero;
 
             // Create the separate thread that will manage the notification system
             NotificationManagerThread = new Thread(Loop)

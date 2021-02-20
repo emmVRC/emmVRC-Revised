@@ -30,9 +30,16 @@ namespace emmVRC.Libraries
             foreach (ApiAvatar avtr in avatars)
             {
                 if (avtr.releaseStatus == "public" || avtr.authorId == APIUser.CurrentUser.id)
-                    yield return CustomAvatarFavorites.FavoriteAvatar(avtr);
+                {
+                    emmVRCLoader.Logger.LogDebug("Favouriting avatar...");
+                    CustomAvatarFavorites.FavoriteAvatar(avtr).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
+                    //yield return CustomAvatarFavorites.FavoriteAvatar(avtr);
+                }
                 else
+                {
+                    emmVRCLoader.Logger.LogDebug("The avatar " + avtr.name + " is not public, and does not belong to us.");
                     errored = true;
+                }
                 yield return new WaitForSeconds(1f);
             }
             CustomAvatarFavorites.MigrateButton.SetActive(false);
@@ -52,10 +59,12 @@ namespace emmVRC.Libraries
                 API.Fetch<ApiAvatar>(avatarId, new Action<ApiContainer>((ApiContainer container) =>
                 {
                     processingList.Add(container.Model.Cast<ApiAvatar>());
+                    emmVRCLoader.Logger.LogDebug("Found avatar " + container.Model.Cast<ApiAvatar>().name);
                     MelonLoader.MelonCoroutines.Start(Delay());
                 }), new Action<ApiContainer>((ApiContainer container) =>
                 {
                     errored = true;
+                    emmVRCLoader.Logger.LogDebug("Current avatar is not available.");
                     MelonLoader.MelonCoroutines.Start(Delay());
                 }));
             }

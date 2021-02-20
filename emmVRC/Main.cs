@@ -213,6 +213,10 @@ namespace emmVRC
                 emmVRCLoader.Logger.LogDebug("Initializing Debug menu...");
                 Menus.DebugMenu.Initialize();
 
+                // Initialize the UnscaledUI tweaks
+                emmVRCLoader.Logger.LogDebug("Initializing Unscaled UI Tweaks...");
+                Hacks.UnscaledUITweaks.Process();
+
                 // Initialize the "Social Menu Functions" menu
                 if (!Configuration.JSONConfig.StealthMode)
                 {
@@ -437,6 +441,12 @@ namespace emmVRC
                     Hacks.ColorChanger.ApplyIfApplicable();
                 }
 
+                if (!Configuration.JSONConfig.StealthMode)
+                {
+                    emmVRCLoader.Logger.LogDebug("Initializing Tab Menu...");
+                    MelonLoader.MelonCoroutines.Start(Hacks.TabMenu.Initialize());
+                }
+
                 // Initialize hooking, for things such as Global Dynamic Bones
                 emmVRCLoader.Logger.LogDebug("Initializing hooks...");
                 Libraries.Hooking.Initialize();
@@ -491,7 +501,7 @@ namespace emmVRC
             Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(false, true);
             Menus.PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
             Menus.FlashlightMenu.toggleFlashlight.setToggleState(false);
-            Menus.FlashlightMenu.toggleHeadlight.setToggleState(false);
+            Menus.FlashlightMenu.toggleHeadlight.setToggleState(false, true);
 
             MelonLoader.MelonCoroutines.Start(Menus.WaypointsMenu.LoadWorld());
             MelonLoader.MelonCoroutines.Start(EULA.Initialize());

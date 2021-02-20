@@ -181,6 +181,7 @@ namespace emmVRC.Managers
         }
         public static void ProcessAvatar(GameObject avatarObject, VRC.SDKBase.VRC_AvatarDescriptor avatarDescriptor)
         {
+            if (avatarObject == null || avatarDescriptor == null || avatarDescriptor.GetComponent<PipelineManager>() == null) return;
             try
             {
                 AvatarPermissions perms = AvatarPermissions.GetAvatarPermissions(avatarDescriptor.GetComponent<PipelineManager>().blueprintId);
@@ -211,6 +212,7 @@ namespace emmVRC.Managers
                         foreach (Material mat in rend.materials)
                                 if (mat != null)
                                     mat.shader = Shader.Find("Diffuse");
+                emmVRCLoader.Logger.LogDebug("Finished processing avatar permissions");
             }
             catch (Exception ex)
             {

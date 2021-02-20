@@ -58,6 +58,7 @@ namespace emmVRC.Menus
         private static ButtonConfigurationMenu FunctionsMenuPositionMenu;
         private static ButtonConfigurationMenu LogoPositionMenu;
         private static ButtonConfigurationMenu NotificationPositionMenu;
+        private static PageItem TabMode;
         private static PageItem StealthMode;
 
         // Page 5 - UI Color Changing
@@ -104,6 +105,7 @@ namespace emmVRC.Menus
         private static PageItem DisableReportUser;
         private static PageItem MinimalWarnKick;
         private static PageItem DisableOneHandMovement;
+        private static PageItem DisableMicTooltip;
 
         // Page 8 - Disable VRC+ Stuff
         private static PageItem DisableVRCPlusAds;
@@ -575,6 +577,29 @@ namespace emmVRC.Menus
                 Managers.NotificationManager.NotificationMenu.getMainButton().setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
                 Managers.NotificationManager.AddNotification("Your new button position has been saved.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
             }, "", "Select the new position for the Notification button", null);
+            TabMode = new PageItem("Tab Mode", () =>
+            {
+                Configuration.JSONConfig.TabMode = true;
+                Configuration.SaveConfig();
+                if (FunctionsMenu.baseMenu.menuEntryButton != null)
+                    FunctionsMenu.baseMenu.menuEntryButton.getGameObject().transform.localScale = Vector3.zero;
+                if (ShortcutMenuButtons.logoButton != null)
+                    ShortcutMenuButtons.logoButton.getGameObject().transform.localScale = Vector3.zero;
+                Managers.NotificationManager.NotificationMenu.getMainButton().getGameObject().transform.localScale = Vector3.zero;
+                TabMenu.newTab.transform.localScale = Vector3.one;
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.TabMode = false;
+                Configuration.SaveConfig();
+                if (FunctionsMenu.baseMenu.menuEntryButton != null)
+                    FunctionsMenu.baseMenu.menuEntryButton.getGameObject().transform.localScale = Vector3.one;
+                if (ShortcutMenuButtons.logoButton != null)
+                    ShortcutMenuButtons.logoButton.getGameObject().transform.localScale = Vector3.one;
+                Managers.NotificationManager.NotificationMenu.getMainButton().getGameObject().transform.localScale = Vector3.one;
+                TabMenu.newTab.transform.localScale = Vector3.zero;
+                RefreshMenu();
+            }, "TOGGLE: Enables the emmVRC Tab, which replaces the Shortcut Menu buttons with a menu.");
             StealthMode = new PageItem("Stealth Mode", () =>
             {
                 Configuration.JSONConfig.StealthMode = true;
@@ -601,7 +626,10 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
-            baseMenu.pageItems.Add(PageItem.Space);
+            if (!Configuration.JSONConfig.StealthMode)
+                baseMenu.pageItems.Add(TabMode);
+            else
+                baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(StealthMode);
 
             UIColorChanging = new PageItem("UI Color\nChange", () =>
@@ -979,6 +1007,9 @@ namespace emmVRC.Menus
                 for (int i = 0; i < 4; i++)
                     baseMenu.pageItems.Add(PageItem.Space);
             }
+
+
+
             DisableReportUser = new PageItem("Disable\nReport User", () =>
             {
                 Configuration.JSONConfig.DisableReportUserButton = true;
@@ -1044,6 +1075,17 @@ namespace emmVRC.Menus
                 RefreshMenu();
                 Hacks.ActionMenuTweaks.Apply();
             }, "TOGGLE: Disables the one-handed movement indicator when one of your VR Controllers has lost tracking");
+            DisableMicTooltip = new PageItem("Disable\nMic Tooltip", () =>
+            {
+                Configuration.JSONConfig.DisableMicTooltip = true;
+                Configuration.SaveConfig();
+                Hacks.UnscaledUITweaks.Process();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableMicTooltip = false;
+                Configuration.SaveConfig();
+                Hacks.UnscaledUITweaks.Process();
+            }, "TOGGLE: Disables the \"Hold V\" tooltip above the microphone indicator in the UI");
             if (!Configuration.JSONConfig.StealthMode)
             {
                 baseMenu.pageItems.Add(DisablePlaylists);
@@ -1051,7 +1093,8 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(DisableAvatarStats);
                 baseMenu.pageItems.Add(MinimalWarnKick);
                 baseMenu.pageItems.Add(DisableOneHandMovement);
-                for (int i = 0; i < 4; i++)
+                baseMenu.pageItems.Add(DisableMicTooltip);
+                for (int i = 0; i < 3; i++)
                     baseMenu.pageItems.Add(PageItem.Space);
             }
             DisableVRCPlusAds = new PageItem("Disable VRC+\nQuick Menu Ads", () =>
@@ -1304,7 +1347,7 @@ namespace emmVRC.Menus
                 baseMenu.pageTitles.Add("UI Changing");
                 baseMenu.pageTitles.Add("Nameplate Color Changing");
                 baseMenu.pageTitles.Add("Disable Quick Menu Buttons");
-                baseMenu.pageTitles.Add("Disable Other Buttons");
+                baseMenu.pageTitles.Add("Disable Other Features");
                 baseMenu.pageTitles.Add("Disable VRChat Plus Buttons");
             }
             baseMenu.pageTitles.Add("Disable Avatar Menu Lists" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
@@ -1336,6 +1379,13 @@ namespace emmVRC.Menus
                 ForceRestart.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
                 UnlimitedFPS.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
 
+                if (!Configuration.JSONConfig.StealthMode)
+                {
+                    LogoPosition.Active = !Configuration.JSONConfig.TabMode;
+                    FunctionsMenuPosition.Active = !Configuration.JSONConfig.TabMode;
+                    NotificationPosition.Active = !Configuration.JSONConfig.TabMode;
+                }
+                TabMode.SetToggleState(Configuration.JSONConfig.TabMode);
                 StealthMode.SetToggleState(Configuration.JSONConfig.StealthMode);
 
                 UIColorChanging.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
@@ -1360,6 +1410,7 @@ namespace emmVRC.Menus
                 DisableReportUser.SetToggleState(Configuration.JSONConfig.DisableReportUserButton);
                 MinimalWarnKick.SetToggleState(Configuration.JSONConfig.MinimalWarnKickButton);
                 DisableOneHandMovement.SetToggleState(Configuration.JSONConfig.DisableOneHandMovement);
+                DisableMicTooltip.SetToggleState(Configuration.JSONConfig.DisableMicTooltip);
 
                 DisableVRCPlusAds.SetToggleState(Configuration.JSONConfig.DisableVRCPlusAds);
                 DisableVRCPlusQMButtons.SetToggleState(Configuration.JSONConfig.DisableVRCPlusQMButtons);

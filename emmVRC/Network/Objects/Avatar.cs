@@ -55,7 +55,8 @@ namespace emmVRC.Network.Objects
                 Endpoint = "avatars",
                 Populated = false,
                 assetVersion = new AssetVersion("2018.4.20f1", 0),
-                tags =  avatar_tags
+                tags =  avatar_tags,
+                supportedPlatforms = (VRC.Core.ApiModel.SupportedPlatforms)avatar_supported_platforms
             };
             return avtr;
         }

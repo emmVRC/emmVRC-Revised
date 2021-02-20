@@ -37,6 +37,7 @@ namespace emmVRC.Objects
         public bool TrackingSaving = true;
         public bool ActionMenuIntegration = true;
         public bool MigrationButtonVisible = true;
+        public bool DisableMicTooltip = false;
 
         // Avatar List render limits
         public int FavoriteRenderLimit = 50;
@@ -49,6 +50,7 @@ namespace emmVRC.Objects
         public int FPSLimit = 144;
 
         // Button positions
+        public bool TabMode = false;
         public int FunctionsButtonX = 0;
         public int FunctionsButtonY = 1;
         public int LogoButtonX = 0;

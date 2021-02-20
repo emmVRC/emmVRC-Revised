@@ -146,6 +146,8 @@ namespace emmVRC.Libraries
             GameObject infoBar = GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar").gameObject;
             infoBar.SetActive(pagename == "ShortcutMenu");
 
+            GameObject tabBar = GetQuickMenuInstance().transform.Find("QuickModeTabs").gameObject;
+
             QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance().field_Private_QuickMenuContextualDisplay_0;
             quickmenuContextualDisplay.Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
             //quickmenuContextualDisplay.Method_Public_Nested0_0(QuickMenuContextualDisplay.Nested0.NoSelection);
@@ -156,6 +158,7 @@ namespace emmVRC.Libraries
             if (pagename == "ShortcutMenu")
             {
                 SetIndex(0);
+                tabBar.SetActive(true);
             }
             else if (pagename == "UserInteractMenu")
             {
@@ -166,6 +169,7 @@ namespace emmVRC.Libraries
                 SetIndex(-1);
                 shortcutMenu?.SetActive(false);
                 userInteractMenu?.SetActive(false);
+                tabBar.SetActive(false);
             }
         }
 

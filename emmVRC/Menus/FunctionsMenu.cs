@@ -41,6 +41,8 @@ namespace emmVRC.Menus
                 baseMenu.menuEntryButton.DestroyMe();
                 QMSingleButton FunctionsButton = new QMSingleButton(ReportWorldMenu.baseMenu, 1, 0, "<color=#FF69B4>emmVRC</color>\nFunctions", () => { baseMenu.OpenMenu(); }, "Extra functions that can enhance the user experience or provide practical features");
             }
+            if (Configuration.JSONConfig.TabMode && !Configuration.JSONConfig.StealthMode)
+                baseMenu.menuEntryButton.getGameObject().transform.localScale = Vector3.zero;
 
             // Add the World Tweaks button
             worldTweaksButton = new PageItem("World\nTweaks", () => { QuickMenuUtils.ShowQuickmenuPage(WorldTweaksMenu.baseMenu.getMenuName()); }, "Contains tweaks to affect the world around you");

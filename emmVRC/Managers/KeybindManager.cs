@@ -25,7 +25,7 @@ namespace emmVRC.Managers
             {
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.H))
                 {
-                    Configuration.JSONConfig.HUDEnabled = !Configuration.JSONConfig.HUDEnabled;
+                    Configuration.JSONConfig.UIVisible = !Configuration.JSONConfig.UIVisible;
                     Configuration.SaveConfig();
                     Hacks.UIElementsMenu.ToggleHUD.setToggleState(Configuration.JSONConfig.HUDEnabled);
                 }

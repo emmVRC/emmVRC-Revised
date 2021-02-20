@@ -44,6 +44,7 @@ namespace emmVRC
         public static Sprite Media_Stop;
         public static Sprite HUD_Base;
         public static Sprite HUD_Minimized;
+        public static Sprite TabIcon;
 
         public static AudioClip customLoadingMusic;
 
@@ -74,7 +75,7 @@ namespace emmVRC
         public static IEnumerator LoadResources()
         {
             // If the path to the emmVRC Resources directory doesn't exist, make it exist
-            if (!Directory.Exists(resourcePath))
+            /*if (!Directory.Exists(resourcePath))
                 Directory.CreateDirectory(resourcePath);
 
             // Check if the UI texture directory exists. If not, the files don't, either.
@@ -98,7 +99,7 @@ namespace emmVRC
                     webClient.DownloadFile("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png", Path.Combine(resourcePath, "HUD/UIMinimized.png"));
                     webClient.DownloadFile("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png", Path.Combine(resourcePath, "HUD/UIMaximized.png"));
                 }
-            }
+            }*/
 
             // Fetch the resources asset bundle, for things like sprites.
             if (Environment.CommandLine.Contains("--emmvrc.assetdev") && Environment.CommandLine.Contains("--emmvrc.devmode")) {
@@ -146,6 +147,8 @@ namespace emmVRC
 
             HUD_Base = LoadSprite("UIMaximized.png");
             HUD_Minimized = LoadSprite("UIMinimized.png");
+
+            TabIcon = LoadSprite("TabIcon.png");
             
             panelTexture = LoadTexture("Panel.png");
 

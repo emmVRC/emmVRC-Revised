@@ -40,9 +40,9 @@ namespace emmVRC.Menus
             BackgroundImage = BackgroundObject.AddComponent<Image>();
 
             // Yes, the double-if actually saves performance.
-            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && Configuration.JSONConfig.FunctionsButtonX != 5)
+            if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && (Configuration.JSONConfig.FunctionsButtonX != 5 || Configuration.JSONConfig.TabMode))
             {
-                if (!Configuration.JSONConfig.LogoButtonEnabled || Configuration.JSONConfig.LogoButtonX != 5)
+                if (!Configuration.JSONConfig.LogoButtonEnabled || Configuration.JSONConfig.LogoButtonX != 5 || Configuration.JSONConfig.TabMode)
                 {
                     var rect = BackgroundObject.GetComponent<RectTransform>();
                     rect.sizeDelta = new Vector2(640, 1920);
