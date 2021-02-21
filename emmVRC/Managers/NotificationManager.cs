@@ -21,7 +21,6 @@ namespace emmVRC.Managers
         private static QMSingleButton NotificationButton3;
         private static GameObject NotificationIcon;
         //private static List<GameObject> VanillaIcons = new List<GameObject>();
-        private static Thread NotificationManagerThread;
         internal static List<Notification> Notifications = new List<Notification>();
         private static bool blink = false;
         public static void Initialize()
@@ -88,19 +87,14 @@ namespace emmVRC.Managers
                 NotificationMenu.getMainButton().getGameObject().transform.localScale = Vector3.zero;
 
             // Create the separate thread that will manage the notification system
-            NotificationManagerThread = new Thread(Loop)
-            {
-                Name = "emmVRC Notification Manager Thread",
-                IsBackground = true
-            };
-            NotificationManagerThread.Start();
-            
+            Loop().NoAwait("emmVRC Notification Manager Thread");
         }
-        private static void Loop()
+        private static async Task Loop()
         {
             while (Enabled)
             {
-                Thread.Sleep(1000);
+                await Task.Delay(1_000);
+                await emmVRC.AwaitUpdate.Yield();
                 if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
                 {
                     try

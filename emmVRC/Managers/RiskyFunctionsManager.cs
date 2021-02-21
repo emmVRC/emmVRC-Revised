@@ -134,6 +134,8 @@ namespace emmVRC.Managers
                 }
                 finally
                 {
+                    await emmVRC.AwaitUpdate.Yield();
+                    
                     // If the temp flag isn't set, perform the tag check
                     if (!temp)
                     {
