@@ -123,12 +123,21 @@ namespace emmVRC.Managers
                             NotificationMenu.getMainButton().setActive(true);
                             NotificationMenu.getMainButton().setButtonText((blink ? "<color=#FF69B4>" + Notifications.Count + "</color>" : "" + Notifications.Count) + "\nemmVRC\nNotifications");
                             NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!" + (Notifications[0].Timeout != -1 ? " This notification will expire in " + Notifications[0].Timeout + " seconds." : ""));
+                            if (Configuration.JSONConfig.TabMode && Hacks.TabMenu.badge != null)
+                            {
+                                Hacks.TabMenu.badge.SetActive(true);
+                                Hacks.TabMenu.badge.GetComponentInChildren<Text>().text = Notifications.Count + " NEW";
+                            }
                         }
                         else
                         {
                             NotificationIcon.SetActive(false);
                             NotificationMenu.getMainButton().setActive(false);
                             notificationActiveTimer = 0;
+                            if (Configuration.JSONConfig.TabMode && Hacks.TabMenu.badge != null)
+                            {
+                                Hacks.TabMenu.badge.SetActive(false);
+                            }
                         }
                         if (Notifications.Count > 0 && Notifications[0].Timeout != -1)
                         {

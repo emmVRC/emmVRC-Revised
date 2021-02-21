@@ -21,6 +21,7 @@ namespace emmVRC.Hacks
 
         public static GameObject menuTitle;
         public static GameObject menuSubTitle;
+        public static GameObject badge;
         public static IEnumerator Initialize()
         {
             while (Resources.onlineSprite == null || Resources.TabIcon == null || MonoBehaviourPublicObCoGaCoObCoObCoUnique.prop_MonoBehaviourPublicObCoGaCoObCoObCoUnique_0 == null || MonoBehaviourPublicObCoGaCoObCoObCoUnique.prop_MonoBehaviourPublicObCoGaCoObCoObCoUnique_0.field_Public_ArrayOf_GameObject_0 == null) yield return null;
@@ -91,7 +92,7 @@ namespace emmVRC.Hacks
 
             if (!Configuration.JSONConfig.TabMode)
                 newTab.transform.localScale = Vector3.zero;
-            GameObject.Destroy(newTab.transform.Find("Badge"));
+            badge = newTab.transform.Find("Badge").gameObject;
             while (newTab.GetComponent<MonoBehaviourPublicGaTeSiSiUnique>() == null)
                 yield return new WaitForSeconds(1f);
             GameObject.Destroy(newTab.GetComponent<MonoBehaviourPublicGaTeSiSiUnique>());
