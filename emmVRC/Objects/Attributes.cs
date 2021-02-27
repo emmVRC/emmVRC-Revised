@@ -8,23 +8,22 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.7.2";
+        public static string Version = "2.7.4";
         public static int LastTestedBuildNumber = 1046;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "02/20/2021";
+        public static string DateUpdated = "02/27/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "• emmVRC now has an optional tab menu integration!\n" +
-            "This replaces the Quick Menu buttons when enabled.\n" +
-            "Special thanks to Slaynash for helping me with this!\n" +
-            "• Color changing now affects the tabs on the Quick\n" +
-            "menu.\n" +
-            "• The emmVRC Avatar Favorites will now show Quest/PC\n" +
-            "compatibility where it is available.\n";
+            "• Added a new Favorite Emojis menu to the Action Menu!\n" +
+            "• emmVRC should now be fully compatible with Oculus\n" +
+            "once again, with the exception of Emoji Favorites\n" +
+            "for now\n" +
+            "• emmVRC now properly supports \"ReadyPlayerMe\"\n" +
+            "avatars";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.2.7.3";
         public static string TargetemmVRCLoaderVersion = "1.0.0";

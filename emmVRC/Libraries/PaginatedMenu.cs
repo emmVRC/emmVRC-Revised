@@ -81,6 +81,7 @@ namespace emmVRC.Libraries
         private QMSingleButton previousPageButton;
         private QMSingleButton pageCount;
         private QMSingleButton nextPageButton;
+        private QMSingleButton templateButton;
 
         private List<QMSingleButton> items = new List<QMSingleButton>();
         private List<QMToggleButton> toggleItems = new List<QMToggleButton>();
@@ -126,6 +127,8 @@ namespace emmVRC.Libraries
                     toggleItems.Add(new QMToggleButton(menuBase, j + 1, i, "", null, "", null, "", buttonColor));
                 }
             }
+            templateButton = new QMSingleButton(menuBase, 1923, 1023, "", null, "");
+            templateButton.setActive(false);
         }
 
         public PaginatedMenu(QMNestedButton menuButton, int x, int y, string menuName, string menuTooltip, Color? buttonColor) : this(menuButton.getMenuName(), x, y, menuName, menuTooltip, buttonColor) { }
@@ -171,6 +174,24 @@ namespace emmVRC.Libraries
                     if (itemsToAdd[i].type == PageItems.Button)
                     {
                         items[i].setButtonText(itemsToAdd[i].Name);
+                        if (itemsToAdd[i].buttonSprite != null)
+                        {
+                            items[i].getGameObject().GetComponent<Image>().sprite = itemsToAdd[i].buttonSprite;
+                            items[i].getGameObject().GetComponent<Button>().colors = new ColorBlock
+                            {
+                                normalColor = new Color(1f, 1f, 1f, 1f),
+                                disabledColor = new Color(0.75f, 0.75f, 0.75f, 1f),
+                                highlightedColor = new Color(0.975f, 0.975f, 0.975f, 1f),
+                                pressedColor = new Color(0.75f, 0.75f, 0.75f, 1f),
+                                colorMultiplier = 1f,
+                                fadeDuration = 0.1f
+                            };
+                        }
+                        else
+                        {
+                            items[i].getGameObject().GetComponent<Image>().sprite = templateButton.getGameObject().GetComponent<Image>().sprite;
+                            //items[i].getGameObject().GetComponent<Button>().colors = templateButton.getGameObject().GetComponent<Button>().colors;
+                        }
                         items[i].setAction(itemsToAdd[i].Action);
                         items[i].setToolTip(itemsToAdd[i].Tooltip);
                         items[i].setActive(itemsToAdd[i].Active);

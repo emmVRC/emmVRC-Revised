@@ -153,19 +153,19 @@ namespace emmVRC.Hacks
                 try
                 {
                     emmVRCLoader.Logger.LogDebug("Setting up skybox coloring...");                  
-                    Resources.blankGradient = new Texture2D(16, 16);
-                    UnityEngine.ImageConversion.LoadImage(Resources.blankGradient, Convert.FromBase64String(B64Textures.Gradient), false);
+                    //Resources.blankGradient = new Texture2D(16, 16);
+                    //UnityEngine.ImageConversion.LoadImage(Resources.blankGradient, Convert.FromBase64String(B64Textures.Gradient), false);
                     GameObject quickMenu = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent();
                     loadingBackground = quickMenu.transform.Find("Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked").gameObject;
-                    loadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", ReplaceCubemap.BuildCubemap(Resources.blankGradient));
-                    loadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
-                    loadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", ReplaceCubemap.BuildCubemap(Resources.blankGradient));
+                    loadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", Resources.blankGradient);
+                    loadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2f, color.g / 2f, color.b / 2f, color.a));
+                    loadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", Resources.blankGradient);
                     setupSkybox = true;
 
                     initialLoadingBackground = GameObject.Find("LoadingBackground_TealGradient_Music/SkyCube_Baked");
-                    initialLoadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", ReplaceCubemap.BuildCubemap(Resources.blankGradient));
-                    initialLoadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
-                    initialLoadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", ReplaceCubemap.BuildCubemap(Resources.blankGradient));
+                    initialLoadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", Resources.blankGradient);
+                    initialLoadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2f, color.g / 2f, color.b / 2f, color.a));
+                    initialLoadingBackground.GetComponent<MeshRenderer>().material.SetTexture("_Tex", Resources.blankGradient);
                 }
                 catch (Exception ex)
                 {
@@ -175,7 +175,7 @@ namespace emmVRC.Hacks
             if (setupSkybox && loadingBackground != null && !ModCompatibility.BetterLoadingScreen)
             {
                 emmVRCLoader.Logger.LogDebug("Coloring skybox...");
-                loadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2.5f, color.g / 2.5f, color.b / 2.5f, color.a));
+                loadingBackground.GetComponent<MeshRenderer>().material.SetColor("_Tint", new Color(color.r / 2f, color.g / 2f, color.b / 2f, color.a));
             }
             ColorBlock buttonTheme = new ColorBlock()
             {

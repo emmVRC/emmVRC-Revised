@@ -36,6 +36,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
     <Compile Include="Hacks\ActionMenuTweaks.cs" />
+    <Compile Include="Hacks\AlarmClock.cs" />
     <Compile Include="Hacks\AvatarMenu.cs" />
     <Compile Include="Hacks\AvatarPropertySaving.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />
@@ -43,6 +44,7 @@
     <Compile Include="Hacks\CustomMainMenuPage.cs" />
     <Compile Include="Hacks\CustomMenuMusic.cs" />
     <Compile Include="Hacks\CustomWorldObjects.cs" />
+    <Compile Include="Hacks\EmojiFavourites.cs" />
     <Compile Include="Hacks\EmoteMenuReborn.cs" />
     <Compile Include="Hacks\ESP.cs" />
     <Compile Include="Hacks\FBTSaving.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Libraries\ButtonConfiguration.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
+    <Compile Include="Libraries\CustomTrigger.cs" />
     <Compile Include="Libraries\emmVRC_Trigger.cs" />
     <Compile Include="Libraries\EULA.cs" />
     <Compile Include="Libraries\Extensions.cs" />

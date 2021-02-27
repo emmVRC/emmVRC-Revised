@@ -15,7 +15,9 @@ namespace emmVRC.Menus
     public class ActionMenuFunctions
     {
         public static CustomActionMenu.Page functionsMenu;
+        public static CustomActionMenu.Page favouriteEmojisMenu;
         public static CustomActionMenu.Page riskyFunctionsMenu;
+        public static List<CustomActionMenu.Button> favouriteEmojiButtons;
         public static CustomActionMenu.Button flightButton;
         public static CustomActionMenu.Button noclipButton;
         public static CustomActionMenu.Button speedButton;
@@ -23,7 +25,10 @@ namespace emmVRC.Menus
         public static CustomActionMenu.Page avatarParametersMenu;
         public static CustomActionMenu.Button saveAvatarParameters;
         public static CustomActionMenu.Button clearAvatarParameters;
-
+        private static EmojiMenu emojiMenu;
+        private static bool playingEmoji = false;
+        private static int currentEmojiPlaying = -1;
+        
         //private static bool justBecameActive = true;
         public static IEnumerator Initialize()
         {
@@ -31,7 +36,26 @@ namespace emmVRC.Menus
                 yield return new WaitForEndOfFrame();
             functionsMenu = new CustomActionMenu.Page(CustomActionMenu.BaseMenu.MainMenu, "emmVRC\nFunctions", Resources.onlineSprite.texture);
             riskyFunctionsMenu = new CustomActionMenu.Page(functionsMenu, "Risky\nFunctions", Resources.flyTexture);
-            flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () => {
+            if (!Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Almost final crusty Oculus check. This can go bye-bye once EmojiGenerator is in deob
+            {
+                favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Resources.rpSprite.texture);
+                favouriteEmojiButtons = new List<CustomActionMenu.Button>();
+                for (int i = 0; i < 8; i++)
+                {
+                    int currentEmojiButtonOption = i;
+                    favouriteEmojiButtons.Add(new CustomActionMenu.Button(favouriteEmojisMenu, "", () =>
+                    {
+                        emmVRCLoader.Logger.LogDebug("Trying to spawn Emoji " + Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
+                        emojiMenu.TriggerEmoji(Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
+                        playingEmoji = true;
+                        currentEmojiPlaying = Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption];
+                        MelonLoader.MelonCoroutines.Start(EmojiTimeout());
+                    }));
+                };
+            }
+
+            flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () =>
+            {
                 if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                     PlayerTweaksMenu.FlightToggle.setToggleState(!Flight.FlightEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
@@ -69,6 +93,12 @@ namespace emmVRC.Menus
             while (true)
             {
                 yield return new WaitForEndOfFrame();
+                if (emojiMenu == null)
+                {
+                    if (QuickMenu.prop_QuickMenu_0.transform.Find("EmojiMenu").GetComponent<EmojiMenu>() == null)
+                        yield return new WaitForSeconds(1f);
+                    emojiMenu = QuickMenu.prop_QuickMenu_0.transform.Find("EmojiMenu").GetComponent<EmojiMenu>();
+                }
                 if (flightButton.currentPedalOption != null)
                 {
                     if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
@@ -94,7 +124,32 @@ namespace emmVRC.Menus
                         espButton.SetEnabled(false);
                     }
                 }
+                if (!Environment.CurrentDirectory.Contains("vrchat-vrchat"))// Final crusty Oculus check. This can go bye-bye when EmojiGenerator is in deob
+                {
+                    if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Length != 0) 
+                    {
+                        for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                            favouriteEmojiButtons[i].SetIcon(EmojiFavourites.AvailableEmojis[Configuration.JSONConfig.FavouritedEmojis[i]].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>());
+                        for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                            favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetIcon(null);
+                    }
+                    if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
+                    {
+                        for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                            if (favouriteEmojiButtons[i].currentPedalOption != null)
+                                favouriteEmojiButtons[i].SetEnabled(!playingEmoji);
+                        for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                            if (favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].currentPedalOption != null)
+                                favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetEnabled(false);
+                    }
+                }
             }
+        }
+        private static IEnumerator EmojiTimeout()
+        {
+            yield return new WaitForSeconds(2f);
+            playingEmoji = false;
+            currentEmojiPlaying = -1;
         }
     }
 }

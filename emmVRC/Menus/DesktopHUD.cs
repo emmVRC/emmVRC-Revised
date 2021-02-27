@@ -32,7 +32,7 @@ namespace emmVRC.Menus
                             if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
                                 if (tempCount != 22)
                                 {
-                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 +" ms\n";
+                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 +" ms";
                                     tempCount++;
                                 }
                         }

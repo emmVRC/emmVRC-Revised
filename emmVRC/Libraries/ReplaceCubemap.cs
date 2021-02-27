@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using UnityEngine;
 
 namespace emmVRC.Libraries
@@ -114,4 +114,4 @@ namespace emmVRC.Libraries
             return source.GetPixel(texelX, source.height - texelY - 1);
         }
     }
-}
+}*/

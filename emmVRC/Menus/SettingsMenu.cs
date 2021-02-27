@@ -32,6 +32,7 @@ namespace emmVRC.Menus
         private static PageItem UIExpansionKitIntegration;
         private static PageItem TrackingSaving;
         private static PageItem ActionMenuIntegration;
+        private static PageItem EmojiFavouriteMenu;
 
         // Page 2 - Visual Features
         private static PageItem RiskyFunctions;
@@ -302,6 +303,9 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.ActionMenuIntegration = false;
                 Configuration.SaveConfig();
             }, "TOGGLE: Integrates an emmVRC menu into the Action (Radial) Menu, for easy access");
+            EmojiFavouriteMenu = new PageItem("Emoji\nFavorites", () => {
+                QuickMenuUtils.ShowQuickmenuPage(Hacks.EmojiFavourites.baseMenu.getMenuName());
+            }, "Configure your Emoji favorites, accessible from the Action Menu");
 
             baseMenu.pageItems.Add(RiskyFunctions);
             baseMenu.pageItems.Add(GlobalDynamicBones);
@@ -317,7 +321,10 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(UIExpansionKitIntegration);
             else
                 baseMenu.pageItems.Add(PageItem.Space);
-            baseMenu.pageItems.Add(PageItem.Space);
+            if (!Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Yet another crusty Oculus check. This one can go bye-bye when EmojiGenerator is in deob
+                baseMenu.pageItems.Add(EmojiFavouriteMenu);
+            else
+                baseMenu.pageItems.Add(PageItem.Space);
 
             InfoBar = new PageItem("Info Bar", () =>
             {

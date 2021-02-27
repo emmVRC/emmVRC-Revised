@@ -63,6 +63,12 @@ namespace emmVRC.Objects
         public int PlayerActionsButtonY = 3;
         public bool StealthMode = false;
 
+        public System.Collections.Generic.List<int> FavouritedEmojis = new System.Collections.Generic.List<int>();
+        public bool PersistentAlarm = false;
+        public uint AlarmTime = 0;
+        public bool PersistentInstanceAlarm = false;
+        public uint InstanceAlarmTime = 0;
+
         // Hack options
 
         // Sub section: Shortcut Menu

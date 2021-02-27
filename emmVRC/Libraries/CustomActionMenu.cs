@@ -77,13 +77,14 @@ namespace emmVRC.Libraries
         {
             public List<Button> buttons = new List<Button>();
             public Page previousPage;
+            public Button menuEntryButton;
             public Page(BaseMenu baseMenu, string buttonText, Texture2D buttonIcon = null)
             {
                 if (!Initialized)
                     Initialize();
                 if (baseMenu == BaseMenu.MainMenu)
                 {
-                    new Button(BaseMenu.MainMenu, buttonText, delegate { OpenMenu(null); }, buttonIcon);
+                    menuEntryButton = new Button(BaseMenu.MainMenu, buttonText, delegate { OpenMenu(null); }, buttonIcon);
                 }
             }
             public Page(Page basePage, string buttonText, Texture2D buttonIcon = null)
@@ -91,7 +92,7 @@ namespace emmVRC.Libraries
                 if (!Initialized)
                     Initialize();
                 previousPage = basePage;
-                new Button(previousPage, buttonText, delegate { OpenMenu(basePage); }, buttonIcon);
+                menuEntryButton = new Button(previousPage, buttonText, delegate { OpenMenu(basePage); }, buttonIcon);
             }
             
             public void OpenMenu(Page currentPage)

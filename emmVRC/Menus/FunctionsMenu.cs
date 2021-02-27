@@ -24,6 +24,7 @@ namespace emmVRC.Menus
         private static PageItem programsButton;
         private static PageItem playerHistoryButton;
         private static PageItem settingsButton;
+        private static PageItem alarmClockButton;
         private static PageItem creditsButton;
         private static PageItem changelogButton;
         private static PageItem debugMenuButton;
@@ -72,6 +73,11 @@ namespace emmVRC.Menus
                 SettingsMenu.LoadMenu();
             }, "Access the Settings for emmVRC, including Risky Functions, color changes, etc.");
             baseMenu.pageItems.Add(settingsButton);
+            alarmClockButton = new PageItem("Alarm\nClocks", () =>
+            {
+                //QuickMenuUtils.ShowQuickmenuPage(Hacks.AlarmClock.baseMenu.getMenuName());
+            }, "Configure emmVRC's alarm clocks");
+            //baseMenu.pageItems.Add(alarmClockButton);
             for (int i = 0; i <= 4; i++)
             {
                 baseMenu.pageItems.Add(PageItem.Space);

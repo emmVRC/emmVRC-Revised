@@ -305,8 +305,11 @@ namespace emmVRC
                 }
 
                 // Initialize the FBT saving system
-                emmVRCLoader.Logger.LogDebug("Initializing FBT saving module...");
-                Hacks.FBTSaving.Initialize();
+                if (!Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Really awful and crude Oculus check
+                {
+                    emmVRCLoader.Logger.LogDebug("Initializing FBT saving module...");
+                    Hacks.FBTSaving.Initialize();
+                }
 
                 // Initialize the Flight and Noclip module for Risky Functions
                 emmVRCLoader.Logger.LogDebug("Initializing Flight and Noclip modules...");
@@ -446,6 +449,13 @@ namespace emmVRC
                     emmVRCLoader.Logger.LogDebug("Initializing Tab Menu...");
                     MelonLoader.MelonCoroutines.Start(Hacks.TabMenu.Initialize());
                 }
+                if (!Configuration.JSONConfig.StealthMode && !Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Another really crusty Oculus check. This one can go bye-bye once EmojiGenerator is in deob maps
+                {
+                    emmVRCLoader.Logger.LogDebug("Initializing Emoji Favourites system...");
+                    MelonLoader.MelonCoroutines.Start(Hacks.EmojiFavourites.Initialize());
+                }
+                //emmVRCLoader.Logger.LogDebug("Initializing alarm clock module...");
+                //MelonLoader.MelonCoroutines.Start(Hacks.AlarmClock.Initialize());
 
                 // Initialize hooking, for things such as Global Dynamic Bones
                 emmVRCLoader.Logger.LogDebug("Initializing hooks...");
@@ -481,6 +491,27 @@ namespace emmVRC
                 }
                 Initialized = true;
 
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        try
+                        {
+                            GameObject newEmoji = GameObject.Instantiate(VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0.First(), VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0.First().transform.parent);
+                            Material newMaterial = newEmoji.GetComponent<ParticleSystemRenderer>().material = new Material(newEmoji.GetComponent<ParticleSystemRenderer>().material);
+                            newMaterial.mainTexture = Resources.onlineSprite.texture;
+                            GameObject[] emojiObjectsList = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0;
+                            emojiObjectsList.Add(newEmoji);
+                            VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0 = emojiObjectsList;
+
+
+                        } catch (Exception ex)
+                        {
+                            emmVRCLoader.Logger.LogError("Instantiation failed: " + ex.ToString());
+                        }
+                    }
+                });
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();
             }
@@ -508,7 +539,7 @@ namespace emmVRC
             // Ensure that everything through here is after the game has loaded
             // Reset the instance clock when you switch instances
             MelonLoader.MelonCoroutines.Start(InstanceHistoryMenu.EnteredWorld());
-            if (Configuration.JSONConfig.ClockEnabled && Hacks.InfoBarClock.clockText != null && !Configuration.JSONConfig.StealthMode)
+            if (Hacks.InfoBarClock.clockText != null && !Configuration.JSONConfig.StealthMode)
                 Hacks.InfoBarClock.instanceTime = 0;
             Managers.RiskyFunctionsManager.CheckThisWrld().NoAwait(nameof(RiskyFunctionsManager.CheckThisWrld));
             if (!Configuration.JSONConfig.StealthMode)

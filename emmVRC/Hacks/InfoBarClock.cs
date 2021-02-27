@@ -79,6 +79,9 @@ namespace emmVRC.Hacks
                 // Wait one realtime second to update the clock
                 yield return new WaitForSecondsRealtime(1f);
 
+                // Add one second to the instance time
+                instanceTime += 1;
+
                 if (Configuration.JSONConfig.ClockEnabled)
                 {
                     // Enable the clock text, if it is disabled
@@ -103,8 +106,7 @@ namespace emmVRC.Hacks
                         // Fill out the instance timer string from the timespan
                         instanceTimeString = string.Format("{0:D2}:{1:D2}:{2:D2}", instanceTimeSpan.Hours, instanceTimeSpan.Minutes, instanceTimeSpan.Seconds);
 
-                        // Add one second to the instance time
-                        instanceTime += 1;
+                        
                     }
 
                     // Apply the current time strings to the clock

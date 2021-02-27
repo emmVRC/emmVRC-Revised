@@ -168,7 +168,7 @@ namespace emmVRC.Hacks
                     API.Fetch<ApiAvatar>(selectedAvatar.id, new System.Action<ApiContainer>((ApiContainer cont) =>
                     {
                         ApiAvatar fetchedAvatar = cont.Model.Cast<ApiAvatar>();
-                        if (fetchedAvatar.releaseStatus == "private" && fetchedAvatar.authorId != APIUser.CurrentUser.id && fetchedAvatar.authorName != "tafi_licensed")
+                        if (fetchedAvatar.releaseStatus == "private" && fetchedAvatar.authorId != APIUser.CurrentUser.id && fetchedAvatar.authorName != "tafi_licensed" && fetchedAvatar.authorName != "Wolf of Estland") // Why does Wolf3D use just like a standard username? And is a new user? The hell?
                             VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         else
                             baseChooseEvent.Invoke();
@@ -313,19 +313,6 @@ namespace emmVRC.Hacks
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                 throw;
             }
-        }
-        public static void AddEmptyFavorite()
-        {
-            ApiAvatar avtr = new ApiAvatar
-            {
-                releaseStatus = "unavailable",
-                name = "Avatar not available",
-                id = "null",
-                assetUrl = "",
-                thumbnailImageUrl = "http://img.thetrueyoshifan.com/AvatarUnavailable.png",
-            };
-            LoadedAvatars.Insert(0, avtr);
-            MelonLoader.MelonCoroutines.Start(RefreshMenu(0.125f));
         }
         public static async Task PopulateList()
         {

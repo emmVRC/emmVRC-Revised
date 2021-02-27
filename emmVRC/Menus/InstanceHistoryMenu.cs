@@ -44,21 +44,8 @@ namespace emmVRC.Menus
                 try
                 {
                     previousInstances = TinyJSON.Decoder.Decode(input).Make<List<SerializedWorld>>();
-                    SerializedWorld removeable = null;
-                    foreach (SerializedWorld pastInstance in previousInstances)
-                    {
-                        if (UnixTime.ToDateTime(pastInstance.loggedDateTime) < DateTime.Now.AddDays(-1))
-                        {
-                            removeable = pastInstance;
-                        }
-                    }
-
-                    if (removeable != null)
-                    {
-                        previousInstances.Remove(removeable);
-                        SaveInstances();
-                    }
-
+                    previousInstances.RemoveAll(a => UnixTime.ToDateTime(a.loggedDateTime) < DateTime.Now.AddDays(-3));
+                    SaveInstances();
                 }
                 catch (Exception ex)
                 {
