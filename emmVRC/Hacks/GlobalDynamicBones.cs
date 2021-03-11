@@ -49,7 +49,7 @@ namespace emmVRC.Hacks
                     {
                         emmVRCLoader.Logger.LogDebug("Hand colliders are " + (aperms.HandColliders ? "enabled" : "disabled") + ", foot colliders are " + (aperms.FeetColliders ? "enabled" : "disabled"));
                         // If hand colliders specifically is on, fetch all the colliders for each hand and add them to cache
-                        if (aperms.HandColliders)
+                        if (aperms.HandColliders && avatarObject.GetComponentInChildren<Animator>() != null)
                         {
                             if (avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftHand) != null && avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand) != null)
                             {
@@ -68,7 +68,7 @@ namespace emmVRC.Hacks
                             }
                         }
                         // If feet folliders specifically is on, fetch all the colliders for each foot and add them to cache
-                        if (aperms.FeetColliders)
+                        if (aperms.FeetColliders && avatarObject.GetComponentInChildren<Animator>() != null)
                         {
                             if (avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftFoot) != null && avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightFoot) != null)
                             {

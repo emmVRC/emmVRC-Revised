@@ -490,28 +490,7 @@ namespace emmVRC
                     MelonLoader.MelonCoroutines.Start(ShortcutMenuButtons.Process());
                 }
                 Initialized = true;
-
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () =>
-                    {
-                        try
-                        {
-                            GameObject newEmoji = GameObject.Instantiate(VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0.First(), VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0.First().transform.parent);
-                            Material newMaterial = newEmoji.GetComponent<ParticleSystemRenderer>().material = new Material(newEmoji.GetComponent<ParticleSystemRenderer>().material);
-                            newMaterial.mainTexture = Resources.onlineSprite.texture;
-                            GameObject[] emojiObjectsList = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0;
-                            emojiObjectsList.Add(newEmoji);
-                            VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0 = emojiObjectsList;
-
-
-                        } catch (Exception ex)
-                        {
-                            emmVRCLoader.Logger.LogError("Instantiation failed: " + ex.ToString());
-                        }
-                    }
-                });
+                
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();
             }

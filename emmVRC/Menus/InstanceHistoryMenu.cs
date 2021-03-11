@@ -81,7 +81,7 @@ namespace emmVRC.Menus
                 {
                     WorldID = RoomManager.field_Internal_Static_ApiWorld_0.id,
                     WorldTags = RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags,
-                    WorldOwner = RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator(),
+                    WorldOwner = (RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator() == null ? "" : RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator()),
                     WorldType = RoomManager.field_Internal_Static_ApiWorldInstance_0.InstanceType.ToString(),
                     WorldName = RoomManager.field_Internal_Static_ApiWorld_0.name,
                     WorldImageURL = RoomManager.field_Internal_Static_ApiWorld_0.thumbnailImageUrl

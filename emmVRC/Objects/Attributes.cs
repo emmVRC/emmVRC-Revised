@@ -8,11 +8,11 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.7.4";
+        public static string Version = "2.7.7";
         public static int LastTestedBuildNumber = 1046;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "02/27/2021";
+        public static string DateUpdated = "03/10/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."

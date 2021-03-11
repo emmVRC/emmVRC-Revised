@@ -13,7 +13,7 @@ namespace emmVRC.Libraries
             if (baseID.Contains('~'))
                 return baseID.Substring(0, baseID.IndexOf('~'));
             else
-                return null;
+                return baseID;
 
         }
     }

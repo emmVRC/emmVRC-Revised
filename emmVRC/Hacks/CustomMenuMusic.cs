@@ -42,7 +42,7 @@ namespace emmVRC.Hacks
                         loadingMusic1.GetComponent<AudioSource>().Stop();
                     if (loadingMusic2 != null)
                         loadingMusic2.GetComponent<AudioSource>().Stop();
-                    WWW CustomLoadingMusicWWW = new WWW(string.Format("file://{0}", availableCustomMenuMusics[randomIndex]).Replace(@"\", "/"));
+                    WWW CustomLoadingMusicWWW = new WWW(string.Format("file://{0}", availableCustomMenuMusics[randomIndex]).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
                     AudioClip customLoadingMusic = CustomLoadingMusicWWW.GetAudioClip();
                     while (!CustomLoadingMusicWWW.isDone || customLoadingMusic.loadState == AudioDataLoadState.Loading) ;
 

@@ -234,5 +234,6 @@ namespace emmVRC.Libraries
         {
             return mngr.field_Public_GameObject_0;
         }
+
     }
 }

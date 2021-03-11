@@ -93,14 +93,14 @@ namespace emmVRC.Libraries
             {
                 try
                 {
-                    foreach (System.Reflection.MethodInfo inf in Type.GetType("VRCTrackingSteam").GetMethods())
+                    foreach (System.Reflection.MethodInfo inf in System.Reflection.Assembly.GetAssembly(typeof(QuickMenuContextualDisplay)).GetType("VRCTrackingSteam", true, true).GetMethods())
                     {
                         if (inf.GetParameters().Length == 1 && inf.GetParameters().First().ParameterType == typeof(string) && inf.ReturnType == typeof(bool) && inf.GetRuntimeBaseDefinition() == inf)
                         {
                             instanceHarmony.Patch(inf, new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IsCalibratedForAvatar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                         }
                     }
-                    foreach (System.Reflection.MethodInfo inf in Type.GetType("VRCTrackingSteam").GetMethods())
+                    foreach (System.Reflection.MethodInfo inf in System.Reflection.Assembly.GetAssembly(typeof(QuickMenuContextualDisplay)).GetType("VRCTrackingSteam", true, true).GetMethods())
                     {
                         if (inf.GetParameters().Length == 3 && inf.GetParameters().First().ParameterType == typeof(Animator) && inf.ReturnType == typeof(void) && inf.GetRuntimeBaseDefinition() == inf)
                         {

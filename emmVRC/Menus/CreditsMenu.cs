@@ -34,7 +34,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>Slaynash</color>", null, "Original developer of VRCModLoader, the entire reason why emmVRC exists today"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>DubyaDude</color>", null, "Developer of the Ruby Button API"));
             baseMenu.pageItems.Add(new PageItem("<color=#88d184>DltDat</color>", null, "Developer of the hooking method used for various functions across emmVRC"));
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
                 baseMenu.pageItems.Add(PageItem.Space);
             noticeMenu = new TextDisplayMenu(baseMenu.menuBase, 10293, 10221, "", "", null, "Notice to you",
             //  "This is an pre-release build! Do not distribute to others\n" +

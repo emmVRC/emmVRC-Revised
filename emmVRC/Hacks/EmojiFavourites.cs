@@ -27,39 +27,48 @@ namespace emmVRC.Hacks
             CurrentEmojiMenu.menuEntryButton.DestroyMe();
             availableEmojiMenuButton = new QMSingleButton(baseMenu, 1, 0, "Add\nEmoji", OpenAvailableEmojiMenu, "Add an Emoji to your favorites");
             currentEmojiMenuButton = new QMSingleButton(baseMenu, 2, 0, "Remove\nEmoji", OpenDeleteFavouriteEmojiMenu, "Delete an Emoji from your favorites");
-            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0 == null)
+            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStVoInStInVoStUnique_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStVoInStInVoStUnique_0.field_Public_ArrayOf_GameObject_0 == null)
                 yield return new WaitForSeconds(1f);
-            AvailableEmojis = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInVoStInVoStUnique_0.field_Public_ArrayOf_GameObject_0;
+            AvailableEmojis = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStVoInStInVoStUnique_0.field_Public_ArrayOf_GameObject_0;
 
          }
         public static void OpenAvailableEmojiMenu()
         {
-            AvailableEmojiMenu.pageItems.Clear();
-
-            for (int i=0; i < AvailableEmojis.Length; i++)
+            if (Configuration.JSONConfig.FavouritedEmojis.Count >= 8)
             {
-                if (!Configuration.JSONConfig.FavouritedEmojis.Contains(i))
-                {
-                    int emojiValue = i;
-                    PageItem itm = new PageItem("", () => {
-                        Configuration.JSONConfig.FavouritedEmojis.Add(emojiValue);
-                        Configuration.SaveConfig();
-                        QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
-                    }, AvailableEmojis[i].name.Replace("Emoji", "").Replace("_", " "));
-                    Texture2D text = AvailableEmojis[i].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>();
-                    itm.buttonSprite = Sprite.CreateSprite(text, new Rect(0.0f, 0.0f, text.width, text.height), new Vector2(0.5f, 0.5f), 25.0f, 0, 0, new Vector4(), false);
-                    AvailableEmojiMenu.pageItems.Add(itm);
-                    if (i == 30)
-                        for (int j = 0; j < 5; j++)
-                            AvailableEmojiMenu.pageItems.Add(PageItem.Space);
-                    if (i == 38)
-                        AvailableEmojiMenu.pageItems.Add(PageItem.Space);
-                } else
-                {
-                    AvailableEmojiMenu.pageItems.Add(PageItem.Space);
-                }
+                VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("emmVRC", "You have reached the maximum amount of Emoji Favorites.", 0f);
             }
-            AvailableEmojiMenu.OpenMenu();
+            else
+            {
+                AvailableEmojiMenu.pageItems.Clear();
+
+                for (int i = 0; i < AvailableEmojis.Length; i++)
+                {
+                    if (!Configuration.JSONConfig.FavouritedEmojis.Contains(i))
+                    {
+                        int emojiValue = i;
+                        PageItem itm = new PageItem("", () =>
+                        {
+                            Configuration.JSONConfig.FavouritedEmojis.Add(emojiValue);
+                            Configuration.SaveConfig();
+                            QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
+                        }, AvailableEmojis[i].name.Replace("Emoji", "").Replace("_", " "));
+                        Texture2D text = AvailableEmojis[i].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>();
+                        itm.buttonSprite = Sprite.CreateSprite(text, new Rect(0.0f, 0.0f, text.width, text.height), new Vector2(0.5f, 0.5f), 25.0f, 0, 0, new Vector4(), false);
+                        AvailableEmojiMenu.pageItems.Add(itm);
+                        if (i == 30)
+                            for (int j = 0; j < 5; j++)
+                                AvailableEmojiMenu.pageItems.Add(PageItem.Space);
+                        if (i == 38)
+                            AvailableEmojiMenu.pageItems.Add(PageItem.Space);
+                    }
+                    else
+                    {
+                        AvailableEmojiMenu.pageItems.Add(PageItem.Space);
+                    }
+                }
+                AvailableEmojiMenu.OpenMenu();
+            }
         }
         public static void OpenDeleteFavouriteEmojiMenu()
         {
