@@ -12,6 +12,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using emmVRC.Objects;
 using VRC.Core;
+//using TMPro;
+using VRC;
 
 #pragma warning disable 4014
 
@@ -753,6 +755,17 @@ namespace emmVRC.Menus
                         text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
+                /*Libraries.PlayerUtils.GetEachPlayer((Player ply) =>
+                {
+                    foreach (TextMeshProUGUI text in PlayerWrappers.GetNamePlateText(ply))
+                    {
+                        if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                        {
+                            text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
+                            text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
+                        }
+                    }
+                });*/ // I cannot get the error out of the way
             }, "TOGGLE: Enables local info spoofing, which can protect your identity in screenshots, recordings, and streams");
             //InfoSpooferNamePicker = new PageItem("")
             InfoHiding = new PageItem("Local\nInfo Hiding", () =>
