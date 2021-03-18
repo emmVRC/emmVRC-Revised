@@ -45,21 +45,25 @@ namespace emmVRC.Menus
                 if (!Configuration.JSONConfig.LogoButtonEnabled || Configuration.JSONConfig.LogoButtonX != 5 || Configuration.JSONConfig.TabMode)
                 {
                     var rect = BackgroundObject.GetComponent<RectTransform>();
-                    rect.sizeDelta = new Vector2(640, 1920);
+                    //rect.sizeDelta = new Vector2(640, 1920);
+                    rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
                     rect.anchoredPosition = new Vector2(1170, 280);
                 }
                 else
                 {
                     var rect = BackgroundObject.GetComponent<RectTransform>();
-                    rect.sizeDelta = new Vector2(640, 1920);
+                    //rect.sizeDelta = new Vector2(640, 1920);
+                    rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
                     rect.anchoredPosition = new Vector2(1590, 280);
                 }
             }
             else
             {
                 var rect = BackgroundObject.GetComponent<RectTransform>();
-                rect.sizeDelta = new Vector2(640, 1920);
-                rect.anchoredPosition = new Vector2(1590, 280);
+                //rect.sizeDelta = new Vector2(640, 1920);
+                rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
+                //rect.anchoredPosition = new Vector2(1590, 280);
+                rect.anchoredPosition = new Vector2(1720, 280); // With Player Framerate counter
             }
             BackgroundImage.sprite = Resources.HUD_Base;
 
@@ -70,7 +74,8 @@ namespace emmVRC.Menus
             TextObject.AddComponent<CanvasRenderer>();
             TextText = TextObject.AddComponent<Text>();
 
-            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(630, 1920);
+            //TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(630, 1920);
+            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(860, 1920); // With Player Framerate counter
             TextText.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
             TextText.fontSize = 40;
             TextText.text = "";

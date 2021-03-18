@@ -32,7 +32,7 @@ namespace emmVRC.Menus
                             if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
                                 if (tempCount != 22)
                                 {
-                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 +" ms\n";
+                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 + " ms - " + plr.GetVRCPlayer().GetFrames() + " fps\n"; // or GetFramesColored()
                                     tempCount++;
                                 }
                         }
@@ -62,6 +62,8 @@ namespace emmVRC.Menus
             }
             return positionstr + "\n\n" + worldinfo;
         }
+
+        // Note to Korty - This is not used (or at least it doesn't seem like it)
         public static GameObject[] InitializeHUD(Transform parent)
         {
             GameObject BackgroundObject = new GameObject("Background");
@@ -122,8 +124,10 @@ namespace emmVRC.Menus
             BackgroundObject.AddComponent<CanvasRenderer>();
 
             BackgroundImage = BackgroundObject.AddComponent<Image>();
-            BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
+            //BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
+            BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(325, 768); // With Player Framerate counter
             BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
+            BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-927f, 111f); // With Player Framerate counter
             BackgroundObject.transform.SetParent(CanvasObject.transform, false);
             BackgroundImage.sprite = Resources.HUD_Minimized;
             TextObject = new GameObject("Text");
@@ -134,7 +138,8 @@ namespace emmVRC.Menus
             TextText.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
             TextText.fontSize = 15;
             TextText.text = "";
-            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
+            //TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
+            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(310, 768); // With Player Framerate counter
 
             CanvasObject.SetActive(false);
 
