@@ -21,10 +21,12 @@ namespace emmVRC.Libraries
             {
                 if (Configuration.JSONConfig.AcceptedEULAVersion != Attributes.EULAVersion)
                 {
-                        File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt"), new string[] { EULAText });
-                        yield return new WaitForSeconds(!Environment.CurrentDirectory.Contains("vrchat-vrchat") ? 5f : 10f); // Yet another of yee old crusty Oculus checks.
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Configuration.JSONConfig.AcceptedEULAVersion == "0.0.0" ? "Please read the EULA for emmVRC.\nThis will open on your desktop." : "Please read the updated EULA\nfor emmVRC.", "Open EULA", () => { System.Diagnostics.Process.Start(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt")); }, "Agree", () => { Configuration.JSONConfig.AcceptedEULAVersion = Attributes.EULAVersion; Configuration.SaveConfig(); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
-                        EULADownloaded = true;
+                    File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt"), new string[] { EULAText });
+                    yield return new WaitForSeconds(!Environment.CurrentDirectory.Contains("vrchat-vrchat") ? 5f : 10f); // Yet another of yee old crusty Oculus checks.
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Configuration.JSONConfig.AcceptedEULAVersion == "0.0.0" ? "Please read the EULA for emmVRC.\nThis will open on your desktop." : "Please read the updated EULA\nfor emmVRC.",
+                        "Open EULA", () => { System.Diagnostics.Process.Start(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/eula.txt")); },
+                        "Agree", () => { Configuration.JSONConfig.AcceptedEULAVersion = Attributes.EULAVersion; Configuration.SaveConfig(); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    EULADownloaded = true;
                 }
                 else EULADownloaded = true;
             }
