@@ -20,6 +20,11 @@ namespace emmVRC.Menus
         public static QMToggleButton PortalBlockToggle;
         public static QMSingleButton DeletePortalsButton;
         public static QMToggleButton ChairBlockToggle;
+
+        public static QMToggleButton VideoPlayerToggle;
+        public static QMToggleButton VRCPickupToggle;
+        public static QMToggleButton PickupObjectToggle;
+
         public static void Initialize()
         {
             baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 192384, 129302, "World\nTweaks", "");
@@ -33,13 +38,55 @@ namespace emmVRC.Menus
             RevertMirrorsButton = new QMSingleButton(baseMenu, 2, 0, "Revert\nMirrors", () => { Hacks.MirrorTweaks.Revert(); }, "Reverts the mirrors in the world to their default reflections");
 
             OptimizePedestalsButton = new QMSingleButton(baseMenu, 1, 1, "Disable\nPedestals", () => { Hacks.PedestalTweaks.Disable(); }, "Disables all the pedestals in the world, for optimization");
+            //OptimizePedestalsButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
+            //OptimizePedestalsButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 96f);
             RevertPedestalsButton = new QMSingleButton(baseMenu, 2, 1, "Enable\nPedestals", () => { Hacks.PedestalTweaks.Revert(); }, "Reverts the pedestals in the world to their default visibility");
+            //RevertPedestalsButton = new QMSingleButton(baseMenu, 1, 1, "Enable\nPedestals", () => { Hacks.PedestalTweaks.Revert(); }, "Reverts the pedestals in the world to their default visibility");
+            //RevertPedestalsButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
+            //RevertPedestalsButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
+
 
             ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { new PortalInternal().Method_Private_Void_String_String_PDM_0(RoomManager.field_Internal_Static_ApiWorld_0.id, RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags); }, "Loads the current instance again");
             PortalBlockToggle = new QMToggleButton(baseMenu, 4, 0, "Portals On", () => { Configuration.JSONConfig.PortalBlockingEnable = false; Configuration.SaveConfig(); }, "Portals Off", () => { Configuration.JSONConfig.PortalBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables portals in the current world", null, null, false, true);
             PortalBlockToggle.setToggleState(!Configuration.JSONConfig.PortalBlockingEnable);
             ChairBlockToggle = new QMToggleButton(baseMenu, 4, 1, "Chairs On", () => { Configuration.JSONConfig.ChairBlockingEnable = false; Configuration.SaveConfig(); }, "Chairs Off", () => { Configuration.JSONConfig.ChairBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables chairs in the current world", null, null, false, true);
-            ChairBlockToggle.setToggleState(!Configuration.JSONConfig.ChairBlockingEnable);;
+            ChairBlockToggle.setToggleState(!Configuration.JSONConfig.ChairBlockingEnable);
+
+            #region Korty's Addons
+            VRCPickupToggle = new QMToggleButton(baseMenu, 1, 2, "VRC_Pickup", () =>
+            {
+                Hacks.ComponentToggle.pickupable = true;
+                Hacks.ComponentToggle.Toggle();
+
+            }, "Disabled", () =>
+            {
+                Hacks.ComponentToggle.pickupable = false;
+                Hacks.ComponentToggle.Toggle();
+            }, "TOGGLE: Keep Objects visible, but disable you being able to pick them up.");
+            VRCPickupToggle.setToggleState(true); // Each Game Start, value will be true - No Config was set
+
+            PickupObjectToggle = new QMToggleButton(baseMenu, 2, 2, "Show\nPickup Objects", () =>
+            {
+                Hacks.ComponentToggle.pickup_object = true;
+                Hacks.ComponentToggle.Toggle();
+            }, "Disabled", () =>
+            {
+                Hacks.ComponentToggle.pickup_object = false;
+                Hacks.ComponentToggle.Toggle();
+            }, "TOGGLE: Keep Objects visible, but disable you being able to pick them up.");
+            PickupObjectToggle.setToggleState(true); // Each Game Start, value will be true - No Config was set
+
+            VideoPlayerToggle = new QMToggleButton(baseMenu, 3, 2, "Show\nVideo Players", () =>
+            {
+                Hacks.ComponentToggle.videoplayers = true;
+                Hacks.ComponentToggle.Toggle();
+            }, "Disabled", () =>
+            {
+                Hacks.ComponentToggle.videoplayers = false;
+                Hacks.ComponentToggle.Toggle();
+            }, "TOGGLE: Video Players\n<color=red>Does not work in Udon Worlds</color>");
+            VideoPlayerToggle.setToggleState(true); // Each Game Start, value will be true - No Config was set
+            #endregion
         }
     }
 }
