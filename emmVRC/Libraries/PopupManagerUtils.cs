@@ -73,7 +73,7 @@ namespace emmVRC.Libraries
                 if (ourShowUiStandardPopup1Action != null) return ourShowUiStandardPopup1Action;
 
                 var targetMethod = typeof(VRCUiPopupManager).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                    .FirstOrDefault(it => it.GetParameters().Length == 3 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopup"));
+                    .FirstOrDefault(it => it.GetParameters().Length == 3 && !it.Name.Contains("PDM") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopup"));
 
                 ourShowUiStandardPopup1Action = (ShowUiStandardPopup1Action)Delegate.CreateDelegate(typeof(ShowUiStandardPopup1Action), VRCUiPopupManager.prop_VRCUiPopupManager_0, targetMethod);
 
@@ -93,7 +93,7 @@ namespace emmVRC.Libraries
                 if (ourShowUiStandardPopup2Action != null) return ourShowUiStandardPopup2Action;
 
                 var targetMethod = typeof(VRCUiPopupManager).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                    .FirstOrDefault(it => it.GetParameters().Length == 5 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopup"));
+                    .FirstOrDefault(it => it.GetParameters().Length == 5 && !it.Name.Contains("PDM") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopup"));
 
                 ourShowUiStandardPopup2Action = (ShowUiStandardPopup2Action)Delegate.CreateDelegate(typeof(ShowUiStandardPopup2Action), VRCUiPopupManager.prop_VRCUiPopupManager_0, targetMethod);
 
@@ -113,7 +113,7 @@ namespace emmVRC.Libraries
                 if (ourShowUiStandardPopup3Action != null) return ourShowUiStandardPopup3Action;
 
                 var targetMethod = typeof(VRCUiPopupManager).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                    .FirstOrDefault(it => it.GetParameters().Length == 7 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopup"));
+                    .FirstOrDefault(it => it.GetParameters().Length == 7 && !it.Name.Contains("PDM") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopup"));
 
                 ourShowUiStandardPopup3Action = (ShowUiStandardPopup3Action)Delegate.CreateDelegate(typeof(ShowUiStandardPopup3Action), VRCUiPopupManager.prop_VRCUiPopupManager_0, targetMethod);
 
@@ -133,7 +133,7 @@ namespace emmVRC.Libraries
                 if (ourShowUiStandardPopupV21Action != null) return ourShowUiStandardPopupV21Action;
 
                 var targetMethod = typeof(VRCUiPopupManager).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                    .FirstOrDefault(it => it.GetParameters().Length == 5 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2"));
+                    .FirstOrDefault(it => it.GetParameters().Length == 5 && !it.Name.Contains("PDM") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2"));
 
                 ourShowUiStandardPopupV21Action = (ShowUiStandardPopupV21Action)Delegate.CreateDelegate(typeof(ShowUiStandardPopupV21Action), VRCUiPopupManager.prop_VRCUiPopupManager_0, targetMethod);
 
@@ -153,7 +153,7 @@ namespace emmVRC.Libraries
                 if (ourShowUiStandardPopupV22Action != null) return ourShowUiStandardPopupV22Action;
 
                 var targetMethod = typeof(VRCUiPopupManager).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                    .FirstOrDefault(it => it.GetParameters().Length == 7 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2"));
+                    .FirstOrDefault(it => it.GetParameters().Length == 7 && !it.Name.Contains("PDM") && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2"));
 
                 ourShowUiStandardPopupV22Action = (ShowUiStandardPopupV22Action)Delegate.CreateDelegate(typeof(ShowUiStandardPopupV22Action), VRCUiPopupManager.prop_VRCUiPopupManager_0, targetMethod);
 

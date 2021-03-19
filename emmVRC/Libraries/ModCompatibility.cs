@@ -33,7 +33,7 @@ namespace emmVRC.Libraries
 
         public static void Initialize()
         {
-            if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "MultiplayerDynamicBones") != -1)
+            if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "MultiplayerDynamicBones" || i.Info.Name == "MultiplayerDynamicBonesMod") != -1)
                 MultiplayerDynamicBones = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "Portal Confirmation") != -1)
                 PortalConfirmation = true;

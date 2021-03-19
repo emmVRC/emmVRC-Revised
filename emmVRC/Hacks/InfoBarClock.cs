@@ -17,9 +17,13 @@ namespace emmVRC.Hacks
         private static bool Enabled = true;
         public static Text clockText;
         public static uint instanceTime = 0;
+        private static bool amPm = false;
         
         public static void Initialize()
         {
+            // Determine if time should be AM or PM, based on the system registry. There is no better way to do this.
+            amPm = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\International", "sShortTime", "x").ToString().Contains("h");
+
             // Grab the Ping text from the Quick Menu, as the base position for our new object
             Transform baseTextTransform = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/PingText");
             if (baseTextTransform != null)
@@ -86,10 +90,6 @@ namespace emmVRC.Hacks
                 {
                     // Enable the clock text, if it is disabled
                     clockText.gameObject.SetActive(true);
-
-                    // Determine if time should be AM or PM, based on the system culture information.
-                    // The alternative is to read the actual current value from Registry, which I really don't want to do, particularly per frame
-                    bool amPm = System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortTimePattern.ToLower().Contains("h");
 
                     // Build a time string based on the current time
                     var timeString = DateTime.Now.ToString(amPm ? "hh:mm tt" : "HH:mm");

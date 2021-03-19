@@ -8,11 +8,11 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.7.7";
+        public static string Version = "2.7.8";
         public static int LastTestedBuildNumber = 1046;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "03/10/2021";
+        public static string DateUpdated = "03/19/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
@@ -25,7 +25,7 @@ namespace emmVRC.Objects
             "• emmVRC now properly supports \"ReadyPlayerMe\"\n" +
             "avatars";
         public static bool Debug = false;
-        public static string TargetMelonLoaderVersion = "0.2.7.3";
+        public static string TargetMelonLoaderVersion = "0.3.0";
         public static string TargetemmVRCLoaderVersion = "1.0.0";
         public static string[] IncompatibleMelonLoaderVersions = { "0.1.0", "0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.5" };
         public static string[] IncompatibleemmVRCLoaderVersions = { "0.0.1", "0.0.2", "0.0.3", "0.0.4", "0.0.5", "1.0.0" };
