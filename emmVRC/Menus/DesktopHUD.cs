@@ -93,7 +93,8 @@ namespace emmVRC.Menus
         private static GameObject CanvasObject;
         private static GameObject BackgroundObject;
         private static GameObject TextObject;
-        private static Image BackgroundImage;
+        private static GameObject LogoIconContainer;
+        private static Image BackgroundImage, emmLogo;
         private static Text TextText;
         private static bool keyFlag;
         public static bool UIExpanded = false;
@@ -140,6 +141,17 @@ namespace emmVRC.Menus
             TextText.text = "";
             //TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
             TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(310, 768); // With Player Framerate counter
+            TextObject.GetComponent<RectTransform>().localPosition += new Vector3(0f, 3f, 0f);
+
+            // Start emmHUD Logo
+            LogoIconContainer = new GameObject("emmHUDLogo");
+            LogoIconContainer.AddComponent<CanvasRenderer>();
+            LogoIconContainer.transform.SetParent(BackgroundObject.transform, false);
+            emmLogo = LogoIconContainer.AddComponent<Image>();
+            emmLogo.sprite = Resources.emmHUDLogo;
+            emmLogo.GetComponent<RectTransform>().localPosition = new Vector2(-123f, 352f);
+            emmLogo.GetComponent<RectTransform>().localScale = new Vector3(0.58f, 0.58f, 0.58f);
+            // End emmHUD Logo
 
             CanvasObject.SetActive(false);
 
@@ -184,7 +196,8 @@ namespace emmVRC.Menus
                     {
                         string userList = "";
                         userList = CommonHUD.RenderPlayerList();
-                        TextText.text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
+                        TextText.text =
+                            "\n                  <color=#FF69B4>emmVRC</color>                        fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
                             "\n                  press 'CTRL+E' to close" +
                             "\n" +
                             "\n" +
@@ -200,7 +213,8 @@ namespace emmVRC.Menus
                     }
                     else if (!UIExpanded)
                     {
-                        TextText.text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
+                        TextText.text =
+                            "\n                  <color=#FF69B4>emmVRC</color>                        fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
                             "\n                  press 'CTRL+E' to open";
                     }
                 }

@@ -20,7 +20,8 @@ namespace emmVRC.Menus
         private static Transform ShortcutMenu;
         private static GameObject BackgroundObject;
         private static GameObject TextObject;
-        private static Image BackgroundImage;
+        private static GameObject LogoIconContainer;
+        private static Image BackgroundImage, emmLogo;
         private static Text TextText;
         public static bool enabled = true;
         public static bool Initialized;
@@ -76,6 +77,7 @@ namespace emmVRC.Menus
 
             //TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(630, 1920);
             TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(860, 1920); // With Player Framerate counter
+            TextObject.GetComponent<RectTransform>().localPosition -= new Vector3(0f, 10f, 0f);
             TextText.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
             TextText.fontSize = 40;
             TextText.text = "";
@@ -89,6 +91,16 @@ namespace emmVRC.Menus
             TRT.anchoredPosition = new Vector2(1590f, 60f);
             //GameObject.DestroyImmediate(TGO.GetComponentInChildren<Text>().gameObject);
             TGO.GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
+
+            // Start emmHUD Logo
+            LogoIconContainer = new GameObject("emmHUDLogo");
+            LogoIconContainer.AddComponent<CanvasRenderer>();
+            LogoIconContainer.transform.SetParent(BackgroundObject.transform, false);
+            emmLogo = LogoIconContainer.AddComponent<Image>();
+            emmLogo.sprite = Resources.emmHUDLogo;
+            emmLogo.GetComponent<RectTransform>().localPosition = new Vector2(-365f, 880f);
+            emmLogo.GetComponent<RectTransform>().localScale = new Vector3(1.3f, 1.3f, 1.3f);
+            // End emmHUD Logo
 
             Initialized = true;
 

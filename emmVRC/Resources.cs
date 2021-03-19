@@ -39,6 +39,7 @@ namespace emmVRC
         public static Sprite Media_Stop;
         public static Sprite HUD_Base;
         public static Sprite HUD_Minimized;
+        public static Sprite emmHUDLogo;
         public static Sprite TabIcon;
 
         public static AudioClip customLoadingMusic;
@@ -149,6 +150,7 @@ namespace emmVRC
 
             HUD_Base = LoadSprite("UIMaximized.png");
             HUD_Minimized = LoadSprite("UIMinimized.png");
+            emmHUDLogo = LoadSprite("emmSimplifedLogo.png");
 
             TabIcon = LoadSprite("TabIcon.png");
             
