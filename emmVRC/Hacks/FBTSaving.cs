@@ -39,10 +39,13 @@ namespace emmVRC.Hacks
             hipInf = typeof(VRCTrackingSteam).GetProperties().First(a => a.PropertyType == typeof(Transform) && ((Transform)a.GetValue(steam)).parent.name == "Puck3");
 
             QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
-            QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(new System.Action(() => { 
-                if (Configuration.JSONConfig.TrackingSaving)
-                    if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0 != null && calibratedAvatars.FindIndex(a => a.AvatarID == VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id) != -1)
-                        calibratedAvatars.RemoveAll(a => a.AvatarID == VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id);
+            QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(new System.Action(() => {
+                if (Configuration.JSONConfig.TrackingSaving && VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0 != null)
+                {
+                    VRC.Core.ApiAvatar targetAvtr = (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0 != null ? VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0 : VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1);
+                    if (calibratedAvatars.FindIndex(a => a.AvatarID == targetAvtr.id) != -1)
+                        calibratedAvatars.RemoveAll(a => a.AvatarID == targetAvtr.id);
+                }
                 originalCalibrateButton.Invoke();
             }));
         }

@@ -71,7 +71,6 @@ namespace emmVRC.Menus
         private static PageItem UIMicIconPulse;
         private static PageItem UIExpansionKitColorChanging;
         private static PageItem InfoSpoofing;
-        private static PageItem InfoHiding;
         private static PageItem InfoSpooferNamePicker;
 
         // Page 5 - Nameplate Color Changing (pretty much useless)
@@ -723,11 +722,6 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables changing the color of UIExpansionKit's menu. Requires a restart to apply");
             InfoSpoofing = new PageItem("Local\nInfo Spoofing", () =>
             {
-                if (Configuration.JSONConfig.InfoHidingEnabled)
-                {
-                    InfoHiding.SetToggleState(false, true);
-                    RefreshMenu();
-                }
                 Configuration.JSONConfig.InfoSpoofingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
@@ -739,74 +733,37 @@ namespace emmVRC.Menus
 
                 foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentsInChildren<UnityEngine.UI.Text>())
                 {
-                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    if (text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
                         text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
                 foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
                 {
-                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    if (text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
                         text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
             }, "TOGGLE: Enables local info spoofing, which can protect your identity in screenshots, recordings, and streams");
             //InfoSpooferNamePicker = new PageItem("")
-            InfoHiding = new PageItem("Local\nInfo Hiding", () =>
-            {
-                if (Configuration.JSONConfig.InfoSpoofingEnabled)
-                {
-                    InfoSpoofing.SetToggleState(false, true);
-                    RefreshMenu();
-                }
-                Configuration.JSONConfig.InfoHidingEnabled = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.InfoHidingEnabled = false;
-                Configuration.SaveConfig();
-                RefreshMenu();
-
-                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentsInChildren<UnityEngine.UI.Text>())
-                {
-                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                    {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
-                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
-                    }
-                }
-                foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
-                {
-                    if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                    {
-                        text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
-                        text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
-                    }
-                }
-            }, "TOGGLE: Enables local info hiding, which can protect your identity in screenshots, recordings, and streams");
             InfoSpooferNamePicker = new PageItem("F", () =>
             {
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter your spoof name (or none for random)", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string name, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
                 {
-                    if (Configuration.JSONConfig.InfoSpoofingEnabled || Configuration.JSONConfig.InfoHidingEnabled)
+                    if (Configuration.JSONConfig.InfoSpoofingEnabled)
                     {
                         foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentsInChildren<UnityEngine.UI.Text>())
                         {
-                            if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                            if (text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                             {
-                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
                                 text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                             }
                         }
                         foreach (UnityEngine.UI.Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<UnityEngine.UI.Text>())
                         {
-                            if (text.text.Contains("⛧⛧⛧⛧⛧⛧⛧⛧⛧") || text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                            if (text.text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                             {
-                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", APIUser.CurrentUser.GetName());
                                 text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                             }
                         }
@@ -829,8 +786,8 @@ namespace emmVRC.Menus
                 else
                     baseMenu.pageItems.Add(PageItem.Space);
                 baseMenu.pageItems.Add(InfoSpoofing);
-                baseMenu.pageItems.Add(InfoHiding);
                 baseMenu.pageItems.Add(InfoSpooferNamePicker);
+                baseMenu.pageItems.Add(PageItem.Space);
             }
 
             FriendNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1000, "Friend Nameplate Color", "Select the color for Friend Nameplate colors", (UnityEngine.Color newColor) =>
@@ -1401,7 +1358,6 @@ namespace emmVRC.Menus
                 UIMicIconPulse.SetToggleState(Configuration.JSONConfig.UIMicIconPulsingEnabled);
                 UIExpansionKitColorChanging.SetToggleState(Configuration.JSONConfig.UIExpansionKitColorChangingEnabled);
                 InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
-                InfoHiding.SetToggleState(Configuration.JSONConfig.InfoHidingEnabled);
                 InfoSpooferNamePicker.Name = "Set\nSpoofed\nName";
 
                 NameplateColorChanging.SetToggleState(Configuration.JSONConfig.NameplateColorChangingEnabled);

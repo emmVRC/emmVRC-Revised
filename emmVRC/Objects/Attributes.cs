@@ -8,22 +8,20 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.7.8";
+        public static string Version = "2.7.10";
         public static int LastTestedBuildNumber = 1046;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "03/19/2021";
+        public static string DateUpdated = "03/23/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "• Added a new Favorite Emojis menu to the Action Menu!\n" +
-            "• emmVRC should now be fully compatible with Oculus\n" +
-            "once again, with the exception of Emoji Favorites\n" +
-            "for now\n" +
-            "• emmVRC now properly supports \"ReadyPlayerMe\"\n" +
-            "avatars";
+            "• Updated for VRChat build 1065+\n" +
+            "• Made adjustments to the new UI to look\n" +
+            "better\n" +
+            "• Fixed bugs with FBT saving causing pretzels\n";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.3.0";
         public static string TargetemmVRCLoaderVersion = "1.0.0";

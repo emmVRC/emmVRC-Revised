@@ -201,7 +201,7 @@ namespace emmVRC.Hacks
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
             NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             NewAvatarList.clearUnseenListOnCollapse = false;
-            NewAvatarList.field_Public_EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique_0 = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
+            NewAvatarList.field_Public_EnumNPublicSealedvaInPuMiFaSpClPuLiCrUnique_0 = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLiCrUnique.SpecificList;
 
             currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Public_Single_0 *= 0.85f;
 
@@ -253,7 +253,26 @@ namespace emmVRC.Hacks
             pageTicker.transform.SetParent(avText.transform, true);
             pageTicker.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(800f, 0f);
 
-            pageAvatar.transform.Find("AvatarModel").transform.localPosition += new Vector3(0f, 60f, 0f);
+            pageAvatar.transform.Find("AvatarPreviewBase").transform.localPosition += new Vector3(0f, 60f, 0f);
+            pageAvatar.transform.Find("AvatarPreviewBase").transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+            foreach(PropertyInfo inf in typeof(PageAvatar).GetProperties().Where(a => a.PropertyType == typeof(Vector3) && ((Vector3)a.GetValue(currPageAvatar)).x <= -461f && ((int)((Vector3)a.GetValue(currPageAvatar)).y) == -200)){
+                Vector3 position = ((Vector3)inf.GetValue(currPageAvatar));
+                inf.SetValue(currPageAvatar, new Vector3(position.x, position.y + 80f, position.z));
+            }
+            foreach (PropertyInfo inf in typeof(PageAvatar).GetProperties().Where(a => a.PropertyType == typeof(Vector3) && ((int)((Vector3)a.GetValue(currPageAvatar)).x) == -91))
+            {
+                Vector3 position = ((Vector3)inf.GetValue(currPageAvatar));
+                inf.SetValue(currPageAvatar, new Vector3(position.x, position.y + 80f, position.z));
+            }
+            /*pageAvatar.transform.Find("XplatHide Button").GetComponent<Button>().onClick.AddListener(new System.Action(() => {
+                pageAvatar.transform.Find("Select Button").GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 80f);
+                pageAvatar.transform.Find("AvatarPreviewBase/FallbackRoot").transform.localPosition += new Vector3(0f, 80f, 0f);
+            }));
+            pageAvatar.transform.Find("Select Button").GetComponent<Button>().onClick.AddListener(new System.Action(() => {
+                pageAvatar.transform.Find("Select Button").GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 80f);
+                pageAvatar.transform.Find("AvatarPreviewBase/FallbackRoot").transform.localPosition += new Vector3(0f, 80f, 0f);
+            }));*/
+
 
             LoadedAvatars = new List<ApiAvatar>();
 

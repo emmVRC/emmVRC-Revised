@@ -119,7 +119,6 @@ namespace emmVRC.Objects
         // Info spoofing and hiding
         public bool InfoSpoofingEnabled = false;
         public string InfoSpoofingName = "";
-        public bool InfoHidingEnabled = false;
 
         // One-timers
         public string AcceptedEULAVersion = "0.0.0";
