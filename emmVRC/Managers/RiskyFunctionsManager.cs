@@ -26,6 +26,8 @@ namespace emmVRC.Managers
         private static Button NoclipButton;
         private static Button SpeedButton;
         private static Button ESPButton;
+        private static Button ItemESPButton;
+        private static Button TriggerESPButton;
 
         internal static void Initialize()
         {
@@ -63,10 +65,12 @@ namespace emmVRC.Managers
                         {
                             Menus.PlayerTweaksMenu.SetRiskyFuncsAllowed(true);
                             Menus.UserTweaksMenu.SetRiskyFuncsAllowed(true);
-                        } else
-                        {
+                            Menus.WorldTweaksMenu.SetRiskyFuncsAllowed(true);
+                        }
+                        else {
                             Menus.PlayerTweaksMenu.SetRiskyFuncsAllowed(false);
                             Menus.UserTweaksMenu.SetRiskyFuncsAllowed(false);
+                            Menus.WorldTweaksMenu.SetRiskyFuncsAllowed(false);
                         }
                         RiskyFuncsAreChecked = true;
                     }
@@ -81,10 +85,14 @@ namespace emmVRC.Managers
                             SpeedButton = PlayerTweaksMenu.SpeedToggle.getGameObject().GetComponent<Button>();
                         else if (ESPButton == null)
                             ESPButton = PlayerTweaksMenu.ESPToggle.getGameObject().GetComponent<Button>();
+                        else if (ItemESPButton == null)
+                            ItemESPButton = WorldTweaksMenu.ItemESPToggle.getGameObject().GetComponent<Button>();
+                        else if (TriggerESPButton == null)
+                            TriggerESPButton = WorldTweaksMenu.TriggerESPToggle.getGameObject().GetComponent<Button>();
                         else
                         {
                             // Ensures that Risky Functions buttons are not enabled when they shouldn't be
-                            if ((FlightButton.enabled || NoclipButton.enabled || SpeedButton.enabled || ESPButton.enabled) && (!RiskyFuncsAreAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled))
+                            if ((FlightButton.enabled || NoclipButton.enabled || SpeedButton.enabled || ESPButton.enabled || ItemESPButton.enabled || TriggerESPButton.enabled) && (!RiskyFuncsAreAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled))
                             {
                                 RiskyFuncsAreChecked = false;
                             }
