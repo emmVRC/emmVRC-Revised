@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using emmVRC.Hacks;
 using emmVRC.TinyJSON;
 using Harmony;
@@ -18,6 +19,8 @@ namespace emmVRC.Libraries
         private static Harmony.HarmonyInstance instanceHarmony;
         private static Action<Player> event1Action;
         private static Action<Player> event2Action;
+
+        private static Regex methodMatchRegex = new Regex("Method_Public_Void_\\d", RegexOptions.Compiled);
 
         public unsafe static void Initialize()
         {
@@ -113,6 +116,15 @@ namespace emmVRC.Libraries
                     emmVRCLoader.Logger.LogError("VRCTrackingSteam hooking failed: " + ex.ToString());
                 }
             }
+            try
+            {
+                foreach (MethodInfo method in typeof(PlayerNameplate).GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => methodMatchRegex.IsMatch(x.Name)))
+                {
+                    emmVRCLoader.Logger.LogDebug($"Found target Rebuild method ({method.Name})", true);
+                    instanceHarmony.Patch(method, null, new HarmonyMethod(typeof(Hooking).GetMethod("OnRebuild", BindingFlags.NonPublic | BindingFlags.Static)));
+                }
+            }
+            catch (Exception ex) { emmVRCLoader.Logger.LogError("Avatar OnRebuild Failed: " + ex.ToString()); }
         }
         private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
         {
@@ -132,10 +144,16 @@ namespace emmVRC.Libraries
         }
         private static bool PerformCalibration(ref VRCTrackingSteam __instance, Animator __0, bool __1, bool __2)
         {
+            if (__0 == null || __instance == null) return true;
             if (Configuration.JSONConfig.TrackingSaving)
             {
                 emmVRCLoader.Logger.LogDebug("Saving calibration info...");
-                MelonLoader.MelonCoroutines.Start(FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id));
+                if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1 != null)
+                    MelonLoader.MelonCoroutines.Start(FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1.id));
+                else if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0 != null)
+                    MelonLoader.MelonCoroutines.Start(FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id));
+                else
+                    emmVRCLoader.Logger.LogError("Could not fetch avatar information for this avatar");
             }
             return true;
         }
@@ -175,6 +193,16 @@ namespace emmVRC.Libraries
             if (!Configuration.JSONConfig.PortalBlockingEnable)
                 return true;
             return false;
+        }
+
+        private static void OnRebuild(PlayerNameplate __instance)
+        {
+            if (__instance.field_Private_VRCPlayer_0 != null)
+                if (__instance.field_Private_VRCPlayer_0.field_Private_Player_0 != null && __instance.field_Private_VRCPlayer_0.field_Private_Player_0.field_Private_APIUser_0 != null)
+                    if (Configuration.JSONConfig.InfoSpoofingEnabled)
+                        PlayerReflect.GetSelfNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
+                    else if (!Configuration.JSONConfig.InfoSpoofingEnabled && PlayerReflect.GetSelfNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                        PlayerReflect.GetSelfNameplateText().text = PlayerReflect.GetSelfNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
         }
     }
 }
