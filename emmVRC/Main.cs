@@ -539,7 +539,11 @@ namespace emmVRC
             }
             PlayerHistoryMenu.currentPlayers = new System.Collections.Generic.List<InstancePlayer>();
 
+            #region Korty's Addons
             Hacks.ComponentToggle.OnLevelLoad();
+            Hacks.ComponentToggle.Toggle();
+            Menus.WorldTweaksMenu.DisableOnSceneLoad();
+            #endregion
         }
 
         public static void OnUpdate()
