@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VRC;
 using VRC.SDKBase;
+using TMPro;
 
 namespace emmVRC.Libraries
 {
@@ -28,6 +29,8 @@ namespace emmVRC.Libraries
 	public static class PlayerReflect
 	{
 		public static VRCPlayerApi GetVRCPlayerApi(this Player player) { return player.prop_VRCPlayerApi_0; }
+
+		public static VRCPlayer GetLocalVRCPlayer() { return VRCPlayer.field_Internal_Static_VRCPlayer_0; }
 
 		public static VRCPlayer GetVRCPlayer(this Player player) { return player.field_Internal_VRCPlayer_0; }
 
@@ -63,6 +66,8 @@ namespace emmVRC.Libraries
 			}
 			return string.Format("{0}{1}</color>", arg, Instance.GetFrames());
 		}
+
+		public static TextMeshProUGUI GetSelfNameplateText() { return GetLocalVRCPlayer().field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Text Container/Name").GetComponent<TextMeshProUGUI>(); }
 	}
 	#endregion
 }
