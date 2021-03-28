@@ -12,24 +12,25 @@ namespace emmVRC.Hacks
 {
     public class ComponentToggle
     {
-        public static VRC_SyncVideoPlayer[] Video_stored_sdk2;
+        internal static VRC_SyncVideoPlayer[] Video_stored_sdk2;
         public static bool videoplayers = true;
-        public static VRC.SDKBase.VRC_Pickup[] Pickup_stored;
+
+        internal static VRC.SDKBase.VRC_Pickup[] Pickup_stored;
         public static bool pickupable = true;
         public static bool pickup_object = true;
 
-        public static void OnLevelLoad()
-        {
-            Store();
-        }
+        internal static VRC.SDKBase.VRC_Trigger[] Trigger_stored;
+
+        public static void OnLevelLoad() { Store(); }
 
         private static void Store()
         {
             Video_stored_sdk2 = UnityEngine.Resources.FindObjectsOfTypeAll<VRC_SyncVideoPlayer>();
             Pickup_stored = UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Pickup>();
+            Trigger_stored = UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Trigger>();
         }
 
-        public static void Toggle(bool tempOn = false) // tempOn can be used to force settings ON for specific worlds if you'd like
+        internal static void Toggle(bool tempOn = false) // tempOn can be used to force settings ON for specific worlds if you'd like
         {
             if (Video_stored_sdk2 == null) Store();
             foreach (var gameObject in Video_stored_sdk2)
