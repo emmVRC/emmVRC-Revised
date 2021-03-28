@@ -8,22 +8,21 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.7.8";
-        public static int LastTestedBuildNumber = 1062;
+        public static string Version = "2.8.0";
+        public static int LastTestedBuildNumber = 1067;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "03/10/2021";
+        public static string DateUpdated = "03/30/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "• Added a new Favorite Emojis menu to the Action Menu!\n" +
-            "• emmVRC should now be fully compatible with Oculus\n" +
-            "once again, with the exception of Emoji Favorites\n" +
-            "for now\n" +
-            "• emmVRC now properly supports \"ReadyPlayerMe\"\n" +
-            "avatars";
+            "• Added Pickup, Pickup object, and Video Player (SDK2) toggles\n" +
+            "• Added Item and Trigger ESP\n" +
+            "• Added Player FPS counter to Player List HUD\n" +
+            "• Changed Avatar Pedestal buttons into a single toggle button\n" +
+            "• Fixed NameSpoofing not being applied to your nameplate\n";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.3.0";
         public static string TargetemmVRCLoaderVersion = "1.1.0";
@@ -38,7 +37,7 @@ namespace emmVRC.Objects
                     "Sample Text",
                     "ǅǅǅǄǄǄǅǅǄǅǅǅ",
                     "Object reference not set to an instance of\nan object",
-                    "\"You spin my head right round, right round, like a record baby\""
+                    "\"You spin my head right round, right round,\nlike a record baby\""
         };
 
         private const string FlavourText = "Love you just the way you are. A cinema... my cinema. ~Emilia";
