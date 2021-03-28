@@ -70,6 +70,7 @@ namespace emmVRC.Objects
         public uint InstanceAlarmTime = 0;
 
         // Hack options
+        public bool DisableAvatarPedestals = false;
 
         // Sub section: Shortcut Menu
         public bool DisableReportWorldButton = false;
@@ -119,7 +120,6 @@ namespace emmVRC.Objects
         // Info spoofing and hiding
         public bool InfoSpoofingEnabled = false;
         public string InfoSpoofingName = "";
-        public bool InfoHidingEnabled = false;
 
         // One-timers
         public string AcceptedEULAVersion = "0.0.0";
