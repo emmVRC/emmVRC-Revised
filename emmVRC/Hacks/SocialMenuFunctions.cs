@@ -88,7 +88,7 @@ namespace emmVRC.Hacks
                     AvatarSearchButton.SetActive(!AvatarSearchButton.activeSelf);
                 try
                 {
-                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0 != null && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location.Contains("friends"))
+                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>() != null && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0 != null && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.statusIsSetToOffline && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location.Contains("friends"))
                         PortalToUserButton.SetActive(!PortalToUserButton.activeSelf);
                     else
                         PortalToUserButton.SetActive(false);
@@ -181,7 +181,7 @@ namespace emmVRC.Hacks
             }));
             PortalToUserButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                if (QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "private" && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location.Contains("friends"))
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "private" && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.statusIsSetToOffline && QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location != "" && !QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.location.Contains("friends"))
                 {
                     try
                     {
@@ -281,37 +281,14 @@ namespace emmVRC.Hacks
                         try
                         {
                             GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(true);
-
-                        }
-                        catch (Exception ex)
-                        {
-                            ex = new Exception();
-                        }
-                        try
-                        {
                             GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(true);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex = new Exception();
-                        }
-                        try
-                        {
                             GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").SetActive(true);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex = new Exception();
-                        }
-                        try
-                        {
                             GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").SetActive(true);
                         }
                         catch (Exception ex)
                         {
                             ex = new Exception();
                         }
-
                     }
                 }
             }

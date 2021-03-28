@@ -58,13 +58,20 @@ namespace emmVRC.Hacks
                 // Set the styling for the text, so that ours matches the original VRChat design
                 emmVRCStatusText.color = transform.GetComponent<Text>().color;
                 emmVRCStatusText.font = transform.GetComponent<Text>().font;
-                emmVRCStatusText.fontSize = transform.GetComponent<Text>().fontSize;
+                emmVRCStatusText.fontSize = 67;
                 emmVRCStatusText.fontStyle = transform.GetComponent<Text>().fontStyle;
 
                 // Expand the info bar, so that the text is not floating in space
                 RectTransform component2 = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/Panel").GetComponent<RectTransform>();
-                component2.sizeDelta = new Vector2(component2.sizeDelta.x, component2.sizeDelta.y + 80f);
-                component2.anchoredPosition = new Vector2(component2.anchoredPosition.x, component2.anchoredPosition.y - 40f);
+                component2.sizeDelta += new Vector2(0f, 80f);
+                component2.anchoredPosition -= new Vector2(0f, 40f);
+
+                RectTransform component3 = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/StreamerModeEnabled/Outline").GetComponent<RectTransform>();
+                component3.sizeDelta += new Vector2(0f, 80f);
+                component3.anchoredPosition -= new Vector2(0f, 40f);
+
+                Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/StreamerModeEnabled/StreamerBackground").GetComponent<RectTransform>().anchoredPosition -= new Vector2(0f, 160f);
+                Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/StreamerModeEnabled/StreamerModeText").GetComponent<RectTransform>().anchoredPosition -= new Vector2(0f, 160f);
 
                 // Shrink the info bar, if the status is not being displayed... this is kinda jank, we should fix this later
                 if (!Configuration.JSONConfig.InfoBarDisplayEnabled)
@@ -98,10 +105,10 @@ namespace emmVRC.Hacks
                     {
                         // If the client is actually logged in, set the status to "Connected"
                         if (Network.NetworkClient.webToken != null)
-                           emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "    Network Status: <color=lime>Connected</color>";
+                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                                    Network Status: <color=lime>Connected</color>";
                         // If the client is not logged in, set the status to "Disconnected"
                         else
-                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "    Network Status: <color=red> Disconnected</color>";
+                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                                Network Status: <color=red> Disconnected</color>";
                     }
                     // If the network is disabled, set up a basic status instead
                     else

@@ -48,7 +48,7 @@ namespace emmVRC.Hacks
                 // Offset our clock from the base object
                 Vector3 newPos = baseTextTransform.localPosition;
                 newPos.x -= baseTextTransform.GetComponent<RectTransform>().sizeDelta.x * 0.5f;
-                newPos.x += 1400 * 0.5f;
+                newPos.x += 1550 * 0.5f;
                 newPos.y += -90;
                 emmVRCRT.localPosition = newPos;
                 
