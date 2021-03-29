@@ -352,6 +352,7 @@ namespace emmVRC.Hacks
                 pageAvatar.transform.Find("AvatarPreviewBase/FallbackRoot").transform.localPosition += new Vector3(0f, 80f, 0f);
             }));*/
 
+            pageAvatar.transform.Find("AvatarModel").transform.localPosition += new Vector3(0f, 60f, 0f);
 
             LoadedAvatars = new List<ApiAvatar>();
 
