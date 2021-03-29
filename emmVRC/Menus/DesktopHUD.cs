@@ -32,7 +32,7 @@ namespace emmVRC.Menus
                             if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
                                 if (tempCount != 22)
                                 {
-                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 +" ms\n";
+                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 + " ms - " + plr.GetVRCPlayer().GetFrames() + " fps\n"; // or GetFramesColored()
                                     tempCount++;
                                 }
                         }
@@ -62,6 +62,8 @@ namespace emmVRC.Menus
             }
             return positionstr + "\n\n" + worldinfo;
         }
+
+        // Note to Korty - This is not used (or at least it doesn't seem like it)
         public static GameObject[] InitializeHUD(Transform parent)
         {
             GameObject BackgroundObject = new GameObject("Background");
@@ -91,7 +93,8 @@ namespace emmVRC.Menus
         private static GameObject CanvasObject;
         private static GameObject BackgroundObject;
         private static GameObject TextObject;
-        private static Image BackgroundImage;
+        private static GameObject LogoIconContainer;
+        private static Image BackgroundImage, emmLogo;
         private static Text TextText;
         private static bool keyFlag;
         public static bool UIExpanded = false;
@@ -122,8 +125,10 @@ namespace emmVRC.Menus
             BackgroundObject.AddComponent<CanvasRenderer>();
 
             BackgroundImage = BackgroundObject.AddComponent<Image>();
-            BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
+            //BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
+            BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(325, 768); // With Player Framerate counter
             BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
+            BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-797f, 111f); // With Player Framerate counter
             BackgroundObject.transform.SetParent(CanvasObject.transform, false);
             BackgroundImage.sprite = Resources.HUD_Minimized;
             TextObject = new GameObject("Text");
@@ -134,7 +139,19 @@ namespace emmVRC.Menus
             TextText.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
             TextText.fontSize = 15;
             TextText.text = "";
-            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
+            //TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 768);
+            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(310, 768); // With Player Framerate counter
+            TextObject.GetComponent<RectTransform>().localPosition += new Vector3(0f, 3f, 0f);
+
+            // Start emmHUD Logo
+            LogoIconContainer = new GameObject("emmHUDLogo");
+            LogoIconContainer.AddComponent<CanvasRenderer>();
+            LogoIconContainer.transform.SetParent(BackgroundObject.transform, false);
+            emmLogo = LogoIconContainer.AddComponent<Image>();
+            emmLogo.sprite = Resources.emmHUDLogo;
+            emmLogo.GetComponent<RectTransform>().localPosition = new Vector2(-123f, 352f);
+            emmLogo.GetComponent<RectTransform>().localScale = new Vector3(0.58f, 0.58f, 0.58f);
+            // End emmHUD Logo
 
             CanvasObject.SetActive(false);
 
@@ -179,7 +196,8 @@ namespace emmVRC.Menus
                     {
                         string userList = "";
                         userList = CommonHUD.RenderPlayerList();
-                        TextText.text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
+                        TextText.text =
+                            "\n                  <color=#FF69B4>emmVRC</color>                        fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
                             "\n                  press 'CTRL+E' to close" +
                             "\n" +
                             "\n" +
@@ -189,13 +207,19 @@ namespace emmVRC.Menus
                             "\n" +
                             "\n" +
                             (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.webToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
-                            "\n";
+                            "\n" +
+                            "\n" +
+                            (Objects.Attributes.Debug ? (
+                                "Current frame time: "+(Hacks.FrameTimeCalculator.frameTimes[Hacks.FrameTimeCalculator.iterator == 0 ? Hacks.FrameTimeCalculator.frameTimes.Length-1 : (Hacks.FrameTimeCalculator.iterator -1)])+"ms\n"+
+                                "Average frame time: "+Hacks.FrameTimeCalculator.frameTimeAvg+"ms\n"
+                            ) : "");
                         if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled))
                             TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
                     }
                     else if (!UIExpanded)
                     {
-                        TextText.text = "\n                  <color=#FF69B4>emmVRC</color>            fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
+                        TextText.text =
+                            "\n                  <color=#FF69B4>emmVRC</color>                        fps: " + Mathf.Floor(1.0f / Time.deltaTime) +
                             "\n                  press 'CTRL+E' to open";
                     }
                 }

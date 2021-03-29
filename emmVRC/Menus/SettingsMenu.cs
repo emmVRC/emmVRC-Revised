@@ -12,6 +12,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using emmVRC.Objects;
 using VRC.Core;
+//using TMPro;
+using VRC;
 
 #pragma warning disable 4014
 
@@ -745,6 +747,8 @@ namespace emmVRC.Menus
                         text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
+                if (PlayerReflect.GetSelfNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    PlayerReflect.GetSelfNameplateText().text = PlayerReflect.GetSelfNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
             }, "TOGGLE: Enables local info spoofing, which can protect your identity in screenshots, recordings, and streams");
             //InfoSpooferNamePicker = new PageItem("")
             InfoSpooferNamePicker = new PageItem("F", () =>
@@ -767,6 +771,8 @@ namespace emmVRC.Menus
                                 text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                             }
                         }
+                        if (PlayerReflect.GetSelfNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                            PlayerReflect.GetSelfNameplateText().text = PlayerReflect.GetSelfNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                     Configuration.JSONConfig.InfoSpoofingName = name;
                     Configuration.SaveConfig();

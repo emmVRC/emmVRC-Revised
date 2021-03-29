@@ -528,7 +528,8 @@ namespace emmVRC
             {
                 Configuration.JSONConfig.LastVersion = Attributes.Version;
                 Configuration.SaveConfig();
-                Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Attributes.Version + "!", "View\nChangelog", () => { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
+                Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Attributes.Version + "!", "View\nChangelog", () => 
+                { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.alertSprite, -1);
             }
             if (Libraries.ModCompatibility.MultiplayerDynamicBones && Configuration.JSONConfig.GlobalDynamicBonesEnabled)
             {
@@ -537,10 +538,17 @@ namespace emmVRC
                 Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
             }
             PlayerHistoryMenu.currentPlayers = new System.Collections.Generic.List<InstancePlayer>();
-        }
 
+            #region Korty's Addons
+            Hacks.ComponentToggle.OnLevelLoad();
+            Hacks.ComponentToggle.Toggle();
+            Menus.WorldTweaksMenu.DisableOnSceneLoad();
+            #endregion
+        }
         public static void OnUpdate()
         {
+            if (Attributes.Debug)
+                FrameTimeCalculator.Update();
             AwaitUpdate.Flush();
 
             if (!Initialized)
@@ -551,12 +559,14 @@ namespace emmVRC
                 // If the user is new to emmVRC, present the emmVRC Welcome message
                 if (!Configuration.JSONConfig.WelcomeMessageShown)
                 {
-                    Managers.NotificationManager.AddNotification("Welcome to the new emmVRC! For updates regarding the client, teasers for new features, and bug reports and support, join the Discord!", "Open\nDiscord", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); Managers.NotificationManager.DismissCurrentNotification(); }, "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite);
+                    Managers.NotificationManager.AddNotification("Welcome to the new emmVRC! For updates regarding the client, teasers for new features, and bug reports and support, join the Discord!", "Open\nDiscord", () => 
+                    { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); Managers.NotificationManager.DismissCurrentNotification(); }, "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Resources.alertSprite);
                     Configuration.JSONConfig.WelcomeMessageShown = true;
                     Configuration.SaveConfig();
                 }
             }
             Hacks.CustomAvatarFavorites.OnUpdate();
+            
         }
         public static void OnApplicationQuit()
         {

@@ -31,7 +31,7 @@ namespace emmVRC.Libraries
             menuTitle.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
             menuTitle.GetComponent<Text>().color = Color.white;
             menuTitle.GetComponent<Text>().text = titleText;
-            menuTitle.GetComponent<RectTransform>().anchoredPosition += new Vector2(580f, -495f);
+            menuTitle.GetComponent<RectTransform>().anchoredPosition += new Vector2(580f, -425f);
             
 
             baseText = GameObject.Instantiate(QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/EarlyAccessText").gameObject, this.menuBase.getBackButton().getGameObject().transform.parent);
@@ -40,7 +40,7 @@ namespace emmVRC.Libraries
             baseText.GetComponent<Text>().color = Color.white;
             baseText.GetComponent<Text>().text = bodyText;
             baseText.GetComponent<Text>().fontSize = (int)(baseText.GetComponent<Text>().fontSize / 1.25);
-            baseText.GetComponent<RectTransform>().anchoredPosition += new Vector2(25f, -620f);
+            baseText.GetComponent<RectTransform>().anchoredPosition += new Vector2(25f, -550f);
             
             if (buttonAction != null)
             {

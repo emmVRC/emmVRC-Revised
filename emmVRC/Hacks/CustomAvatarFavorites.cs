@@ -7,6 +7,7 @@ using VRC.UI;
 using emmVRC.Libraries;
 using emmVRC.Network;
 using System.Linq;
+using Il2CppSystem.Linq;
 using System.IO;
 using emmVRC.Objects;
 using System.Reflection;
@@ -17,7 +18,12 @@ namespace emmVRC.Hacks
 {
     public static class CustomAvatarFavorites
     {
-
+        public enum SortingMode
+        {
+            DateAdded = 0,
+            Alphabetical = 1,
+            Creator = 2
+        }
         internal static GameObject PublicAvatarList;
         internal static UiAvatarList NewAvatarList;
         private static GameObject avText;
@@ -43,8 +49,11 @@ namespace emmVRC.Hacks
         private static GameObject backButton;
         private static GameObject forwardButton;
         private static GameObject pageTicker;
+        private static GameObject sortButton;
         private static bool waitingForSearch = false;
         public static int currentPage = 0;
+        private static SortingMode currentSortingMode = SortingMode.DateAdded;
+        private static bool sortingInverse = false; // False = First-to-Last, True = Last-to-First
 
         private static MethodInfo renderElementMethod;
         internal static void RenderElement(this UiVRCList uivrclist, List<ApiAvatar> AvatarList)
@@ -58,6 +67,12 @@ namespace emmVRC.Hacks
         }
         internal static void Initialize()
         {
+            if (Configuration.JSONConfig.SortingMode <= 2)
+                currentSortingMode = (SortingMode)Configuration.JSONConfig.SortingMode;
+            else
+                currentSortingMode = 0;
+            sortingInverse = Configuration.JSONConfig.SortingInverse;
+
             pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar").gameObject;
             FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Favorite Button").gameObject;
             FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
@@ -169,12 +184,20 @@ namespace emmVRC.Hacks
                     {
                         ApiAvatar fetchedAvatar = cont.Model.Cast<ApiAvatar>();
                         if (fetchedAvatar.releaseStatus == "private" && fetchedAvatar.authorId != APIUser.CurrentUser.id && fetchedAvatar.authorName != "tafi_licensed" && fetchedAvatar.authorName != "Wolf of Estland") // Why does Wolf3D use just like a standard username? And is a new user? The hell?
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        { 
+                            if (LoadedAvatars.ToArray().Any(a => a.id == fetchedAvatar.id))
+                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            else
+                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        }
                         else
                             baseChooseEvent.Invoke();
                     }), new System.Action<ApiContainer>((ApiContainer cont) =>
                     {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        else
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     }));
                 }
                 else
@@ -182,11 +205,17 @@ namespace emmVRC.Hacks
                     //emmVRCLoader.Bootstrapper.Instance.StartCoroutine(CheckAvatar());
                     if (selectedAvatar.releaseStatus == "private" && selectedAvatar.authorId != APIUser.CurrentUser.id && selectedAvatar.authorName != "tafi_licensed")
                     {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        else
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     }
                     else if (selectedAvatar.releaseStatus == "unavailable")
                     {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        else
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     }
                     else
                         baseChooseEvent.Invoke();
@@ -217,7 +246,7 @@ namespace emmVRC.Hacks
             }));
             refreshButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
             refreshButton.transform.SetParent(avText.transform, true);
-            refreshButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(975f, 0f);
+            refreshButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(980f, 0f);
 
             backButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
             backButton.GetComponentInChildren<Text>().text = "←";
@@ -230,7 +259,7 @@ namespace emmVRC.Hacks
             }));
             backButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
             backButton.transform.SetParent(avText.transform, true);
-            backButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(725f, 0f);
+            backButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(750f, 0f);
 
             forwardButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
             forwardButton.GetComponentInChildren<Text>().text = "→";
@@ -243,7 +272,7 @@ namespace emmVRC.Hacks
             }));
             forwardButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
             forwardButton.transform.SetParent(avText.transform, true);
-            forwardButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(875f, 0f);
+            forwardButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(900f, 0f);
 
             pageTicker = GameObject.Instantiate(ChangeButton, avText.transform.parent);
             pageTicker.GetComponentInChildren<Text>().text = "0 / 0";
@@ -251,11 +280,61 @@ namespace emmVRC.Hacks
             GameObject.Destroy(pageTicker.GetComponent<Image>());
             pageTicker.GetComponent<RectTransform>().sizeDelta /= new Vector2(4f, 1f);
             pageTicker.transform.SetParent(avText.transform, true);
-            pageTicker.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(800f, 0f);
+            pageTicker.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(825f, 0f);
+
+            sortButton = GameObject.Instantiate(ChangeButton, avText.transform.parent);
+            switch (currentSortingMode)
+            {
+                case SortingMode.DateAdded:
+                    sortButton.GetComponentInChildren<Text>().text = "Date " + (sortingInverse ? "↑" : "↓");
+                    break;
+                case SortingMode.Alphabetical:
+                    sortButton.GetComponentInChildren<Text>().text = "ABC " + (sortingInverse ? "↑" : "↓");
+                    break;
+                case SortingMode.Creator:
+                    sortButton.GetComponentInChildren<Text>().text = "Creator " + (sortingInverse ? "↑" : "↓");
+                    break;
+            }
+            sortButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            sortButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                if (!sortingInverse)
+                    sortingInverse = true;
+                else
+                {
+                    if (currentSortingMode != SortingMode.Creator)
+                        currentSortingMode++;
+                    else
+                        currentSortingMode = SortingMode.DateAdded;
+                    sortingInverse = false;
+                }
+                switch (currentSortingMode)
+                {
+                    case SortingMode.DateAdded:
+                        sortButton.GetComponentInChildren<Text>().text = "Date "+(sortingInverse ? "↑" : "↓");
+                        break;
+                    case SortingMode.Alphabetical:
+                        sortButton.GetComponentInChildren<Text>().text = "ABC " + (sortingInverse ? "↑" : "↓");
+                        break;
+                    case SortingMode.Creator:
+                        sortButton.GetComponentInChildren<Text>().text = "Creator " + (sortingInverse ? "↑" : "↓");
+                        break;
+                }
+                currentPage = 0;
+                Configuration.JSONConfig.SortingMode = (int)currentSortingMode;
+                Configuration.JSONConfig.SortingInverse = sortingInverse;
+                Configuration.SaveConfig();
+                MelonLoader.MelonCoroutines.Start(JumpToStart());
+                MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
+            }));
+            sortButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(2f, 1f);
+            sortButton.transform.SetParent(avText.transform, true);
+            sortButton.GetComponent<RectTransform>().anchoredPosition = avText.transform.Find("ToggleIcon").GetComponent<RectTransform>().anchoredPosition + new Vector2(635f, 0f);
 
             pageAvatar.transform.Find("AvatarPreviewBase").transform.localPosition += new Vector3(0f, 60f, 0f);
             pageAvatar.transform.Find("AvatarPreviewBase").transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-            foreach(PropertyInfo inf in typeof(PageAvatar).GetProperties().Where(a => a.PropertyType == typeof(Vector3) && ((Vector3)a.GetValue(currPageAvatar)).x <= -461f && ((int)((Vector3)a.GetValue(currPageAvatar)).y) == -200)){
+            foreach (PropertyInfo inf in typeof(PageAvatar).GetProperties().Where(a => a.PropertyType == typeof(Vector3) && ((Vector3)a.GetValue(currPageAvatar)).x <= -461f && ((int)((Vector3)a.GetValue(currPageAvatar)).y) == -200))
+            {
                 Vector3 position = ((Vector3)inf.GetValue(currPageAvatar));
                 inf.SetValue(currPageAvatar, new Vector3(position.x, position.y + 80f, position.z));
             }
@@ -376,8 +455,35 @@ namespace emmVRC.Hacks
                         currentPage = (int)SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit;
                     if (currentPage < 0)
                         currentPage = 0;
-                    pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit + 1);
-                    List<ApiAvatar> avatarsToRender = SearchedAvatars.GetRange(currentPage * Configuration.JSONConfig.SearchRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.SearchRenderLimit - SearchedAvatars.Count));
+
+                    List<ApiAvatar> sortedSearchedAvatars;
+                    
+                    switch (currentSortingMode)
+                    {
+
+                        case SortingMode.Alphabetical:
+                            sortedSearchedAvatars = new List<ApiAvatar>();
+                            foreach (ApiAvatar avtr in SearchedAvatars.ToArray().OrderBy(x => x.name))
+                                sortedSearchedAvatars.Add(avtr);
+                            if (sortingInverse)
+                                sortedSearchedAvatars.Reverse();
+                            break;
+                        case SortingMode.Creator:
+                            sortedSearchedAvatars = new List<ApiAvatar>();
+                            foreach (ApiAvatar avtr in SearchedAvatars.ToArray().OrderBy(x => x.authorName))
+                                sortedSearchedAvatars.Add(avtr);
+                            if (sortingInverse)
+                                sortedSearchedAvatars.Reverse();
+                            break;
+                        default:
+                            sortedSearchedAvatars = SearchedAvatars;
+                            if (sortingInverse)
+                                sortedSearchedAvatars.Reverse();
+                            break;
+                    }
+
+                    pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)sortedSearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit + 1);
+                    List<ApiAvatar> avatarsToRender = sortedSearchedAvatars.GetRange(currentPage * Configuration.JSONConfig.SearchRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.SearchRenderLimit - sortedSearchedAvatars.Count));
                     if (avatarsToRender.Count > Configuration.JSONConfig.SearchRenderLimit)
                         avatarsToRender.RemoveRange(Configuration.JSONConfig.SearchRenderLimit, avatarsToRender.Count - Configuration.JSONConfig.SearchRenderLimit);
                     NewAvatarList.RenderElement(new List<ApiAvatar>());
@@ -398,8 +504,35 @@ namespace emmVRC.Hacks
                         currentPage = (int)LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit;
                     if (currentPage < 0)
                         currentPage = 0;
-                    pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit + 1);
-                    List<ApiAvatar> avatarsToRender = LoadedAvatars.GetRange(currentPage * Configuration.JSONConfig.FavoriteRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.FavoriteRenderLimit - LoadedAvatars.Count));
+
+                    List<ApiAvatar> sortedLoadedAvatars;
+
+                    switch (currentSortingMode)
+                    {
+
+                        case SortingMode.Alphabetical:
+                            sortedLoadedAvatars = new List<ApiAvatar>();
+                            foreach (ApiAvatar avtr in LoadedAvatars.ToArray().OrderBy(x => x.name))
+                                sortedLoadedAvatars.Add(avtr);
+                            if (sortingInverse)
+                                sortedLoadedAvatars.Reverse();
+                            break;
+                        case SortingMode.Creator:
+                            sortedLoadedAvatars = new List<ApiAvatar>();
+                            foreach (ApiAvatar avtr in LoadedAvatars.ToArray().OrderBy(x => x.authorName))
+                                sortedLoadedAvatars.Add(avtr);
+                            if (sortingInverse)
+                                sortedLoadedAvatars.Reverse();
+                            break;
+                        default:
+                            sortedLoadedAvatars = LoadedAvatars;
+                            if (sortingInverse)
+                                sortedLoadedAvatars.Reverse();
+                            break;
+                    }
+
+                    pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)sortedLoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit + 1);
+                    List<ApiAvatar> avatarsToRender = sortedLoadedAvatars.GetRange(currentPage * Configuration.JSONConfig.FavoriteRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.FavoriteRenderLimit - sortedLoadedAvatars.Count));
                     if (avatarsToRender.Count > Configuration.JSONConfig.FavoriteRenderLimit)
                         avatarsToRender.RemoveRange(Configuration.JSONConfig.FavoriteRenderLimit, avatarsToRender.Count - Configuration.JSONConfig.FavoriteRenderLimit);
                     NewAvatarList.RenderElement(new List<ApiAvatar>());
@@ -501,7 +634,8 @@ namespace emmVRC.Hacks
         internal static void OnUpdate()
         {
 
-            if (PublicAvatarList == null || FavoriteButtonNew == null || RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
+            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null || PublicAvatarList == null || FavoriteButtonNew == null || RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
+            if (!PublicAvatarList.activeInHierarchy ) return;
             if (searchBox == null && NewAvatarList.gameObject.activeInHierarchy)
             {
                 VRCUiPageHeader pageheader = QuickMenuUtils.GetVRCUiMInstance().GetComponentInChildren<VRCUiPageHeader>(true);
@@ -519,14 +653,14 @@ namespace emmVRC.Hacks
                     SearchAvatars(searchTerm).NoAwait(nameof(SearchAvatars));
                 }));
             }
-            if (searchBox != null && searchBox.field_Public_Button_0 != null && !searchBox.field_Public_Button_0.interactable && PublicAvatarList.activeInHierarchy && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+            if (searchBox != null && searchBox.field_Public_Button_0 != null && !searchBox.field_Public_Button_0.interactable  && RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
                 searchBox.field_Public_Button_0.interactable = true;
                 searchBox.field_Public_UnityAction_1_String_0 = searchBoxAction;
             }
 
 
-            if (PublicAvatarList.activeSelf && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
+            if (Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
             {
                 NewAvatarList.collapsedCount = Configuration.JSONConfig.FavoriteRenderLimit + Configuration.JSONConfig.SearchRenderLimit;
                 NewAvatarList.expandedCount = Configuration.JSONConfig.FavoriteRenderLimit + Configuration.JSONConfig.SearchRenderLimit;

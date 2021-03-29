@@ -72,6 +72,7 @@ namespace emmVRC.Hacks
 
                 Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/StreamerModeEnabled/StreamerBackground").GetComponent<RectTransform>().anchoredPosition -= new Vector2(0f, 160f);
                 Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar/StreamerModeEnabled/StreamerModeText").GetComponent<RectTransform>().anchoredPosition -= new Vector2(0f, 160f);
+
                 // Shrink the info bar, if the status is not being displayed... this is kinda jank, we should fix this later
                 if (!Configuration.JSONConfig.InfoBarDisplayEnabled)
                 {
@@ -104,7 +105,7 @@ namespace emmVRC.Hacks
                     {
                         // If the client is actually logged in, set the status to "Connected"
                         if (Network.NetworkClient.webToken != null)
-                           emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                                    Network Status: <color=lime>Connected</color>";
+                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                                    Network Status: <color=lime>Connected</color>";
                         // If the client is not logged in, set the status to "Disconnected"
                         else
                             emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                                Network Status: <color=red> Disconnected</color>";

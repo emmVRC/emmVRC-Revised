@@ -198,6 +198,7 @@ namespace emmVRC.Hacks
                                 objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social"));
                                 objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo"));
                                 objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo"));
+                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings"));
                             }
                 }
                 if ((Configuration.JSONConfig.InfoSpoofingEnabled) && objectRoots != null)
@@ -228,8 +229,6 @@ namespace emmVRC.Hacks
                                 wasEnabled2 = true;
                             }
                         }
-
-
                     }
                     catch (Exception ex)
                     {

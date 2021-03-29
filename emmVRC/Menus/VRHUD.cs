@@ -20,7 +20,8 @@ namespace emmVRC.Menus
         private static Transform ShortcutMenu;
         private static GameObject BackgroundObject;
         private static GameObject TextObject;
-        private static Image BackgroundImage;
+        private static GameObject LogoIconContainer;
+        private static Image BackgroundImage, emmLogo;
         private static Text TextText;
         public static bool enabled = true;
         public static bool Initialized;
@@ -45,21 +46,25 @@ namespace emmVRC.Menus
                 if (!Configuration.JSONConfig.LogoButtonEnabled || Configuration.JSONConfig.LogoButtonX != 5 || Configuration.JSONConfig.TabMode)
                 {
                     var rect = BackgroundObject.GetComponent<RectTransform>();
-                    rect.sizeDelta = new Vector2(640, 1920);
+                    //rect.sizeDelta = new Vector2(640, 1920);
+                    rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
                     rect.anchoredPosition = new Vector2(1170, 280);
                 }
                 else
                 {
                     var rect = BackgroundObject.GetComponent<RectTransform>();
-                    rect.sizeDelta = new Vector2(640, 1920);
+                    //rect.sizeDelta = new Vector2(640, 1920);
+                    rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
                     rect.anchoredPosition = new Vector2(1590, 280);
                 }
             }
             else
             {
                 var rect = BackgroundObject.GetComponent<RectTransform>();
-                rect.sizeDelta = new Vector2(640, 1920);
-                rect.anchoredPosition = new Vector2(1590, 280);
+                //rect.sizeDelta = new Vector2(640, 1920);
+                rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
+                //rect.anchoredPosition = new Vector2(1590, 280);
+                rect.anchoredPosition = new Vector2(1720, 280); // With Player Framerate counter
             }
             BackgroundImage.sprite = Resources.HUD_Base;
 
@@ -70,12 +75,15 @@ namespace emmVRC.Menus
             TextObject.AddComponent<CanvasRenderer>();
             TextText = TextObject.AddComponent<Text>();
 
-            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(630, 1920);
+            //TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(630, 1920);
+            TextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(860, 1920); // With Player Framerate counter
+            TextObject.GetComponent<RectTransform>().localPosition -= new Vector3(0f, 10f, 0f);
             TextText.font = UnityEngine.Resources.GetBuiltinResource<Font>("Arial.ttf");
             TextText.fontSize = 40;
             TextText.text = "";
 
-            ToggleHUDButton = new QMSingleButton("ShortcutMenu", 0, 0, "", () => {
+            ToggleHUDButton = new QMSingleButton("ShortcutMenu", 0, 0, "", () =>
+            {
                 enabled = !enabled;
             }, "Toggles the Quick Menu HUD", Color.grey);
             var TGO = ToggleHUDButton.getGameObject();
@@ -84,6 +92,16 @@ namespace emmVRC.Menus
             TRT.anchoredPosition = new Vector2(1590f, 60f);
             //GameObject.DestroyImmediate(TGO.GetComponentInChildren<Text>().gameObject);
             TGO.GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
+
+            // Start emmHUD Logo
+            LogoIconContainer = new GameObject("emmHUDLogo");
+            LogoIconContainer.AddComponent<CanvasRenderer>();
+            LogoIconContainer.transform.SetParent(BackgroundObject.transform, false);
+            emmLogo = LogoIconContainer.AddComponent<Image>();
+            emmLogo.sprite = Resources.emmHUDLogo;
+            emmLogo.GetComponent<RectTransform>().localPosition = new Vector2(-365f, 880f);
+            emmLogo.GetComponent<RectTransform>().localScale = new Vector3(1.3f, 1.3f, 1.3f);
+            // End emmHUD Logo
 
             Initialized = true;
 
@@ -131,7 +149,12 @@ namespace emmVRC.Menus
                         "\n" +
                         "\n" +
                         (Configuration.JSONConfig.emmVRCNetworkEnabled ? (Network.NetworkClient.webToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
-                        "\n";
+                        "\n" +
+                        "\n" +
+                        (Objects.Attributes.Debug ? (
+                            "Current frame time: " + (Hacks.FrameTimeCalculator.frameTimes[Hacks.FrameTimeCalculator.iterator == 0 ? Hacks.FrameTimeCalculator.frameTimes.Length - 1 : (Hacks.FrameTimeCalculator.iterator - 1)]) + "ms\n" +
+                            "Average frame time: " + Hacks.FrameTimeCalculator.frameTimeAvg + "ms\n"
+                        ) : "");
                     if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled))
                         TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
                 }
