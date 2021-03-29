@@ -121,6 +121,10 @@ namespace emmVRC.Objects
         public bool InfoSpoofingEnabled = false;
         public string InfoSpoofingName = "";
 
+        // Avatar list sorting options
+        public int SortingMode = 0;
+        public bool SortingInverse = false;
+
         // One-timers
         public string AcceptedEULAVersion = "0.0.0";
         public bool WelcomeMessageShown = false;

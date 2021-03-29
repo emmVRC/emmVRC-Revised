@@ -198,6 +198,7 @@ namespace emmVRC.Hacks
                                 objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social"));
                                 objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo"));
                                 objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo"));
+                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings"));
                             }
                 }
                 if ((Configuration.JSONConfig.InfoSpoofingEnabled) && objectRoots != null)
@@ -247,7 +248,6 @@ namespace emmVRC.Hacks
                                         {
                                             if (text.text.Contains(NameSpoofGenerator.spoofedName))
                                             {
-                                                text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", VRC.Core.APIUser.CurrentUser.GetName());
                                                 text.text = text.text.Replace(NameSpoofGenerator.spoofedName, VRC.Core.APIUser.CurrentUser.GetName());
                                             }
                                         }
@@ -260,7 +260,6 @@ namespace emmVRC.Hacks
                                     {
                                         if (text.text.Contains(NameSpoofGenerator.spoofedName))
                                         {
-                                            text.text = text.text.Replace("⛧⛧⛧⛧⛧⛧⛧⛧⛧", VRC.Core.APIUser.CurrentUser.GetName());
                                             text.text = text.text.Replace(NameSpoofGenerator.spoofedName, VRC.Core.APIUser.CurrentUser.GetName());
                                         }
                                     }

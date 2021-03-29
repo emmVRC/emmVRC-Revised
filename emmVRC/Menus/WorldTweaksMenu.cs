@@ -81,7 +81,7 @@ namespace emmVRC.Menus
             {
                 Hacks.ComponentToggle.pickupable = false;
                 Hacks.ComponentToggle.Toggle();
-            }, "TOGGLE: Keep Objects visible, but disable you being able to pick them up.");
+            }, "TOGGLE: Keep Objects visible, but disable you being able to pick them up");
             VRCPickupToggle.setToggleState(true); // Each Game Start, value will be true - No Config was set
 
             PickupObjectToggle = new QMToggleButton(baseMenu, 2, 2, "Show\nPickup Objects", () =>
@@ -92,7 +92,7 @@ namespace emmVRC.Menus
             {
                 Hacks.ComponentToggle.pickup_object = false;
                 Hacks.ComponentToggle.Toggle();
-            }, "TOGGLE: Keep Objects visible, but disable you being able to pick them up.");
+            }, "TOGGLE: Hide all pickup objects in the world");
             PickupObjectToggle.setToggleState(true); // Each Game Start, value will be true - No Config was set
 
             VideoPlayerToggle = new QMToggleButton(baseMenu, 3, 2, "Show\nVideo Players", () =>
@@ -103,7 +103,7 @@ namespace emmVRC.Menus
             {
                 Hacks.ComponentToggle.videoplayers = false;
                 Hacks.ComponentToggle.Toggle();
-            }, "TOGGLE: Video Players\n<color=red>Does not work in Udon Worlds</color>");
+            }, "TOGGLE: Video Players\nDoes not work in Udon Worlds");
             VideoPlayerToggle.setToggleState(true); // Each Game Start, value will be true - No Config was set
 
             AvatarPedestalToggle = new QMToggleButton(baseMenu, 4, 2, "Avatar\nPedestals", () =>
@@ -135,23 +135,19 @@ namespace emmVRC.Menus
                     if (!Hacks.ComponentToggle.pickupable)
                     {
                         Hacks.ComponentToggle.pickupable = true;
-                        VRCPickupToggle.setToggleState(true);
+                        VRCPickupToggle.setToggleState(false);
                     }
                     if (!Hacks.ComponentToggle.pickup_object)
                     {
                         Hacks.ComponentToggle.pickup_object = true;
-                        PickupObjectToggle.setToggleState(true);
+                        PickupObjectToggle.setToggleState(false);
                     }
                     ItemESPToggle.getGameObject().GetComponent<Button>().enabled = true;
                     TriggerESPToggle.getGameObject().GetComponent<Button>().enabled = true;
-                    VRCPickupToggle.getGameObject().GetComponent<Button>().enabled = true;
-                    PickupObjectToggle.getGameObject().GetComponent<Button>().enabled = true;
                     break;
                 default:
                     ItemESPToggle.getGameObject().GetComponent<Button>().enabled = false;
                     TriggerESPToggle.getGameObject().GetComponent<Button>().enabled = false;
-                    VRCPickupToggle.getGameObject().GetComponent<Button>().enabled = false;
-                    PickupObjectToggle.getGameObject().GetComponent<Button>().enabled = false;
                     break;
             }
         }

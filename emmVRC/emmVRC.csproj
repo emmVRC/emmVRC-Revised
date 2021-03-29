@@ -52,6 +52,7 @@
     <Compile Include="Hacks\Flight.cs" />
     <Compile Include="Hacks\FOV.cs" />
     <Compile Include="Hacks\FPS.cs" />
+    <Compile Include="Hacks\FrameTimeCalculator.cs" />
     <Compile Include="Hacks\GlobalDynamicBones.cs" />
     <Compile Include="Hacks\InfoSpoofing.cs" />
     <Compile Include="Hacks\InfoBarClock.cs" />
@@ -255,6 +256,10 @@
     <Reference Include="UnityEngine.ImageConversionModule, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -128,7 +128,7 @@ namespace emmVRC.Menus
             //BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
             BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(325, 768); // With Player Framerate counter
             BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
-            BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-927f, 111f); // With Player Framerate counter
+            BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-797f, 111f); // With Player Framerate counter
             BackgroundObject.transform.SetParent(CanvasObject.transform, false);
             BackgroundImage.sprite = Resources.HUD_Minimized;
             TextObject = new GameObject("Text");
@@ -207,7 +207,12 @@ namespace emmVRC.Menus
                             "\n" +
                             "\n" +
                             (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.webToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
-                            "\n";
+                            "\n" +
+                            "\n" +
+                            (Objects.Attributes.Debug ? (
+                                "Current frame time: "+(Hacks.FrameTimeCalculator.frameTimes[Hacks.FrameTimeCalculator.iterator == 0 ? Hacks.FrameTimeCalculator.frameTimes.Length-1 : (Hacks.FrameTimeCalculator.iterator -1)])+"ms\n"+
+                                "Average frame time: "+Hacks.FrameTimeCalculator.frameTimeAvg+"ms\n"
+                            ) : "");
                         if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled))
                             TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
                     }

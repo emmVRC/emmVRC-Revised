@@ -545,9 +545,10 @@ namespace emmVRC
             Menus.WorldTweaksMenu.DisableOnSceneLoad();
             #endregion
         }
-
         public static void OnUpdate()
         {
+            if (Attributes.Debug)
+                FrameTimeCalculator.Update();
             AwaitUpdate.Flush();
 
             if (!Initialized)
@@ -565,6 +566,7 @@ namespace emmVRC
                 }
             }
             Hacks.CustomAvatarFavorites.OnUpdate();
+            
         }
         public static void OnApplicationQuit()
         {

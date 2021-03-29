@@ -82,7 +82,8 @@ namespace emmVRC.Menus
             TextText.fontSize = 40;
             TextText.text = "";
 
-            ToggleHUDButton = new QMSingleButton("ShortcutMenu", 0, 0, "", () => {
+            ToggleHUDButton = new QMSingleButton("ShortcutMenu", 0, 0, "", () =>
+            {
                 enabled = !enabled;
             }, "Toggles the Quick Menu HUD", Color.grey);
             var TGO = ToggleHUDButton.getGameObject();
@@ -148,7 +149,12 @@ namespace emmVRC.Menus
                         "\n" +
                         "\n" +
                         (Configuration.JSONConfig.emmVRCNetworkEnabled ? (Network.NetworkClient.webToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
-                        "\n";
+                        "\n" +
+                        "\n" +
+                        (Objects.Attributes.Debug ? (
+                            "Current frame time: " + (Hacks.FrameTimeCalculator.frameTimes[Hacks.FrameTimeCalculator.iterator == 0 ? Hacks.FrameTimeCalculator.frameTimes.Length - 1 : (Hacks.FrameTimeCalculator.iterator - 1)]) + "ms\n" +
+                            "Average frame time: " + Hacks.FrameTimeCalculator.frameTimeAvg + "ms\n"
+                        ) : "");
                     if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled))
                         TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
                 }
