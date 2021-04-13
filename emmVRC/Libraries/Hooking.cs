@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using emmVRC.Hacks;
-using emmVRC.TinyJSON;
 using Harmony;
-using MelonLoader;
-using Transmtn.DTO;
 using UnityEngine;
 using VRC;
 using VRC.Core;
@@ -126,6 +122,7 @@ namespace emmVRC.Libraries
             }
             catch (Exception ex) { emmVRCLoader.Logger.LogError("Avatar OnRebuild Failed: " + ex.ToString()); }
         }
+
         private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
         {
             if (__0 != null && FBTSaving.IsPreviouslyCalibrated(__0) && RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.TrackingSaving)
@@ -200,9 +197,9 @@ namespace emmVRC.Libraries
             if (__instance.field_Private_VRCPlayer_0 != null)
                 if (__instance.field_Private_VRCPlayer_0.field_Private_Player_0 != null && __instance.field_Private_VRCPlayer_0.field_Private_Player_0.field_Private_APIUser_0 != null)
                     if (Configuration.JSONConfig.InfoSpoofingEnabled)
-                        PlayerReflect.GetSelfNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
-                    else if (!Configuration.JSONConfig.InfoSpoofingEnabled && PlayerReflect.GetSelfNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                        PlayerReflect.GetSelfNameplateText().text = PlayerReflect.GetSelfNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
+                    else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
         }
     }
 }

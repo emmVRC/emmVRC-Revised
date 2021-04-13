@@ -132,6 +132,9 @@ namespace emmVRC.Menus
         private static PageItem RespawnKeybind;
         private static PageItem GoHomeKeybind;
 
+        // Page 11 - April Fools
+        private static PageItem AprilFoolsJoke;
+
         private static bool canToggleNetwork = true;
 
 
@@ -304,7 +307,8 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.ActionMenuIntegration = false;
                 Configuration.SaveConfig();
             }, "TOGGLE: Integrates an emmVRC menu into the Action (Radial) Menu, for easy access");
-            EmojiFavouriteMenu = new PageItem("Emoji\nFavorites", () => {
+            EmojiFavouriteMenu = new PageItem("Emoji\nFavorites", () =>
+            {
                 QuickMenuUtils.ShowQuickmenuPage(Hacks.EmojiFavourites.baseMenu.getMenuName());
             }, "Configure your Emoji favorites, accessible from the Action Menu");
 
@@ -747,11 +751,11 @@ namespace emmVRC.Menus
                         text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                 }
-                if (PlayerReflect.GetSelfNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                    PlayerReflect.GetSelfNameplateText().text = PlayerReflect.GetSelfNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
+                if (VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
             }, "TOGGLE: Enables local info spoofing, which can protect your identity in screenshots, recordings, and streams");
             //InfoSpooferNamePicker = new PageItem("")
-            InfoSpooferNamePicker = new PageItem("F", () =>
+            InfoSpooferNamePicker = new PageItem("Set spoofed\nName", () =>
             {
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter your spoof name (or none for random)", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode>, UnityEngine.UI.Text>((string name, Il2CppSystem.Collections.Generic.List<UnityEngine.KeyCode> keyk, UnityEngine.UI.Text tx) =>
                 {
@@ -771,8 +775,8 @@ namespace emmVRC.Menus
                                 text.text = text.text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                             }
                         }
-                        if (PlayerReflect.GetSelfNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                            PlayerReflect.GetSelfNameplateText().text = PlayerReflect.GetSelfNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
+                        if (VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                            VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
                     }
                     Configuration.JSONConfig.InfoSpoofingName = name;
                     Configuration.SaveConfig();
@@ -1304,7 +1308,37 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(ToggleHUDEnabledKeybind);
             baseMenu.pageItems.Add(RespawnKeybind);
             baseMenu.pageItems.Add(GoHomeKeybind);
-
+            AprilFoolsJoke = new PageItem("April Fools", () =>
+            {
+                Configuration.JSONConfig.AprilFoolsJoke = true;
+                Configuration.SaveConfig();
+                foreach (QMSingleButton button in QMButtonAPI.allSingleButtons)
+                {
+                    if (button != ShortcutMenuButtons.logoButton && button != TabMenu.logoButton && button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
+                        button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
+                }
+                foreach (QMToggleButton button in QMButtonAPI.allToggleButtons)
+                {
+                    if (button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
+                        button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
+                }
+            }, "Disabled", () =>
+                {
+                    Configuration.JSONConfig.AprilFoolsJoke = false;
+                    Configuration.SaveConfig();
+                    foreach (QMSingleButton button in QMButtonAPI.allSingleButtons)
+                    {
+                        if (button != ShortcutMenuButtons.logoButton && button != TabMenu.logoButton && button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
+                            button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
+                    }
+                    foreach (QMToggleButton button in QMButtonAPI.allToggleButtons)
+                    {
+                        if (button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
+                            button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
+                    }
+                }, "TOGGLE: Enable the April Fools 2021 joke, for a limited time only");
+            if (!Configuration.JSONConfig.StealthMode)
+            baseMenu.pageItems.Add(AprilFoolsJoke);
 
 
             baseMenu.pageTitles.Add("Core Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
@@ -1322,6 +1356,8 @@ namespace emmVRC.Menus
             }
             baseMenu.pageTitles.Add("Disable Avatar Menu Lists" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Keybinds" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
+            if (!Configuration.JSONConfig.StealthMode)
+                baseMenu.pageTitles.Add("April Fools");
         }
         public static void RefreshMenu()
         {
@@ -1401,6 +1437,7 @@ namespace emmVRC.Menus
                 RespawnKeybind.Name = "Respawn:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[0])));
                 GoHomeKeybind.Name = "Go Home:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[0])));
 
+                AprilFoolsJoke.SetToggleState(Configuration.JSONConfig.AprilFoolsJoke);
 
             }
             catch (Exception ex)

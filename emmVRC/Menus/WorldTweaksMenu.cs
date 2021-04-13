@@ -135,19 +135,23 @@ namespace emmVRC.Menus
                     if (!Hacks.ComponentToggle.pickupable)
                     {
                         Hacks.ComponentToggle.pickupable = true;
-                        VRCPickupToggle.setToggleState(false);
+                        VRCPickupToggle.setToggleState(true);
                     }
                     if (!Hacks.ComponentToggle.pickup_object)
                     {
                         Hacks.ComponentToggle.pickup_object = true;
-                        PickupObjectToggle.setToggleState(false);
+                        PickupObjectToggle.setToggleState(true);
                     }
                     ItemESPToggle.getGameObject().GetComponent<Button>().enabled = true;
                     TriggerESPToggle.getGameObject().GetComponent<Button>().enabled = true;
+                    VRCPickupToggle.getGameObject().GetComponent<Button>().enabled = true;
+                    PickupObjectToggle.getGameObject().GetComponent<Button>().enabled = true;
                     break;
                 default:
                     ItemESPToggle.getGameObject().GetComponent<Button>().enabled = false;
                     TriggerESPToggle.getGameObject().GetComponent<Button>().enabled = false;
+                    VRCPickupToggle.getGameObject().GetComponent<Button>().enabled = false;
+                    PickupObjectToggle.getGameObject().GetComponent<Button>().enabled = false;
                     break;
             }
         }

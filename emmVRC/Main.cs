@@ -131,6 +131,7 @@ namespace emmVRC
                         emmVRCLoader.Logger.LogError("Error occured while initializing network: " + ex.ToString());
                     }
                 }
+
                 // Initialize the Debug manager
                 emmVRCLoader.Logger.LogDebug("Initializing debug manager");
                 Managers.DebugManager.Initialize();

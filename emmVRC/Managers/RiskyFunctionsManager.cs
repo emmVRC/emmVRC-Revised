@@ -61,7 +61,7 @@ namespace emmVRC.Managers
                     // Check if we have processed what the status of Risky Functions should be
                     if (!RiskyFuncsAreChecked)
                     {
-                        if (RiskyFuncsAreAllowed)
+                        if (RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                         {
                             Menus.PlayerTweaksMenu.SetRiskyFuncsAllowed(true);
                             Menus.UserTweaksMenu.SetRiskyFuncsAllowed(true);

@@ -120,6 +120,8 @@ namespace emmVRC
                     assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Halloween.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.xmasmode"))
                     assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Xmas.emm");
+                else if (Environment.CommandLine.Contains("--emmvrc.beemode"))
+                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Bee.emm");
                 else
                     assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
 

@@ -48,14 +48,14 @@ namespace emmVRC.Menus
                     var rect = BackgroundObject.GetComponent<RectTransform>();
                     //rect.sizeDelta = new Vector2(640, 1920);
                     rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
-                    rect.anchoredPosition = new Vector2(1170, 280);
+                    rect.anchoredPosition = new Vector2(1290, 290);
                 }
                 else
                 {
                     var rect = BackgroundObject.GetComponent<RectTransform>();
                     //rect.sizeDelta = new Vector2(640, 1920);
                     rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
-                    rect.anchoredPosition = new Vector2(1590, 280);
+                    rect.anchoredPosition = new Vector2(1745, 290);
                 }
             }
             else
@@ -64,7 +64,7 @@ namespace emmVRC.Menus
                 //rect.sizeDelta = new Vector2(640, 1920);
                 rect.sizeDelta = new Vector2(900, 1920); // With Player Framerate counter
                 //rect.anchoredPosition = new Vector2(1590, 280);
-                rect.anchoredPosition = new Vector2(1720, 280); // With Player Framerate counter
+                rect.anchoredPosition = new Vector2(1745, 290); // With Player Framerate counter
             }
             BackgroundImage.sprite = Resources.HUD_Base;
 
@@ -116,12 +116,12 @@ namespace emmVRC.Menus
             if (Configuration.JSONConfig.MoveVRHUDIfSpaceFree && Configuration.JSONConfig.DisableRankToggleButton && Configuration.JSONConfig.DisableReportWorldButton && Configuration.JSONConfig.FunctionsButtonX != 5)
             {
                 if (!Configuration.JSONConfig.LogoButtonEnabled || Configuration.JSONConfig.LogoButtonX != 5)
-                    BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(1170, 280);
+                    BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(1290, 290);
                 else
-                    BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(1590, 280);
+                    BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(1745, 290);
             }
             else
-                BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(1590, 280);
+                BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(1745, 290);
         }
 
         private static IEnumerator Loop()

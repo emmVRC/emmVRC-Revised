@@ -10,6 +10,7 @@ using UnityEngine;
 using VRC;
 using VRC.Animation;
 using VRC.Core;
+using TMPro;
 
 namespace emmVRC.Libraries
 {
@@ -77,7 +78,6 @@ namespace emmVRC.Libraries
                 if (ourReloadAvatarAction != null) return ourReloadAvatarAction;
                 var targetMethod = typeof(VRCPlayer).GetMethods(BindingFlags.Public | BindingFlags.Instance)
                     .Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 1 && it.GetParameters()[0].ParameterType == typeof(bool) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "Switching {0} to avatar {1}"));
-
                 ourReloadAvatarAction = (ReloadAvatarAction)Delegate.CreateDelegate(typeof(ReloadAvatarAction), targetMethod);
 
                 return ourReloadAvatarAction;
@@ -86,7 +86,8 @@ namespace emmVRC.Libraries
 
         public static void ReloadAvatar(this VRCPlayer instance, bool ignoreSelf = false)
         {
-            instance.Method_Public_Void_Boolean_0(ignoreSelf);
+            emmVRCLoader.Logger.LogDebug("ReloadAvatar called");
+            instance.Method_Public_Void_Boolean_1(ignoreSelf);
             //ReloadAvatarAct.Invoke(instance, something);
         }
         #endregion
@@ -230,6 +231,22 @@ namespace emmVRC.Libraries
         }
         #endregion
 
+        #region VRCPlayer GetNameplateText
+        public static TextMeshProUGUI GetNameplateText(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Text Container/Name").GetComponent<TextMeshProUGUI>(); }
+        #endregion
+
+        #region PlayerNet Framerate
+        public static float GetFramerate(this PlayerNet net)
+        {
+            if (net.field_Private_Byte_0 == null || net.field_Private_Byte_0 == 0f) return -1f;
+            return Mathf.Floor(1000f / net.field_Private_Byte_0);
+        }
+        public static Color LerpFramerateColor(this PlayerNet net)
+        {
+            if (net.GetFramerate() == -1f) return Color.grey;
+            return Color.Lerp(Color.red, Color.green, (net.GetFramerate() / 100f));
+        }
+        #endregion
         public static GameObject menuContent(this VRCUiManager mngr)
         {
             return mngr.field_Public_GameObject_0;

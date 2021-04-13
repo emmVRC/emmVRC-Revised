@@ -32,7 +32,7 @@ namespace emmVRC.Menus
                             if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
                                 if (tempCount != 22)
                                 {
-                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 + " ms - " + plr.GetVRCPlayer().GetFrames() + " fps\n"; // or GetFramesColored()
+                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr.field_Internal_VRCPlayer_0.prop_Int16_0 + " ms - <color=" + ColorConversion.ColorToHex(plr.prop_PlayerNet_0.LerpFramerateColor(), true) + ">" + (plr.prop_PlayerNet_0.GetFramerate() != -1f ? plr.prop_PlayerNet_0.GetFramerate()+"" : "N/A") + "</color> fps\n";
                                     tempCount++;
                                 }
                         }
@@ -48,11 +48,8 @@ namespace emmVRC.Menus
         public static string RenderWorldInfo()
         {
             string positionstr = "";
-            string worldinfo = "";
             if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
-                worldinfo += "\nWorld name:\n" + RoomManager.field_Internal_Static_ApiWorld_0.name;
-                worldinfo += "\n\nWorld creator:\n" + RoomManager.field_Internal_Static_ApiWorld_0.authorName;
                 if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
                 {
                     positionstr += "<b><color=red>X: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.x * 10)) / 10 + "</color></b>  ";
@@ -60,7 +57,7 @@ namespace emmVRC.Menus
                     positionstr += "<b><color=cyan>Z: " + (Mathf.Floor(VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.GetComponent<VRC.Player>().transform.position.z * 10)) / 10 + "</color></b>  ";
                 }
             }
-            return positionstr + "\n\n" + worldinfo;
+            return positionstr + "\n\n";
         }
 
         // Note to Korty - This is not used (or at least it doesn't seem like it)
@@ -100,6 +97,7 @@ namespace emmVRC.Menus
         public static bool UIExpanded = false;
         public static bool Initialized = false;
         public static bool enabled = true;
+        private static CanvasScaler scaler;
         public static IEnumerator Initialize()
         {
             emmVRCLoader.Logger.LogDebug("Initializing Desktop HUD");
@@ -112,9 +110,8 @@ namespace emmVRC.Menus
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
             CanvasObject.transform.position = Vector3.zero;
-            CanvasScaler scaler = CanvasObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(Screen.width, Screen.height);
+                    scaler = CanvasObject.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
             //          scaler.scaleFactor = 10.0f;
             //          scaler.dynamicPixelsPerUnit = 10.0f;
 
@@ -125,10 +122,11 @@ namespace emmVRC.Menus
             BackgroundObject.AddComponent<CanvasRenderer>();
 
             BackgroundImage = BackgroundObject.AddComponent<Image>();
-            //BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
+            BackgroundObject.GetComponent<RectTransform>().anchorMin = new Vector2(0, 1);
+            BackgroundObject.GetComponent<RectTransform>().anchorMax = new Vector2(0, 1);
+            BackgroundObject.GetComponent<RectTransform>().pivot = new Vector2(0, 1);
+            BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -5f);
             BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(325, 768); // With Player Framerate counter
-            BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
-            BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-797f, 111f); // With Player Framerate counter
             BackgroundObject.transform.SetParent(CanvasObject.transform, false);
             BackgroundImage.sprite = Resources.HUD_Minimized;
             TextObject = new GameObject("Text");
@@ -149,7 +147,10 @@ namespace emmVRC.Menus
             LogoIconContainer.transform.SetParent(BackgroundObject.transform, false);
             emmLogo = LogoIconContainer.AddComponent<Image>();
             emmLogo.sprite = Resources.emmHUDLogo;
-            emmLogo.GetComponent<RectTransform>().localPosition = new Vector2(-123f, 352f);
+            emmLogo.GetComponent<RectTransform>().anchorMin = new Vector2(0, 1);
+            emmLogo.GetComponent<RectTransform>().anchorMax = new Vector2(0, 1);
+            emmLogo.GetComponent<RectTransform>().pivot = new Vector2(0, 1);
+            emmLogo.GetComponent<RectTransform>().anchoredPosition = new Vector2(10, -2.5f);
             emmLogo.GetComponent<RectTransform>().localScale = new Vector3(0.58f, 0.58f, 0.58f);
             // End emmHUD Logo
 
@@ -167,6 +168,11 @@ namespace emmVRC.Menus
                 if (Configuration.JSONConfig.HUDEnabled && enabled)
                 {
                     CanvasObject.SetActive(true);
+
+                    
+                    //BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
+                    //BackgroundObject.GetComponent<RectTransform>().anchor
+                    //BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-797f, 111f); // With Player Framerate counter
                 }
                 else
                 {

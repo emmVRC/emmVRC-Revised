@@ -29,7 +29,9 @@ namespace emmVRC.Hacks
         {
             if (cooldown <= 0)
             {
-                foreach (UiUserList list in UnityEngine.Resources.FindObjectsOfTypeAll<UiUserList>())
+                // This changed with obfuscation, and since we're not updating the deob table (yet), this is hardcoded. Should be the same on Oculus anyway
+                // This is UiUserList, btw
+                foreach (MonoBehaviour1PublicObInBoTeSiSiBoInObSiUnique list in UnityEngine.Resources.FindObjectsOfTypeAll<MonoBehaviour1PublicObInBoTeSiSiBoInObSiUnique>())
                 {
                     try
                     {

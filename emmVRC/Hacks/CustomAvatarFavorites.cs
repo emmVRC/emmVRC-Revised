@@ -352,7 +352,6 @@ namespace emmVRC.Hacks
                 pageAvatar.transform.Find("AvatarPreviewBase/FallbackRoot").transform.localPosition += new Vector3(0f, 80f, 0f);
             }));*/
 
-            pageAvatar.transform.Find("AvatarModel").transform.localPosition += new Vector3(0f, 60f, 0f);
 
             LoadedAvatars = new List<ApiAvatar>();
 
@@ -457,31 +456,28 @@ namespace emmVRC.Hacks
                     if (currentPage < 0)
                         currentPage = 0;
 
-                    List<ApiAvatar> sortedSearchedAvatars;
-                    
+                    List<ApiAvatar> sortedSearchedAvatars = new List<ApiAvatar>();
+
                     switch (currentSortingMode)
                     {
 
                         case SortingMode.Alphabetical:
-                            sortedSearchedAvatars = new List<ApiAvatar>();
                             foreach (ApiAvatar avtr in SearchedAvatars.ToArray().OrderBy(x => x.name))
                                 sortedSearchedAvatars.Add(avtr);
-                            if (sortingInverse)
-                                sortedSearchedAvatars.Reverse();
                             break;
                         case SortingMode.Creator:
-                            sortedSearchedAvatars = new List<ApiAvatar>();
+                            
                             foreach (ApiAvatar avtr in SearchedAvatars.ToArray().OrderBy(x => x.authorName))
                                 sortedSearchedAvatars.Add(avtr);
-                            if (sortingInverse)
-                                sortedSearchedAvatars.Reverse();
                             break;
-                        default:
-                            sortedSearchedAvatars = SearchedAvatars;
-                            if (sortingInverse)
-                                sortedSearchedAvatars.Reverse();
+                        case SortingMode.DateAdded:
+                            foreach (ApiAvatar avtr in SearchedAvatars)
+                                sortedSearchedAvatars.Add(avtr);
                             break;
                     }
+
+                    if (sortingInverse)
+                        sortedSearchedAvatars.Reverse();
 
                     pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)sortedSearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit + 1);
                     List<ApiAvatar> avatarsToRender = sortedSearchedAvatars.GetRange(currentPage * Configuration.JSONConfig.SearchRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.SearchRenderLimit - sortedSearchedAvatars.Count));
@@ -489,12 +485,12 @@ namespace emmVRC.Hacks
                         avatarsToRender.RemoveRange(Configuration.JSONConfig.SearchRenderLimit, avatarsToRender.Count - Configuration.JSONConfig.SearchRenderLimit);
                     NewAvatarList.RenderElement(new List<ApiAvatar>());
                     NewAvatarList.RenderElement(avatarsToRender);
-                    avText.GetComponentInChildren<Text>().text = "(" + SearchedAvatars.Count + ") Search Results";
+                    avText.GetComponentInChildren<Text>().text = "(" + sortedSearchedAvatars.Count + ") Search Results";
                     if (currentPage == 0)
                         backButton.GetComponent<Button>().interactable = false;
                     else
                         backButton.GetComponent<Button>().interactable = true;
-                    if (currentPage >= SearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit)
+                    if (currentPage >= sortedSearchedAvatars.Count / Configuration.JSONConfig.SearchRenderLimit)
                         forwardButton.GetComponent<Button>().interactable = false;
                     else
                         forwardButton.GetComponent<Button>().interactable = true;
@@ -506,31 +502,26 @@ namespace emmVRC.Hacks
                     if (currentPage < 0)
                         currentPage = 0;
 
-                    List<ApiAvatar> sortedLoadedAvatars;
+                    List<ApiAvatar> sortedLoadedAvatars = new List<ApiAvatar>();
 
                     switch (currentSortingMode)
                     {
 
                         case SortingMode.Alphabetical:
-                            sortedLoadedAvatars = new List<ApiAvatar>();
                             foreach (ApiAvatar avtr in LoadedAvatars.ToArray().OrderBy(x => x.name))
                                 sortedLoadedAvatars.Add(avtr);
-                            if (sortingInverse)
-                                sortedLoadedAvatars.Reverse();
                             break;
                         case SortingMode.Creator:
-                            sortedLoadedAvatars = new List<ApiAvatar>();
                             foreach (ApiAvatar avtr in LoadedAvatars.ToArray().OrderBy(x => x.authorName))
                                 sortedLoadedAvatars.Add(avtr);
-                            if (sortingInverse)
-                                sortedLoadedAvatars.Reverse();
                             break;
-                        default:
-                            sortedLoadedAvatars = LoadedAvatars;
-                            if (sortingInverse)
-                                sortedLoadedAvatars.Reverse();
+                        case SortingMode.DateAdded:
+                            foreach (ApiAvatar avtr in LoadedAvatars)
+                                sortedLoadedAvatars.Add(avtr);
                             break;
                     }
+                    if (sortingInverse)
+                        sortedLoadedAvatars.Reverse();
 
                     pageTicker.GetComponentInChildren<Text>().text = (currentPage + 1) + " / " + ((int)sortedLoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit + 1);
                     List<ApiAvatar> avatarsToRender = sortedLoadedAvatars.GetRange(currentPage * Configuration.JSONConfig.FavoriteRenderLimit, System.Math.Abs(currentPage * Configuration.JSONConfig.FavoriteRenderLimit - sortedLoadedAvatars.Count));
@@ -538,12 +529,12 @@ namespace emmVRC.Hacks
                         avatarsToRender.RemoveRange(Configuration.JSONConfig.FavoriteRenderLimit, avatarsToRender.Count - Configuration.JSONConfig.FavoriteRenderLimit);
                     NewAvatarList.RenderElement(new List<ApiAvatar>());
                     NewAvatarList.RenderElement(avatarsToRender);
-                    avText.GetComponentInChildren<Text>().text = "(" + LoadedAvatars.Count + ") emmVRC Favorites";
+                    avText.GetComponentInChildren<Text>().text = "(" + sortedLoadedAvatars.Count + ") emmVRC Favorites";
                     if (currentPage == 0)
                         backButton.GetComponent<Button>().interactable = false;
                     else
                         backButton.GetComponent<Button>().interactable = true;
-                    if (currentPage >= LoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit)
+                    if (currentPage >= sortedLoadedAvatars.Count / Configuration.JSONConfig.FavoriteRenderLimit)
                         forwardButton.GetComponent<Button>().interactable = false;
                     else
                         forwardButton.GetComponent<Button>().interactable = true;
@@ -634,7 +625,11 @@ namespace emmVRC.Hacks
         }
         internal static void OnUpdate()
         {
-
+            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled)
+            {
+                PublicAvatarList.SetActive(false);
+                FavoriteButtonNew.SetActive(false);
+            }
             if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null || PublicAvatarList == null || FavoriteButtonNew == null || RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
             if (!PublicAvatarList.activeInHierarchy ) return;
             if (searchBox == null && NewAvatarList.gameObject.activeInHierarchy)
