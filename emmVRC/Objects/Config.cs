@@ -125,13 +125,6 @@ namespace emmVRC.Objects
         public int SortingMode = 0;
         public bool SortingInverse = false;
 
-        // April fools!
-        public bool AprilFoolsJoke = false;
-        public bool AprilFoolsDay = false;
-
-        // VRC+ Disclaimer
-        public bool VRCPlusDisclaimerShown = false;
-
         // One-timers
         public string AcceptedEULAVersion = "0.0.0";
         public bool WelcomeMessageShown = false;

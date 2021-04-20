@@ -52,23 +52,28 @@ namespace emmVRC.Hacks
                 }
                 if (menuOpen && menuJustOpened)
                 {
-                    if (Configuration.JSONConfig.DisableVRCPlusMenuTabs)
+                    while (VRC.Core.APIUser.CurrentUser == null)
+                        yield return new WaitForEndOfFrame();
+                    if ( !Objects.NetworkConfig.Instance.VRCPlusRequired || VRC.Core.APIUser.CurrentUser.isSupporter)
                     {
-                        vrcPlusButton.SetActive(false);
-                        userIconsButton.GetComponent<LayoutElement>().enabled = false;
-                        userIconsButton.GetComponent<Image>().enabled = false;
-                        userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(false);
-                        userIconsButton.SetActive(false);
-                        vrcPlusGetMoreFavorites.transform.localScale = Vector3.zero;
-                    }
-                    else
-                    {
-                        vrcPlusButton.SetActive(true);
-                        userIconsButton.GetComponent<LayoutElement>().enabled = true;
-                        userIconsButton.GetComponent<Image>().enabled = true;
-                        userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(true);
-                        userIconsButton.SetActive(true);
-                        vrcPlusGetMoreFavorites.transform.localScale = Vector3.one;
+                        if (Configuration.JSONConfig.DisableVRCPlusMenuTabs)
+                        {
+                            vrcPlusButton.SetActive(false);
+                            userIconsButton.GetComponent<LayoutElement>().enabled = false;
+                            userIconsButton.GetComponent<Image>().enabled = false;
+                            userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(false);
+                            userIconsButton.SetActive(false);
+                            vrcPlusGetMoreFavorites.transform.localScale = Vector3.zero;
+                        }
+                        else
+                        {
+                            vrcPlusButton.SetActive(true);
+                            userIconsButton.GetComponent<LayoutElement>().enabled = true;
+                            userIconsButton.GetComponent<Image>().enabled = true;
+                            userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(true);
+                            userIconsButton.SetActive(true);
+                            vrcPlusGetMoreFavorites.transform.localScale = Vector3.one;
+                        }
                     }
                     menuJustOpened = false;
                 }

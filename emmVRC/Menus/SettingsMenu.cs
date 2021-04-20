@@ -132,9 +132,6 @@ namespace emmVRC.Menus
         private static PageItem RespawnKeybind;
         private static PageItem GoHomeKeybind;
 
-        // Page 11 - April Fools
-        private static PageItem AprilFoolsJoke;
-
         private static bool canToggleNetwork = true;
 
 
@@ -1073,10 +1070,16 @@ namespace emmVRC.Menus
             }
             DisableVRCPlusAds = new PageItem("Disable VRC+\nQuick Menu Ads", () =>
             {
-                Configuration.JSONConfig.DisableVRCPlusAds = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                /*
+                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
+                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                {
+                    Configuration.JSONConfig.DisableVRCPlusAds = true;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                    MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                }
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusAds = false;
@@ -1086,10 +1089,16 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus adverts in the Quick Menu");
             DisableVRCPlusQMButtons = new PageItem("Disable VRC+\nQuick Menu Buttons", () =>
             {
-                Configuration.JSONConfig.DisableVRCPlusQMButtons = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
-                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                /*
+                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
+                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                {
+                    Configuration.JSONConfig.DisableVRCPlusQMButtons = true;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                    MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
+                }
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusQMButtons = false;
@@ -1099,9 +1108,15 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus buttons in the Quick Menu");
             DisableVRCPlusMenuTabs = new PageItem("Disable VRC+\nMenu Tabs", () =>
             {
-                Configuration.JSONConfig.DisableVRCPlusMenuTabs = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
+                /*
+                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
+                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                {
+                    Configuration.JSONConfig.DisableVRCPlusMenuTabs = true;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                }
 
             }, "Enabled", () =>
             {
@@ -1112,9 +1127,15 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus menu tabs, and adjusts the rest of the tabs to fit again");
             DisableVRCPlusUserInfo = new PageItem("Disable VRC+\nUser Info", () =>
             {
-                Configuration.JSONConfig.DisableVRCPlusUserInfo = true;
-                Configuration.SaveConfig();
-                RefreshMenu();
+                /*
+                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
+                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                {
+                    Configuration.JSONConfig.DisableVRCPlusUserInfo = true;
+                    Configuration.SaveConfig();
+                    RefreshMenu();
+                }
 
             }, "Enabled", () =>
             {
@@ -1308,37 +1329,6 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(ToggleHUDEnabledKeybind);
             baseMenu.pageItems.Add(RespawnKeybind);
             baseMenu.pageItems.Add(GoHomeKeybind);
-            AprilFoolsJoke = new PageItem("April Fools", () =>
-            {
-                Configuration.JSONConfig.AprilFoolsJoke = true;
-                Configuration.SaveConfig();
-                foreach (QMSingleButton button in QMButtonAPI.allSingleButtons)
-                {
-                    if (button != ShortcutMenuButtons.logoButton && button != TabMenu.logoButton && button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
-                        button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
-                }
-                foreach (QMToggleButton button in QMButtonAPI.allToggleButtons)
-                {
-                    if (button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
-                        button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
-                }
-            }, "Disabled", () =>
-                {
-                    Configuration.JSONConfig.AprilFoolsJoke = false;
-                    Configuration.SaveConfig();
-                    foreach (QMSingleButton button in QMButtonAPI.allSingleButtons)
-                    {
-                        if (button != ShortcutMenuButtons.logoButton && button != TabMenu.logoButton && button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
-                            button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
-                    }
-                    foreach (QMToggleButton button in QMButtonAPI.allToggleButtons)
-                    {
-                        if (button != null && button.getGameObject() != null && button.getGameObject().GetComponent<RectTransform>() != null)
-                            button.getGameObject().GetComponent<RectTransform>().localScale = -button.getGameObject().GetComponent<RectTransform>().localScale;
-                    }
-                }, "TOGGLE: Enable the April Fools 2021 joke, for a limited time only");
-            if (!Configuration.JSONConfig.StealthMode)
-            baseMenu.pageItems.Add(AprilFoolsJoke);
 
 
             baseMenu.pageTitles.Add("Core Features" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
@@ -1356,8 +1346,6 @@ namespace emmVRC.Menus
             }
             baseMenu.pageTitles.Add("Disable Avatar Menu Lists" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
             baseMenu.pageTitles.Add("Keybinds" + (Configuration.JSONConfig.StealthMode ? " (Stealth Mode Enabled)" : ""));
-            if (!Configuration.JSONConfig.StealthMode)
-                baseMenu.pageTitles.Add("April Fools");
         }
         public static void RefreshMenu()
         {
@@ -1437,7 +1425,6 @@ namespace emmVRC.Menus
                 RespawnKeybind.Name = "Respawn:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[0])));
                 GoHomeKeybind.Name = "Go Home:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[0])));
 
-                AprilFoolsJoke.SetToggleState(Configuration.JSONConfig.AprilFoolsJoke);
 
             }
             catch (Exception ex)

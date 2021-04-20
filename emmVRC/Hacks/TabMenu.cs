@@ -36,8 +36,6 @@ namespace emmVRC.Hacks
             GameObject tabMenuObj = QuickMenu.prop_QuickMenu_0.gameObject.transform.Find(tabMenu.getMenuName()).gameObject;
 
             logoButton = new QMSingleButton(tabMenu, 1, 0, "", () => { if (Configuration.JSONConfig.LogoButtonEnabled) System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
-            if (Configuration.JSONConfig.AprilFoolsJoke)
-                logoButton.getGameObject().GetComponent<RectTransform>().localScale = -logoButton.getGameObject().GetComponent<RectTransform>().localScale;
             functionsButton = new QMSingleButton(tabMenu, 1, 1, "Functions", () => {
                 QuickMenu.prop_QuickMenu_0.transform.Find("QuickModeTabs/HomeTab").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
                 FunctionsMenu.baseMenu.menuEntryButton.getGameObject().GetComponent<UnityEngine.UI.Button>().onClick.Invoke();

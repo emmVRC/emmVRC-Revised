@@ -25,7 +25,8 @@ namespace emmVRC.Libraries
             {
                 foreach (MethodInfo inf in typeof(VRCPlayer).GetMethods())
                 {
-                    if (inf.Name.Contains("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_PDM_") && !UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(inf).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == "Avatar is Ready, Initializing")){
+                    if (inf.Name.Contains("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_PDM_") && !UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(inf).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == "Avatar is Ready, Initializing"))
+                    {
                         instanceHarmony.Patch(inf, new HarmonyMethod(typeof(Hooking).GetMethod("OnAvatarInstantiated", BindingFlags.NonPublic | BindingFlags.Static)));
                     }
                 }
@@ -184,7 +185,7 @@ namespace emmVRC.Libraries
                 //MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(__1));
             }
         }
-        
+
         private static bool OnPortalEntered(PortalInternal __instance)
         {
             if (!Configuration.JSONConfig.PortalBlockingEnable)
@@ -194,12 +195,12 @@ namespace emmVRC.Libraries
 
         private static void OnRebuild(PlayerNameplate __instance)
         {
-            if (__instance.field_Private_VRCPlayer_0 != null)
-                if (__instance.field_Private_VRCPlayer_0.field_Private_Player_0 != null && __instance.field_Private_VRCPlayer_0.field_Private_Player_0.field_Private_APIUser_0 != null)
-                    if (Configuration.JSONConfig.InfoSpoofingEnabled)
-                        VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
-                    else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                        VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
+            if (Configuration.JSONConfig.StealthMode || __instance.field_Private_VRCPlayer_0 == null) return;
+            if (__instance.field_Private_VRCPlayer_0.field_Private_Player_0 != null && __instance.field_Private_VRCPlayer_0.field_Private_Player_0.field_Private_APIUser_0 != null)
+                if (Configuration.JSONConfig.InfoSpoofingEnabled)
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
+                else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
         }
     }
 }

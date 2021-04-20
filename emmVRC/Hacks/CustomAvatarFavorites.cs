@@ -90,13 +90,19 @@ namespace emmVRC.Hacks
                 }
                 if (!flag)
                 {
-                    if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))
+                    /*
+                    if (!APIUser.CurrentUser.isSupporter && NetworkConfig.Instance.VRCPlusRequired)
+                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
+                    else*/ // Here's our code for VRChat Plus compliance. Bading!
                     {
-                        FavoriteAvatar(apiAvatar).NoAwait(nameof(FavoriteAvatar));
-                    }
-                    else
-                    {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot favorite this avatar (it is private!)", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))
+                        {
+                            FavoriteAvatar(apiAvatar).NoAwait(nameof(FavoriteAvatar));
+                        }
+                        else
+                        {
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot favorite this avatar (it is private!)", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        }
                     }
                 }
                 else

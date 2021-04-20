@@ -491,7 +491,7 @@ namespace emmVRC
                     MelonLoader.MelonCoroutines.Start(ShortcutMenuButtons.Process());
                 }
                 Initialized = true;
-                
+
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();
             }

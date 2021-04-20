@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using emmVRC.Objects;
+using VRC.Core;
+using VRC;
 
 namespace emmVRC.Hacks
 {
@@ -28,6 +30,8 @@ namespace emmVRC.Hacks
 
         public static IEnumerator Process()
         {
+
+            
             if (logoButton == null)
             {
                 logoButton = new QMSingleButton("ShortcutMenu", Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY, "", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
@@ -52,11 +56,16 @@ namespace emmVRC.Hacks
             reportWorldButton.SetActive(!Configuration.JSONConfig.DisableReportWorldButton);
             trustRankButton.transform.localScale = (Configuration.JSONConfig.DisableRankToggleButton ? Vector3.zero : Vector3.one);
             socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
-            vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
-            vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
-            vrcPlusThankYouButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
-            vrcPlusUserIconButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
-            vrcPlusUserIconCameraButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+            while (APIUser.CurrentUser == null || Objects.NetworkConfig.Instance == null)
+                yield return new WaitForEndOfFrame();
+            if (!Objects.NetworkConfig.Instance.VRCPlusRequired || VRC.Core.APIUser.CurrentUser.isSupporter)
+            {
+                vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+                vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+                vrcPlusThankYouButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+                vrcPlusUserIconButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+                vrcPlusUserIconCameraButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+            }
         }
     }
 }

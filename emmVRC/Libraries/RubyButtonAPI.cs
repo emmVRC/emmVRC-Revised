@@ -102,8 +102,7 @@ namespace emmVRC.Libraries
         {
             btnType = "SingleButton";
             button = UnityEngine.Object.Instantiate(QuickMenuUtils.SingleButtonTemplate(), QuickMenuUtils.GetQuickMenuInstance().transform.Find(btnQMLoc), true);
-            if (Configuration.JSONConfig.AprilFoolsJoke && !Configuration.JSONConfig.StealthMode)
-                button.GetComponent<RectTransform>().localScale = -button.GetComponent<RectTransform>().localScale;
+
             initShift[0] = -1;
             initShift[1] = 0;
             setLocation(btnXLocation, btnYLocation);
@@ -191,8 +190,6 @@ namespace emmVRC.Libraries
             btnType = "ToggleButton";
             button = UnityEngine.Object.Instantiate<GameObject>(QuickMenuUtils.ToggleButtonTemplate(), QuickMenuUtils.GetQuickMenuInstance().transform.Find(btnQMLoc), true);
 
-            if (Configuration.JSONConfig.AprilFoolsJoke && !Configuration.JSONConfig.StealthMode)
-                button.GetComponent<RectTransform>().localScale = -button.GetComponent<RectTransform>().localScale;
 
             btnOn = button.transform.Find("Toggle_States_Visible/ON").gameObject;
             btnOff = button.transform.Find("Toggle_States_Visible/OFF").gameObject;

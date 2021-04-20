@@ -34,6 +34,7 @@ namespace emmVRC.Network
         private static bool userIDTried = false;
         private static bool keyFileTried = false;
         private static bool passwordTried = false;
+        public static int retries = 0;
         private static string message = "To those interested; this class is very much temporary. The entire network is going to be rewritten at some point soon.";
         public static string webToken
         {
@@ -47,6 +48,7 @@ namespace emmVRC.Network
         public static HttpClient httpClient { get; set; }
         public static void InitializeClient()
         {
+            retries = 0;
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -226,11 +228,21 @@ namespace emmVRC.Network
                 }
                 else
                 {
-                    Managers.NotificationManager.AddNotification("The emmVRC Network is currently unavailable. Please try again later.", "Reconnect", () => {
-                        Network.NetworkClient.InitializeClient();
-                        MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
-                        Managers.NotificationManager.DismissCurrentNotification();
-                    }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.errorSprite, -1);
+                    if (retries <= NetworkConfig.Instance.NetworkAutoRetries)
+                    {
+                        retries++;
+                        await sendRequest(password);
+                    }
+                    else
+                    {
+                        Managers.NotificationManager.AddNotification("The emmVRC Network is currently unavailable. Please try again later.", "Reconnect", () =>
+                        {
+                            retries = 0;
+                            Network.NetworkClient.InitializeClient();
+                            MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
+                            Managers.NotificationManager.DismissCurrentNotification();
+                        }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Resources.errorSprite, -1);
+                    }
                     //emmVRCLoader.Logger.LogError(response);
                 }
             }
