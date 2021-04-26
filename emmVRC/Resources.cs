@@ -99,8 +99,8 @@ namespace emmVRC
                 // Fetch the byte[] streams of data from Emilia's servers
                 using (WebClient webClient = new WebClient())
                 {
-                    webClient.DownloadFile("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMinimized.png", Path.Combine(resourcePath, "HUD/UIMinimized.png"));
-                    webClient.DownloadFile("https://thetrueyoshifan.com/downloads/emmvrcresources/HUD/uiMaximized.png", Path.Combine(resourcePath, "HUD/UIMaximized.png"));
+                    webClient.DownloadFile("https://dl.emmvrc.com/downloads/emmvrcresources/HUD/uiMinimized.png", Path.Combine(resourcePath, "HUD/UIMinimized.png"));
+                    webClient.DownloadFile("https://dl.emmvrc.com/downloads/emmvrcresources/HUD/uiMaximized.png", Path.Combine(resourcePath, "HUD/UIMaximized.png"));
                 }
             }*/
 
@@ -111,19 +111,19 @@ namespace emmVRC
             else {
                 UnityWebRequest assetBundleRequest;
                 if (Environment.CommandLine.Contains("--emmvrc.anniversarymode"))
-                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Anniversary.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Anniversary.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.pridemode"))
-                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Pride.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Pride.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.normalmode"))
-                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Normal.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Normal.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.halloweenmode"))
-                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Halloween.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Halloween.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.xmasmode"))
-                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Xmas.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Xmas.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.beemode"))
-                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/Seasonals/Bee.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Bee.emm");
                 else
-                    assetBundleRequest = UnityWebRequest.Get("https://thetrueyoshifan.com/downloads/emmvrcresources/emmVRCResources.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/emmVRCResources.emm");
 
                 assetBundleRequest.SendWebRequest();
                 while (!assetBundleRequest.isDone)

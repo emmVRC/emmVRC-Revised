@@ -95,13 +95,13 @@ namespace emmVRC
                             System.IO.File.Delete(modFile);
                         }
                     }
-                    cli.DownloadFile("https://thetrueyoshifan.com/downloads/emmVRCLoader.dll", dest != "" ? dest : Path.Combine(Environment.CurrentDirectory, "Mods/emmVRCLoader.dll"));
+                    cli.DownloadFile("https://dl.emmvrc.com/downloads/emmVRCLoader.dll", dest != "" ? dest : Path.Combine(Environment.CurrentDirectory, "Mods/emmVRCLoader.dll"));
                     MessageBox.Show("The newest emmVRCLoader has been downloaded to your Mods folder. To use emmVRC, restart your game. If the problem persists, remove any current emmVRCLoader files, and download the latest from #loader-updates in the emmVRC Discord.", "emmVRC", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
                     watch.Stop();
-                    emmVRCLoader.Logger.LogError("Attempt to download the new loader failed. You must download the latest from https://thetrueyoshifan.com/downloads/emmVRCLoader.dll manually.");
+                    emmVRCLoader.Logger.LogError("Attempt to download the new loader failed. You must download the latest from https://dl.emmvrc.com/downloads/emmVRCLoader.dll manually.");
                     emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
                     System.Windows.Forms.MessageBox.Show("You are using an incompatible version of emmVRCLoader: v" + currentEmmVRCLoaderVersion + ". Please install v" + Attributes.TargetemmVRCLoaderVersion + " or greater, from the #loader-updates channel in the emmVRC Discord. emmVRC cannot start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }

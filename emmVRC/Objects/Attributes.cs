@@ -8,11 +8,11 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.8.5";
+        public static string Version = "2.8.6";
         public static int LastTestedBuildNumber = 1068;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "04/19/2021";
+        public static string DateUpdated = "04/22/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
@@ -24,9 +24,9 @@ namespace emmVRC.Objects
             "stealth mode on\n";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.3.0";
-        public static string TargetemmVRCLoaderVersion = "1.1.0";
+        public static string TargetemmVRCLoaderVersion = "1.2.0";
         public static string[] IncompatibleMelonLoaderVersions = { "0.1.0", "0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.5", "0.2.6", "0.2.7", "0.2.7.1", "0.2.7.2", "0.2.7.3", "0.2.7.4" };
-        public static string[] IncompatibleemmVRCLoaderVersions = { "0.0.1", "0.0.2", "0.0.3", "0.0.4", "0.0.5", "1.0.0" };
+        public static string[] IncompatibleemmVRCLoaderVersions = { "0.0.1", "0.0.2", "0.0.3", "0.0.4", "0.0.5", "1.0.0", "1.1.0" };
         public static string[] FlavourTextList = {
                     "Did you know that Tab is also a drink?",
                     "Going strong for almost 2 years!",

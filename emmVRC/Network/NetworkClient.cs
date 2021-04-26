@@ -25,10 +25,10 @@ namespace emmVRC.Network
     {
         //TODO add caching
         //TODO add sockets
-        private const string BaseAddress = "https://thetrueyoshifan.com";
+        private const string BaseAddress = "https://api.emmvrc.com";
         private static int Port = 3000;
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
-        public const string configURL = "https://thetrueyoshifan.com"; // TODO: Integrate this with the API
+        public const string configURL = "https://dl.emmvrc.com"; // TODO: Integrate this with the API
         private static string LoginKey;
         private static string _webToken;
         private static bool userIDTried = false;

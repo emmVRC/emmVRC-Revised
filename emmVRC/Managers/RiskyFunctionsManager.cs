@@ -123,7 +123,7 @@ namespace emmVRC.Managers
 
                 try
                 {
-                    var result = await HTTPRequest.get("https://www.thetrueyoshifan.com/RiskyFuncsCheck.php?userid=" +
+                    var result = await HTTPRequest.get("https://dl.emmvrc.com/riskyfuncs.php?userid=" +
                                                        VRC.Core.APIUser.CurrentUser.id + "&worldid=" +
                                                        RoomManager.field_Internal_Static_ApiWorld_0.id);
                     
