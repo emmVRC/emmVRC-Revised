@@ -47,7 +47,7 @@ namespace emmVRC.Hacks
                     // Cache the VRC.Player GameObject, if we don't already have it
                     if (player == null && VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
                     {
-                        player = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_Player_0;
+                        player = VRCPlayer.field_Internal_Static_VRCPlayer_0._player;
                     }
                     else
                     {

@@ -39,7 +39,7 @@ namespace emmVRC.Hacks
                 component.anchorMin = transform.GetComponent<RectTransform>().anchorMin;
                 component.anchorMax = transform.GetComponent<RectTransform>().anchorMax;
                 component.anchoredPosition = transform.GetComponent<RectTransform>().anchoredPosition;
-                component.sizeDelta = new Vector2(2000f, transform.GetComponent<RectTransform>().sizeDelta.y);
+                component.sizeDelta = new Vector2(2000f, 92);
                 component.pivot = transform.GetComponent<RectTransform>().pivot;
 
                 // Offset our status from the base object
@@ -105,10 +105,10 @@ namespace emmVRC.Hacks
                     {
                         // If the client is actually logged in, set the status to "Connected"
                         if (Network.NetworkClient.webToken != null)
-                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                                    Network Status: <color=lime>Connected</color>";
+                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                Network Status: <color=lime>Connected</color>";
                         // If the client is not logged in, set the status to "Disconnected"
                         else
-                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "                                Network Status: <color=red> Disconnected</color>";
+                            emmVRCStatusText.text = "<color=#FF69B4>emmVRC</color> v" + Objects.Attributes.Version + "           Network Status: <color=red> Disconnected</color>";
                     }
                     // If the network is disabled, set up a basic status instead
                     else

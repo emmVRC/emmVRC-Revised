@@ -27,9 +27,9 @@ namespace emmVRC.Hacks
             CurrentEmojiMenu.menuEntryButton.DestroyMe();
             availableEmojiMenuButton = new QMSingleButton(baseMenu, 1, 0, "Add\nEmoji", OpenAvailableEmojiMenu, "Add an Emoji to your favorites");
             currentEmojiMenuButton = new QMSingleButton(baseMenu, 2, 0, "Remove\nEmoji", OpenDeleteFavouriteEmojiMenu, "Delete an Emoji from your favorites");
-            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInStVoInStVoUnique_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInStVoInStVoUnique_0.field_Public_ArrayOf_GameObject_0 == null)
+            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaInStVoInStVoInVoStUnique_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaInStVoInStVoInVoStUnique_0.field_Public_ArrayOf_GameObject_0 == null)
                 yield return new WaitForSeconds(1f);
-            AvailableEmojis = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaVoInStInStVoInStVoUnique_0.field_Public_ArrayOf_GameObject_0;
+            AvailableEmojis = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_MonoBehaviourPublicGaInStVoInStVoInVoStUnique_0.field_Public_ArrayOf_GameObject_0;
 
          }
         public static void OpenAvailableEmojiMenu()

@@ -33,7 +33,7 @@ namespace emmVRC.Hacks
                                 if (masterIconObj == null && player.prop_VRCPlayerApi_0.isMaster && player.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
                                 {
                                     emmVRCLoader.Logger.LogDebug("Initializing master icon...");
-                                    GameObject templateObject = player.field_Internal_VRCPlayer_0.field_Private_Transform_0.parent.transform.Find("Player Nameplate/Canvas/Nameplate/Contents/Friend Marker").gameObject;
+                                    GameObject templateObject = player._vrcplayer.field_Private_Transform_0.parent.transform.Find("Player Nameplate/Canvas/Nameplate/Contents/Friend Marker").gameObject;
                                     emmVRCLoader.Logger.LogDebug("1");
                                     masterIconObj = GameObject.Instantiate(templateObject, templateObject.transform.parent);
                                     emmVRCLoader.Logger.LogDebug("2");

@@ -89,8 +89,8 @@ namespace emmVRCLoader
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.ToString());
-                return false;
+                ex = new Exception();
+                return true;
             }
             return false;
         }

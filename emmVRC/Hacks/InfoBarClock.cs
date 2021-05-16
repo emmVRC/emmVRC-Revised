@@ -46,13 +46,13 @@ namespace emmVRC.Hacks
                 emmVRCRT.anchorMin = baseTextTransform.GetComponent<RectTransform>().anchorMin;
                 emmVRCRT.anchorMax = baseTextTransform.GetComponent<RectTransform>().anchorMax;
                 emmVRCRT.anchoredPosition = baseTextTransform.GetComponent<RectTransform>().anchoredPosition;
-                emmVRCRT.sizeDelta = new Vector2(2000, baseTextTransform.GetComponent<RectTransform>().sizeDelta.y);
+                emmVRCRT.sizeDelta = new Vector2(2000, 92);
                 emmVRCRT.pivot = baseTextTransform.GetComponent<RectTransform>().pivot;
 
                 // Offset our clock from the base object
                 Vector3 newPos = baseTextTransform.localPosition;
                 newPos.x -= baseTextTransform.GetComponent<RectTransform>().sizeDelta.x * 0.5f;
-                newPos.x += 1550 * 0.5f;
+                newPos.x += 1375 * 0.5f;
                 newPos.y += -90;
                 emmVRCRT.localPosition = newPos;
                 

@@ -92,7 +92,7 @@ namespace emmVRC.Hacks
                 {
                     /*
                     if (!APIUser.CurrentUser.isSupporter && NetworkConfig.Instance.VRCPlusRequired)
-                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
+                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "", 0f);
                     else*/ // Here's our code for VRChat Plus compliance. Bading!
                     {
                         if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))

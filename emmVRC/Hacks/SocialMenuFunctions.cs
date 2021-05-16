@@ -156,7 +156,7 @@ namespace emmVRC.Hacks
                     });
                     if (plrToTP != null)
                     {
-                        VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP.field_Internal_VRCPlayer_0.transform.position;
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = plrToTP._vrcplayer.transform.position;
                     }
                     try
                     {

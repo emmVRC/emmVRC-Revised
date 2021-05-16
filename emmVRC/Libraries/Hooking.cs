@@ -165,7 +165,7 @@ namespace emmVRC.Libraries
 
         private static bool PlayerCanUseStation(ref bool __result, VRC.Player __0, bool __1)
         {
-            if (__0 != null && __0 == VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_Player_0 && Configuration.JSONConfig.ChairBlockingEnable)
+            if (__0 != null && __0 == VRCPlayer.field_Internal_Static_VRCPlayer_0._player && Configuration.JSONConfig.ChairBlockingEnable)
             {
                 __result = false;
                 return false;
@@ -196,7 +196,7 @@ namespace emmVRC.Libraries
         private static void OnRebuild(PlayerNameplate __instance)
         {
             if (Configuration.JSONConfig.StealthMode || __instance.field_Private_VRCPlayer_0 == null) return;
-            if (__instance.field_Private_VRCPlayer_0.field_Private_Player_0 != null && __instance.field_Private_VRCPlayer_0.field_Private_Player_0.field_Private_APIUser_0 != null)
+            if (__instance.field_Private_VRCPlayer_0._player != null && __instance.field_Private_VRCPlayer_0._player.field_Private_APIUser_0 != null)
                 if (Configuration.JSONConfig.InfoSpoofingEnabled)
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
                 else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
