@@ -126,13 +126,28 @@ namespace emmVRC
                     assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/emmVRCResources.emm");
 
                 assetBundleRequest.SendWebRequest();
-                while (!assetBundleRequest.isDone)
+                while (!assetBundleRequest.isDone && !assetBundleRequest.isHttpError)
                     yield return new WaitForSeconds(0.1f);
 
-                AssetBundleCreateRequest dlBundle = AssetBundle.LoadFromMemoryAsync(assetBundleRequest.downloadHandler.data);
-                while (!dlBundle.isDone)
-                    yield return new WaitForSeconds(0.1f);
-                emmVRCBundle = dlBundle.assetBundle;
+                if (assetBundleRequest.isHttpError)
+                {
+                    try
+                    {
+                        emmVRCBundle = AssetBundle.LoadFromFile(Path.Combine(dependenciesPath, "Resources.emm"));
+                    }
+                    catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError("emmVRC could not load resources. Many UI elements and features will be broken.");
+                    }
+                }
+                else
+                {
+                    File.WriteAllBytes(Path.Combine(dependenciesPath, "Resources.emm"), assetBundleRequest.downloadHandler.data);
+                    AssetBundleCreateRequest dlBundle = AssetBundle.LoadFromMemoryAsync(assetBundleRequest.downloadHandler.data);
+                    while (!dlBundle.isDone)
+                        yield return new WaitForSeconds(0.1f);
+                    emmVRCBundle = dlBundle.assetBundle;
+                }
             }
             // Made loading much simpler. If issues are found add yield return before each sprite.
             offlineSprite = LoadSprite("Offline.png");

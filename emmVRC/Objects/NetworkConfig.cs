@@ -15,7 +15,7 @@ namespace emmVRC.Objects
         public bool APICallsAllowed = true;
         public bool MessagingAllowed = true;
         public int NetworkAutoRetries = 0;
-        public bool VRCPlusRequired = false;
+        public bool AvatarPedestalScansAllowed = true;
         public static NetworkConfig Instance = new NetworkConfig();
     }
 }

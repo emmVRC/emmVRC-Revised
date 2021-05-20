@@ -450,11 +450,8 @@ namespace emmVRC
                     emmVRCLoader.Logger.LogDebug("Initializing Tab Menu...");
                     MelonLoader.MelonCoroutines.Start(Hacks.TabMenu.Initialize());
                 }
-                if (!Configuration.JSONConfig.StealthMode && !Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Another really crusty Oculus check. This one can go bye-bye once EmojiGenerator is in deob maps
-                {
-                    emmVRCLoader.Logger.LogDebug("Initializing Emoji Favourites system...");
-                    MelonLoader.MelonCoroutines.Start(Hacks.EmojiFavourites.Initialize());
-                }
+                emmVRCLoader.Logger.LogDebug("Initializing Emoji Favourites system...");
+                MelonLoader.MelonCoroutines.Start(Hacks.EmojiFavourites.Initialize());
                 //emmVRCLoader.Logger.LogDebug("Initializing alarm clock module...");
                 //MelonLoader.MelonCoroutines.Start(Hacks.AlarmClock.Initialize());
 
@@ -539,6 +536,8 @@ namespace emmVRC
                 Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
             }
             PlayerHistoryMenu.currentPlayers = new System.Collections.Generic.List<InstancePlayer>();
+
+            CustomAvatarFavorites.CheckForAvatarPedestals().NoAwait();
 
             #region Korty's Addons
             Hacks.ComponentToggle.OnLevelLoad();

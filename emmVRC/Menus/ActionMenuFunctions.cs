@@ -28,7 +28,7 @@ namespace emmVRC.Menus
         private static EmojiMenu emojiMenu;
         private static bool playingEmoji = false;
         private static int currentEmojiPlaying = -1;
-        
+
         //private static bool justBecameActive = true;
         public static IEnumerator Initialize()
         {
@@ -36,23 +36,20 @@ namespace emmVRC.Menus
                 yield return new WaitForEndOfFrame();
             functionsMenu = new CustomActionMenu.Page(CustomActionMenu.BaseMenu.MainMenu, "emmVRC\nFunctions", Resources.onlineSprite.texture);
             riskyFunctionsMenu = new CustomActionMenu.Page(functionsMenu, "Risky\nFunctions", Resources.flyTexture);
-            if (!Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Almost final crusty Oculus check. This can go bye-bye once EmojiGenerator is in deob
+            favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Resources.rpSprite.texture);
+            favouriteEmojiButtons = new List<CustomActionMenu.Button>();
+            for (int i = 0; i < 8; i++)
             {
-                favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Resources.rpSprite.texture);
-                favouriteEmojiButtons = new List<CustomActionMenu.Button>();
-                for (int i = 0; i < 8; i++)
+                int currentEmojiButtonOption = i;
+                favouriteEmojiButtons.Add(new CustomActionMenu.Button(favouriteEmojisMenu, "", () =>
                 {
-                    int currentEmojiButtonOption = i;
-                    favouriteEmojiButtons.Add(new CustomActionMenu.Button(favouriteEmojisMenu, "", () =>
-                    {
-                        emmVRCLoader.Logger.LogDebug("Trying to spawn Emoji " + Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
-                        emojiMenu.TriggerEmoji(Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
-                        playingEmoji = true;
-                        currentEmojiPlaying = Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption];
-                        MelonLoader.MelonCoroutines.Start(EmojiTimeout());
-                    }));
-                };
-            }
+                    emmVRCLoader.Logger.LogDebug("Trying to spawn Emoji " + Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
+                    emojiMenu.TriggerEmoji(Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
+                    playingEmoji = true;
+                    currentEmojiPlaying = Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption];
+                    MelonLoader.MelonCoroutines.Start(EmojiTimeout());
+                }));
+            };
 
             flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () =>
             {
@@ -124,24 +121,21 @@ namespace emmVRC.Menus
                         espButton.SetEnabled(false);
                     }
                 }
-                if (!Environment.CurrentDirectory.Contains("vrchat-vrchat"))// Final crusty Oculus check. This can go bye-bye when EmojiGenerator is in deob
+                if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Length != 0)
                 {
-                    if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Length != 0) 
-                    {
-                        for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                            favouriteEmojiButtons[i].SetIcon(EmojiFavourites.AvailableEmojis[Configuration.JSONConfig.FavouritedEmojis[i]].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>());
-                        for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                            favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetIcon(null);
-                    }
-                    if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
-                    {
-                        for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                            if (favouriteEmojiButtons[i].currentPedalOption != null)
-                                favouriteEmojiButtons[i].SetEnabled(!playingEmoji);
-                        for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                            if (favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].currentPedalOption != null)
-                                favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetEnabled(false);
-                    }
+                    for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                        favouriteEmojiButtons[i].SetIcon(EmojiFavourites.AvailableEmojis[Configuration.JSONConfig.FavouritedEmojis[i]].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>());
+                    for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                        favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetIcon(null);
+                }
+                if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
+                {
+                    for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                        if (favouriteEmojiButtons[i].currentPedalOption != null)
+                            favouriteEmojiButtons[i].SetEnabled(!playingEmoji);
+                    for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                        if (favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].currentPedalOption != null)
+                            favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetEnabled(false);
                 }
             }
         }

@@ -9,6 +9,7 @@ using emmVRC.Network;
 using System.Linq;
 using Il2CppSystem.Linq;
 using System.IO;
+using System;
 using emmVRC.Objects;
 using System.Reflection;
 using System.Collections;
@@ -32,7 +33,7 @@ namespace emmVRC.Hacks
         public static Button.ButtonClickedEvent baseChooseEvent;
         private static GameObject FavoriteButton;
         private static GameObject FavoriteButtonNew;
-        public static GameObject MigrateButton;
+        public static GameObject ExportButton;
         private static Button FavoriteButtonNewButton;
         private static Text FavoriteButtonNewText;
         public static GameObject pageAvatar;
@@ -83,17 +84,15 @@ namespace emmVRC.Hacks
 
                 ApiAvatar apiAvatar = pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
                 bool flag = false;
-                for (int i = 0; i < LoadedAvatars.Count; i++)
-                {
-                    if (LoadedAvatars[i].id == apiAvatar.id)
+                foreach (var avatar in LoadedAvatars)
+                    if (avatar.id == apiAvatar.id)
                         flag = true;
-                }
                 if (!flag)
                 {
-                    /*
-                    if (!APIUser.CurrentUser.isSupporter && NetworkConfig.Instance.VRCPlusRequired)
-                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "", 0f);
-                    else*/ // Here's our code for VRChat Plus compliance. Bading!
+                    
+                    if (!DoesUserHaveVRCPlus())
+                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
+                    else
                     {
                         if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))
                         {
@@ -133,44 +132,37 @@ namespace emmVRC.Hacks
                 emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
             }
 
-            MigrateButton = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
-            MigrateButton.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0f, 765f);
-            MigrateButton.GetComponentInChildren<Text>().text = "Migrate";
-            MigrateButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-            MigrateButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            ExportButton = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
+            ExportButton.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0f, 765f);
+            ExportButton.GetComponentInChildren<Text>().text = "Export";
+            ExportButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
+            ExportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Do you want to migrate your AviFav+ avatars to emmVRC?", "Yes", () =>
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Would you like to export your emmVRC Favorite Avatars?", "Yes", () =>
                 {
-                    System.Collections.Generic.List<AviFavAvatar> aviFavAvatars = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json"))).Make<System.Collections.Generic.List<AviFavAvatar>>();
-                    System.Collections.Generic.List<string> ids = new System.Collections.Generic.List<string>();
-                    foreach (AviFavAvatar avtr in aviFavAvatars)
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                    System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
+                    foreach (ApiAvatar avtr in LoadedAvatars)
                     {
-                        ids.Add(avtr.AvatarID);
+                        exportedAvatars.Add(new ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
                     }
-                    if (ids.Count > 0)
-                    {
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your avatars are being migrated in the background. This may take a few minutes. Please do not close VRChat.", "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
-                        MigrateButton.GetComponentInChildren<Button>().enabled = false;
-                        MigrateButton.GetComponentInChildren<Text>().text = "Migrating...";
-
-                        MelonLoader.MelonCoroutines.Start(AvatarUtilities.fetchAvatars(ids, (System.Collections.Generic.List<ApiAvatar> avatars, bool errored) =>
-                        {
-                            MelonLoader.MelonCoroutines.Start(AvatarUtilities.FavoriteAvatars(avatars, errored));
-                        }));
-                    }
+                    File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+                    Managers.NotificationManager.AddNotification("Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
                 }, "No", () =>
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 });
             }));
-            if (File.Exists(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json")))
+            try
             {
-                MigrateButton.SetActive(true);
-                MigrateButton.GetComponentInChildren<Button>().enabled = true;
+                ExportButton.transform.Find("Horizontal/FavoritesCountSpacingText").gameObject.SetActive(false);
+                ExportButton.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
+                ExportButton.transform.Find("Horizontal/FavoritesCountDividerText").gameObject.SetActive(false);
+                ExportButton.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);
             }
-            else
+            catch (System.Exception ex)
             {
-                MigrateButton.SetActive(false);
+                emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
             }
 
             GameObject oldPublicAvatarList;
@@ -184,47 +176,53 @@ namespace emmVRC.Hacks
             ChangeButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
             {
                 ApiAvatar selectedAvatar = pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0;
-                if (NetworkConfig.Instance.APICallsAllowed && !selectedAvatar.id.Contains("local"))
+                if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id) || SearchedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
                 {
-                    API.Fetch<ApiAvatar>(selectedAvatar.id, new System.Action<ApiContainer>((ApiContainer cont) =>
+                    if (NetworkConfig.Instance.APICallsAllowed && !selectedAvatar.id.Contains("local"))
                     {
-                        ApiAvatar fetchedAvatar = cont.Model.Cast<ApiAvatar>();
-                        if (fetchedAvatar.releaseStatus == "private" && fetchedAvatar.authorId != APIUser.CurrentUser.id && fetchedAvatar.authorName != "tafi_licensed" && fetchedAvatar.authorName != "Wolf of Estland") // Why does Wolf3D use just like a standard username? And is a new user? The hell?
-                        { 
-                            if (LoadedAvatars.ToArray().Any(a => a.id == fetchedAvatar.id))
+                        API.Fetch<ApiAvatar>(selectedAvatar.id, new System.Action<ApiContainer>((ApiContainer cont) =>
+                        {
+                            ApiAvatar fetchedAvatar = cont.Model.Cast<ApiAvatar>();
+                            if (fetchedAvatar.releaseStatus == "private" && fetchedAvatar.authorId != APIUser.CurrentUser.id)
+                        {
+                                if (LoadedAvatars.ToArray().Any(a => a.id == fetchedAvatar.id))
+                                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                                else
+                                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            }
+                            else
+                                baseChooseEvent.Invoke();
+                        }), new System.Action<ApiContainer>((ApiContainer cont) =>
+                        {
+                            if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
+                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            else
+                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        }));
+                    }
+                    else
+                    {
+                        //emmVRCLoader.Bootstrapper.Instance.StartCoroutine(CheckAvatar());
+                        if (selectedAvatar.releaseStatus == "private" && selectedAvatar.authorId != APIUser.CurrentUser.id)
+                        {
+                            if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
                                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                             else
                                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         }
+                        else if (selectedAvatar.releaseStatus == "unavailable")
+                        {
+                            if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
+                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            else
+                                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        }
                         else
                             baseChooseEvent.Invoke();
-                    }), new System.Action<ApiContainer>((ApiContainer cont) =>
-                    {
-                        if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                        else
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                    }));
-                }
-                else
+                    }
+                } else
                 {
-                    //emmVRCLoader.Bootstrapper.Instance.StartCoroutine(CheckAvatar());
-                    if (selectedAvatar.releaseStatus == "private" && selectedAvatar.authorId != APIUser.CurrentUser.id && selectedAvatar.authorName != "tafi_licensed")
-                    {
-                        if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                        else
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                    }
-                    else if (selectedAvatar.releaseStatus == "unavailable")
-                    {
-                        if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                        else
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                    }
-                    else
-                        baseChooseEvent.Invoke();
+                    baseChooseEvent.Invoke();
                 }
             }));
 
@@ -635,6 +633,7 @@ namespace emmVRC.Hacks
             {
                 PublicAvatarList.SetActive(false);
                 FavoriteButtonNew.SetActive(false);
+                ExportButton.SetActive(false);
             }
             if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null || PublicAvatarList == null || FavoriteButtonNew == null || RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
             if (!PublicAvatarList.activeInHierarchy ) return;
@@ -677,13 +676,9 @@ namespace emmVRC.Hacks
                 if (currPageAvatar != null && currPageAvatar.field_Public_SimpleAvatarPedestal_0 != null && currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0 != null && LoadedAvatars != null && FavoriteButtonNew != null)
                 {
                     bool flag = false;
-                    for (int i = 0; i < LoadedAvatars.Count; i++)
-                    {
-                        if (LoadedAvatars[i].id == currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.id)
-                        {
+                    foreach (ApiAvatar avatar in LoadedAvatars)
+                        if (avatar.id == currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.id)
                             flag = true;
-                        }
-                    }
 
                     if (!flag)
                     {
@@ -699,15 +694,17 @@ namespace emmVRC.Hacks
             {
                 PublicAvatarList.SetActive(false);
                 FavoriteButtonNew.SetActive(false);
+                ExportButton.SetActive(false);
             }
             else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
             {
                 PublicAvatarList.SetActive(true);
                 FavoriteButtonNew.SetActive(true);
+                ExportButton.SetActive(true);
             }
             if (error && !errorWarned)
             {
-                Managers.NotificationManager.AddNotification("Your emmVRC avatars could not be loaded. Please contact yoshifan#9550 to resolve this.", "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, "", null, Resources.errorSprite, -1);
+                Managers.NotificationManager.AddNotification("Your emmVRC avatars could not be loaded. Please ask in the Discord to resolve this.", "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, "", null, Resources.errorSprite, -1);
                 errorWarned = true;
             }
         }
@@ -729,6 +726,44 @@ namespace emmVRC.Hacks
         {
             GameObject.Destroy(PublicAvatarList);
             GameObject.Destroy(FavoriteButtonNew);
+        }
+
+        public static bool DoesUserHaveVRCPlus()
+        {
+            return APIUser.CurrentUser.isSupporter;
+        }
+        
+        public static async Task CheckForAvatarPedestals()
+        {
+            if (NetworkClient.webToken == null || APIUser.CurrentUser == null || !Configuration.JSONConfig.SubmitAvatarPedestals) return;
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
+            {
+                await emmVRC.AwaitUpdate.Yield();
+            }
+            ApiWorld currentWorld = RoomManager.field_Internal_Static_ApiWorld_0;
+            if (currentWorld.IsPublicPublishedWorld)
+            {
+                foreach (AvatarPedestal pedestal in UnityEngine.Resources.FindObjectsOfTypeAll<AvatarPedestal>())
+                {
+                    if (pedestal != null && pedestal.field_Private_ApiAvatar_0.releaseStatus == "public")
+                    {
+                        await emmVRC.AwaitUpdate.Yield();
+                        Network.Objects.Avatar serAvtr = new Network.Objects.Avatar(pedestal.field_Private_ApiAvatar_0);
+                        emmVRCLoader.Logger.LogDebug("Found pedestal " + pedestal.field_Private_ApiAvatar_0.name + ", putting...");
+                        try
+                        {
+                            await HTTPRequest.put(NetworkClient.baseURL + "/api/avatar", serAvtr);
+                        }
+                        catch
+                        {
+                            await emmVRC.AwaitUpdate.Yield();
+                            emmVRCLoader.Logger.LogDebug("Could not put avatar");
+                            throw;
+                        }
+                        await Task.Delay(500);
+                    }
+                }
+            }
         }
     }
 }

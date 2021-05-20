@@ -38,21 +38,26 @@ namespace emmVRC.Menus
             SendMessageButton.getGameObject().GetComponent<Button>().interactable = false;
             FavoriteAvatarButton = new QMSingleButton(UserTweaks, 2, 1, "Favorite\nAvatar", () =>
             {
-                bool flag = false;
-                if (QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.allowAvatarCopying && QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0.releaseStatus == "public")
-                {
-                    foreach(ApiAvatar avtr in CustomAvatarFavorites.LoadedAvatars)
-                    {
-                        if (avtr.id == QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0.id)
-                            flag = true;
-                    }
-                    if (flag)
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You already have this avatar favorited", "Dismiss", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                    else
-                        CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
-                }
+                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Objects.Attributes.VRCPlusMessage, 0f);
                 else
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "This avatar is not public, or the user does not have cloning turned on.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                {
+                    bool flag = false;
+                    if (QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.allowAvatarCopying && QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0.releaseStatus == "public")
+                    {
+                        foreach (ApiAvatar avtr in CustomAvatarFavorites.LoadedAvatars)
+                        {
+                            if (avtr.id == QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0.id)
+                                flag = true;
+                        }
+                        if (flag)
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You already have this avatar favorited", "Dismiss", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                        else
+                            CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
+                    }
+                    else
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "This avatar is not public, or the user does not have cloning turned on.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                }
             }, "Allows you to favorite this user's avatar, if the avatar is public and cloning is on");
             BlockUserButton = new QMSingleButton(UserTweaks, 3, 1, "<color=#FF69B4>emmVRC</color>\nBlock", () => {
                 if (Network.NetworkClient.webToken != null)

@@ -19,6 +19,9 @@ namespace emmVRC.Hacks
         private static GameObject personalList;
         private static GameObject legacyList;
         private static GameObject publicList;
+        private static GameObject otherList;
+        private static UiAvatarList otherListList;
+
         public static void Initialize()
         {
             // Gather all the GameObjects for the VRChat default avatar lists (that we can about anyway)
@@ -30,6 +33,11 @@ namespace emmVRC.Hacks
             personalList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Personal Avatar List").gameObject;
             legacyList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             publicList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Public Avatar List").gameObject;
+            otherList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Licensed Avatar List (1)").gameObject;
+            if (otherList == null)
+                otherList = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Licensed Avatar List").gameObject;
+            if (otherList != null)
+                otherListList = otherList.GetComponent<UiAvatarList>();
 
             // Start the coroutine to disable them
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -90,6 +98,17 @@ namespace emmVRC.Hacks
                 else
                 {
                     publicList.SetActive(true);
+                }
+
+                // Disable or enable the "Other" category
+                if (Configuration.JSONConfig.DisableAvatarOther && otherListList != null)
+                {
+                    otherList.SetActive(false);
+                }
+                else if (!Configuration.JSONConfig.DisableAvatarOther && otherListList != null)
+                {
+                    if (otherListList.pickers.ToArray().Any(a => a.isActiveAndEnabled))
+                    otherList.SetActive(true);
                 }
                 yield return new WaitForSeconds(1f);
             }

@@ -25,27 +25,6 @@ namespace emmVRC.Libraries
         public static List<ApiAvatar> processingList;
         public static bool requestFinished = true;
         public static bool errored = false;
-        public static IEnumerator FavoriteAvatars(List<ApiAvatar> avatars, bool errored)
-        {
-            foreach (ApiAvatar avtr in avatars)
-            {
-                if (avtr.releaseStatus == "public" || avtr.authorId == APIUser.CurrentUser.id)
-                {
-                    emmVRCLoader.Logger.LogDebug("Favouriting avatar...");
-                    CustomAvatarFavorites.FavoriteAvatar(avtr).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
-                    //yield return CustomAvatarFavorites.FavoriteAvatar(avtr);
-                }
-                else
-                {
-                    emmVRCLoader.Logger.LogDebug("The avatar " + avtr.name + " is not public, and does not belong to us.");
-                    errored = true;
-                }
-                yield return new WaitForSeconds(1f);
-            }
-            CustomAvatarFavorites.MigrateButton.SetActive(false);
-            File.Move(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json"), Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.old.json"));
-            Managers.NotificationManager.AddNotification("Your avatars have been migrated" + (errored ? ", but one or more of your avatars are no longer available. They may have been privated or deleted." : " successfully."), "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite);
-        }
         public static IEnumerator fetchAvatars(List<string> avatars, Action<List<ApiAvatar>, bool> callBack)
         {
             processingList = new List<ApiAvatar>();

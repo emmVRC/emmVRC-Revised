@@ -24,6 +24,7 @@ namespace emmVRC.Objects
         public bool ClockEnabled = true;
         public bool AvatarFavoritesEnabled = true;
         public bool AvatarFavoritesJumpToStart = true;
+        public bool SubmitAvatarPedestals = true;
         public bool MasterIconEnabled = true;
         public bool LogoButtonEnabled = true;
         public bool HUDEnabled = true;
@@ -97,6 +98,7 @@ namespace emmVRC.Objects
         public bool DisableAvatarPersonal = false;
         public bool DisableAvatarLegacy = false;
         public bool DisableAvatarPublic = false;
+        public bool DisableAvatarOther = false;
 
         // UI Color setup
         public bool UIColorChangingEnabled = false;

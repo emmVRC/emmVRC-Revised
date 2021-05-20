@@ -54,7 +54,7 @@ namespace emmVRC.Hacks
                 {
                     while (VRC.Core.APIUser.CurrentUser == null)
                         yield return new WaitForEndOfFrame();
-                    if ( !Objects.NetworkConfig.Instance.VRCPlusRequired || VRC.Core.APIUser.CurrentUser.isSupporter)
+                    if (CustomAvatarFavorites.DoesUserHaveVRCPlus())
                     {
                         if (Configuration.JSONConfig.DisableVRCPlusMenuTabs)
                         {

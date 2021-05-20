@@ -53,6 +53,7 @@ namespace emmVRC.Menus
         private static PageItem GlobalChat;
         private static PageItem AvatarFavoriteList;
         private static PageItem AvatarFavoriteJumpToStart;
+        private static PageItem SubmitAvatarPedestals;
 
         // Page 4 - Button Positions
         private static PageItem FunctionsMenuPosition;
@@ -121,6 +122,7 @@ namespace emmVRC.Menus
         private static PageItem DisableAvatarPersonalList;
         private static PageItem DisableAvatarLegacyList;
         private static PageItem DisableAvatarPublicList;
+        private static PageItem DisableAvatarOtherList;
 
         // Page 10 - Keybind Configuration
         private static PageItem EnableKeybinds;
@@ -323,10 +325,7 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(UIExpansionKitIntegration);
             else
                 baseMenu.pageItems.Add(PageItem.Space);
-            if (!Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Yet another crusty Oculus check. This one can go bye-bye when EmojiGenerator is in deob
-                baseMenu.pageItems.Add(EmojiFavouriteMenu);
-            else
-                baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(EmojiFavouriteMenu);
 
             InfoBar = new PageItem("Info Bar", () =>
             {
@@ -528,12 +527,24 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: In the emmVRC Favorites, automatically jumps back to the start when switching pages or reloading favorites");
+            SubmitAvatarPedestals = new PageItem("Submit Public\nAvatar Pedestals", () =>
+            {
+                Configuration.JSONConfig.SubmitAvatarPedestals = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.SubmitAvatarPedestals = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Automatically sends public avatar pedestals in the world to the emmVRC Network to be used for search");
 
             baseMenu.pageItems.Add(emmVRCNetwork);
             //baseMenu.pageItems.Add(GlobalChat);
             baseMenu.pageItems.Add(AvatarFavoriteList);
             baseMenu.pageItems.Add(AvatarFavoriteJumpToStart);
-            for (int i = 0; i < 6; i++)
+            baseMenu.pageItems.Add(SubmitAvatarPedestals);
+            for (int i = 0; i < 5; i++)
                 baseMenu.pageItems.Add(PageItem.Space);
 
 
@@ -1070,10 +1081,10 @@ namespace emmVRC.Menus
             }
             DisableVRCPlusAds = new PageItem("Disable VRC+\nQuick Menu Ads", () =>
             {
-                /*
-                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
-                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                
+                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
+                else
                 {
                     Configuration.JSONConfig.DisableVRCPlusAds = true;
                     Configuration.SaveConfig();
@@ -1089,10 +1100,10 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus adverts in the Quick Menu");
             DisableVRCPlusQMButtons = new PageItem("Disable VRC+\nQuick Menu Buttons", () =>
             {
-                /*
-                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
-                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                
+                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
+                else
                 {
                     Configuration.JSONConfig.DisableVRCPlusQMButtons = true;
                     Configuration.SaveConfig();
@@ -1108,10 +1119,10 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus buttons in the Quick Menu");
             DisableVRCPlusMenuTabs = new PageItem("Disable VRC+\nMenu Tabs", () =>
             {
-                /*
-                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
-                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                
+                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
+                else
                 {
                     Configuration.JSONConfig.DisableVRCPlusMenuTabs = true;
                     Configuration.SaveConfig();
@@ -1127,10 +1138,10 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus menu tabs, and adjusts the rest of the tabs to fit again");
             DisableVRCPlusUserInfo = new PageItem("Disable VRC+\nUser Info", () =>
             {
-                /*
-                if (!APIUser.CurrentUser.isSupporter && Objects.NetworkConfig.Instance.VRCPlusRequired)
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.", 0f);
-                else*/ // Here is our code for VRChat Plus compliance. Bading!
+                
+                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
+                else
                 {
                     Configuration.JSONConfig.DisableVRCPlusUserInfo = true;
                     Configuration.SaveConfig();
@@ -1209,12 +1220,23 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
             }, "TOGGLE: Disables the 'Public Avatars' list in your Avatars menu");
+            DisableAvatarOtherList = new PageItem("Disable Other\nAvatar List", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarOther = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "Enabled", () =>
+            {
+                Configuration.JSONConfig.DisableAvatarOther = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+            }, "TOGGLE: Disables the 'Other' list in your Avatars menu");
             baseMenu.pageItems.Add(DisableAvatarHotWorlds);
             baseMenu.pageItems.Add(DisableAvatarRandomWorlds);
             baseMenu.pageItems.Add(DisableAvatarPersonalList);
             baseMenu.pageItems.Add(DisableAvatarLegacyList);
             baseMenu.pageItems.Add(DisableAvatarPublicList);
-            baseMenu.pageItems.Add(PageItem.Space);
+            baseMenu.pageItems.Add(DisableAvatarOtherList);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
@@ -1360,6 +1382,7 @@ namespace emmVRC.Menus
                 GlobalChat.SetToggleState(Configuration.JSONConfig.GlobalChatEnabled);
                 AvatarFavoriteList.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);
                 AvatarFavoriteJumpToStart.SetToggleState(Configuration.JSONConfig.AvatarFavoritesJumpToStart);
+                SubmitAvatarPedestals.SetToggleState(Configuration.JSONConfig.SubmitAvatarPedestals);
                 UIExpansionKitIntegration.SetToggleState(Configuration.JSONConfig.UIExpansionKitIntegration);
                 TrackingSaving.SetToggleState(Configuration.JSONConfig.TrackingSaving);
 
@@ -1415,6 +1438,7 @@ namespace emmVRC.Menus
                 DisableAvatarPersonalList.SetToggleState(Configuration.JSONConfig.DisableAvatarPersonal);
                 DisableAvatarLegacyList.SetToggleState(Configuration.JSONConfig.DisableAvatarLegacy);
                 DisableAvatarPublicList.SetToggleState(Configuration.JSONConfig.DisableAvatarPublic);
+                DisableAvatarOtherList.SetToggleState(Configuration.JSONConfig.DisableAvatarOther);
 
                 EnableKeybinds.SetToggleState(Configuration.JSONConfig.EnableKeybinds);
                 FlightKeybind.Name = "Flight:\n" + (((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1] != UnityEngine.KeyCode.None ? KeyCodeConversion.Stringify(((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "") + (KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0])));

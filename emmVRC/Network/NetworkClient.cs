@@ -114,13 +114,6 @@ namespace emmVRC.Network
                 string result = await HTTPRequest.get(NetworkClient.configURL + "/configuration.php");
                 NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
                 await emmVRC.AwaitUpdate.Yield();
-                try
-                {
-                    Hacks.CustomAvatarFavorites.MigrateButton.SetActive(NetworkConfig.Instance.APICallsAllowed && File.Exists(Path.Combine(System.Environment.CurrentDirectory, "404Mods/AviFavorites/avatars.json")));
-                } catch (Exception ex)
-                {
-                    emmVRCLoader.Logger.LogError("Can't enable AviFav migration button. Error: " + ex);
-                }
             }
             catch (Exception exception)
             {

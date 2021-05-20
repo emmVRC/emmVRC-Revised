@@ -8,17 +8,23 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.8.7";
-        public static int LastTestedBuildNumber = 1088;
+        public static string Version = "2.9.0";
+        public static int LastTestedBuildNumber = 1090;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "05/03/2021";
+        public static string DateUpdated = "05/20/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "• Fixed compatibility with VRChat build 1088";
+            "There are too many changes to list in full, but here are\n" +
+            "some highlights:\n" +
+            "• Built-in Avatar list exporter\n" +
+            "• Pedestal scanning, which can be toggled in emmVRC\n" +
+            "settings\n" +
+            "• Emoji Favorites is now available for Oculus users\n\n" +
+            "For the full changelog, please join our Discord below!";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.3.0";
         public static string TargetemmVRCLoaderVersion = "1.2.0";
@@ -36,6 +42,6 @@ namespace emmVRC.Objects
                     "\"You spin my head right round, right round,\nlike a record baby\"",
                     "<b>BOAT STUCK! <i>BOAT STUCK!</i></b>"
         };
-        //public static string VRCPlusMessage = "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.";
+        public static string VRCPlusMessage = "VRChat, like emmVRC, relies on the support of their users to keep the platform free. Please support VRChat to unlock these features.";
     }
 }

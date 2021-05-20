@@ -58,7 +58,7 @@ namespace emmVRC.Hacks
             socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
             while (APIUser.CurrentUser == null || Objects.NetworkConfig.Instance == null)
                 yield return new WaitForEndOfFrame();
-            if (!Objects.NetworkConfig.Instance.VRCPlusRequired || VRC.Core.APIUser.CurrentUser.isSupporter)
+            if (CustomAvatarFavorites.DoesUserHaveVRCPlus())
             {
                 vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
                 vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;

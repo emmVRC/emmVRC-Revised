@@ -103,7 +103,7 @@ namespace emmVRC.Menus
             {
                 Hacks.ComponentToggle.videoplayers = false;
                 Hacks.ComponentToggle.Toggle();
-            }, "TOGGLE: Video Players\nDoes not work in Udon Worlds");
+            }, "TOGGLE: Video Players");
             VideoPlayerToggle.setToggleState(true); // Each Game Start, value will be true - No Config was set
 
             AvatarPedestalToggle = new QMToggleButton(baseMenu, 4, 2, "Avatar\nPedestals", () =>
