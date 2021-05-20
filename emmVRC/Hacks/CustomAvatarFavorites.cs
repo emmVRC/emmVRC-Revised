@@ -735,7 +735,7 @@ namespace emmVRC.Hacks
         
         public static async Task CheckForAvatarPedestals()
         {
-            if (NetworkClient.webToken == null || APIUser.CurrentUser == null || !Configuration.JSONConfig.SubmitAvatarPedestals) return;
+            if (NetworkClient.webToken == null || APIUser.CurrentUser == null || !Configuration.JSONConfig.SubmitAvatarPedestals || !NetworkConfig.Instance.AvatarPedestalScansAllowed) return;
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
             {
                 await emmVRC.AwaitUpdate.Yield();
