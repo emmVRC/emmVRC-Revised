@@ -32,7 +32,7 @@ namespace emmVRC.Hacks
                 if (vrcPlusButton == null)
                 {
                     vrcPlusButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/VRC+PageTab/");
-                    userIconsButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/UserIconTab/");
+                    userIconsButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/GalleryTab/");
                     worldButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/WorldsPageTab/");
                     avatarButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/AvatarPageTab/");
                     socialButton = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/SocialPageTab/");
@@ -54,26 +54,23 @@ namespace emmVRC.Hacks
                 {
                     while (VRC.Core.APIUser.CurrentUser == null)
                         yield return new WaitForEndOfFrame();
-                    if (CustomAvatarFavorites.DoesUserHaveVRCPlus())
+                    if (Configuration.JSONConfig.DisableVRCPlusMenuTabs)
                     {
-                        if (Configuration.JSONConfig.DisableVRCPlusMenuTabs)
-                        {
-                            vrcPlusButton.SetActive(false);
-                            userIconsButton.GetComponent<LayoutElement>().enabled = false;
-                            userIconsButton.GetComponent<Image>().enabled = false;
-                            userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(false);
-                            userIconsButton.SetActive(false);
-                            vrcPlusGetMoreFavorites.transform.localScale = Vector3.zero;
-                        }
-                        else
-                        {
-                            vrcPlusButton.SetActive(true);
-                            userIconsButton.GetComponent<LayoutElement>().enabled = true;
-                            userIconsButton.GetComponent<Image>().enabled = true;
-                            userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(true);
-                            userIconsButton.SetActive(true);
-                            vrcPlusGetMoreFavorites.transform.localScale = Vector3.one;
-                        }
+                        vrcPlusButton.SetActive(false);
+                        userIconsButton.GetComponent<LayoutElement>().enabled = false;
+                        userIconsButton.GetComponent<Image>().enabled = false;
+                        userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(false);
+                        userIconsButton.SetActive(false);
+                        vrcPlusGetMoreFavorites.transform.localScale = Vector3.zero;
+                    }
+                    else
+                    {
+                        vrcPlusButton.SetActive(true);
+                        userIconsButton.GetComponent<LayoutElement>().enabled = true;
+                        userIconsButton.GetComponent<Image>().enabled = true;
+                        userIconsButton.transform.Find("Image_NEW").gameObject.SetActive(true);
+                        userIconsButton.SetActive(true);
+                        vrcPlusGetMoreFavorites.transform.localScale = Vector3.one;
                     }
                     menuJustOpened = false;
                 }

@@ -34,15 +34,15 @@ namespace emmVRC.Libraries
         public static void ShowStandardPopupV2(this VRCUiPopupManager vrcUiPopupManager, string title, string content, string button1Text, Action button1Action, string button2Text, Action button2Action, Action<VRCUiPopup> onCreated = null) =>
             ShowUiStandardPopupV22.Invoke(title, content, button1Text, button1Action, button2Text, button2Action, onCreated);
 
-        public static void ShowInputPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string preFilledText, UnityEngine.UI.InputField.InputType inputType, bool keypad, string buttonText, Il2CppSystem.Action<string, List<KeyCode>, UnityEngine.UI.Text> buttonAction, Il2CppSystem.Action cancelAction, string boxText = "Enter text....", bool closeOnAccept = true, Action<VRCUiPopup> onCreated = null) =>
-            ShowUiInputPopup.Invoke(title, preFilledText, inputType, keypad, buttonText, buttonAction, cancelAction, boxText, closeOnAccept, onCreated);
+        public static void ShowInputPopup(this VRCUiPopupManager vrcUiPopupManager, string title, string preFilledText, UnityEngine.UI.InputField.InputType inputType, bool keypad, string buttonText, Il2CppSystem.Action<string, List<KeyCode>, UnityEngine.UI.Text> buttonAction, Il2CppSystem.Action cancelAction, string boxText = "Enter text....", bool closeOnAccept = true, Action<VRCUiPopup> onCreated = null, bool startOnLeft = false, int characterLimit = 0) =>
+            ShowUiInputPopup.Invoke(title, preFilledText, inputType, keypad, buttonText, buttonAction, cancelAction, boxText, closeOnAccept, onCreated, startOnLeft, characterLimit);
         public static void ShowAlert(this VRCUiPopupManager vrcUiPopupManager, string title, string content, float timeout) =>
             ShowUiAlertPopup.Invoke(title, content, timeout);
         #region Input Popup
         public delegate void ShowUiInputPopupAction(string title, string initialText, UnityEngine.UI.InputField.InputType inputType,
             bool isNumeric, string confirmButtonText, Il2CppSystem.Action<string, List<KeyCode>, UnityEngine.UI.Text> onComplete,
             Il2CppSystem.Action onCancel, string placeholderText = "Enter text...", bool closeAfterInput = true,
-            Il2CppSystem.Action<VRCUiPopup> onPopupShown = null);
+            Il2CppSystem.Action<VRCUiPopup> onPopupShown = null, bool startOnLeft = false, int characterLimit = 0);
 
         private static ShowUiInputPopupAction ourShowUiInputPopupAction;
 
@@ -53,7 +53,7 @@ namespace emmVRC.Libraries
                 if (ourShowUiInputPopupAction != null) return ourShowUiInputPopupAction;
 
                 var targetMethod = typeof(VRCUiPopupManager).GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                    .FirstOrDefault(it => it.GetParameters().Length == 10 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/InputPopup"));
+                    .FirstOrDefault(it => it.GetParameters().Length == 12 && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "UserInterface/MenuContent/Popups/InputPopup"));
 
                 ourShowUiInputPopupAction = (ShowUiInputPopupAction)Delegate.CreateDelegate(typeof(ShowUiInputPopupAction), VRCUiPopupManager.prop_VRCUiPopupManager_0, targetMethod);
 

@@ -12,7 +12,7 @@ namespace emmVRC.Libraries
     {
         public static void ShowEmptyMenu()
         {
-            QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_Int32_0(4);
+            QuickMenuUtils.GetQuickMenuInstance().Method_Private_Void_Int32_0(4);
         }
     }
 }

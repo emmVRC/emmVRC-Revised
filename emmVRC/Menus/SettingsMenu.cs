@@ -24,6 +24,7 @@ namespace emmVRC.Menus
         // Base menu for the Settings menu
         public static PaginatedMenu baseMenu;
         public static QMSingleButton ResetSettingsButton;
+        public static QMSingleButton ExportAvatarListButton;
 
         // Page 1 - Core Features
 
@@ -159,6 +160,23 @@ namespace emmVRC.Menus
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 }));
             }, "Resets all emmVRC Settings to their default values. This requires a restart to fully take effect");
+            ExportAvatarListButton = new QMSingleButton(baseMenu.menuBase, 5, 0, "Export\nAvatar\nList", () =>
+            {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Would you like to export your emmVRC Favorite Avatars?", "Yes", () =>
+                {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                    System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
+                    foreach (ApiAvatar avtr in CustomAvatarFavorites.LoadedAvatars)
+                    {
+                        exportedAvatars.Add(new ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
+                    }
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+                    Managers.NotificationManager.AddNotification("Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
+                }, "No", () =>
+                {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                });
+            }, "Exports your emmVRC Avatar Favorites to a json file");
 
             RiskyFunctions = new PageItem("Risky Functions", () =>
             {
@@ -1081,16 +1099,11 @@ namespace emmVRC.Menus
             }
             DisableVRCPlusAds = new PageItem("Disable VRC+\nQuick Menu Ads", () =>
             {
-                
-                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
-                else
-                {
-                    Configuration.JSONConfig.DisableVRCPlusAds = true;
-                    Configuration.SaveConfig();
-                    RefreshMenu();
-                    MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-                }
+
+                Configuration.JSONConfig.DisableVRCPlusAds = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusAds = false;
@@ -1100,16 +1113,11 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus adverts in the Quick Menu");
             DisableVRCPlusQMButtons = new PageItem("Disable VRC+\nQuick Menu Buttons", () =>
             {
-                
-                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
-                else
-                {
-                    Configuration.JSONConfig.DisableVRCPlusQMButtons = true;
-                    Configuration.SaveConfig();
-                    RefreshMenu();
-                    MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
-                }
+
+                Configuration.JSONConfig.DisableVRCPlusQMButtons = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                MelonLoader.MelonCoroutines.Start(Hacks.ShortcutMenuButtons.Process());
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusQMButtons = false;
@@ -1119,16 +1127,9 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus buttons in the Quick Menu");
             DisableVRCPlusMenuTabs = new PageItem("Disable VRC+\nMenu Tabs", () =>
             {
-                
-                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
-                else
-                {
-                    Configuration.JSONConfig.DisableVRCPlusMenuTabs = true;
-                    Configuration.SaveConfig();
-                    RefreshMenu();
-                }
-
+                Configuration.JSONConfig.DisableVRCPlusMenuTabs = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableVRCPlusMenuTabs = false;
@@ -1138,15 +1139,10 @@ namespace emmVRC.Menus
             }, "TOGGLE: Disables the VRChat Plus menu tabs, and adjusts the rest of the tabs to fit again");
             DisableVRCPlusUserInfo = new PageItem("Disable VRC+\nUser Info", () =>
             {
-                
-                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
-                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
-                else
-                {
-                    Configuration.JSONConfig.DisableVRCPlusUserInfo = true;
-                    Configuration.SaveConfig();
-                    RefreshMenu();
-                }
+
+                Configuration.JSONConfig.DisableVRCPlusUserInfo = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
 
             }, "Enabled", () =>
             {

@@ -13,6 +13,7 @@ using emmVRC.Libraries;
 using VRC.Core;
 using Il2CppSystem.Reflection;
 using Harmony;
+using System.Security.Cryptography;
 
 
 #pragma warning disable 4014
@@ -118,6 +119,12 @@ namespace emmVRC
             else
             {
                 emmVRCLoader.Logger.LogDebug("[NOTICE] emmVRC Debug Mode is intended for development or troubleshooting purposes. Using it in regular play can result in unexpected lag or other issues. If you are seeing this and are not sure what to do, check your launch options for `--emmvrc.debug`.");
+                MD5 md5 = MD5.Create();
+                System.IO.FileStream libStream = System.IO.File.OpenRead(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"));
+                string md5hash = BitConverter.ToString(md5.ComputeHash(libStream)).Replace("-", "").ToLower();
+                emmVRCLoader.Logger.Log("emmVRC module: " + md5hash);
+                if (Environment.CommandLine.Contains("--emmvrc.devmode"))
+                    emmVRCLoader.Logger.Log("emmVRC is currently running with developer mode enabled. This is not intended for casual use, and should be removed from your launch options.");
                 if (Configuration.JSONConfig.emmVRCNetworkEnabled)
                 {
                     // Network connection

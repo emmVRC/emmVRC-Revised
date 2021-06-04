@@ -24,7 +24,8 @@ namespace emmVRC.Hacks
         private static GameObject TeleportButton;
         private static GameObject AvatarSearchButton;
         private static GameObject VRCPlusSupporterButton;
-        private static GameObject VRCPlusEarlyAdopterButton;
+        private static GameObject VRCPlusEarlyAdopterIcon;
+        private static GameObject VRCPlusSubscriberIcon;
 
         private static GameObject ToggleBlockButton;
         private static GameObject PortalToUserButton;
@@ -36,50 +37,48 @@ namespace emmVRC.Hacks
 
         public static void Initialize()
         {
-            SocialFunctionsButton = GameObject.Instantiate(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists/PlaylistsButton"), GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").transform);
-            SocialFunctionsButton.transform.SetParent(GameObject.Find("MenuContent/Screens/UserInfo/User Panel/").transform);
+            SocialFunctionsButton = GameObject.Instantiate(GameObject.Find("MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightUpperButtonColumn/FavoriteButton"), GameObject.Find("MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightUpperButtonColumn").transform);
             SocialFunctionsButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Functions";
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-            SocialFunctionsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(50, 150);
-            SocialFunctionsButton.GetComponent<RectTransform>().sizeDelta -= new Vector2(0, 25f);
+            //SocialFunctionsButton.GetComponent<RectTransform>().sizeDelta -= new Vector2(0, 25f);
 
             UserSendMessage = GameObject.Instantiate(SocialFunctionsButton, SocialFunctionsButton.transform.parent);
-            UserSendMessage.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            //UserSendMessage.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             UserSendMessage.GetComponentInChildren<Text>().text = "Send Message";
             UserSendMessage.SetActive(false);
 
             UserNotes = GameObject.Instantiate(UserSendMessage, SocialFunctionsButton.transform.parent);
-            UserNotes.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            //UserNotes.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             UserNotes.GetComponentInChildren<Text>().text = "Notes";
             UserNotes.SetActive(false);
 
             TeleportButton = GameObject.Instantiate(UserNotes, SocialFunctionsButton.transform.parent);
-            TeleportButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            //TeleportButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             TeleportButton.GetComponentInChildren<Text>().text = "Teleport";
             TeleportButton.SetActive(false);
 
             AvatarSearchButton = GameObject.Instantiate(TeleportButton, SocialFunctionsButton.transform.parent);
-            AvatarSearchButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            //AvatarSearchButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             AvatarSearchButton.GetComponentInChildren<Text>().text = "Search Avatars";
             AvatarSearchButton.SetActive(false);
 
             ToggleBlockButton = GameObject.Instantiate(AvatarSearchButton, SocialFunctionsButton.transform.parent);
-            ToggleBlockButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            //ToggleBlockButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             ToggleBlockButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Block";
             ToggleBlockButton.SetActive(false);
 
             PortalToUserButton = GameObject.Instantiate(ToggleBlockButton, SocialFunctionsButton.transform.parent);
-            PortalToUserButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
+            //PortalToUserButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(0, 60f);
             PortalToUserButton.GetComponentInChildren<Text>().text = "Drop Portal";
             PortalToUserButton.SetActive(false);
 
 
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                UserSendMessage.SetActive(!UserSendMessage.activeSelf);
-                UserSendMessage.GetComponent<Button>().interactable = false;
+                //UserSendMessage.SetActive(!UserSendMessage.activeSelf);
+                //UserSendMessage.GetComponent<Button>().interactable = false;
                 UserNotes.SetActive(!UserNotes.activeSelf);
-                ToggleBlockButton.SetActive(!ToggleBlockButton.activeSelf);
+                //ToggleBlockButton.SetActive(!ToggleBlockButton.activeSelf);
                 if (RiskyFunctionsManager.RiskyFuncsAreAllowed)
                     TeleportButton.SetActive(!TeleportButton.activeSelf);
                 else
@@ -99,31 +98,7 @@ namespace emmVRC.Hacks
                 }
                 try
                 {
-                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").activeSelf);
-                }
-                catch (Exception ex)
-                {
-                    ex = new Exception();
-                }
-                try
-                {
-                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").activeSelf);
-                }
-                catch (Exception ex)
-                {
-                    ex = new Exception();
-                }
-                try
-                {
-                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").activeSelf);
-                }
-                catch (Exception ex)
-                {
-                    ex = new Exception();
-                }
-                try
-                {
-                    GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").SetActive(!GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").activeSelf);
+                    GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightLowerButtonColumn/").SetActive(!GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightLowerButtonColumn/").activeSelf);
                 }
                 catch (Exception ex)
                 {
@@ -246,8 +221,9 @@ namespace emmVRC.Hacks
                 {
                     if (VRCPlusSupporterButton == null)
                     {
-                        VRCPlusSupporterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Supporter");
-                        VRCPlusEarlyAdopterButton = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/VRCPlusEarlyAdopter");
+                        VRCPlusSupporterButton = GameObject.Find("MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightUpperButtonColumn/Supporter/SupporterButton");
+                        VRCPlusEarlyAdopterIcon = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/VRCIcons/VRCPlusEarlyAdopterIcon");
+                        VRCPlusSubscriberIcon = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/VRCIcons/VRCPlusSubscriberIcon");
                     }
                     if (!menuOpen && GameObject.Find("MenuContent/Screens/UserInfo").activeInHierarchy)
                     {
@@ -259,12 +235,14 @@ namespace emmVRC.Hacks
                         if (Configuration.JSONConfig.DisableVRCPlusUserInfo)
                         {
                             VRCPlusSupporterButton.transform.localScale = Vector3.zero;
-                            VRCPlusEarlyAdopterButton.transform.localScale = Vector3.zero;
+                            VRCPlusEarlyAdopterIcon.transform.localScale = Vector3.zero;
+                            VRCPlusSubscriberIcon.transform.localScale = Vector3.zero;
                         }
                         else
                         {
                             VRCPlusSupporterButton.transform.localScale = Vector3.one;
-                            VRCPlusEarlyAdopterButton.transform.localScale = Vector3.one;
+                            VRCPlusEarlyAdopterIcon.transform.localScale = Vector3.one;
+                            VRCPlusSubscriberIcon.transform.localScale = Vector3.one;
                         }
                         menuJustOpened = false;
                     }
@@ -272,23 +250,12 @@ namespace emmVRC.Hacks
                         menuOpen = false;
                     if (!GameObject.Find("MenuContent/Screens/UserInfo").activeSelf)
                     {
-                        UserSendMessage.SetActive(false);
+                        //UserSendMessage.SetActive(false);
                         UserNotes.SetActive(false);
                         TeleportButton.SetActive(false);
                         AvatarSearchButton.SetActive(false);
-                        ToggleBlockButton.SetActive(false);
+                        //ToggleBlockButton.SetActive(false);
                         PortalToUserButton.SetActive(false);
-                        try
-                        {
-                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists").SetActive(true);
-                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Favorite").SetActive(true);
-                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Report").SetActive(true);
-                            GameObject.Find("MenuContent/Screens/UserInfo/User Panel/OnlineFriend/VoteKickButton").SetActive(true);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex = new Exception();
-                        }
                     }
                 }
             }

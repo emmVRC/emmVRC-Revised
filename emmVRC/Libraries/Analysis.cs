@@ -64,5 +64,4 @@ namespace emmVRC.Libraries
             }
         }
     }
-}
-*/
+}*/

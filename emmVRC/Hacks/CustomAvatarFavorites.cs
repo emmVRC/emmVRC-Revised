@@ -33,7 +33,6 @@ namespace emmVRC.Hacks
         public static Button.ButtonClickedEvent baseChooseEvent;
         private static GameObject FavoriteButton;
         private static GameObject FavoriteButtonNew;
-        public static GameObject ExportButton;
         private static Button FavoriteButtonNewButton;
         private static Text FavoriteButtonNewText;
         public static GameObject pageAvatar;
@@ -126,39 +125,6 @@ namespace emmVRC.Hacks
                 FavoriteButtonNew.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
                 FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountDividerText").gameObject.SetActive(false);
                 FavoriteButtonNew.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);
-            }
-            catch (System.Exception ex)
-            {
-                emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
-            }
-
-            ExportButton = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
-            ExportButton.GetComponentInChildren<RectTransform>().localPosition += new Vector3(0f, 765f);
-            ExportButton.GetComponentInChildren<Text>().text = "Export";
-            ExportButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-            ExportButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
-            {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Would you like to export your emmVRC Favorite Avatars?", "Yes", () =>
-                {
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
-                    foreach (ApiAvatar avtr in LoadedAvatars)
-                    {
-                        exportedAvatars.Add(new ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
-                    }
-                    File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
-                    Managers.NotificationManager.AddNotification("Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
-                }, "No", () =>
-                {
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                });
-            }));
-            try
-            {
-                ExportButton.transform.Find("Horizontal/FavoritesCountSpacingText").gameObject.SetActive(false);
-                ExportButton.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
-                ExportButton.transform.Find("Horizontal/FavoritesCountDividerText").gameObject.SetActive(false);
-                ExportButton.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);
             }
             catch (System.Exception ex)
             {
@@ -633,7 +599,6 @@ namespace emmVRC.Hacks
             {
                 PublicAvatarList.SetActive(false);
                 FavoriteButtonNew.SetActive(false);
-                ExportButton.SetActive(false);
             }
             if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null || PublicAvatarList == null || FavoriteButtonNew == null || RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
             if (!PublicAvatarList.activeInHierarchy ) return;
@@ -694,13 +659,11 @@ namespace emmVRC.Hacks
             {
                 PublicAvatarList.SetActive(false);
                 FavoriteButtonNew.SetActive(false);
-                ExportButton.SetActive(false);
             }
             else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
             {
                 PublicAvatarList.SetActive(true);
                 FavoriteButtonNew.SetActive(true);
-                ExportButton.SetActive(true);
             }
             if (error && !errorWarned)
             {

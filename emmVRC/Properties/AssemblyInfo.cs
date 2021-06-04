@@ -15,8 +15,6 @@ using Harmony;
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: DisablePrivateReflection]
-[assembly: SecurityCritical]
 [assembly: HarmonyShield]
 
 // Setting ComVisible to false makes the types in this assembly not visible

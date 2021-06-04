@@ -31,7 +31,7 @@ namespace emmVRC.Hacks
         public static IEnumerator Process()
         {
 
-            
+
             if (logoButton == null)
             {
                 logoButton = new QMSingleButton("ShortcutMenu", Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY, "", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
@@ -46,11 +46,11 @@ namespace emmVRC.Hacks
             trustRankButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors").gameObject;
             socialNotifications = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/SocialNotifications").gameObject;
             vrcPlusThankYouButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusThankYou").gameObject;
-            vrcPlusUserIconButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/UserIconButton").gameObject;
+            vrcPlusUserIconButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GalleryButton").gameObject;
             vrcPlusUserIconCameraButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/UserIconCameraButton").gameObject;
             vrcPlusMiniBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusMiniBanner").gameObject;
             vrcPlusMainBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/VRCPlusBanner").gameObject;
-            
+
             emojiButton.SetActive(!Configuration.JSONConfig.DisableEmojiButton);
             emoteButton.SetActive(!Configuration.JSONConfig.DisableEmoteButton);
             reportWorldButton.SetActive(!Configuration.JSONConfig.DisableReportWorldButton);
@@ -58,14 +58,11 @@ namespace emmVRC.Hacks
             socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
             while (APIUser.CurrentUser == null || Objects.NetworkConfig.Instance == null)
                 yield return new WaitForEndOfFrame();
-            if (CustomAvatarFavorites.DoesUserHaveVRCPlus())
-            {
-                vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
-                vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
-                vrcPlusThankYouButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
-                vrcPlusUserIconButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
-                vrcPlusUserIconCameraButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
-            }
+            vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+            vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+            vrcPlusThankYouButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+            vrcPlusUserIconButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+            vrcPlusUserIconCameraButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
         }
     }
 }

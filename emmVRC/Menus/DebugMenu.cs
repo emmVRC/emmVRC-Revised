@@ -91,7 +91,7 @@ namespace emmVRC.Menus
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter test text here", "", UnityEngine.UI.InputField.InputType.Standard, false, "Foobar", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string str, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
                         VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Text entered: " + str);
-                    }), null);
+                    }), null, "Enter text...", true, null, true, 0);
                 } catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError("Input popup failed: " + ex.ToString());
