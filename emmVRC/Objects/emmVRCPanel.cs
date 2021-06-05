@@ -20,7 +20,10 @@ namespace emmVRC.Objects
         public static emmVRCPanel Instantiate(GameObject parent)
         {
             if (!classInjected)
+            {
                 UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp<emmVRCPanel>();
+                classInjected = true;
+            }
             return parent.AddComponent<emmVRCPanel>();
         }
 

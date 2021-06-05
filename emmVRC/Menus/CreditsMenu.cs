@@ -14,7 +14,7 @@ namespace emmVRC.Menus
     public class CreditsMenu
     {
         public static PaginatedMenu baseMenu;
-        public static TextDisplayMenu noticeMenu;
+        public static ScrollingTextMenu noticeMenu;
         //public static TextDisplayMenu licensesMenu;
         public static void Initialize()
         {
@@ -36,21 +36,21 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("<color=#88d184>DltDat</color>", null, "Developer of the hooking method used for various functions across emmVRC"));
             for (int i = 0; i < 4; i++)
                 baseMenu.pageItems.Add(PageItem.Space);
-            noticeMenu = new TextDisplayMenu(baseMenu.menuBase, 10293, 10221, "", "", null, "Notice to you",
+            noticeMenu = new ScrollingTextMenu(baseMenu.menuBase, 10293, 10221, "", "", null, "Notice to you",
             //  "This is an pre-release build! Do not distribute to others\n" +
-                "emmVRC started off as a simple proof-of-concept for modding\n" +
-                "VRChat. It originally only had a primitive Global Dynamic Bones\n" +
-                "setup, and that was all. But seeing the potential of mods,\n" +
-                "I set off to test the boundaries of what a simple Mono mod\n" +
+                "emmVRC started off as a simple proof-of-concept for modding " +
+                "VRChat. It originally only had a primitive Global Dynamic Bones " +
+                "setup, and that was all. But seeing the potential of mods, " +
+                "I set off to test the boundaries of what a simple Mono mod " +
                 "could do.\n" +
                 "\n" +
-                "Fast forward an entire year later, and emmVRC is a far bigger\n" +
-                "project than I ever could have imagined. Every day, we see\n" +
-                "more and more users joining the Discord, and using the mod.\n" +
-                "It's amazing to see, and I couldn't have done it without\n" +
+                "Fast forward an entire year later, and emmVRC is a far bigger " +
+                "project than I ever could have imagined. Every day, we see " +
+                "more and more users joining the Discord, and using the mod. " +
+                "It's amazing to see, and I couldn't have done it without " +
                 "all of you guys.\n" +
                 "\n" +
-                "Thank you for supporting emmVRC throughout the year,\n" +
+                "Thank you for supporting emmVRC throughout the year, " +
                 "and helping me keep doing what I do! -Emilia");
             noticeMenu.menuEntryButton.DestroyMe();
             baseMenu.pageItems.Add(new PageItem("<color=#FF69B4>Notice</color>", () => { noticeMenu.OpenMenu(); }, "..."));
