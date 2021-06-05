@@ -32,7 +32,7 @@ namespace emmVRC.Menus
                             if (plr != null && plr.field_Private_VRCPlayerApi_0 != null)
                                 if (tempCount != 22)
                                 {
-                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.field_Private_APIUser_0)) + ">" + plr.field_Private_APIUser_0.GetName() + "</color> - " + plr._vrcplayer.prop_Int16_0 + " ms - <color=" + ColorConversion.ColorToHex(plr.prop_PlayerNet_0.LerpFramerateColor(), true) + ">" + (plr.prop_PlayerNet_0.GetFramerate() != -1f ? plr.prop_PlayerNet_0.GetFramerate()+"" : "N/A") + "</color> fps\n";
+                                    userList += (plr.field_Private_VRCPlayerApi_0.isMaster ? "♕ " : "     ") + "<color=#" + Libraries.ColorConversion.ColorToHex(VRCPlayer.Method_Public_Static_Color_APIUser_0(plr.prop_APIUser_0)) + ">" + plr.prop_APIUser_0.GetName() + "</color> - " + plr._vrcplayer.prop_Int16_0 + " ms - <color=" + ColorConversion.ColorToHex(plr.prop_PlayerNet_0.LerpFramerateColor(), true) + ">" + (plr.prop_PlayerNet_0.GetFramerate() != -1f ? plr.prop_PlayerNet_0.GetFramerate()+"" : "N/A") + "</color> fps\n";
                                     tempCount++;
                                 }
                         }

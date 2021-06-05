@@ -17,7 +17,7 @@ namespace emmVRC.Hacks
         public static QMToggleButton ToggleHUD;
         public static IEnumerator Initialize()
         {
-            ToggleHUD = new QMToggleButton("UIElementsMenu", 1, 1, "HUD On", () =>
+            ToggleHUD = new QMToggleButton("UIElementsMenu", 1, 2, "HUD On", () =>
             {
                 Configuration.JSONConfig.UIVisible = true;
                 Configuration.SaveConfig();

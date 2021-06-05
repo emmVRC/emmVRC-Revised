@@ -8,17 +8,17 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.9.2";
-        public static int LastTestedBuildNumber = 1101;
+        public static string Version = "2.9.3";
+        public static int LastTestedBuildNumber = 1102;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "06/03/2021";
+        public static string DateUpdated = "06/04/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "• Fixed compatibility with VRChat build 1101";
+            "• Fixed compatibility with VRChat build 1102";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.3.0";
         public static string TargetemmVRCLoaderVersion = "1.2.0";

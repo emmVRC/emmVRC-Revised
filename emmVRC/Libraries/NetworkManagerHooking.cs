@@ -14,13 +14,13 @@ namespace emmVRC.Libraries
         public static void OnPlayerJoined(VRC.Player plr)
         {
            
-            if (Configuration.JSONConfig.PlayerHistoryEnable && plr.field_Private_APIUser_0 != null && plr.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
+            if (Configuration.JSONConfig.PlayerHistoryEnable && plr.prop_APIUser_0 != null && plr.prop_APIUser_0.id != APIUser.CurrentUser.id)
             {
-                PlayerHistoryMenu.currentPlayers.Add(new InstancePlayer { Name = plr.field_Private_APIUser_0.GetName(), UserID = plr.field_Private_APIUser_0.id, TimeJoinedStamp = DateTime.Now.ToShortTimeString() });
+                PlayerHistoryMenu.currentPlayers.Add(new InstancePlayer { Name = plr.prop_APIUser_0.GetName(), UserID = plr.prop_APIUser_0.id, TimeJoinedStamp = DateTime.Now.ToShortTimeString() });
                 
             }
             if (Configuration.JSONConfig.LogPlayerJoin)
-                emmVRCLoader.Logger.Log("Player joined: " + plr.field_Private_APIUser_0.GetName());
+                emmVRCLoader.Logger.Log("Player joined: " + plr.prop_APIUser_0.GetName());
         }
         public static void OnPlayerLeft(VRC.Player plr)
         {
@@ -29,7 +29,7 @@ namespace emmVRC.Libraries
                 
             }
             if (Configuration.JSONConfig.LogPlayerJoin)
-                emmVRCLoader.Logger.Log("Player left: " + plr.field_Private_APIUser_0.GetName());
+                emmVRCLoader.Logger.Log("Player left: " + plr.prop_APIUser_0.GetName());
         }
     }
 }

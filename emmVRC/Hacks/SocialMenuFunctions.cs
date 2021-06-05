@@ -98,7 +98,7 @@ namespace emmVRC.Hacks
                 }
                 try
                 {
-                    GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightLowerButtonColumn/").SetActive(!GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightLowerButtonColumn/").activeSelf);
+                    GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/OnlineFriendButtons").transform.localScale = (GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/OnlineFriendButtons").transform.localScale == Vector3.zero ? Vector3.one : Vector3.zero);
                 }
                 catch (Exception ex)
                 {
@@ -126,7 +126,7 @@ namespace emmVRC.Hacks
                     Player plrToTP = null;
                     Libraries.PlayerUtils.GetEachPlayer((Player plr) =>
                     {
-                        if (plr.field_Private_APIUser_0.id == QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id)
+                        if (plr.prop_APIUser_0.id == QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Public_APIUser_0.id)
                             plrToTP = plr;
                     });
                     if (plrToTP != null)
@@ -251,6 +251,7 @@ namespace emmVRC.Hacks
                     if (!GameObject.Find("MenuContent/Screens/UserInfo").activeSelf)
                     {
                         //UserSendMessage.SetActive(false);
+                        GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/OnlineFriendButtons").transform.localScale = Vector3.one;
                         UserNotes.SetActive(false);
                         TeleportButton.SetActive(false);
                         AvatarSearchButton.SetActive(false);
