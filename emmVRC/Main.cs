@@ -24,7 +24,7 @@ namespace emmVRC
     {
         public static bool Initialized = false;
         public static readonly AwaitProvider AwaitUpdate = new AwaitProvider();
-        
+
         // OnApplicationStart is called when emmVRCLoader passes over control to the emmVRC assembly.
         private static void OnApplicationStart()
         {
@@ -43,6 +43,36 @@ namespace emmVRC
             if (Environment.CommandLine.Contains("--emmvrc.stealthmode"))
                 Configuration.JSONConfig.StealthMode = true;
 
+            if (typeof(MelonLoader.MelonMod).GetMethod("VRChat_OnUiManagerInit") == null)
+                MelonLoader.MelonCoroutines.Start(GetAssembly());
+
+        }
+
+        private static System.Collections.IEnumerator GetAssembly()
+        {
+            System.Reflection.Assembly assemblyCSharp = null;
+            while (true)
+            {
+                assemblyCSharp = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly => assembly.GetName().Name == "Assembly-CSharp");
+                if (assemblyCSharp == null)
+                    yield return null;
+                else
+                    break;
+            }
+
+            MelonLoader.MelonCoroutines.Start(WaitForUiManagerInit(assemblyCSharp));
+        }
+
+        private static System.Collections.IEnumerator WaitForUiManagerInit(System.Reflection.Assembly assemblyCSharp)
+        {
+
+            System.Type vrcUiManager = assemblyCSharp.GetType("VRCUiManager");
+            System.Reflection.PropertyInfo uiManagerSingleton = vrcUiManager.GetProperties().First(pi => pi.PropertyType == vrcUiManager);
+
+            while (uiManagerSingleton.GetValue(null) == null)
+                yield return null;
+
+            OnUIManagerInit();
         }
 
         // OnUIManagerInit is the equivelent of the VRCUiManagerUtils.WaitForUIManagerInit, but better

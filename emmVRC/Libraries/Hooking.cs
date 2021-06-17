@@ -146,9 +146,7 @@ namespace emmVRC.Libraries
             if (Configuration.JSONConfig.TrackingSaving)
             {
                 emmVRCLoader.Logger.LogDebug("Saving calibration info...");
-                if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1 != null)
-                    MelonLoader.MelonCoroutines.Start(FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1.id));
-                else if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0 != null)
+                if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0 != null)
                     MelonLoader.MelonCoroutines.Start(FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id));
                 else
                     emmVRCLoader.Logger.LogError("Could not fetch avatar information for this avatar");

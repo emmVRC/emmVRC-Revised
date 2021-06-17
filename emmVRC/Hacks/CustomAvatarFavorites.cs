@@ -140,6 +140,19 @@ namespace emmVRC.Hacks
                 emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
             }
 
+            GameObject ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/XplatHide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
+            ShowAuthorButton.GetComponentInChildren<Text>().text = "";
+            ShowAuthorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(82f, 82f);
+            ShowAuthorButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(250f, -25f);
+            ShowAuthorButton.transform.Find("PlatformIcon").gameObject.SetActive(true);
+            ShowAuthorButton.transform.Find("PlatformIcon").GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            Button ShowAuthorButtonButton = ShowAuthorButton.GetComponent<Button>();
+            ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
+            ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
+            {
+                QuickMenu.prop_QuickMenu_0.field_Public_MenuController_0.Method_Public_Void_String_0(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId);
+            }));
+
             GameObject oldPublicAvatarList;
             oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
