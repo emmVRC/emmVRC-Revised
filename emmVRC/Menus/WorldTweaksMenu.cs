@@ -49,7 +49,7 @@ namespace emmVRC.Menus
             //RevertPedestalsButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
 
 
-            ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { new PortalInternal().Method_Private_Void_String_String_PDM_0(RoomManager.field_Internal_Static_ApiWorld_0.id, RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags); }, "Loads the current instance again");
+            ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { new PortalInternal().Method_Private_Void_String_String_PDM_0(RoomManager.field_Internal_Static_ApiWorld_0.id, RoomManager.field_Internal_Static_ApiWorldInstance_0.instanceId); }, "Loads the current instance again");
             PortalBlockToggle = new QMToggleButton(baseMenu, 4, 0, "Portals On", () => { Configuration.JSONConfig.PortalBlockingEnable = false; Configuration.SaveConfig(); }, "Portals Off", () => { Configuration.JSONConfig.PortalBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables portals in the current world", null, null, false, true);
             PortalBlockToggle.setToggleState(!Configuration.JSONConfig.PortalBlockingEnable);
             ChairBlockToggle = new QMToggleButton(baseMenu, 4, 1, "Chairs On", () => { Configuration.JSONConfig.ChairBlockingEnable = false; Configuration.SaveConfig(); }, "Chairs Off", () => { Configuration.JSONConfig.ChairBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables chairs in the current world", null, null, false, true);

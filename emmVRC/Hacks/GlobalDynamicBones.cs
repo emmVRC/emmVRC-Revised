@@ -23,6 +23,14 @@ namespace emmVRC.Hacks
             // Check if we should do anything at all
             if (Configuration.JSONConfig.GlobalDynamicBonesEnabled)
             {
+                if (avatarObject == null)
+                    emmVRCLoader.Logger.LogDebug("Avatar object is null");
+                if (avatarDescriptor == null)
+                    emmVRCLoader.Logger.LogDebug("Avatar descriptor is null");
+                if (avatarDescriptor.GetComponent<PipelineManager>() == null)
+                    emmVRCLoader.Logger.LogDebug("Avatar pipeline is null");
+                if (avatarObject == null)
+                    emmVRCLoader.Logger.LogDebug("Avatar VRCPlayer is null");
                 if (avatarObject == null || avatarDescriptor == null || avatarDescriptor.GetComponent<PipelineManager>() == null || avatarDescriptor.GetComponentInParent<VRCPlayer>() == null) return;
 
                 // Grab avatar permissions for the loaded avatar

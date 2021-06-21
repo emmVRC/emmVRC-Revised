@@ -84,10 +84,13 @@ namespace emmVRC.Libraries
             }
         }
 
+        private static MethodInfo reloadAvatarsMethod;
         public static void ReloadAvatar(this VRCPlayer instance, bool ignoreSelf = false)
         {
             emmVRCLoader.Logger.LogDebug("ReloadAvatar called");
-            instance.Method_Public_Void_Boolean_0(ignoreSelf);
+            reloadAvatarsMethod = typeof(VRCPlayer).GetMethods().First(method => method.Name.Contains("Method_Public_Void_Boolean_") && method.GetParameters().Any(param => param.IsOptional));
+            if (reloadAvatarsMethod != null)
+                reloadAvatarsMethod.Invoke(instance, new object[] { ignoreSelf });
             //ReloadAvatarAct.Invoke(instance, something);
         }
         #endregion
@@ -228,6 +231,26 @@ namespace emmVRC.Libraries
         public static void SetQuickMenuContext(this QuickMenu instance, QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique context, APIUser user = null, string text = "")
         {
             SetQuickMenuContextMethod.Invoke(instance, new object[] { context, user, text });
+        }
+        #endregion
+
+        #region QuickMenu SelectPlayer
+        private static MethodInfo ourSelectPlayerMethod;
+        public static MethodInfo SelectPlayerMethod
+        {
+            get
+            {
+                if (ourSelectPlayerMethod != null) return ourSelectPlayerMethod;
+                var targetMethod = typeof(QuickMenu).GetMethods()
+                    .First(it => it != null && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(VRC.Player));
+                ourSelectPlayerMethod = targetMethod;
+                return ourSelectPlayerMethod;
+            }
+        }
+
+        public static void SelectPlayer(this QuickMenu instance, VRC.Player player)
+        {
+            SelectPlayerMethod.Invoke(instance, new object[] { player });
         }
         #endregion
 

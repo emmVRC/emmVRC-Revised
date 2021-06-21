@@ -61,10 +61,10 @@ namespace emmVRC.Menus
         {
             baseMenu.pageItems.Clear();
             foreach (SerializedWorld pastInstance in previousInstances) { 
-                baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags), () =>
+                baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags) + (pastInstance.WorldTags.Contains("region(jp)") ? "\n<color=#FFFF00>[JP]</color>" : (pastInstance.WorldTags.Contains("region(eu)") ? "\n<color=#FFFF00>[EU]</color>" : "")), () =>
                 {
                     new PortalInternal().Method_Private_Void_String_String_PDM_0(pastInstance.WorldID, pastInstance.WorldTags);
-                }, pastInstance.WorldName + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
+                }, pastInstance.WorldName + (pastInstance.WorldTags.Contains("region(jp)") ? " [JP Region]" : (pastInstance.WorldTags.Contains("region(eu)") ? " [EU Region]" : ""))  + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
             }
         }
         public static void SaveInstances()
@@ -80,9 +80,9 @@ namespace emmVRC.Menus
                 SerializedWorld world = new SerializedWorld
                 {
                     WorldID = RoomManager.field_Internal_Static_ApiWorld_0.id,
-                    WorldTags = RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags,
-                    WorldOwner = (RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator() == null ? "" : RoomManager.field_Internal_Static_ApiWorldInstance_0.GetInstanceCreator()),
-                    WorldType = RoomManager.field_Internal_Static_ApiWorldInstance_0.InstanceType.ToString(),
+                    WorldTags = RoomManager.field_Internal_Static_ApiWorldInstance_0.instanceId,
+                    WorldOwner = (RoomManager.field_Internal_Static_ApiWorldInstance_0.ownerId == null ? "" : RoomManager.field_Internal_Static_ApiWorldInstance_0.ownerId),
+                    WorldType = RoomManager.field_Internal_Static_ApiWorldInstance_0.type.ToString(),
                     WorldName = RoomManager.field_Internal_Static_ApiWorld_0.name,
                     WorldImageURL = RoomManager.field_Internal_Static_ApiWorld_0.thumbnailImageUrl
                 };

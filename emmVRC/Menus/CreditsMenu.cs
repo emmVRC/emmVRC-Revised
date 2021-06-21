@@ -24,8 +24,8 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Hordini</color>", null, "Supporter, community manager, and major cutie"));
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Brandon</color>", null, "Network developer"));
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Janni9009</color>", null, "Developer and supporter"));
+            baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Lily</color>", null, "Developer and supporter"));
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Supah</color>", null, "Major supporter and moderator"));
-            baseMenu.pageItems.Add(new PageItem("<color=#C67228>mrgw98</color>", null, "Helper in the community"));
             //baseMenu.pageItems.Add(new PageItem("<color=#0091FF>Provania</color>", null, "Moderator and Helper in the community"));
             baseMenu.pageItems.Add(new PageItem("<color=#0091FF>rakosi2</color>", null, "Moderator and Helper in the community"));
             baseMenu.pageItems.Add(new PageItem("<color=#C67228>RiskiVR</color>", null, "Helper in the community"));
@@ -33,7 +33,6 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>knah</color>", null, "Netcode developer, as well as developer of the Unhollower, the most important part of MelonLoader"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>Slaynash</color>", null, "Original developer of VRCModLoader, the entire reason why emmVRC exists today"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>DubyaDude</color>", null, "Developer of the Ruby Button API"));
-            baseMenu.pageItems.Add(new PageItem("<color=#88d184>DltDat</color>", null, "Developer of the hooking method used for various functions across emmVRC"));
             for (int i = 0; i < 4; i++)
                 baseMenu.pageItems.Add(PageItem.Space);
             noticeMenu = new TextDisplayMenu(baseMenu.menuBase, 10293, 10221, "", "", null, "Notice to you",
