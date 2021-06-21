@@ -92,17 +92,15 @@ namespace emmVRC.Hacks
                     else
                         PortalToUserButton.SetActive(false);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    ex = new Exception();
                 }
                 try
                 {
                     GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/OnlineFriendButtons").transform.localScale = (GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/OnlineFriendButtons").transform.localScale == Vector3.zero ? Vector3.one : Vector3.zero);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    ex = new Exception();
                 }
             }));
 

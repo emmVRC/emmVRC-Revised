@@ -640,9 +640,20 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables the emmVRC Tab, which replaces the Shortcut Menu buttons with a menu.");
             StealthMode = new PageItem("Stealth Mode", () =>
             {
-                Configuration.JSONConfig.StealthMode = true;
-                Configuration.SaveConfig();
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must restart your game for this change to apply.\nRestart now?", "Yes", () => { DestructiveActions.ForceRestart(); }, "No", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                
+                VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Are you sure you want to enable stealth mode? This will hide emmVRC from the menus, and you must use the Report World button to access emmVRC", "Yes", () =>
+                {
+                    Configuration.JSONConfig.StealthMode = true;
+                    Configuration.SaveConfig();
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You must restart your game for this change to apply.\nRestart now?", "Yes", () => {
+                        DestructiveActions.ForceRestart();
+                    }, "No", () => {
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                    });
+                }, "No", () => {
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                });
+                
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.StealthMode = false;

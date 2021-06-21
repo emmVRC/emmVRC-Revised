@@ -24,7 +24,7 @@ namespace emmVRC
     {
         public static bool Initialized = false;
         public static readonly AwaitProvider AwaitUpdate = new AwaitProvider();
-        
+
         // OnApplicationStart is called when emmVRCLoader passes over control to the emmVRC assembly.
         private static void OnApplicationStart()
         {
@@ -487,6 +487,13 @@ namespace emmVRC
                     emmVRCLoader.Logger.LogDebug("Initializing Tab Menu...");
                     MelonLoader.MelonCoroutines.Start(Hacks.TabMenu.Initialize());
                 }
+
+                if (!Configuration.JSONConfig.StealthMode)
+                {
+                    emmVRCLoader.Logger.LogDebug("Initializing User Info tweaks...");
+                    Hacks.UserInfoTweaks.Initialize();
+                }    
+
                 emmVRCLoader.Logger.LogDebug("Initializing Emoji Favourites system...");
                 MelonLoader.MelonCoroutines.Start(Hacks.EmojiFavourites.Initialize());
                 //emmVRCLoader.Logger.LogDebug("Initializing alarm clock module...");
