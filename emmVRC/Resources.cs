@@ -41,6 +41,7 @@ namespace emmVRC
         public static Sprite HUD_Minimized;
         public static Sprite emmHUDLogo;
         public static Sprite TabIcon;
+        public static Sprite authorSprite;
 
         public static AudioClip customLoadingMusic;
 
@@ -160,6 +161,7 @@ namespace emmVRC
             rpSprite = LoadSprite("RP.png");
 
             crownSprite = LoadSprite("Crown.png");
+            authorSprite = LoadSprite("Author.png");
 
             Media_Nav = LoadSprite("Media_NAV.png");
             Media_PlayPause = LoadSprite("Media_PLAY_PAUSE.png");

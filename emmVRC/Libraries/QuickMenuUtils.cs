@@ -94,7 +94,7 @@ namespace emmVRC.Libraries
         }
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!
-        private static FieldInfo currentPageGetter;
+        public static FieldInfo currentPageGetter;
 
         private static GameObject shortcutMenu;
         private static GameObject userInteractMenu;
@@ -127,9 +127,9 @@ namespace emmVRC.Libraries
                 foreach (FieldInfo fi in fis)
                 {
                     GameObject value = fi.GetValue(quickmenu)?.TryCast<GameObject>();
-                    if (value == shortcutMenu && ++count == 2)
+                    if (value == shortcutMenu && ++count == 3)
                     {
-                        //emmVRCLoader.Logger.Log("[QuickMenuUtils] currentPage field: " + fi.Name);
+                        //emmVRCLoader.Logger.LogDebug("currentPage field: " + fi.Name);
                         currentPageGetter = fi;
                         break;
                     }
@@ -176,6 +176,7 @@ namespace emmVRC.Libraries
         // Set the current Quick Menu index
         public static void SetIndex(int index)
         {
+            emmVRCLoader.Logger.LogDebug("Menu index enum is set to " + ((QuickMenu.EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique)index).ToString()+" (int value "+index+")");
             GetQuickMenuInstance().field_Private_EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique_0 = (QuickMenu.EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique)index;
         }
     }

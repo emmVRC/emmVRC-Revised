@@ -33,7 +33,7 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>knah</color>", null, "Netcode developer, as well as developer of the Unhollower, the most important part of MelonLoader"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>Slaynash</color>", null, "Original developer of VRCModLoader, the entire reason why emmVRC exists today"));
             baseMenu.pageItems.Add(new PageItem("<color=#71368A>DubyaDude</color>", null, "Developer of the Ruby Button API"));
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
                 baseMenu.pageItems.Add(PageItem.Space);
             noticeMenu = new ScrollingTextMenu(baseMenu.menuBase, 10293, 10221, "", "", null, "Notice to you",
             //  "This is an pre-release build! Do not distribute to others\n" +

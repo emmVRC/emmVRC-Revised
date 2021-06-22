@@ -121,7 +121,7 @@ namespace emmVRC.Menus
                         espButton.SetEnabled(false);
                     }
                 }
-                if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Length != 0)
+                if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Count != 0)
                 {
                     for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
                         favouriteEmojiButtons[i].SetIcon(EmojiFavourites.AvailableEmojis[Configuration.JSONConfig.FavouritedEmojis[i]].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>());

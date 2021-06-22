@@ -30,8 +30,9 @@ namespace emmVRC.Hacks
             ViewFullDescButton.transform.Find("Text").GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 0f);
             ViewFullDescButton.GetComponentInChildren<Text>().text = "View Full";
             ViewFullDescButton.GetComponentInChildren<Text>().resizeTextForBestFit = true;
-            ViewFullDescButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(325f, 110f);
-            ViewFullDescButton.GetComponent<RectTransform>().offsetMax = new Vector2(375f, 110f);
+            ViewFullDescButton.GetComponent<RectTransform>().offsetMax = new Vector2(-400f, 100f);
+            ViewFullDescButton.GetComponent<RectTransform>().offsetMin = new Vector2(-650f, 35f);
+
             //ViewFullDescButton.GetComponent<RectTransform>().anchorMax -= new Vector2(0f, 25f);
             ViewFullDescButton.SetActive(true);
             ViewFullDescButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();

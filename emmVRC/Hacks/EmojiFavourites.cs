@@ -1,4 +1,8 @@
 ﻿using System;
+using Il2CppSystem;
+using UnhollowerBaseLib;
+using UnhollowerRuntimeLib;
+using Il2CppSystem.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +20,7 @@ namespace emmVRC.Hacks
         public static PaginatedMenu CurrentEmojiMenu;
         private static QMSingleButton availableEmojiMenuButton;
         private static QMSingleButton currentEmojiMenuButton;
-        public static GameObject[] AvailableEmojis;
+        public static List<GameObject> AvailableEmojis;
         public static IEnumerator Initialize()
         {
             baseMenu = new QMNestedButton("ShortcutMenu", 13213, 29481, "", "");
@@ -27,11 +31,38 @@ namespace emmVRC.Hacks
             CurrentEmojiMenu.menuEntryButton.DestroyMe();
             availableEmojiMenuButton = new QMSingleButton(baseMenu, 1, 0, "Add\nEmoji", OpenAvailableEmojiMenu, "Add an Emoji to your favorites");
             currentEmojiMenuButton = new QMSingleButton(baseMenu, 2, 0, "Remove\nEmoji", OpenDeleteFavouriteEmojiMenu, "Delete an Emoji from your favorites");
-            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_EmojiGenerator_0 == null || VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_EmojiGenerator_0.field_Public_ArrayOf_GameObject_0 == null)
+            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null)
                 yield return new WaitForSeconds(1f);
-            AvailableEmojis = VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_EmojiGenerator_0.field_Public_ArrayOf_GameObject_0;
+            AvailableEmojis = emojiObjects();
+        }
 
-         }
+        private static Il2CppSystem.Reflection.FieldInfo emojiGenField = null;
+        private static Il2CppSystem.Reflection.FieldInfo emojisField = null;
+        public static List<GameObject> emojiObjects()
+        {
+            var vrcPlayerFields = Il2CppType.Of<VRCPlayer>().GetFields(Il2CppSystem.Reflection.BindingFlags.Instance | Il2CppSystem.Reflection.BindingFlags.Public | Il2CppSystem.Reflection.BindingFlags.NonPublic);
+            if (emojiGenField == null || emojisField == null)
+            { 
+                foreach (var f in vrcPlayerFields)
+                {
+                    var il2CppFields = f.FieldType.GetFields(Il2CppSystem.Reflection.BindingFlags.Instance | Il2CppSystem.Reflection.BindingFlags.Public | Il2CppSystem.Reflection.BindingFlags.NonPublic);
+                    if (il2CppFields.Length > 1) // EmojiGenerator only has 1 field
+                        continue;
+
+                    foreach (var sf in il2CppFields)
+                    {
+                        if (sf.FieldType.IsArray && sf.FieldType.GetElementType() == Il2CppType.Of<GameObject>())
+                        {
+                            emojiGenField = f;
+                            emojisField = sf;
+                            break;
+                        }
+                    }
+                } }
+            var emojiGen = emojiGenField.GetValue(VRCPlayer.field_Internal_Static_VRCPlayer_0);
+            return emojisField.GetValue(emojiGen).Cast<Il2CppReferenceArray<GameObject>>().ToList();
+        }
+
         public static void OpenAvailableEmojiMenu()
         {
             if (Configuration.JSONConfig.FavouritedEmojis.Count >= 8)
@@ -42,7 +73,7 @@ namespace emmVRC.Hacks
             {
                 AvailableEmojiMenu.pageItems.Clear();
 
-                for (int i = 0; i < AvailableEmojis.Length; i++)
+                for (int i = 0; i < AvailableEmojis.Count; i++)
                 {
                     if (!Configuration.JSONConfig.FavouritedEmojis.Contains(i))
                     {

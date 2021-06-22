@@ -80,9 +80,7 @@ namespace emmVRC.Hacks
             //newTab.GetComponent<UnityEngine.UI.Button>().onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
             newTab.GetComponent<UnityEngine.UI.Button>().onClick.AddListener((Action)(() =>
             {
-                QuickMenu.prop_QuickMenu_0.field_Private_GameObject_6.SetActive(false);
-                QuickMenu.prop_QuickMenu_0.field_Private_GameObject_6 = tabMenuObj;
-                QuickMenu.prop_QuickMenu_0.field_Private_GameObject_6.SetActive(true);
+                QuickMenuUtils.ShowQuickmenuPage(tabMenuObj.name);
                 notificationsButton.setButtonText(Managers.NotificationManager.Notifications.Count + "\nNotifications");
                 if (Managers.NotificationManager.Notifications.Count <= 0)
                     notificationsButton.getGameObject().GetComponent<UnityEngine.UI.Button>().interactable = false;

@@ -35,6 +35,7 @@ namespace emmVRC.Hacks
         private static GameObject FavoriteButtonNew;
         private static Button FavoriteButtonNewButton;
         private static Text FavoriteButtonNewText;
+        private static GameObject ShowAuthorButton;
         public static GameObject pageAvatar;
         private static PageAvatar currPageAvatar;
         private static bool error = false;
@@ -140,12 +141,13 @@ namespace emmVRC.Hacks
                 emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
             }
 
-            GameObject ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/XplatHide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
+            ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/XplatHide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
             ShowAuthorButton.GetComponentInChildren<Text>().text = "";
             ShowAuthorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(82f, 82f);
             ShowAuthorButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(250f, -25f);
             ShowAuthorButton.transform.Find("PlatformIcon").gameObject.SetActive(true);
             ShowAuthorButton.transform.Find("PlatformIcon").GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            MelonLoader.MelonCoroutines.Start(ShowAuthorIconUpdate());
             Button ShowAuthorButtonButton = ShowAuthorButton.GetComponent<Button>();
             ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
             ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
@@ -348,6 +350,15 @@ namespace emmVRC.Hacks
             LoadedAvatars = new List<ApiAvatar>();
 
             SearchedAvatars = new List<ApiAvatar>();
+
+        }
+
+        public static IEnumerator ShowAuthorIconUpdate()
+        {
+            while (Resources.authorSprite == null)
+                yield return new WaitForEndOfFrame();
+            ShowAuthorButton.transform.Find("PlatformIcon").GetComponent<Image>().sprite = Resources.authorSprite;
+            ShowAuthorButton.transform.Find("PlatformIcon").GetComponent<RectTransform>().sizeDelta /= new Vector2(1.5f, 1.5f);
 
         }
         public static async Task FavoriteAvatar(ApiAvatar avtr)
