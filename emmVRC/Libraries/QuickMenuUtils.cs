@@ -117,22 +117,35 @@ namespace emmVRC.Libraries
             if (currentPageGetter == null)
             {
                 GameObject shortcutMenu = quickmenu.transform.Find("ShortcutMenu").gameObject;
-                if (!shortcutMenu.activeInHierarchy)
-                    shortcutMenu = quickmenu.transform.Find("UserInteractMenu").gameObject;
-
+                GameObject userInteractMenu = quickmenu.transform.Find("UserInteractMenu").gameObject;
 
                 FieldInfo[] fis = Il2CppType.Of<QuickMenu>().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppType.Of<GameObject>()).ToArray();
                 //emmVRCLoader.Logger.Log("[QuickMenuUtils] GameObject Fields in QuickMenu:");
                 int count = 0;
+                bool continueThru = true;
                 foreach (FieldInfo fi in fis)
                 {
                     GameObject value = fi.GetValue(quickmenu)?.TryCast<GameObject>();
-                    if (value == shortcutMenu && ++count == 3)
-                    {
-                        //emmVRCLoader.Logger.LogDebug("currentPage field: " + fi.Name);
-                        currentPageGetter = fi;
-                        break;
-                    }
+                    if (continueThru){
+                        switch (QuickMenu.prop_QuickMenu_0.field_Private_EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique_0)
+                        {
+                            default:
+                                if (value == shortcutMenu && ++count == 3)
+                                {
+                                    emmVRCLoader.Logger.LogDebug("currentPage field: " + fi.Name);
+                                    currentPageGetter = fi;
+                                    continueThru = false;
+                                }
+                                break;
+                            case QuickMenu.EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique.UserInteractMenu:
+                                if (value == userInteractMenu && ++count == 2)
+                                {
+                                    emmVRCLoader.Logger.LogDebug("currentPage field: " + fi.Name);
+                                    currentPageGetter = fi;
+                                    continueThru = false;
+                                }
+                                break;
+                        } }
                 }
                 if (currentPageGetter == null)
                 {

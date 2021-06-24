@@ -114,6 +114,14 @@ namespace emmVRC.Network
                 string result = await HTTPRequest.get(NetworkClient.configURL + "/configuration.php");
                 NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
                 await emmVRC.AwaitUpdate.Yield();
+                if (NetworkConfig.Instance.MessageID != -1 && Configuration.JSONConfig.LastSeenStartupMessage != NetworkConfig.Instance.MessageID){
+                    Managers.NotificationManager.AddNotification(NetworkConfig.Instance.StartupMessage, "Dismiss", () =>
+                    {
+                        Configuration.JSONConfig.LastSeenStartupMessage = NetworkConfig.Instance.MessageID;
+                        Configuration.SaveConfig();
+                        Managers.NotificationManager.DismissCurrentNotification();
+                    }, "", null, Resources.alertSprite);
+                }
             }
             catch (Exception exception)
             {

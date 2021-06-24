@@ -60,7 +60,7 @@ namespace emmVRC.Managers
         }
         private static void ReloadUsers()
         {
-            VRCPlayer.field_Internal_Static_VRCPlayer_0.Method_Public_Void_Boolean_0(true);
+            VRCPlayer.field_Internal_Static_VRCPlayer_0.ReloadAllAvatars();
 
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCUserManager_0.Method_Private_Void_Boolean_1(false);
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCUserManager_0.Method_Private_Void_Boolean_2(false);

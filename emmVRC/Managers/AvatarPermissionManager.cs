@@ -29,13 +29,14 @@ namespace emmVRC.Managers
         public bool AudioSourcesEnabled = true;
         public static AvatarPermissions GetAvatarPermissions(string avatarId)
         {
-            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarPermissions/" + avatarId + ".json"))){
+            if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarPermissions/" + avatarId + ".json")))
+            {
                 AvatarPermissions perms = TinyJSON.Decoder.Decode(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarPermissions/" + avatarId + ".json"))).Make<AvatarPermissions>();
                 return perms;
             }
             else
             {
-                AvatarPermissions perms = new AvatarPermissions { AvatarId = avatarId};
+                AvatarPermissions perms = new AvatarPermissions { AvatarId = avatarId };
                 return perms;
             }
         }
@@ -72,47 +73,57 @@ namespace emmVRC.Managers
 
             baseMenu = new PaginatedMenu(UserTweaksMenu.UserTweaks, 29304, 102394, "Avatar\nPermissions", "", null);
             baseMenu.menuEntryButton.DestroyMe();
-            DynamicBonesEnabledToggle = new PageItem("Dynamic Bones", () => {
+            DynamicBonesEnabledToggle = new PageItem("Dynamic Bones", () =>
+            {
                 selectedAvatarPermissions.DynamicBonesEnabled = true;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 selectedAvatarPermissions.DynamicBonesEnabled = false;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
             }, "TOGGLE: Enables Dynamic Bones for the selected avatar", true, true);
-            ParticleSystemsEnabledToggle = new PageItem("Particle\nSystems", () => {
+            ParticleSystemsEnabledToggle = new PageItem("Particle\nSystems", () =>
+            {
                 selectedAvatarPermissions.ParticleSystemsEnabled = true;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 selectedAvatarPermissions.ParticleSystemsEnabled = false;
-                selectedAvatarPermissions.SaveAvatarPermissions(); 
+                selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
             }, "TOGGLE: Enables Particle Systems for the selected avatar", true, true);
-            ClothEnabledToggle = new PageItem("Cloth", () => {
+            ClothEnabledToggle = new PageItem("Cloth", () =>
+            {
                 selectedAvatarPermissions.ClothEnabled = true;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 selectedAvatarPermissions.ClothEnabled = false;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
             }, "TOGGLE: Enables Cloth for the selected avatar", true, true);
-            ShadersEnabledToggle = new PageItem("Shaders", () => {
+            ShadersEnabledToggle = new PageItem("Shaders", () =>
+            {
                 selectedAvatarPermissions.ShadersEnabled = true;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 selectedAvatarPermissions.ShadersEnabled = false;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
             }, "TOGGLE: Enables Shaders for the selected avatar", true, true);
-            AudioSourcesEnabledToggle = new PageItem("Audio\nSources", () => {
+            AudioSourcesEnabledToggle = new PageItem("Audio\nSources", () =>
+            {
                 selectedAvatarPermissions.AudioSourcesEnabled = true;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 selectedAvatarPermissions.AudioSourcesEnabled = false;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
@@ -127,20 +138,24 @@ namespace emmVRC.Managers
             baseMenu.pageItems.Add(PageItem.Space);
             baseMenu.pageItems.Add(PageItem.Space);
 
-            HandCollidersToggle = new PageItem("Hand\nColliders", () => {
+            HandCollidersToggle = new PageItem("Hand\nColliders", () =>
+            {
                 selectedAvatarPermissions.HandColliders = true;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 selectedAvatarPermissions.HandColliders = false;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
             }, "TOGGLE: Select to only use these colliders for Global Dynamic Bone interactions");
-            FeetCollidersToggle = new PageItem("Feet\nColliders", () => {
+            FeetCollidersToggle = new PageItem("Feet\nColliders", () =>
+            {
                 selectedAvatarPermissions.FeetColliders = true;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
-            }, "Disabled", () => {
+            }, "Disabled", () =>
+            {
                 selectedAvatarPermissions.FeetColliders = false;
                 selectedAvatarPermissions.SaveAvatarPermissions();
                 ReloadAvatars();
@@ -151,7 +166,8 @@ namespace emmVRC.Managers
             baseMenu.pageTitles.Add("Avatar Features");
             baseMenu.pageTitles.Add("Exclusive Global Dynamic Bone Colliders");
             baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
-            baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick.AddListener(new System.Action(() => {
+            baseMenu.menuBase.getBackButton().getGameObject().GetComponent<Button>().onClick.AddListener(new System.Action(() =>
+            {
                 if (UserInteractMenu)
                     QuickMenuUtils.ShowQuickmenuPage("UserInteractMenu");
                 else
@@ -179,44 +195,60 @@ namespace emmVRC.Managers
             FeetCollidersToggle.SetToggleState(selectedAvatarPermissions.FeetColliders);
             baseMenu.OpenMenu();
         }
-        public static void ProcessAvatar(GameObject avatarObject, VRC.SDKBase.VRC_AvatarDescriptor avatarDescriptor)
+        public static async Task ProcessAvatar(GameObject avatarObject, VRC.SDKBase.VRC_AvatarDescriptor avatarDescriptor)
         {
             if (avatarObject == null || avatarDescriptor == null || avatarDescriptor.GetComponent<PipelineManager>() == null) return;
-            try
+            foreach (GameObject obj in new GameObject[] { avatarObject, avatarObject.transform.parent.Find("_AvatarMirrorClone").gameObject, avatarObject.transform.parent.Find("_AvatarShadowClone").gameObject })
             {
-                AvatarPermissions perms = AvatarPermissions.GetAvatarPermissions(avatarDescriptor.GetComponent<PipelineManager>().blueprintId);
-                if (!perms.AudioSourcesEnabled)
-                    foreach (AudioSource src in avatarObject.GetComponentsInChildren<AudioSource>(true))
-                        if (src != null)
-                            GameObject.Destroy(src);
-                if (!perms.ClothEnabled)
-                    foreach (Cloth clth in avatarObject.GetComponentsInChildren<Cloth>(true))
-                        if (clth != null)
-                            GameObject.Destroy(clth);
-                if (!perms.DynamicBonesEnabled)
+                if (obj == null) return;
+                try
                 {
-                    foreach (DynamicBone bone in avatarObject.GetComponentsInChildren<DynamicBone>(true))
-                        if (bone != null)
-                            GameObject.Destroy(bone);
-                    foreach (DynamicBoneCollider coll in avatarObject.GetComponentsInChildren<DynamicBoneCollider>(true))
-                        if (coll != null)
-                            GameObject.Destroy(coll);
+                    AvatarPermissions perms = AvatarPermissions.GetAvatarPermissions(avatarDescriptor.GetComponent<PipelineManager>().blueprintId);
+                    if (!perms.AudioSourcesEnabled)
+                        foreach (AudioSource src in obj.GetComponentsInChildren<AudioSource>(true))
+                            if (src != null)
+                                GameObject.Destroy(src);
+                    if (!perms.ClothEnabled)
+                        foreach (Cloth clth in obj.GetComponentsInChildren<Cloth>(true))
+                            if (clth != null)
+                                GameObject.Destroy(clth);
+                    if (!perms.DynamicBonesEnabled)
+                    {
+                        foreach (DynamicBone bone in obj.GetComponentsInChildren<DynamicBone>(true))
+                            if (bone != null)
+                                GameObject.Destroy(bone);
+                        foreach (DynamicBoneCollider coll in obj.GetComponentsInChildren<DynamicBoneCollider>(true))
+                            if (coll != null)
+                                GameObject.Destroy(coll);
+                    }
+                    if (!perms.ParticleSystemsEnabled)
+                        foreach (ParticleSystem part in obj.GetComponentsInChildren<ParticleSystem>(true))
+                            if (part != null)
+                                part.maxParticles = 0;
+                    if (!perms.ShadersEnabled)
+                    {
+                        foreach (Renderer rend in obj.GetComponentsInChildren<Renderer>(true))
+                        {
+                            if (rend != null)
+                            {
+                                emmVRCLoader.Logger.LogDebug("Found renderer on " + rend.gameObject.name);
+                                foreach (Material mat in rend.materials)
+                                {
+                                    if (mat != null)
+                                    {
+                                        emmVRCLoader.Logger.LogDebug("Found material " + mat.name + " using shader " + mat.shader.name + ", overriding with Diffuse...");
+                                        mat.shader = Shader.Find("Diffuse");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    emmVRCLoader.Logger.LogDebug("Finished processing avatar permissions");
                 }
-                if (!perms.ParticleSystemsEnabled)
-                    foreach (ParticleSystem part in avatarObject.GetComponentsInChildren<ParticleSystem>(true))
-                        if (part != null)
-                        part.maxParticles = 0;
-                if (!perms.ShadersEnabled)
-                    foreach (Renderer rend in avatarObject.GetComponentsInChildren<Renderer>(true))
-                        if (rend != null)
-                        foreach (Material mat in rend.materials)
-                                if (mat != null)
-                                    mat.shader = Shader.Find("Diffuse");
-                emmVRCLoader.Logger.LogDebug("Finished processing avatar permissions");
-            }
-            catch (Exception ex)
-            {
-                emmVRCLoader.Logger.LogError("Error processing avatar: " + ex.ToString());
+                catch (Exception ex)
+                {
+                    emmVRCLoader.Logger.LogError("Error processing avatar: " + ex.ToString());
+                }
             }
         }
     }

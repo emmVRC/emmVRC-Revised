@@ -16,6 +16,8 @@ namespace emmVRC.Objects
         public bool MessagingAllowed = true;
         public int NetworkAutoRetries = 0;
         public bool AvatarPedestalScansAllowed = true;
+        public string StartupMessage = "";
+        public int MessageID = -1;
         public static NetworkConfig Instance = new NetworkConfig();
     }
 }

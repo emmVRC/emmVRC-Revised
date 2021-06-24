@@ -8,16 +8,26 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.10.1";
+        public static string Version = "2.10.2";
         public static int LastTestedBuildNumber = 1108;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "06/22/2021";
+        public static string DateUpdated = "06/24/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
+            "<b>v2.10.2</b>\n" +
+            "• Updated the in-game changelog format to now show all of the changes since the last major emmVRC version\n" +
+            "• More fixes for the double menu glitch related to selecting users\n" +
+            "• Avatar permissions are now fully working, and affect both the mirror and shadow clones of avatars now\n" +
+            "• Show Avatar Author should now work for Oculus users\n\n" +
+            "<b>v2.10.1</b>\n" +
+            "• Fixed issues with Full Body Calibration\n" +
+            "• Added a failsafe for emmVRC's FBTSaving to not lead to the calibration button doing nothing\n" +
+            "• Fixed issues with the emmVRC Tab Menu causing the double menu glitch\n\n" +
+            "<b>v2.10.0</b>\n"+
             "• Added a new <b>scrolling text menu</b>! This replaces the older style of text displays in the Quick Menu, and it makes reading and adding text to the emmVRC menus a <i>lot</i> easier\n" +
             "• Added a <b>last login</b> indicator to the User Info page! This will show the last time a user logged into VRChat if they're currently offline\n" +
             "• Added a platform indicator to the profile picture in the User Info page\n" +

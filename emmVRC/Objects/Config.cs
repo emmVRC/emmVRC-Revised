@@ -50,6 +50,9 @@ namespace emmVRC.Objects
         // FPS limit
         public int FPSLimit = 144;
 
+        // Last seen startup message
+        public int LastSeenStartupMessage = -1;
+
         // Button positions
         public bool TabMode = false;
         public int FunctionsButtonX = 0;

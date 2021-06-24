@@ -254,6 +254,26 @@ namespace emmVRC.Libraries
         }
         #endregion
 
+        #region MenuController ViewUserInfo
+        private static MethodInfo ourViewUserInfoMethod;
+        public static MethodInfo ViewUserInfoMethod
+        {
+            get
+            {
+                if (ourViewUserInfoMethod != null) return ourViewUserInfoMethod;
+                var targetMethod = typeof(MenuController).GetMethods()
+                    .First(it => it != null && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(string) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Method && jt.TryResolve()?.Name == "FetchUser"));
+                ourViewUserInfoMethod = targetMethod;
+                return ourViewUserInfoMethod;
+            }
+        }
+
+        public static void ViewUserInfo(this MenuController instance, string userID)
+        {
+            ViewUserInfoMethod.Invoke(instance, new object[] { userID });
+        }
+        #endregion
+
         #region VRCPlayer GetNameplateText
         public static TextMeshProUGUI GetNameplateText(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Text Container/Name").GetComponent<TextMeshProUGUI>(); }
         #endregion

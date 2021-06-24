@@ -125,6 +125,7 @@ namespace emmVRC.Libraries
             }
             catch (Exception ex) { emmVRCLoader.Logger.LogError("Avatar OnRebuild Failed: " + ex.ToString()); }
         }
+        
         private static bool PlayerCanUseStation(ref bool __result, VRC.Player __0, bool __1)
         {
             if (__0 != null && __0 == VRCPlayer.field_Internal_Static_VRCPlayer_0._player && Configuration.JSONConfig.ChairBlockingEnable)
@@ -150,7 +151,7 @@ namespace emmVRC.Libraries
         private static void OnAvatarInstantiate(VRCAvatarManager __instance, GameObject __0)
         {
             emmVRCLoader.Logger.LogDebug("Avatar loaded");
-            Managers.AvatarPermissionManager.ProcessAvatar(__0, __instance.prop_VRC_AvatarDescriptor_0);
+            Managers.AvatarPermissionManager.ProcessAvatar(__0, __instance.prop_VRC_AvatarDescriptor_0).NoAwait();
             if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
             {
                 Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, __instance.prop_VRC_AvatarDescriptor_0);

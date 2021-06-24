@@ -152,7 +152,7 @@ namespace emmVRC.Hacks
             ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
             ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
             {
-                QuickMenu.prop_QuickMenu_0.field_Public_MenuController_0.Method_Public_Void_String_0(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId);
+                QuickMenu.prop_QuickMenu_0.field_Public_MenuController_0.ViewUserInfo(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId);
             }));
 
             GameObject oldPublicAvatarList;
