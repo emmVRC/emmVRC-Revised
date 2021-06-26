@@ -151,7 +151,7 @@ namespace emmVRC.Libraries
         private static void OnAvatarInstantiate(VRCAvatarManager __instance, GameObject __0)
         {
             emmVRCLoader.Logger.LogDebug("Avatar loaded");
-            Managers.AvatarPermissionManager.ProcessAvatar(__0, __instance.prop_VRC_AvatarDescriptor_0).NoAwait();
+            Managers.AvatarPermissionManager.ProcessAvatar(__0, __instance.prop_VRC_AvatarDescriptor_0);
             if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
             {
                 Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, __instance.prop_VRC_AvatarDescriptor_0);
@@ -178,10 +178,26 @@ namespace emmVRC.Libraries
         {
             if (Configuration.JSONConfig.StealthMode || __instance.field_Private_VRCPlayer_0 == null) return;
             if (__instance.field_Private_VRCPlayer_0._player != null && __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0 != null)
+            {
                 if (Configuration.JSONConfig.InfoSpoofingEnabled)
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
                 else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
+                if (Configuration.JSONConfig.NameplateColorChangingEnabled && !ModCompatibility.OGTrustRank)
+                {
+                    APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;
+                    if (user.isFriend)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex));
+                    else if (user.hasVeteranTrustLevel)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
+                    else if (user.hasTrustedTrustLevel) 
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex));
+                    else if (user.hasKnownTrustLevel) 
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex));
+                    else if (user.hasBasicTrustLevel)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex));
+                }
+            }
         }
         private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
         {

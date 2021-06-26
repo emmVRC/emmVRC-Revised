@@ -278,6 +278,10 @@ namespace emmVRC.Libraries
         public static TextMeshProUGUI GetNameplateText(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Text Container/Name").GetComponent<TextMeshProUGUI>(); }
         #endregion
 
+        #region VRCPlayer GetNameplateBackground
+        public static ImageThreeSlice GetNameplateBackground(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Background").GetComponent<ImageThreeSlice>(); }
+        #endregion
+
         #region PlayerNet Framerate
         public static float GetFramerate(this PlayerNet net)
         {

@@ -195,12 +195,13 @@ namespace emmVRC.Managers
             FeetCollidersToggle.SetToggleState(selectedAvatarPermissions.FeetColliders);
             baseMenu.OpenMenu();
         }
-        public static async Task ProcessAvatar(GameObject avatarObject, VRC.SDKBase.VRC_AvatarDescriptor avatarDescriptor)
+        public static void ProcessAvatar(GameObject avatarObject, VRC.SDKBase.VRC_AvatarDescriptor avatarDescriptor)
         {
             if (avatarObject == null || avatarDescriptor == null || avatarDescriptor.GetComponent<PipelineManager>() == null) return;
-            foreach (GameObject obj in new GameObject[] { avatarObject, avatarObject.transform.parent.Find("_AvatarMirrorClone").gameObject, avatarObject.transform.parent.Find("_AvatarShadowClone").gameObject })
+            foreach (Transform trsf in new Transform[] { avatarObject.transform, avatarObject.transform.parent.Find("_AvatarMirrorClone"), avatarObject.transform.parent.Find("_AvatarShadowClone") })
             {
-                if (obj == null) return;
+                if (trsf == null) return;
+                GameObject obj = trsf.gameObject;
                 try
                 {
                     AvatarPermissions perms = AvatarPermissions.GetAvatarPermissions(avatarDescriptor.GetComponent<PipelineManager>().blueprintId);
