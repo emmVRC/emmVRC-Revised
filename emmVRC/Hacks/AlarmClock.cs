@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Collections;
@@ -16,11 +16,11 @@ namespace emmVRC.Hacks
     {
         public static bool AlarmEnabled = false;
         public static string AlarmTimeString = "00:00";
-        private static TimeSpan alarmTimeActual;
+        public static TimeSpan alarmTimeActual;
 
         public static bool InstanceAlarmEnabled = false;
         public static string InstanceAlarmTimeString = "00:00";
-        private static TimeSpan instanceAlarmTimeActual;
+        public static TimeSpan instanceAlarmTimeActual;
 
         public static bool AlarmTriggered = false;
         public static bool InstanceAlarmTriggered = false;
@@ -55,18 +55,19 @@ namespace emmVRC.Hacks
                     if (audioFile.Contains(".ogg") || audioFile.Contains(".wav"))
                     {
                         emmVRCLoader.Logger.LogDebug("Processing alarm clip " + audioFile);
-                        WWW AlarmClipWWW = new WWW(string.Format("file://{0}", audioFile).Replace(@"\", "/"));
+                        WWW AlarmClipWWW = new WWW(string.Format("file://{0}", audioFile).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
                         AudioClip alarmClip = AlarmClipWWW.GetAudioClip();
                         while (!AlarmClipWWW.isDone || alarmClip.loadState == AudioDataLoadState.Loading) yield return new WaitForEndOfFrame();
+                        alarmClip.hideFlags |= HideFlags.DontUnloadUnusedAsset;
                         alarmClips.Add(alarmClip);
                     }
                 }
             } else
             {
-                //alarmClips.Add(Resources.AlarmSound);
+                alarmClips.Add(Resources.alarmTone);
             }
-            while (GameObject.Find("LoadingBackground_TealGradient_Music/LoadingSound") == null || GameObject.Find("LoadingBackground_TealGradient_Music/LoadingSound").GetComponent<AudioSource>() == null) yield return new WaitForEndOfFrame();
-            referenceSource = GameObject.Find("LoadingBackground_TealGradient_Music/LoadingSound").GetComponent<AudioSource>();
+            while (GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup") == null) yield return new WaitForEndOfFrame();
+            referenceSource = GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup").GetComponentInChildren<AudioSource>(true);
             GameObject alarmSourceObj = GameObject.Instantiate(referenceSource.gameObject);
             alarmSourceObj.transform.parent = null;
             alarmSourceObj.name = "AlarmSound";
@@ -90,9 +91,11 @@ namespace emmVRC.Hacks
             alarmEnabled = new QMToggleButton(alarmMenu, 1, 0, "Alarm\nEnabled", () =>
             {
                 AlarmEnabled = true;
+                AlarmTriggered = false;
             }, "Disabled", () =>
             {
                 AlarmEnabled = false;
+                AlarmTriggered = false;
             }, "TOGGLE: Enables the alarm clock for the time provided", null, null, false, AlarmEnabled);
             alarmPersistentEnabled = new QMToggleButton(alarmMenu, 2, 0, "Keep Alarm", () =>
             {
@@ -106,9 +109,9 @@ namespace emmVRC.Hacks
             }, "TOGGLE: Allow this alarm to stay on, even across restarts", null, null, false, Configuration.JSONConfig.PersistentAlarm);
             alarmTime = new QMSingleButton(alarmMenu, 3, 0, "Time:\n" + AlarmTimeString, () =>
             {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the alarm time", AlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
-                    alarmTimeActual = TimeSpan.ParseExact(time, Hour24 ? "HH:mm" : "hh:mm tt", CultureInfo.CurrentCulture);
-                    AlarmTimeString = time;
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the alarm time", AlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
+                    alarmTimeActual = new TimeSpan(DateTime.Parse(time).Hour, DateTime.Parse(time).Minute, DateTime.Parse(time).Second);
+                    AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("hh:mm") : (new DateTime() + alarmTimeActual).ToString("HH:mm tt"));
                     if (Configuration.JSONConfig.PersistentAlarm)
                     {
                         Configuration.JSONConfig.AlarmTime = (uint)alarmTimeActual.TotalSeconds;
@@ -122,9 +125,11 @@ namespace emmVRC.Hacks
             instanceAlarmEnabled = new QMToggleButton(instanceAlarmMenu, 1, 0, "Instance\nAlarm Enabled", () =>
             {
                 InstanceAlarmEnabled = true;
+                InstanceAlarmTriggered = false;
             }, "Disabled", () =>
             {
                 InstanceAlarmEnabled = false;
+                InstanceAlarmTriggered = false;
             }, "TOGGLE: Enables the instance alarm clock for the time provided");
             instanceAlarmPersistentEnabled = new QMToggleButton(instanceAlarmMenu, 2, 0, "Keep Instance\nAlarm", () =>
             {
@@ -138,8 +143,8 @@ namespace emmVRC.Hacks
             }, "TOGGLE: Allow this alarm to stay on, even across restarts");
             instanceAlarmTime = new QMSingleButton(instanceAlarmMenu, 3, 0, "Instance\nTime:\n" + InstanceAlarmTimeString, () =>
             {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the instance alarm time", InstanceAlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
-                    instanceAlarmTimeActual = TimeSpan.ParseExact(time, "HH:mm", CultureInfo.CurrentCulture);
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the instance alarm time", InstanceAlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
+                    instanceAlarmTimeActual = new TimeSpan(DateTime.Parse(time).Hour, DateTime.Parse(time).Minute, DateTime.Parse(time).Second);
                     InstanceAlarmTimeString = time;
                     if (Configuration.JSONConfig.PersistentInstanceAlarm)
                     {
@@ -155,34 +160,66 @@ namespace emmVRC.Hacks
         {
             while (true)
             {
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForFixedUpdate();
                 if (alarmSource != null && referenceSource != null)
                 {
                     alarmSource.volume = referenceSource.volume;
                     alarmSource.outputAudioMixerGroup = referenceSource.outputAudioMixerGroup;
                 }
-                if (AlarmEnabled)
+                if (AlarmEnabled && !AlarmTriggered)
                 {
-                    if (DateTime.Now.TimeOfDay >= alarmTimeActual && DateTime.Now.TimeOfDay.Add(new TimeSpan(00, 00, 01)) <= alarmTimeActual && !AlarmTriggered)
+                    if (DateTime.Now.TimeOfDay.Hours == alarmTimeActual.Hours && DateTime.Now.TimeOfDay.Minutes == alarmTimeActual.Minutes && DateTime.Now.TimeOfDay.Seconds == alarmTimeActual.Seconds && !AlarmTriggered)
                     {
                         AlarmTriggered = true;
-                        alarmSource.clip = alarmClips[new System.Random().Next(alarmClips.Count)];
+                        emmVRCLoader.Logger.LogDebug("Alarm triggered");
+                        alarmSource.clip = (alarmClips.Count > 1 ? alarmClips[new System.Random().Next(alarmClips.Count)] : alarmClips.First());
+                        if (alarmSource.clip == null)
+                            alarmSource.clip = Resources.alarmTone;
                         alarmSource.Play();
+                        Managers.NotificationManager.AddNotification("Your alarm for " + (Hour24 ? (new DateTime() + alarmTimeActual).ToString("hh:mm") : (new DateTime() + alarmTimeActual).ToString("HH:mm tt")) + " is ringing.", "Snooze\n(15 min)", () => {
+                            alarmTimeActual.Add(new TimeSpan(0, 15, 0));
+                            AlarmTriggered = false;
+                            Managers.NotificationManager.DismissCurrentNotification();
+                        }, "Dismiss", () => {
+                            AlarmTriggered = false;
+                            if (!Configuration.JSONConfig.PersistentAlarm)
+                            {
+                                AlarmEnabled = false;
+                            }
+                            Managers.NotificationManager.DismissCurrentNotification();
+                        }, Resources.alarmSprite);
                     }
                 }
-                if (InstanceAlarmEnabled)
+                if (InstanceAlarmEnabled && !InstanceAlarmTriggered)
                 {
                     if (TimeSpan.FromSeconds(InfoBarClock.instanceTime) == instanceAlarmTimeActual)
                     {
                         InstanceAlarmTriggered = true;
-                        alarmSource.clip = alarmClips[new System.Random().Next(alarmClips.Count)];
+                        emmVRCLoader.Logger.LogDebug("Instance Alarm triggered");
+                        alarmSource.clip = (alarmClips.Count > 1 ? alarmClips[new System.Random().Next(alarmClips.Count)] : alarmClips.First());
+                        if (alarmSource.clip == null)
+                            alarmSource.clip = Resources.alarmTone;
                         alarmSource.Play();
+                        Managers.NotificationManager.AddNotification("Your instance alarm for " + ((new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss")) + " is ringing.", "Snooze\n(15 min)", () => {
+                            instanceAlarmTimeActual.Add(new TimeSpan(0, 15, 0));
+                            InstanceAlarmTriggered = false;
+                            Managers.NotificationManager.DismissCurrentNotification();
+                        }, "Dismiss", () => {
+                            InstanceAlarmTriggered = false;
+                            if (!Configuration.JSONConfig.PersistentInstanceAlarm)
+                            {
+                                InstanceAlarmEnabled = false;
+                            }
+                            Managers.NotificationManager.DismissCurrentNotification();
+                        }, Resources.alarmSprite);
                     }
                 }
-                if ((!AlarmEnabled && !InstanceAlarmTriggered) || (!AlarmTriggered && !InstanceAlarmTriggered && alarmSource.isPlaying))
+                if (alarmSource.isPlaying && ((!AlarmEnabled && !InstanceAlarmEnabled) || (!AlarmTriggered && !InstanceAlarmTriggered)))
+                {
+                    emmVRCLoader.Logger.LogDebug("Alarm stopped");
                     alarmSource.Stop();
+                }
             }
         }
     }
 }
-*/

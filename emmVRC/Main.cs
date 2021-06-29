@@ -496,12 +496,19 @@ namespace emmVRC
 
                 emmVRCLoader.Logger.LogDebug("Initializing Emoji Favourites system...");
                 MelonLoader.MelonCoroutines.Start(Hacks.EmojiFavourites.Initialize());
-                //emmVRCLoader.Logger.LogDebug("Initializing alarm clock module...");
-                //MelonLoader.MelonCoroutines.Start(Hacks.AlarmClock.Initialize());
+
+                emmVRCLoader.Logger.LogDebug("Initializing alarm clock module...");
+                MelonLoader.MelonCoroutines.Start(Hacks.AlarmClock.Initialize());
 
                 // Initialize hooking, for things such as Global Dynamic Bones
                 emmVRCLoader.Logger.LogDebug("Initializing hooks...");
                 Libraries.Hooking.Initialize();
+
+                if (!Configuration.JSONConfig.StealthMode)
+                {
+                    emmVRCLoader.Logger.LogDebug("Initializing CameraPlus...");
+                    Hacks.CameraPlus.Initialize();
+                }
 
                 // At this point, if no errors have occured, emmVRC is done initializing
                 watch.Stop();
@@ -532,6 +539,7 @@ namespace emmVRC
                     MelonLoader.MelonCoroutines.Start(ShortcutMenuButtons.Process());
                 }
                 Initialized = true;
+
 
                 // Debug actions need to go before this
                 DebugMenu.PopulateDebugMenu();

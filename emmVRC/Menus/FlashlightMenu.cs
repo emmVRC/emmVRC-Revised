@@ -62,6 +62,9 @@ namespace emmVRC.Menus
                 lght.range = LightStrength;
                 flashLightBase.transform.Rotate(90f, 0f, 0f);
                 FlashlightObject = flashLightBase;
+                VRC_UdonTrigger.Instantiate(FlashlightObject, "Toggle On/Off", () => {
+                    lght.enabled = !lght.enabled;
+                });
             }, "Flashlight Off", () =>
             {
                 GameObject.Destroy(FlashlightObject);

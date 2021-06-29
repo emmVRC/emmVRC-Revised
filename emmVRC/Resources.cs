@@ -18,6 +18,7 @@ namespace emmVRC
     {
         // Main AssetBundle for emmVRC's Resources
         private static AssetBundle emmVRCBundle;
+        private static AssetBundle udonBundle;
         // Path to emmVRC's Resources
         public static string resourcePath = Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/Resources");
         public static string dependenciesPath = Path.Combine(Environment.CurrentDirectory, "Dependencies");
@@ -32,6 +33,7 @@ namespace emmVRC
         public static Sprite alertSprite;
         public static Sprite errorSprite;
         public static Sprite messageSprite;
+        public static Sprite alarmSprite;
         public static Sprite rpSprite;
         public static Sprite crownSprite;
         public static Sprite Media_Nav;
@@ -42,6 +44,10 @@ namespace emmVRC
         public static Sprite emmHUDLogo;
         public static Sprite TabIcon;
         public static Sprite authorSprite;
+        public static Sprite lensOn;
+        public static Sprite lensOff;
+        public static Sprite zoomIn;
+        public static Sprite zoomOut;
 
         public static AudioClip customLoadingMusic;
 
@@ -54,6 +60,10 @@ namespace emmVRC
 
         public static Texture2D toggleOnTexture;
         public static Texture2D toggleOffTexture;
+
+        // Audio clips
+
+        public static AudioClip alarmTone;
 
         // Quick Method for making adding sprites easier
         private static Sprite LoadSprite(string sprite) {
@@ -73,6 +83,13 @@ namespace emmVRC
             Cubemap newCubemap = emmVRCBundle.LoadAsset(cubemap, Il2CppType.Of<Cubemap>()).Cast<Cubemap>();
             newCubemap.hideFlags |= HideFlags.DontUnloadUnusedAsset;
             return newCubemap;
+        }
+
+        private static AudioClip LoadAudioClip(string audioclip)
+        {
+            AudioClip newAudioClip = emmVRCBundle.LoadAsset(audioclip, Il2CppType.Of<AudioClip>()).Cast<AudioClip>();
+            newAudioClip.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+            return newAudioClip;
         }
 
         // Main function for loading in all the resources from the web and locally
@@ -158,7 +175,13 @@ namespace emmVRC
             alertSprite = LoadSprite("Alert.png");
             errorSprite = LoadSprite("Error.png");
             messageSprite = LoadSprite("Message.png");
+            alarmSprite = LoadSprite("Alarm.png");
             rpSprite = LoadSprite("RP.png");
+
+            lensOn = LoadSprite("LensOn.png");
+            lensOff = LoadSprite("LensOff.png");
+            zoomIn = LoadSprite("ZoomIn.png");
+            zoomOut = LoadSprite("ZoomOut.png");
 
             crownSprite = LoadSprite("Crown.png");
             authorSprite = LoadSprite("Author.png");
@@ -183,6 +206,8 @@ namespace emmVRC
             toggleOffTexture = LoadTexture("E_GUI_Toggle_OFF.png");
 
             blankGradient = LoadCubemap("Gradient.png");
+
+            alarmTone = LoadAudioClip("AlarmSound.ogg");
 
         }
     }

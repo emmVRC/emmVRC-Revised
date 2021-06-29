@@ -75,10 +75,10 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(settingsButton);
             alarmClockButton = new PageItem("Alarm\nClocks", () =>
             {
-                //QuickMenuUtils.ShowQuickmenuPage(Hacks.AlarmClock.baseMenu.getMenuName());
+                QuickMenuUtils.ShowQuickmenuPage(Hacks.AlarmClock.baseMenu.getMenuName());
             }, "Configure emmVRC's alarm clocks");
-            //baseMenu.pageItems.Add(alarmClockButton);
-            for (int i = 0; i <= 4; i++)
+            baseMenu.pageItems.Add(alarmClockButton);
+            for (int i = 0; i <= 3; i++)
             {
                 baseMenu.pageItems.Add(PageItem.Space);
             }

@@ -39,6 +39,7 @@
     <Compile Include="Hacks\AlarmClock.cs" />
     <Compile Include="Hacks\AvatarMenu.cs" />
     <Compile Include="Hacks\AvatarPropertySaving.cs" />
+    <Compile Include="Hacks\CameraPlus.cs" />
     <Compile Include="Hacks\ColorChanger.cs" />
     <Compile Include="Hacks\ComponentToggle.cs" />
     <Compile Include="Hacks\CustomAvatarFavorites.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Libraries\PopupManagerUtils.cs" />
     <Compile Include="Libraries\QuickMenuUtils.cs" />
     <Compile Include="Libraries\RubyButtonAPI.cs" />
+    <Compile Include="Libraries\TextureUtilities.cs" />
     <Compile Include="Libraries\TinyJSON\Decoder.cs" />
     <Compile Include="Libraries\TinyJSON\EncodeOptions.cs" />
     <Compile Include="Libraries\TinyJSON\Encoder.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="Objects\SerializedAvatar.cs" />
     <Compile Include="Objects\SerializedWorld.cs" />
     <Compile Include="Objects\Slider.cs" />
+    <Compile Include="Objects\VRC_UdonTrigger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Libraries\ReplaceCubemap.cs" />
     <Compile Include="Resources.cs" />
@@ -361,6 +364,33 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\UnityEngine.XRModule.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="VRC.Udon">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.ClientBindings">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.ClientBindings.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.Common">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.Security">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.Serialization.AOT">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.Serialization.AOT.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.Serialization.OdinSerializer">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.Serialization.OdinSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.VM">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.VM.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.VRCWrapperModules">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.VRCWrapperModules.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.Udon.Wrapper">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.Wrapper.dll</HintPath>
     </Reference>
     <Reference Include="VRCCore-Editor, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
