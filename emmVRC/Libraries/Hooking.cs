@@ -151,10 +151,26 @@ namespace emmVRC.Libraries
         private static void OnAvatarInstantiate(VRCAvatarManager __instance, GameObject __0)
         {
             emmVRCLoader.Logger.LogDebug("Avatar loaded");
-            Managers.AvatarPermissionManager.ProcessAvatar(__0, __instance.prop_VRC_AvatarDescriptor_0);
-            if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
+            emmVRCLoader.Logger.LogDebug("Field Descriptor 1 is " + (__instance.field_Private_VRC_AvatarDescriptor_0 == null ? "null" : "not null"));
+            emmVRCLoader.Logger.LogDebug("Field Descriptor 2 is " + (__instance.field_Private_VRC_AvatarDescriptor_1 == null ? "null" : "not null"));
+            emmVRCLoader.Logger.LogDebug("Field AvatarDescriptor is " + (__instance.field_Private_VRCAvatarDescriptor_0 == null ? "null" : "not null"));
+            emmVRCLoader.Logger.LogDebug("Prop Descriptor 1 is " + (__instance.prop_VRC_AvatarDescriptor_0 == null ? "null" : "not null"));
+            emmVRCLoader.Logger.LogDebug("Prop Descriptor 2 is " + (__instance.prop_VRC_AvatarDescriptor_1 == null ? "null" : "not null"));
+            emmVRCLoader.Logger.LogDebug("Prop AvatarDescriptor is " + (__instance.prop_VRCAvatarDescriptor_0 == null ? "null" : "not null"));
+            VRC.SDKBase.VRC_AvatarDescriptor descriptor = null;
+            if (__instance.field_Private_VRC_AvatarDescriptor_0 != null)
+                descriptor = __instance.field_Private_VRC_AvatarDescriptor_0;
+            else if (__instance.field_Private_VRC_AvatarDescriptor_1 != null)
+                descriptor = __instance.field_Private_VRC_AvatarDescriptor_1;
+            if (descriptor == null)
+                emmVRCLoader.Logger.LogError("The avatar descriptor could not be obtained from this avatar. Global Dynamic Bones and Avatar Permissions will not function.");
+            else
             {
-                Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, __instance.prop_VRC_AvatarDescriptor_0);
+                Managers.AvatarPermissionManager.ProcessAvatar(__0, descriptor);
+                if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
+                {
+                    Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, descriptor);
+                }
             }
             //MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(__1));
         }

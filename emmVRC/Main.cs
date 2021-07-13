@@ -504,10 +504,10 @@ namespace emmVRC
                 emmVRCLoader.Logger.LogDebug("Initializing hooks...");
                 Libraries.Hooking.Initialize();
 
-                if (!Configuration.JSONConfig.StealthMode)
+                if (!Configuration.JSONConfig.StealthMode && !ModCompatibility.CameraPlus)
                 {
                     emmVRCLoader.Logger.LogDebug("Initializing CameraPlus...");
-                    Hacks.CameraPlus.Initialize();
+                    MelonLoader.MelonCoroutines.Start(Hacks.CameraPlus.Initialize());
                 }
 
                 // At this point, if no errors have occured, emmVRC is done initializing

@@ -40,6 +40,8 @@ namespace emmVRC.Objects
         public bool MigrationButtonVisible = true;
         public bool DisableMicTooltip = false;
 
+        public bool CameraPlus = true;
+
         // Avatar List render limits
         public int FavoriteRenderLimit = 50;
         public int SearchRenderLimit = 100;

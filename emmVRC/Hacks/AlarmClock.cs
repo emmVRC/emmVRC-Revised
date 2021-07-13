@@ -77,13 +77,13 @@ namespace emmVRC.Hacks
 
             Hour24 = !System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortTimePattern.ToLower().Contains("h");
             alarmTimeActual = TimeSpan.FromSeconds(Configuration.JSONConfig.AlarmTime);
-            AlarmTimeString = alarmTimeActual.ToString();
+            AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt", CultureInfo.InvariantCulture));
 
             AlarmEnabled = Configuration.JSONConfig.PersistentAlarm;
             InstanceAlarmEnabled = Configuration.JSONConfig.PersistentInstanceAlarm;
 
             instanceAlarmTimeActual = TimeSpan.FromSeconds(Configuration.JSONConfig.InstanceAlarmTime);
-            InstanceAlarmTimeString = instanceAlarmTimeActual.ToString();
+            InstanceAlarmTimeString = (new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss");
 
             baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 19283, 10293, "", "");
             baseMenu.getMainButton().DestroyMe();
@@ -111,15 +111,17 @@ namespace emmVRC.Hacks
             {
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the alarm time", AlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
                     alarmTimeActual = new TimeSpan(DateTime.Parse(time).Hour, DateTime.Parse(time).Minute, DateTime.Parse(time).Second);
-                    AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("hh:mm") : (new DateTime() + alarmTimeActual).ToString("HH:mm tt"));
+                    AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt", CultureInfo.InvariantCulture));
                     if (Configuration.JSONConfig.PersistentAlarm)
                     {
                         Configuration.JSONConfig.AlarmTime = (uint)alarmTimeActual.TotalSeconds;
                         Configuration.SaveConfig();
-                        alarmTime.setButtonText("Time:\n" + AlarmTimeString);
-                    }    
+                    }
+                    alarmTime.setButtonText("Time:\n" + AlarmTimeString);
                 }), null, Hour24 ? "00:00" : "00:00 PM");
             }, "The time the alarm will go off. Select to change.");
+            AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt"));
+            alarmTime.setButtonText("Time:\n" + AlarmTimeString);
 
             instanceAlarmMenu = new QMNestedButton(baseMenu, 2, 0, "Instance\nAlarm", "Configure the instance alarm clock, which uses the time you've been in the current instance");
             instanceAlarmEnabled = new QMToggleButton(instanceAlarmMenu, 1, 0, "Instance\nAlarm Enabled", () =>
@@ -145,13 +147,13 @@ namespace emmVRC.Hacks
             {
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the instance alarm time", InstanceAlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
                     instanceAlarmTimeActual = new TimeSpan(DateTime.Parse(time).Hour, DateTime.Parse(time).Minute, DateTime.Parse(time).Second);
-                    InstanceAlarmTimeString = time;
+                    InstanceAlarmTimeString = (new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss");
                     if (Configuration.JSONConfig.PersistentInstanceAlarm)
                     {
                         Configuration.JSONConfig.InstanceAlarmTime = (uint)instanceAlarmTimeActual.TotalSeconds;
                         Configuration.SaveConfig();
-                        instanceAlarmTime.setButtonText("Time:\n" + InstanceAlarmTimeString);
                     }
+                    instanceAlarmTime.setButtonText("Time:\n" + InstanceAlarmTimeString);
                 }), null, "00:00");
             }, "The time the instance alarm will go off. Select to change.");
             MelonLoader.MelonCoroutines.Start(Loop());
@@ -177,14 +179,17 @@ namespace emmVRC.Hacks
                             alarmSource.clip = Resources.alarmTone;
                         alarmSource.Play();
                         Managers.NotificationManager.AddNotification("Your alarm for " + (Hour24 ? (new DateTime() + alarmTimeActual).ToString("hh:mm") : (new DateTime() + alarmTimeActual).ToString("HH:mm tt")) + " is ringing.", "Snooze\n(15 min)", () => {
-                            alarmTimeActual.Add(new TimeSpan(0, 15, 0));
+                            alarmTimeActual += new TimeSpan(0, 15, 0);
+                            AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt", CultureInfo.InvariantCulture));
                             AlarmTriggered = false;
+                            alarmTime.setButtonText("Time:\n" + AlarmTimeString);
                             Managers.NotificationManager.DismissCurrentNotification();
                         }, "Dismiss", () => {
                             AlarmTriggered = false;
                             if (!Configuration.JSONConfig.PersistentAlarm)
                             {
                                 AlarmEnabled = false;
+                                alarmEnabled.setToggleState(false);
                             }
                             Managers.NotificationManager.DismissCurrentNotification();
                         }, Resources.alarmSprite);
@@ -201,14 +206,17 @@ namespace emmVRC.Hacks
                             alarmSource.clip = Resources.alarmTone;
                         alarmSource.Play();
                         Managers.NotificationManager.AddNotification("Your instance alarm for " + ((new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss")) + " is ringing.", "Snooze\n(15 min)", () => {
-                            instanceAlarmTimeActual.Add(new TimeSpan(0, 15, 0));
+                            instanceAlarmTimeActual += new TimeSpan(0, 15, 0);
                             InstanceAlarmTriggered = false;
+                            InstanceAlarmTimeString = (new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss");
+                            instanceAlarmTime.setButtonText("Time:\n" + InstanceAlarmTimeString);
                             Managers.NotificationManager.DismissCurrentNotification();
                         }, "Dismiss", () => {
                             InstanceAlarmTriggered = false;
                             if (!Configuration.JSONConfig.PersistentInstanceAlarm)
                             {
                                 InstanceAlarmEnabled = false;
+                                instanceAlarmEnabled.setToggleState(false);
                             }
                             Managers.NotificationManager.DismissCurrentNotification();
                         }, Resources.alarmSprite);

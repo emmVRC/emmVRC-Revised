@@ -76,6 +76,7 @@ namespace emmVRC.Menus
         private static PageItem UIExpansionKitColorChanging;
         private static PageItem InfoSpoofing;
         private static PageItem InfoSpooferNamePicker;
+        private static PageItem CameraPlus;
 
         // Page 5 - Nameplate Color Changing (pretty much useless)
         private static PageItem NameplateColorChanging;
@@ -821,6 +822,19 @@ namespace emmVRC.Menus
 
                 }), null, "Enter spoof name....");
             }, "Allows you to change your spoofed name to one that never changes");
+            CameraPlus = new PageItem("Camera\nPlus", () =>
+            {
+                Configuration.JSONConfig.CameraPlus = true;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.CameraPlus.SetCameraPlus();
+            }, "Disabled", () =>
+            {
+                Configuration.JSONConfig.CameraPlus = false;
+                Configuration.SaveConfig();
+                RefreshMenu();
+                Hacks.CameraPlus.SetCameraPlus();
+            }, "TOGGLE: Enables CameraPlus, which adds additional buttons and functions to the VRChat camera");
             if (!Configuration.JSONConfig.StealthMode)
             {
                 baseMenu.pageItems.Add(UIColorChanging);
@@ -834,7 +848,7 @@ namespace emmVRC.Menus
                     baseMenu.pageItems.Add(PageItem.Space);
                 baseMenu.pageItems.Add(InfoSpoofing);
                 baseMenu.pageItems.Add(InfoSpooferNamePicker);
-                baseMenu.pageItems.Add(PageItem.Space);
+                baseMenu.pageItems.Add(CameraPlus);
             }
 
             FriendNameplateColorPicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1000, 1000, "Friend Nameplate Color", "Select the color for Friend Nameplate colors", (UnityEngine.Color newColor) =>
@@ -1419,6 +1433,7 @@ namespace emmVRC.Menus
                 UIExpansionKitColorChanging.SetToggleState(Configuration.JSONConfig.UIExpansionKitColorChangingEnabled);
                 InfoSpoofing.SetToggleState(Configuration.JSONConfig.InfoSpoofingEnabled);
                 InfoSpooferNamePicker.Name = "Set\nSpoofed\nName";
+                CameraPlus.SetToggleState(Configuration.JSONConfig.CameraPlus);
 
                 NameplateColorChanging.SetToggleState(Configuration.JSONConfig.NameplateColorChangingEnabled);
 

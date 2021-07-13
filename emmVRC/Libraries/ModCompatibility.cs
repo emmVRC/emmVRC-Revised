@@ -25,6 +25,7 @@ namespace emmVRC.Libraries
         public static bool IKTweaks = false;
         public static bool BetterLoadingScreen = false;
         public static bool VRCMinus = false;
+        public static bool CameraPlus = false;
 
         public static GameObject FlightButton;
         public static GameObject NoclipButton;
@@ -51,6 +52,8 @@ namespace emmVRC.Libraries
                 BetterLoadingScreen = true;
             if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "VRC-Minus") != -1)
                 VRCMinus = true;
+            if (MelonLoader.MelonHandler.Mods.FindIndex(i => i.Info.Name == "CameraPlus") != -1)
+                CameraPlus = true;
 
 
             if (MultiplayerDynamicBones)
@@ -92,6 +95,8 @@ namespace emmVRC.Libraries
                 emmVRCLoader.Logger.LogDebug("Detected BetterLoadingScreen");
             if (VRCMinus)
                 emmVRCLoader.Logger.LogDebug("Detected VRCMinus");
+            if (CameraPlus)
+                emmVRCLoader.Logger.LogDebug("Detected CameraPlus");
         }
         public static IEnumerator ColorUIExpansionKit()
         {

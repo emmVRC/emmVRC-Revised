@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,14 @@ namespace emmVRC.Hacks
 {
     public class CameraPlus
     {
-        public static void Initialize()
+        public static GameObject zoomInButton;
+        public static GameObject zoomOutButton;
+        public static GameObject toggleCameraIndicatorButton;
+        private static Transform camera_body;
+        public static IEnumerator Initialize()
         {
+            while (Resources.zoomIn == null || Resources.zoomOut == null || Resources.lensOff == null || Resources.lensOn == null)
+                yield return new WaitForEndOfFrame();
             // Grab Controller
             UserCameraController userCameraController = UnityEngine.Resources.FindObjectsOfTypeAll<UserCameraController>()[0];
 
@@ -25,7 +32,7 @@ namespace emmVRC.Hacks
             //Sprite cameraindicator_off_sprite = CreateSprite(ImageData.cameraindicator_off_image);
 
             // Zoom-In
-            GameObject zoomInButton = GameObject.Instantiate(userCameraController.transform.Find("ViewFinder/PhotoControls/Right_Filters").gameObject, userCameraController.transform.Find("ViewFinder"));
+            zoomInButton = GameObject.Instantiate(userCameraController.transform.Find("ViewFinder/PhotoControls/Right_Filters").gameObject, userCameraController.transform.Find("ViewFinder"));
             Objects.VRC_UdonTrigger.Instantiate(zoomInButton, "Zoom-In", () =>
             {
                 Camera cam = userCameraController.transform.Find("PhotoCamera").GetComponent<Camera>();
@@ -39,13 +46,13 @@ namespace emmVRC.Hacks
             SetButtonOffset(zoomInButton);
 
             // Zoom-Out
-            GameObject zoomOutButton = GameObject.Instantiate(userCameraController.transform.Find("ViewFinder/PhotoControls/Right_Lock").gameObject, userCameraController.transform.Find("ViewFinder"));
+            zoomOutButton = GameObject.Instantiate(userCameraController.transform.Find("ViewFinder/PhotoControls/Right_Lock").gameObject, userCameraController.transform.Find("ViewFinder"));
             Objects.VRC_UdonTrigger.Instantiate(zoomOutButton,"Zoom-Out", () =>
             {
                 Camera cam = userCameraController.transform.Find("PhotoCamera").GetComponent<Camera>();
-                if ((cam.fieldOfView + 10) < 180) cam.fieldOfView += 10;
+                if ((cam.fieldOfView + 10) < 120) cam.fieldOfView += 10;
                 cam = userCameraController.transform.Find("PhotoCamera/VideoCamera").GetComponent<Camera>();
-                if ((cam.fieldOfView + 10) < 180) cam.fieldOfView += 10;
+                if ((cam.fieldOfView + 10) < 120) cam.fieldOfView += 10;
                 userCameraController.field_Public_AudioSource_0.PlayOneShot(userCameraController.field_Public_AudioClip_0);
             });
             SetButtonSprite(zoomOutButton, Resources.zoomOut);
@@ -54,7 +61,7 @@ namespace emmVRC.Hacks
 
             // Toggle Camera Indicator
             GameObject cameraHelper = userCameraController.transform.Find("PhotoCamera/camera_lens_mesh").gameObject;
-            GameObject toggleCameraIndicatorButton = GameObject.Instantiate(userCameraController.transform.Find("ViewFinder/PhotoControls/Right_Timer").gameObject, userCameraController.transform.Find("ViewFinder"));
+            toggleCameraIndicatorButton = GameObject.Instantiate(userCameraController.transform.Find("ViewFinder/PhotoControls/Right_Timer").gameObject, userCameraController.transform.Find("ViewFinder"));
             Objects.VRC_UdonTrigger.Instantiate(toggleCameraIndicatorButton, "Camera Indicator", () =>
             {
                 cameraHelper.SetActive(!cameraHelper.activeSelf);
@@ -69,9 +76,10 @@ namespace emmVRC.Hacks
             SetButtonOffset(toggleCameraIndicatorButton);
 
             // Resize Camera Body
-            Transform camera_body = userCameraController.transform.Find("ViewFinder/camera_mesh/body");
+            camera_body = userCameraController.transform.Find("ViewFinder/camera_mesh/body");
             camera_body.localPosition = camera_body.localPosition + new Vector3(-0.025f, 0, 0);
             camera_body.localScale = camera_body.localScale + new Vector3(0.8f, 0, 0);
+            SetCameraPlus();
         }
         private static void SetButtonOffset(GameObject button) { button.transform.localPosition = button.transform.localPosition + new Vector3(-0.05f, 0, 0); }
         private static void SetButtonIconScale(GameObject button)
@@ -88,6 +96,25 @@ namespace emmVRC.Hacks
             {
                 if ((trans != null) && trans.gameObject.name.StartsWith("Icon"))
                     trans.GetComponent<SpriteRenderer>().sprite = sp;
+            }
+        }
+        public static void SetCameraPlus()
+        {
+            if (Configuration.JSONConfig.CameraPlus)
+            {
+                camera_body.localPosition = new Vector3(-0.025f, 0f, 0f);
+                camera_body.localScale = new Vector3(6.3317f, camera_body.localScale.y, camera_body.localScale.z);
+                zoomInButton.SetActive(true);
+                zoomOutButton.SetActive(true);
+                toggleCameraIndicatorButton.SetActive(true);
+            }
+            else
+            {
+                camera_body.localPosition = Vector3.zero;
+                camera_body.localScale = new Vector3(5.5317f, camera_body.localScale.y, camera_body.localScale.z);
+                zoomInButton.SetActive(false);
+                zoomOutButton.SetActive(false);
+                toggleCameraIndicatorButton.SetActive(false);
             }
         }
     }
