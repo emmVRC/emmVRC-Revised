@@ -22,13 +22,16 @@ namespace emmVRC.Menus
         {
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 201945, 104894, "Instance\nHistory", "", null);
             baseMenu.menuEntryButton.DestroyMe();
-            clearInstances = new QMSingleButton(baseMenu.menuBase, 5, 1, "<color=#FFCCBB>Clear\nInstances</color>", () => {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Instance History", "Are you sure you want to clear the instance history? All previously joined instances will be lost!", "Yes", new System.Action(() => { 
+            clearInstances = new QMSingleButton(baseMenu.menuBase, 5, 1, "<color=#FFCCBB>Clear\nInstances</color>", () =>
+            {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("Instance History", "Are you sure you want to clear the instance history? All previously joined instances will be lost!", "Yes", new System.Action(() =>
+                {
                     previousInstances.Clear();
                     SaveInstances();
                     LoadMenu();
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                }), "No", new System.Action(() => {
+                }), "No", new System.Action(() =>
+                {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
                 }));
             }, "Clears the instance history of all previous instances");
@@ -60,11 +63,12 @@ namespace emmVRC.Menus
         public static void LoadMenu()
         {
             baseMenu.pageItems.Clear();
-            foreach (SerializedWorld pastInstance in previousInstances) { 
-                baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags) + (pastInstance.WorldTags.Contains("region(jp)") ? "\n<color=#FFFF00>[JP]</color>" : (pastInstance.WorldTags.Contains("region(eu)") ? "\n<color=#FFFF00>[EU]</color>" : "")), () =>
+            foreach (SerializedWorld pastInstance in previousInstances)
+            {
+                baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags), () =>
                 {
                     new PortalInternal().Method_Private_Void_String_String_PDM_0(pastInstance.WorldID, pastInstance.WorldTags);
-                }, pastInstance.WorldName + (pastInstance.WorldTags.Contains("region(jp)") ? " [JP Region]" : (pastInstance.WorldTags.Contains("region(eu)") ? " [EU Region]" : ""))  + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
+                }, pastInstance.WorldName + (pastInstance.WorldTags.Contains("region(jp)") ? " [JP Region]" : (pastInstance.WorldTags.Contains("region(eu)") ? " [EU Region]" : "")) + " (" + PrettifyInstanceType(pastInstance.WorldType) + ")" + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
             }
         }
         public static void SaveInstances()
@@ -99,9 +103,26 @@ namespace emmVRC.Menus
                 previousInstances.Add(world);
                 SaveInstances();
                 LoadMenu();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
+            }
+        }
+        public static string PrettifyInstanceType(string original)
+        {
+            switch (original)
+            {
+                default:
+                    return original;
+                case "FriendsOfGuests":
+                    return "Friends+";
+                case "FriendsOnly":
+                    return "Friends";
+                case "InvitePlus":
+                    return "Invite+";
+                case "InviteOnly":
+                    return "Invite";
             }
         }
     }
