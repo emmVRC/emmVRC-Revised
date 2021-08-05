@@ -79,11 +79,29 @@ namespace emmVRC
         public static void OnUIManagerInit()
         {
             emmVRCLoader.Logger.LogDebug("UI manager initialized");
+            int VRCBuildNumber = 0;
+            UnhollowerBaseLib.Il2CppArrayBase<MonoBehaviour> components = GameObject.Find("_Application/ApplicationSetup").GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour component in components)
+            {
+                if (component.TryCast<Transform>() != null || component.TryCast<ApiCache>() != null)
+                    continue;
 
-            VRCApplicationSetup setup = UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First();
-            System.Reflection.PropertyInfo buildNumber = null;
-            int VRCBuildNumber = 1040;
-            foreach (System.Reflection.PropertyInfo inf in typeof(VRCApplicationSetup).GetProperties())
+                emmVRCLoader.Logger.LogDebug(component.GetType().Name);
+                bool flag = false;
+                foreach (FieldInfo field in component.GetIl2CppType().GetFields())
+                {
+                    if (flag == false)
+                        if (field.FieldType == UnhollowerRuntimeLib.Il2CppType.Of<int>()) {
+                            VRCBuildNumber = field.GetValue(component).Unbox<int>();
+                            flag = true; 
+                        }
+                }
+            }
+            emmVRCLoader.Logger.Log("VRChat build is: " + VRCBuildNumber);
+            //VRCApplicationSetup setup = UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First();
+            //System.Reflection.PropertyInfo buildNumber = null;
+
+            /*foreach (System.Reflection.PropertyInfo inf in typeof(VRCApplicationSetup).GetProperties())
             {
                 if (inf.PropertyType == typeof(int))
                 {
@@ -95,19 +113,19 @@ namespace emmVRC
             if (buildNumber != null)
             {
                 VRCBuildNumber = (int)buildNumber.GetValue(setup);// UnityEngine.Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber;
-                emmVRCLoader.Logger.Log("VRChat build is: " + VRCBuildNumber);
+                
             } else
             {
                 emmVRCLoader.Logger.Log("Could not determine the VRChat build number...");
-            }
+            }*/
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             string currentVersion = (string)typeof(MelonLoader.BuildInfo).GetField("Version").GetValue(null);
             string currentEmmVRCLoaderVersion = (string)typeof(emmVRCLoader.BuildInfo).GetField("Version").GetValue(null);
             if (Attributes.IncompatibleMelonLoaderVersions.Contains(currentVersion))
             {
-                emmVRCLoader.Logger.LogError("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.");
-                System.Windows.Forms.MessageBox.Show("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + ", via the instructions in our Discord under the #how-to channel. emmVRC will not start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                emmVRCLoader.Logger.LogError("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + " or newer, via the instructions in our Discord under the #how-to channel. emmVRC will not start.");
+                System.Windows.Forms.MessageBox.Show("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.TargetMelonLoaderVersion + " or newer, via the instructions in our Discord under the #how-to channel. emmVRC will not start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 watch.Stop();
                 return;
             }

@@ -43,17 +43,17 @@ namespace emmVRC.Menus
                 else
                 {
                     bool flag = false;
-                    if (QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.allowAvatarCopying && QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0.releaseStatus == "public")
+                    if (QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.allowAvatarCopying && QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0.releaseStatus == "public")
                     {
                         foreach (ApiAvatar avtr in CustomAvatarFavorites.LoadedAvatars)
                         {
-                            if (avtr.id == QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0.id)
+                            if (avtr.id == QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0.id)
                                 flag = true;
                         }
                         if (flag)
                             VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You already have this avatar favorited", "Dismiss", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         else
-                            CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
+                            CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
                     }
                     else
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "This avatar is not public, or the user does not have cloning turned on.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));

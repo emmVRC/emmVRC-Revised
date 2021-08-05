@@ -193,8 +193,9 @@ namespace emmVRC.Hacks
                 disabledColor = Color.grey,
                 highlightedColor = color * 1.5f,
                 normalColor = color / 1.5f,
-                pressedColor = Color.grey * 1.5f,
-                fadeDuration = 0.1f
+                pressedColor = new Color(1f, 1f, 1f, 1f),
+                fadeDuration = 0.1f,
+                selectedColor = color / 1.5f
             };
             color.a = 0.9f;
             if (UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().Count != 0)

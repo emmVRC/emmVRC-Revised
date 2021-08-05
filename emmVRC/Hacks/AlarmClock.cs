@@ -48,16 +48,25 @@ namespace emmVRC.Hacks
             while (Resources.onlineSprite == null) yield return new WaitForSeconds(1f);
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds"));
-            if (Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")).Length > 0)
+            if (Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")).Length > 0) // TODO: Fix audio loading
             {
                 foreach (string audioFile in Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")))
                 {
                     if (audioFile.Contains(".ogg") || audioFile.Contains(".wav"))
                     {
                         emmVRCLoader.Logger.LogDebug("Processing alarm clip " + audioFile);
-                        WWW AlarmClipWWW = new WWW(string.Format("file://{0}", audioFile).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
-                        AudioClip alarmClip = AlarmClipWWW.GetAudioClip();
-                        while (!AlarmClipWWW.isDone || alarmClip.loadState == AudioDataLoadState.Loading) yield return new WaitForEndOfFrame();
+                        UnityEngine.Networking.UnityWebRequest CustomLoadingMusicRequest = UnityEngine.Networking.UnityWebRequest.Get(string.Format("file://{0}", audioFile).Replace(@"\", "/"));
+                        CustomLoadingMusicRequest.SendWebRequest();
+                        while (!CustomLoadingMusicRequest.isDone) yield return null;
+                        //WWW CustomLoadingMusicWWW = new WWW(string.Format("file://{0}", availableCustomMenuMusics[randomIndex]).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
+                        AudioClip alarmClip = null;
+                        if (CustomLoadingMusicRequest.isHttpError)
+                            emmVRCLoader.Logger.LogError("Could not load music file: " + CustomLoadingMusicRequest.error);
+                        else
+                            alarmClip = UnityEngine.Networking.WebRequestWWW.InternalCreateAudioClipUsingDH(CustomLoadingMusicRequest.downloadHandler, CustomLoadingMusicRequest.url, false, false, AudioType.UNKNOWN);
+                        //WWW AlarmClipWWW = new WWW(string.Format("file://{0}", audioFile).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
+                        //AudioClip alarmClip = AlarmClipWWW.GetAudioClip();
+                        //while (!AlarmClipWWW.isDone || alarmClip.loadState == AudioDataLoadState.Loading) yield return new WaitForEndOfFrame();
                         alarmClip.hideFlags |= HideFlags.DontUnloadUnusedAsset;
                         alarmClips.Add(alarmClip);
                     }

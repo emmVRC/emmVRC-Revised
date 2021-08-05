@@ -8,16 +8,22 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.11.1";
-        public static int LastTestedBuildNumber = 1108;
+        public static string Version = "2.11.3";
+        public static int LastTestedBuildNumber = 1121;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "07/13/2021";
+        public static string DateUpdated = "08/05/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
+            "<b>v2.11.3</b>\n" +
+            "• Fixed Custom Loading Music and custom Alarm tones\n" +
+            "• Fixed buttons going invisible when selected while using emmVRC\n" +
+            "• Fixed the Favorite button favoriting a user's fallback avatar when you have them selected\n" +
+            "<b>v2.11.2</b>\n" +
+            "• Updated for compatibility with the VRChat 2019 update\n" +
             "<b>v2.11.1</b>\n" +
             "• Global Dynamic Bones should now be working on Oculus\n" +
             "• Added the instance type to Instance History's tooltip\n" +
@@ -29,9 +35,9 @@ namespace emmVRC.Objects
             "• The flashlight now has a \"Use\" action to toggle the light on and off\n" +
             "• Fixed the VRHUD issue that has been present for a while now. Special thanks to Loukylor for the fix, along with many more recently!\n";
         public static bool Debug = false;
-        public static string TargetMelonLoaderVersion = "0.4.0";
+        public static string TargetMelonLoaderVersion = "0.4.3";
         public static string TargetemmVRCLoaderVersion = "1.2.0";
-        public static string[] IncompatibleMelonLoaderVersions = { "0.1.0", "0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.5", "0.2.6", "0.2.7", "0.2.7.1", "0.2.7.2", "0.2.7.3", "0.2.7.4", "0.3.0" };
+        public static string[] IncompatibleMelonLoaderVersions = { "0.1.0", "0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.5", "0.2.6", "0.2.7", "0.2.7.1", "0.2.7.2", "0.2.7.3", "0.2.7.4", "0.3.0", "0.4.0" };
         public static string[] IncompatibleemmVRCLoaderVersions = { "0.0.1", "0.0.2", "0.0.3", "0.0.4", "0.0.5", "1.0.0", "1.1.0" };
         public static string[] FlavourTextList = {
                     "Did you know that Tab is also a drink?",

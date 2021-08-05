@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 using emmVRC.Libraries;
 
 namespace emmVRC.Hacks
@@ -42,9 +43,18 @@ namespace emmVRC.Hacks
                         loadingMusic1.GetComponent<AudioSource>().Stop();
                     if (loadingMusic2 != null)
                         loadingMusic2.GetComponent<AudioSource>().Stop();
-                    WWW CustomLoadingMusicWWW = new WWW(string.Format("file://{0}", availableCustomMenuMusics[randomIndex]).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
-                    AudioClip customLoadingMusic = CustomLoadingMusicWWW.GetAudioClip();
-                    while (!CustomLoadingMusicWWW.isDone || customLoadingMusic.loadState == AudioDataLoadState.Loading) ;
+                    //WWW CustomLoadingMusicWWW = WWW.LoadFromCacheOrDownload(string.Format("file://{0}", availableCustomMenuMusics[randomIndex]).Replace(@"\", "/"), null, (uint)new System.Random().Next(0, 65535));
+                    UnityWebRequest CustomLoadingMusicRequest = UnityWebRequest.Get(string.Format("file://{0}", availableCustomMenuMusics[randomIndex]).Replace(@"\", "/"));
+                    CustomLoadingMusicRequest.SendWebRequest();
+                    while (!CustomLoadingMusicRequest.isDone) yield return null;
+                    emmVRCLoader.Logger.LogDebug("Request sent and returned");
+                    AudioClip customLoadingMusic = null;
+                    if (CustomLoadingMusicRequest.isHttpError)
+                        emmVRCLoader.Logger.LogError("Could not load music file: " + CustomLoadingMusicRequest.error);
+                    else
+                        customLoadingMusic = WebRequestWWW.InternalCreateAudioClipUsingDH(CustomLoadingMusicRequest.downloadHandler, CustomLoadingMusicRequest.url, false, false, AudioType.UNKNOWN);
+                    //AudioClip customLoadingMusic = CustomLoadingMusicWWW.GetAudioClip();
+                    //while (!CustomLoadingMusicWWW.isDone || customLoadingMusic.loadState == AudioDataLoadState.Loading) ;
 
                     if (customLoadingMusic != null)
                     {

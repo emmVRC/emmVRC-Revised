@@ -56,37 +56,43 @@ namespace emmVRC.Hacks
             while (userInfo.field_Public_APIUser_0 == null || userInfo.field_Public_APIUser_0.id == lastCheckedId)
                 yield return new WaitForEndOfFrame();
             if (gameObject.activeInHierarchy)
-            {
-                lastCheckedId = userInfo.field_Public_APIUser_0.id;
-                if (lastSeenText != null)
+            {try
                 {
-                    try
+                    lastCheckedId = userInfo.field_Public_APIUser_0.id;
+                    if (lastSeenText != null)
                     {
-                        if (userInfo.field_Public_APIUser_0.statusValue != VRC.Core.APIUser.UserStatus.Offline || !userInfo.field_Public_APIUser_0.isFriend)
-                            lastSeenText.GetComponent<Text>().text = "";
-                        else
+                        try
                         {
-                            DateTime lastSeen = DateTime.Parse(userInfo.field_Public_APIUser_0.last_login);
-                            lastSeenText.GetComponent<Text>().text = "Last login: " + lastSeen.ToString();
+                            if (userInfo.field_Public_APIUser_0.statusValue != VRC.Core.APIUser.UserStatus.Offline || !userInfo.field_Public_APIUser_0.isFriend)
+                                lastSeenText.GetComponent<Text>().text = "";
+                            else
+                            {
+                                DateTime lastSeen = DateTime.Parse(userInfo.field_Public_APIUser_0.last_login);
+                                lastSeenText.GetComponent<Text>().text = "Last login: " + lastSeen.ToString();
+                            }
                         }
-                    } catch (Exception ex)
-                    {
-                        emmVRCLoader.Logger.LogError("Error parsing last login: "+ex.ToString());
+                        catch (Exception ex)
+                        {
+                            emmVRCLoader.Logger.LogError("Error parsing last login: " + ex.ToString());
+                        }
                     }
-                }
-                if (platformIcon != null)
+                    if (platformIcon != null)
+                    {
+                        try
+                        {
+                            if (userInfo.field_Public_APIUser_0.last_platform == "standalonewindows")
+                                platformIcon.GetComponent<RawImage>().texture = UnityEngine.Resources.FindObjectsOfTypeAll<UiPlatformIcon>().First().field_Public_GameObject_1.GetComponent<RawImage>().texture;
+                            else
+                                platformIcon.GetComponent<RawImage>().texture = UnityEngine.Resources.FindObjectsOfTypeAll<UiPlatformIcon>().First().field_Public_GameObject_2.GetComponent<RawImage>().texture;
+                        }
+                        catch (Exception ex)
+                        {
+                            emmVRCLoader.Logger.LogError("Error with platform icon: " + ex.ToString());
+                        }
+                    }
+                } catch (Exception ex)
                 {
-                    try
-                    {
-                        if (userInfo.field_Public_APIUser_0.last_platform == "standalonewindows")
-                            platformIcon.GetComponent<RawImage>().texture = UnityEngine.Resources.FindObjectsOfTypeAll<UiPlatformIcon>().First().field_Public_GameObject_1.GetComponent<RawImage>().texture;
-                        else
-                            platformIcon.GetComponent<RawImage>().texture = UnityEngine.Resources.FindObjectsOfTypeAll<UiPlatformIcon>().First().field_Public_GameObject_2.GetComponent<RawImage>().texture;
-                    }
-                     catch (Exception ex)
-                    {
-                        emmVRCLoader.Logger.LogError("Error with platform icon: "+ex.ToString());
-                    }
+                    emmVRCLoader.Logger.LogError("Error while waiting for user: " + ex.ToString());
                 }
             }
         }
