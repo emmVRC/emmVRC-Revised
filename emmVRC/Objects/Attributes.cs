@@ -8,7 +8,7 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.11.3";
+        public static string Version = "2.11.4";
         public static int LastTestedBuildNumber = 1121;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
@@ -18,6 +18,9 @@ namespace emmVRC.Objects
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
+            "<b>v2.11.4</b>\n" +
+            "• Updated for compatibility with the VRChat 1132 build\n" +
+            "• Fixed the pesky error user info tweaks error when opening the social menu\n" +
             "<b>v2.11.3</b>\n" +
             "• Fixed Custom Loading Music and custom Alarm tones\n" +
             "• Fixed buttons going invisible when selected while using emmVRC\n" +
