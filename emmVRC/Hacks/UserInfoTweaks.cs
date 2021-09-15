@@ -18,6 +18,7 @@ namespace emmVRC.Hacks
         public GameObject lastSeenText;
         public GameObject platformIcon;
         public PageUserInfo userInfo;
+        private static UiPlatformIcon icon;
         public string lastCheckedId;
 
         public UserInfoTweaks(IntPtr ptr) : base(ptr) { }
@@ -45,11 +46,14 @@ namespace emmVRC.Hacks
             inst.platformIcon.AddComponent<RawImage>();
             inst.platformIcon.SetActive(true);
 
+            icon = GameObject.Find("UserInterface/QuickMenu/QuickMenu_NewElements/_CONTEXT/QM_Context_User_Hover/AvatarImage/PlatformIcon").GetComponent<UiPlatformIcon>();
+
         }
         public void OnEnable()
         {
             MelonLoader.MelonCoroutines.Start(WaitForUserReady());
         }
+
         [UnhollowerBaseLib.Attributes.HideFromIl2Cpp]
         public IEnumerator WaitForUserReady()
         {
@@ -81,9 +85,9 @@ namespace emmVRC.Hacks
                         try
                         {
                             if (userInfo.field_Public_APIUser_0.last_platform == "standalonewindows")
-                                platformIcon.GetComponent<RawImage>().texture = UnityEngine.Resources.FindObjectsOfTypeAll<UiPlatformIcon>().First().field_Public_GameObject_1.GetComponent<RawImage>().texture;
+                                platformIcon.GetComponent<RawImage>().texture = icon.field_Public_GameObject_1.GetComponent<RawImage>().texture;
                             else
-                                platformIcon.GetComponent<RawImage>().texture = UnityEngine.Resources.FindObjectsOfTypeAll<UiPlatformIcon>().First().field_Public_GameObject_2.GetComponent<RawImage>().texture;
+                                platformIcon.GetComponent<RawImage>().texture = icon.field_Public_GameObject_2.GetComponent<RawImage>().texture;
                         }
                         catch (Exception ex)
                         {
