@@ -224,7 +224,7 @@ namespace emmVRC.Hacks
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
             NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             NewAvatarList.clearUnseenListOnCollapse = false;
-            NewAvatarList.field_Public_EnumNPublicSealedvaInPuMiFaSpClPuLiCrUnique_0 = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLiCrUnique.SpecificList;
+            NewAvatarList.field_Public_EnumNPublicSealedvaInPuMiFaSpClPuLi11Unique_0 = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi11Unique.SpecificList;
 
             currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Public_Single_0 *= 0.85f;
 
