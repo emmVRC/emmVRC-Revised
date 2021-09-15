@@ -141,7 +141,7 @@ namespace emmVRC.Hacks
                 emmVRCLoader.Logger.LogError("GameObject toggling failed. VRChat must have moved something in an update. Sorry!");
             }
 
-            ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/XplatHide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
+            ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Fallback Hide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
             ShowAuthorButton.GetComponentInChildren<Text>().text = "";
             ShowAuthorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(82f, 82f);
             ShowAuthorButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(250f, -25f);
