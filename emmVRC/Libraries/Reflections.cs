@@ -85,12 +85,12 @@ namespace emmVRC.Libraries
         }
 
         private static MethodInfo reloadAvatarsMethod;
-        public static void ReloadAvatar(this VRCPlayer instance, bool ignoreSelf = false)
+        public static void ReloadAvatar(this VRCPlayer instance)
         {
             emmVRCLoader.Logger.LogDebug("ReloadAvatar called");
-            reloadAvatarsMethod = typeof(VRCPlayer).GetMethods().First(method => method.Name.Contains("Method_Public_Void_Boolean_") && method.GetParameters().Any(param => param.IsOptional));
-            if (reloadAvatarsMethod != null)
-                reloadAvatarsMethod.Invoke(instance, new object[] { ignoreSelf });
+            if (reloadAvatarsMethod == null)
+                reloadAvatarsMethod = typeof(VRCPlayer).GetMethods().First(mi => mi.Name.StartsWith("Method_Private_Void_Boolean_") && mi.Name.Length < 31 && mi.GetParameters().Any(pi => pi.IsOptional));
+            reloadAvatarsMethod.Invoke(instance, new object[] { true });
             //ReloadAvatarAct.Invoke(instance, something);
         }
         #endregion
@@ -100,7 +100,7 @@ namespace emmVRC.Libraries
         {
             foreach (Player plr in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
             {
-                plr._vrcplayer.ReloadAvatar(false);
+                plr._vrcplayer.ReloadAvatar();
             }
         }
         #endregion

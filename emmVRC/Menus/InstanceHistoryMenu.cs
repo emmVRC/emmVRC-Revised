@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Objects;
@@ -18,8 +19,14 @@ namespace emmVRC.Menus
         private static QMSingleButton clearInstances;
         private static List<SerializedWorld> previousInstances;
 
+        private static MethodInfo enterWorldMethod;
+        private static Type transitionInfoEnum;
+
         public static void Initialize()
         {
+            transitionInfoEnum = typeof(WorldTransitionInfo).GetNestedTypes().First();
+            enterWorldMethod = typeof(VRCFlowManager).GetMethod("Method_Public_Void_String_String_WorldTransitionInfo_Action_1_String_Boolean_0");
+
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 201945, 104894, "Instance\nHistory", "", null);
             baseMenu.menuEntryButton.DestroyMe();
             clearInstances = new QMSingleButton(baseMenu.menuBase, 5, 1, "<color=#FFCCBB>Clear\nInstances</color>", () =>
@@ -67,7 +74,9 @@ namespace emmVRC.Menus
             {
                 baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags), () =>
                 {
-                    new PortalInternal().Method_Private_Void_String_String_PDM_0(pastInstance.WorldID, pastInstance.WorldTags);
+                    object currentPortalInfo = Activator.CreateInstance(typeof(WorldTransitionInfo), new object[2] { Enum.Parse(transitionInfoEnum, "Menu"), "WorldInfo_Go" });
+                    currentPortalInfo.GetType().GetProperty($"field_Public_{transitionInfoEnum.Name}_0").SetValue(currentPortalInfo, transitionInfoEnum.GetEnumValues().GetValue(3)); //I hate reflection
+                    enterWorldMethod.Invoke(VRCFlowManager.prop_VRCFlowManager_0, new object[5] { pastInstance.WorldID, pastInstance.WorldTags, currentPortalInfo, null, false }); //Just kill me
                 }, pastInstance.WorldName + (pastInstance.WorldTags.Contains("region(jp)") ? " [JP Region]" : (pastInstance.WorldTags.Contains("region(eu)") ? " [EU Region]" : "")) + " (" + PrettifyInstanceType(pastInstance.WorldType) + ")" + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
             }
         }

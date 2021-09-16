@@ -53,8 +53,8 @@ namespace emmVRC.Menus
             SelectCurrentUserButton = new QMSingleButton(baseMenu, 3, 0, "Select\nCurrent\nUser", () =>
             {
                 QuickMenuUtils.GetQuickMenuInstance().SelectPlayer(VRCPlayer.field_Internal_Static_VRCPlayer_0._player);
-                GameObject.Find(PlayerTweaksMenu.baseMenu.getMenuName()).SetActive(false);
-                QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique_0(QuickMenu.EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique.UserInteractMenu);
+                //GameObject.Find(PlayerTweaksMenu.baseMenu.getMenuName()).SetActive(false);
+                //QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique_0(QuickMenu.EnumNPublicSealedvaUnShEmUsEmNoCaMo_nUnique.UserInteractMenu);
                 //QuickMenuUtils.GetQuickMenuInstance().Method_Public_Void_VRCPlayer_PDM_0(VRCPlayer.field_Internal_Static_VRCPlayer_0);
             }, "Selects you as the current user");
 
