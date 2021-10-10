@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using VRC.Core;
 using UnityEngine;
 using emmVRC.Objects;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Menus
 {
@@ -18,7 +19,7 @@ namespace emmVRC.Menus
         public string UserID = "";
         public string TimeJoinedStamp = "";
     }
-    public class PlayerHistoryMenu
+    public class PlayerHistoryMenu : MelonLoaderEvents
     {
         public static PaginatedMenu baseMenu;
         private static PageItem toggleHistory;
@@ -27,7 +28,7 @@ namespace emmVRC.Menus
         public static List<InstancePlayer> currentPlayers;
         public static int Timeout = 0;
         private static List<PageItem> currentInstancePlayers;
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 10293, 12934, "Player\nHistory", "If you're reading this, hi!", null);
             baseMenu.menuEntryButton.DestroyMe();
@@ -51,6 +52,12 @@ namespace emmVRC.Menus
             currentInstancePlayers = new List<PageItem>();
             //currentPlayersNames = new List<string>();
             currentPlayers = new List<InstancePlayer>();
+
+            Utils.NetworkEvents.OnPlayerJoined += (VRC.Player plr) =>
+            {
+                if (Configuration.JSONConfig.PlayerHistoryEnable && plr.prop_APIUser_0 != null && plr.prop_APIUser_0.id != APIUser.CurrentUser.id)
+                    currentPlayers.Add(new InstancePlayer { Name = plr.prop_APIUser_0.GetName(), UserID = plr.prop_APIUser_0.id, TimeJoinedStamp = DateTime.Now.ToShortTimeString() });
+            };
         }
         public static void ShowMenu()
         {

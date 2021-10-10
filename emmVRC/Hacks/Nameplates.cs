@@ -28,7 +28,7 @@ namespace emmVRC.Hacks
                     VRCPlayer.field_Internal_Static_Color_4 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex);
                     VRCPlayer.field_Internal_Static_Color_5 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex);
                     VRCPlayer.field_Internal_Static_Color_6 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex);
-                    if (Libraries.ModCompatibility.OGTrustRank)
+                    if (Functions.Core.ModCompatibility.OGTrustRank)
                     {
                         try
                         {

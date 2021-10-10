@@ -299,5 +299,19 @@ namespace emmVRC.Libraries
             return mngr.field_Public_GameObject_0;
         }
 
+        private static MethodInfo enterWorldMethod;
+        private static Type transitionInfoEnum;
+        public static void EnterWorld(this VRCFlowManager mngr, string id, string tags)
+        {
+            if (enterWorldMethod == null || transitionInfoEnum == null)
+            {
+                transitionInfoEnum = typeof(WorldTransitionInfo).GetNestedTypes().First();
+                enterWorldMethod = typeof(VRCFlowManager).GetMethod("Method_Public_Void_String_String_WorldTransitionInfo_Action_1_String_Boolean_0");
+            }
+            object currentPortalInfo = Activator.CreateInstance(typeof(WorldTransitionInfo), new object[2] { Enum.Parse(transitionInfoEnum, "Menu"), "WorldInfo_Go" });
+            currentPortalInfo.GetType().GetProperty($"field_Public_{transitionInfoEnum.Name}_0").SetValue(currentPortalInfo, transitionInfoEnum.GetEnumValues().GetValue(3));
+            enterWorldMethod.Invoke(VRCFlowManager.prop_VRCFlowManager_0, new object[5] { id, tags, currentPortalInfo, null, false });
+        }
+
     }
 }

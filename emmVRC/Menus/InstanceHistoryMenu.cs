@@ -10,23 +10,18 @@ using System.Threading.Tasks;
 using emmVRC.Objects;
 using emmVRC.Managers;
 using UnityEngine;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Menus
 {
-    public class InstanceHistoryMenu
+    public class InstanceHistoryMenu : MelonLoaderEvents
     {
         public static PaginatedMenu baseMenu;
         private static QMSingleButton clearInstances;
         private static List<SerializedWorld> previousInstances;
 
-        private static MethodInfo enterWorldMethod;
-        private static Type transitionInfoEnum;
-
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
-            transitionInfoEnum = typeof(WorldTransitionInfo).GetNestedTypes().First();
-            enterWorldMethod = typeof(VRCFlowManager).GetMethod("Method_Public_Void_String_String_WorldTransitionInfo_Action_1_String_Boolean_0");
-
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 201945, 104894, "Instance\nHistory", "", null);
             baseMenu.menuEntryButton.DestroyMe();
             clearInstances = new QMSingleButton(baseMenu.menuBase, 5, 1, "<color=#FFCCBB>Clear\nInstances</color>", () =>
@@ -74,15 +69,18 @@ namespace emmVRC.Menus
             {
                 baseMenu.pageItems.Insert(0, new PageItem(pastInstance.WorldName + "\n" + InstanceIDUtilities.GetInstanceID(pastInstance.WorldTags), () =>
                 {
-                    object currentPortalInfo = Activator.CreateInstance(typeof(WorldTransitionInfo), new object[2] { Enum.Parse(transitionInfoEnum, "Menu"), "WorldInfo_Go" });
-                    currentPortalInfo.GetType().GetProperty($"field_Public_{transitionInfoEnum.Name}_0").SetValue(currentPortalInfo, transitionInfoEnum.GetEnumValues().GetValue(3)); //I hate reflection
-                    enterWorldMethod.Invoke(VRCFlowManager.prop_VRCFlowManager_0, new object[5] { pastInstance.WorldID, pastInstance.WorldTags, currentPortalInfo, null, false }); //Just kill me
+                    VRCFlowManager.prop_VRCFlowManager_0.EnterWorld(pastInstance.WorldID, pastInstance.WorldTags); //Just kill me
                 }, pastInstance.WorldName + (pastInstance.WorldTags.Contains("region(jp)") ? " [JP Region]" : (pastInstance.WorldTags.Contains("region(eu)") ? " [EU Region]" : "")) + " (" + PrettifyInstanceType(pastInstance.WorldType) + ")" + ", last joined " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortDateString() + " " + UnixTime.ToDateTime(pastInstance.loggedDateTime).ToShortTimeString() + "\nSelect to join"));
             }
         }
         public static void SaveInstances()
         {
             File.WriteAllBytes(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/instancehistory.emm"), Encoding.UTF8.GetBytes(TinyJSON.Encoder.Encode(previousInstances, TinyJSON.EncodeOptions.PrettyPrint)));
+        }
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        {
+            if (buildIndex == -1)
+                MelonLoader.MelonCoroutines.Start(EnteredWorld());
         }
         public static IEnumerator EnteredWorld()
         {

@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
+using emmVRC.Objects.ModuleBases;
+
 namespace emmVRC.Menus
 {
-    public class DisabledButtonMenu
+    public class DisabledButtonMenu : MelonLoaderEvents
     {
         public static QMNestedButton baseMenu;
         private static QMSingleButton emojiButton;
         private static QMSingleButton reportWorld;
         private static QMToggleButton rankToggleButton;
 
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 1920, 1080, "Disabled\nButtons", "Contains buttons from the Quick Menu that were disabled by emmVRC");
             baseMenu.getMainButton().DestroyMe();

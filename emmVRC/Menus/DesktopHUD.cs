@@ -71,7 +71,7 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(256, 768);
             BackgroundObject.GetComponent<RectTransform>().position = new Vector2(130 - (Screen.width / 2), (Screen.height / 6) - 64);
             BackgroundObject.transform.SetParent(parent, false);
-            BackgroundObject.GetComponent<Image>().sprite = Resources.HUD_Minimized;
+            BackgroundObject.GetComponent<Image>().sprite = Functions.Core.Resources.HUD_Minimized;
             GameObject TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
@@ -102,7 +102,7 @@ namespace emmVRC.Menus
         {
             emmVRCLoader.Logger.LogDebug("Initializing Desktop HUD");
             // UI Init
-            while (Resources.HUD_Minimized == null) yield return null;
+            while (Functions.Core.Resources.HUD_Minimized == null) yield return null;
             CanvasObject = new GameObject("emmVRCUICanvas");
             GameObject.DontDestroyOnLoad(CanvasObject);
             Canvas canvas = CanvasObject.AddComponent<Canvas>();
@@ -128,7 +128,7 @@ namespace emmVRC.Menus
             BackgroundObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -5f);
             BackgroundObject.GetComponent<RectTransform>().sizeDelta = new Vector2(325, 768); // With Player Framerate counter
             BackgroundObject.transform.SetParent(CanvasObject.transform, false);
-            BackgroundImage.sprite = Resources.HUD_Minimized;
+            BackgroundImage.sprite = Functions.Core.Resources.HUD_Minimized;
             TextObject = new GameObject("Text");
             TextObject.AddComponent<CanvasRenderer>();
             TextObject.transform.SetParent(BackgroundObject.transform, false);
@@ -146,7 +146,7 @@ namespace emmVRC.Menus
             LogoIconContainer.AddComponent<CanvasRenderer>();
             LogoIconContainer.transform.SetParent(BackgroundObject.transform, false);
             emmLogo = LogoIconContainer.AddComponent<Image>();
-            emmLogo.sprite = Resources.emmHUDLogo;
+            emmLogo.sprite = Functions.Core.Resources.emmHUDLogo;
             emmLogo.GetComponent<RectTransform>().anchorMin = new Vector2(0, 1);
             emmLogo.GetComponent<RectTransform>().anchorMax = new Vector2(0, 1);
             emmLogo.GetComponent<RectTransform>().pivot = new Vector2(0, 1);
@@ -183,9 +183,9 @@ namespace emmVRC.Menus
                 {
                     UIExpanded = !UIExpanded;
                     if (UIExpanded)
-                        BackgroundImage.sprite = Resources.HUD_Base;
+                        BackgroundImage.sprite = Functions.Core.Resources.HUD_Base;
                     else
-                        BackgroundImage.sprite = Resources.HUD_Minimized;
+                        BackgroundImage.sprite = Functions.Core.Resources.HUD_Minimized;
                     keyFlag = true;
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1]) || (KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && !keyFlag && Configuration.JSONConfig.EnableKeybinds)
@@ -216,8 +216,8 @@ namespace emmVRC.Menus
                             "\n" +
                             "\n" +
                             (Objects.Attributes.Debug ? (
-                                "Current frame time: "+(Hacks.FrameTimeCalculator.frameTimes[Hacks.FrameTimeCalculator.iterator == 0 ? Hacks.FrameTimeCalculator.frameTimes.Length-1 : (Hacks.FrameTimeCalculator.iterator -1)])+"ms\n"+
-                                "Average frame time: "+Hacks.FrameTimeCalculator.frameTimeAvg+"ms\n"
+                                "Current frame time: "+(Functions.Debug.FrameTimeCalculator.frameTimes[Functions.Debug.FrameTimeCalculator.iterator == 0 ? Functions.Debug.FrameTimeCalculator.frameTimes.Length-1 : (Functions.Debug.FrameTimeCalculator.iterator -1)])+"ms\n"+
+                                "Average frame time: "+ Functions.Debug.FrameTimeCalculator.frameTimeAvg+"ms\n"
                             ) : "");
                         if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled))
                             TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));

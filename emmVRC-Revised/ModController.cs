@@ -1,59 +1,42 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Reflection;
 
 namespace emmVRCLoader
 {
-    [Obfuscation(Exclude = true)]
     public class ModController
     {
-        private MethodInfo onApplicationStartMethod;
-        private MethodInfo onApplicationQuitMethod;
-        private MethodInfo onLevelWasLoadedMethod;
-        private MethodInfo onLevelWasInitializedMethod;
-        private MethodInfo onUpdateMethod;
-        private MethodInfo onFixedUpdateMethod;
-        private MethodInfo onLateUpdateMethod;
-        private MethodInfo onGUIMethod;
-        private MethodInfo onModSettingsApplied;
-        private MethodInfo onUIManagerInit;
+        private readonly MethodInfo onApplicationStartMethod;
+        private readonly MethodInfo onApplicationQuitMethod;
+        private readonly MethodInfo onSceneWasLoadedMethod;
+        private readonly MethodInfo onSceneWasInitializedMethod;
+        private readonly MethodInfo onSceneWasUnloadedMethod;
+        private readonly MethodInfo onUpdateMethod;
+        private readonly MethodInfo onFixedUpdateMethod;
+        private readonly MethodInfo onLateUpdateMethod;
+        private readonly MethodInfo onGUIMethod;
 
-        public void Create(Type mod)
+        public ModController(Type mod)
         {
-            MethodInfo[] methods = mod.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            foreach (MethodInfo method in methods)
-            {
-                if (method.Name.Equals("OnApplicationStart") && method.GetParameters().Length == 0)
-                    onApplicationStartMethod = method;
-                if (method.Name.Equals("OnApplicationQuit") && method.GetParameters().Length == 0)
-                    onApplicationQuitMethod = method;
-                if (method.Name.Equals("OnLevelWasLoaded") && method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(int))
-                    onLevelWasLoadedMethod = method;
-                if (method.Name.Equals("OnLevelWasInitialized") && method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(int))
-                    onLevelWasInitializedMethod = method;
-                if (method.Name.Equals("OnUpdate") && method.GetParameters().Length == 0)
-                    onUpdateMethod = method;
-                if (method.Name.Equals("OnFixedUpdate") && method.GetParameters().Length == 0)
-                    onFixedUpdateMethod = method;
-                if (method.Name.Equals("OnLateUpdate") && method.GetParameters().Length == 0)
-                    onLateUpdateMethod = method;
-                if (method.Name.Equals("OnGUI") && method.GetParameters().Length == 0)
-                    onGUIMethod = method;
-                if (method.Name.Equals("OnModSettingsApplied") && method.GetParameters().Length == 0)
-                    onModSettingsApplied = method;
-                if (method.Name.Equals("OnUIManagerInit") && method.GetParameters().Length == 0)
-                    onUIManagerInit = method;
-            }
+            onApplicationStartMethod = mod.GetMethod(nameof(OnApplicationStart), AccessTools.all);
+            onApplicationQuitMethod = mod.GetMethod(nameof(OnApplicationQuit), AccessTools.all);
+            onSceneWasLoadedMethod = mod.GetMethod(nameof(OnSceneWasLoaded), AccessTools.all);
+            onSceneWasInitializedMethod = mod.GetMethod(nameof(OnSceneWasInitialized), AccessTools.all);
+            onSceneWasUnloadedMethod = mod.GetMethod(nameof(OnSceneWasUnloaded), AccessTools.all);
+            onUpdateMethod = mod.GetMethod(nameof(OnUpdate), AccessTools.all);
+            onFixedUpdateMethod = mod.GetMethod(nameof(OnFixedUpdate), AccessTools.all);
+            onLateUpdateMethod = mod.GetMethod(nameof(OnLateUpdate), AccessTools.all);
+            onGUIMethod = mod.GetMethod(nameof(OnGUI), AccessTools.all);
         }
 
-        public virtual void OnApplicationStart() => onApplicationStartMethod?.Invoke(null, new object[] { });
-        public virtual void OnApplicationQuit() => onApplicationQuitMethod?.Invoke(null, new object[] { });
-        public virtual void OnLevelWasLoaded(int level) => onLevelWasLoadedMethod?.Invoke(null, new object[] { level });
-        public virtual void OnLevelWasInitialized(int level) => onLevelWasInitializedMethod?.Invoke(null, new object[] { level });
-        public virtual void OnUpdate() => onUpdateMethod?.Invoke(null, new object[] { });
-        public virtual void OnFixedUpdate() => onFixedUpdateMethod?.Invoke(null, new object[] { });
-        public virtual void OnLateUpdate() => onLateUpdateMethod?.Invoke(null, new object[] { });
-        public virtual void OnGUI() => onGUIMethod?.Invoke(null, new object[] { });
-        public virtual void OnModSettingsApplied() => onModSettingsApplied?.Invoke(null, new object[] { });
-        public virtual void OnUIManagerInit() => onUIManagerInit?.Invoke(null, new object[] { });
+        public void OnApplicationStart() => onApplicationStartMethod?.Invoke(null, null);
+        public void OnApplicationQuit() => onApplicationQuitMethod?.Invoke(null, null);
+        public void OnSceneWasLoaded(int buildIndex, string sceneName) => onSceneWasLoadedMethod?.Invoke(null, new object[2] { buildIndex, sceneName });
+        public void OnSceneWasInitialized(int buildIndex, string sceneName) => onSceneWasInitializedMethod?.Invoke(null, new object[2] { buildIndex, sceneName });
+        public void OnSceneWasUnloaded(int buildIndex, string sceneName) => onSceneWasUnloadedMethod?.Invoke(null, new object[2] { buildIndex, sceneName });
+        public void OnUpdate() => onUpdateMethod?.Invoke(null, null);
+        public void OnFixedUpdate() => onFixedUpdateMethod?.Invoke(null, null);
+        public void OnLateUpdate() => onLateUpdateMethod?.Invoke(null, null);
+        public void OnGUI() => onGUIMethod?.Invoke(null, null);
     }
 }

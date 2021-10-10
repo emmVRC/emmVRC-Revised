@@ -7,15 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using emmVRC.Objects.ModuleBases;
 
-namespace emmVRC.Hacks
+namespace emmVRC.Functions.UI
 {
-    public class UserListRefresh
+    public class UserListRefresh : MelonLoaderEvents
     {
         public static int cooldown = 0;
         public static GameObject refreshButton;
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
+            if (Configuration.JSONConfig.StealthMode) return;
             refreshButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social/UserProfileAndStatusSection/Status/EditStatusButton").gameObject, QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social"));
             refreshButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(1260f, 370f);
             refreshButton.GetComponentInChildren<Text>().text = "<color=#FFFFFF>Refresh</color>";

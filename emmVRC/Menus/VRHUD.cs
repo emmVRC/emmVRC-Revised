@@ -29,7 +29,7 @@ namespace emmVRC.Menus
         public static IEnumerator Initialize()
         {
             emmVRCLoader.Logger.Log("[emmVRC] Initializing Quickmenu HUD");
-            while (Resources.HUD_Base == null) yield return null;
+            while (Functions.Core.Resources.HUD_Base == null) yield return null;
             // Find the shortcut menu and tie it to a global variable:
             ShortcutMenu = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu");
 
@@ -66,7 +66,7 @@ namespace emmVRC.Menus
                 //rect.anchoredPosition = new Vector2(1590, 280);
                 rect.anchoredPosition = new Vector2(1745, 290); // With Player Framerate counter
             }
-            BackgroundImage.sprite = Resources.HUD_Base;
+            BackgroundImage.sprite = Functions.Core.Resources.HUD_Base;
 
             // Setting up the text object:
             TextObject = new GameObject("Text");
@@ -91,14 +91,14 @@ namespace emmVRC.Menus
             TRT.sizeDelta = new Vector2(168f, 168f);
             TRT.anchoredPosition = new Vector2(1590f, 60f);
             //GameObject.DestroyImmediate(TGO.GetComponentInChildren<Text>().gameObject);
-            TGO.GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
+            TGO.GetComponentInChildren<Image>().sprite = Functions.Core.Resources.onlineSprite;
 
             // Start emmHUD Logo
             LogoIconContainer = new GameObject("emmHUDLogo");
             LogoIconContainer.AddComponent<CanvasRenderer>();
             LogoIconContainer.transform.SetParent(BackgroundObject.transform, false);
             emmLogo = LogoIconContainer.AddComponent<Image>();
-            emmLogo.sprite = Resources.emmHUDLogo;
+            emmLogo.sprite = Functions.Core.Resources.emmHUDLogo;
             emmLogo.GetComponent<RectTransform>().localPosition = new Vector2(-365f, 880f);
             emmLogo.GetComponent<RectTransform>().localScale = new Vector3(1.3f, 1.3f, 1.3f);
             // End emmHUD Logo
@@ -152,8 +152,8 @@ namespace emmVRC.Menus
                         "\n" +
                         "\n" +
                         (Objects.Attributes.Debug ? (
-                            "Current frame time: " + (Hacks.FrameTimeCalculator.frameTimes[Hacks.FrameTimeCalculator.iterator == 0 ? Hacks.FrameTimeCalculator.frameTimes.Length - 1 : (Hacks.FrameTimeCalculator.iterator - 1)]) + "ms\n" +
-                            "Average frame time: " + Hacks.FrameTimeCalculator.frameTimeAvg + "ms\n"
+                            "Current frame time: " + (Functions.Debug.FrameTimeCalculator.frameTimes[Functions.Debug.FrameTimeCalculator.iterator == 0 ? Functions.Debug.FrameTimeCalculator.frameTimes.Length - 1 : (Functions.Debug.FrameTimeCalculator.iterator - 1)]) + "ms\n" +
+                            "Average frame time: " + Functions.Debug.FrameTimeCalculator.frameTimeAvg + "ms\n"
                         ) : "");
                     if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled))
                         TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));

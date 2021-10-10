@@ -2,25 +2,19 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using emmVRC.Objects;
-using emmVRC.Managers;
-using Il2CppSystem.Diagnostics;
-using emmVRC.Network;
 using System.Collections;
 using UnityEngine.Networking;
-using System.Net;
 using UnityEngine;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Menus
 {
-    public class ProgramMenu
+    public class ProgramMenu : MelonLoaderEvents
     {
         public static PaginatedMenu baseMenu;
 
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 203945, 102894, "Programs", "", null);
             baseMenu.menuEntryButton.DestroyMe();
@@ -44,7 +38,7 @@ namespace emmVRC.Menus
                 } catch (Exception ex)
                 {
                     emmVRCLoader.Logger.LogError("Your program list file is invalid. Please check JSON validity and try again. Error: "+ex.ToString());
-                    Managers.NotificationManager.AddNotification("Your program list file is invalid. Please check JSON validity and try again.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.errorSprite, -1);
+                    Managers.NotificationManager.AddNotification("Your program list file is invalid. Please check JSON validity and try again.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.errorSprite, -1);
                 }
             }
             foreach (Program program in programs)
@@ -53,10 +47,10 @@ namespace emmVRC.Menus
                 {
                     try
                     {
-                        if (program.programPath != "")
+                        if (!string.IsNullOrEmpty(program.programPath))
                         {
                             System.Diagnostics.Process.Start("C:\\Windows\\system32\\cmd.exe", "/C " + program.programPath);
-                        } else if (program.url != "")
+                        } else if (!string.IsNullOrEmpty(program.url))
                         {
                             MelonLoader.MelonCoroutines.Start(HTTPGet(program.url, program.name));
                         }

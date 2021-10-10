@@ -8,10 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.UI;
 using VRC.Core;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Menus
 {
-    public class UserTweaksMenu
+    [Priority(0)]
+    public class UserTweaksMenu : MelonLoaderEvents
     {
         public static QMNestedButton UserTweaks;
         public static QMSingleButton AvatarPermissions;
@@ -21,12 +23,12 @@ namespace emmVRC.Menus
         public static QMSingleButton SendMessageButton;
         public static QMSingleButton FavoriteAvatarButton;
         public static QMSingleButton BlockUserButton;
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             UserTweaks = new QMNestedButton("UserInteractMenu", Configuration.JSONConfig.PlayerActionsButtonX, Configuration.JSONConfig.PlayerActionsButtonY, "<color=#FF69B4>emmVRC</color>\nActions", "Provides functions and tweaks with the selected user");
             AvatarPermissions = new QMSingleButton(UserTweaks, 1, 0, "Avatar\nOptions", () => { AvatarPermissionManager.OpenMenu(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.prop_ApiAvatar_0.id, true); }, "Allows you to configure permissions for this user's avatar, which includes dynamic bone settings");
             UserPermissions = new QMSingleButton(UserTweaks, 2, 0, "User\nOptions", () => { UserPermissionManager.OpenMenu(QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.id); }, "Allows you to configure permissions for this user, which includes enabling Global Dynamic Bones");
-            PlayerNotesButton = new QMSingleButton(UserTweaks, 3, 0, "Player\nNotes", () => { PlayerNotes.LoadNote(QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.id, QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.GetName()); }, "Allows you to write a note for the specified user");
+            PlayerNotesButton = new QMSingleButton(UserTweaks, 3, 0, "Player\nNotes", () => { Functions.UI.PlayerNotes.LoadNote(QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.id, QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.GetName()); }, "Allows you to write a note for the specified user");
             TeleportButton = new QMSingleButton(UserTweaks, 4, 0, "Teleport\nto player", () => { if (Configuration.JSONConfig.RiskyFunctionsEnabled) VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0._vrcplayer.transform.position; }, "Teleports to the selected player. Requires risky functions");
             /*SendMessageButton = new QMSingleButton(UserTweaks, 1, 1, "Send\nMessage", () =>
             {
@@ -38,22 +40,17 @@ namespace emmVRC.Menus
             SendMessageButton.getGameObject().GetComponent<Button>().interactable = false;*/
             FavoriteAvatarButton = new QMSingleButton(UserTweaks, /*2*/ 1, 1, "Favorite\nAvatar", () =>
             {
-                if (!CustomAvatarFavorites.DoesUserHaveVRCPlus())
+                if (!Utils.PlayerUtils.DoesUserHaveVRCPlus())
                     VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Objects.Attributes.VRCPlusMessage, 0f);
                 else
                 {
-                    bool flag = false;
                     if (QuickMenuUtils.GetQuickMenuInstance().field_Private_APIUser_0.allowAvatarCopying && QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0.releaseStatus == "public")
                     {
-                        foreach (ApiAvatar avtr in CustomAvatarFavorites.LoadedAvatars)
-                        {
-                            if (avtr.id == QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0.id)
-                                flag = true;
-                        }
-                        if (flag)
+                        
+                        if (Functions.UI.CustomAvatarFavorites.LoadedAvatars.ToArray().Any(a => a.id == QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0.id))
                             VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "You already have this avatar favorited", "Dismiss", new Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         else
-                            CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0).NoAwait(nameof(CustomAvatarFavorites.FavoriteAvatar));
+                            Functions.UI.CustomAvatarFavorites.FavoriteAvatar(QuickMenuUtils.GetQuickMenuInstance().field_Private_Player_0.prop_ApiAvatar_0).NoAwait(nameof(Functions.UI.CustomAvatarFavorites.FavoriteAvatar));
                     }
                     else
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "This avatar is not public, or the user does not have cloning turned on.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));

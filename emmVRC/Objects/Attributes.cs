@@ -8,35 +8,22 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static string Version = "2.11.4";
+        public static string Version = "2.12.0";
         public static int LastTestedBuildNumber = 1121;
         public static string EULAVersion = "1.0.1";
         public static bool Beta = false;
-        public static string DateUpdated = "08/05/2021";
+        public static string DateUpdated = "10/08/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public static string Changelog =
-            "<b>v2.11.4</b>\n" +
-            "• Updated for compatibility with the VRChat 1132 build\n" +
-            "• Fixed the pesky error user info tweaks error when opening the social menu\n" +
-            "<b>v2.11.3</b>\n" +
-            "• Fixed Custom Loading Music and custom Alarm tones\n" +
-            "• Fixed buttons going invisible when selected while using emmVRC\n" +
-            "• Fixed the Favorite button favoriting a user's fallback avatar when you have them selected\n" +
-            "<b>v2.11.2</b>\n" +
-            "• Updated for compatibility with the VRChat 2019 update\n" +
-            "<b>v2.11.1</b>\n" +
-            "• Global Dynamic Bones should now be working on Oculus\n" +
-            "• Added the instance type to Instance History's tooltip\n" +
-            "• Fixed the CameraPlus tooltip in emmVRC Settings\n\n" +
-            "<b>v2.11.0</b>\n" +
-            "• Added <b>nameplate coloring!</b> This uses the same color system used prior to the nameplate update\n" +
-            "• Added <b>CameraPlus!</b> This implementation will be released as a standalone mod later as well, but it allows you finer control over the VRChat Camera. Credits for the original mod and code goes to Slaynash\n" +
-            "• Added an <b>Alarm Clock</b>, available for both system time and instance time\n" +
-            "• The flashlight now has a \"Use\" action to toggle the light on and off\n" +
-            "• Fixed the VRHUD issue that has been present for a while now. Special thanks to Loukylor for the fix, along with many more recently!\n";
+            "<b>v2.12.0</b>\n" +
+            "• Interaction with pickup triggers (e.g. flashlights) now works like the vanilla game\n" +
+            "• UIExpansionKit coloring will no longer affect checkboxes\n" +
+            "• Added more exclusions and inclusions to the color module\n" +
+            "• Mods can now opt out of emmVRC coloring for buttons by using a \"emmVRCDoNotColor\" GameObject within the button\n" +
+            "• ";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.4.3";
         public static string TargetemmVRCLoaderVersion = "1.2.0";

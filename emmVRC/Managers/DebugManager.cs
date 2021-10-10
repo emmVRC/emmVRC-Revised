@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Managers
 {
@@ -15,31 +16,28 @@ namespace emmVRC.Managers
         public string Name = "";
         public string Description = "";
     }
-    public class DebugManager
+    public class DebugManager : MelonLoaderEvents, IWithFixedUpdate
     {
         public static List<DebugAction> DebugActions = new List<DebugAction>();
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
+            emmVRCLoader.Logger.LogDebug("Initializing debug manager");
             if (Environment.CommandLine.Contains("--emmvrc.debug"))
             {
                 Objects.Attributes.Debug = true;
             }
-            MelonLoader.MelonCoroutines.Start(Loop());
         }
-        public static IEnumerator Loop()
+        public void OnFixedUpdate()
         {
-            while (true)
+            if (Objects.Attributes.Debug)
             {
-                if (Objects.Attributes.Debug)
+                foreach (DebugAction action in DebugActions)
                 {
-                    foreach (DebugAction action in DebugActions)
-                    {
-                        if (Input.GetKeyDown(action.ActionKey))
-                            action.ActionAction.Invoke();
-                    }
+                    if (Input.GetKeyDown(action.ActionKey))
+                        action.ActionAction.Invoke();
                 }
-                yield return new WaitForFixedUpdate();
             }
+
         }
 
     }

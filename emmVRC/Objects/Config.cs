@@ -18,7 +18,7 @@ namespace emmVRC.Objects
         public bool emmVRCNetworkEnabled = true;
         public bool GlobalChatEnabled = true;
         public bool VRFlightControls = true;
-        public bool UIExpansionKitIntegration = true;
+        public bool UIExpansionKitIntegration = false;
         public bool UnlimitedFPSEnabled = false;
         public bool InfoBarDisplayEnabled = true;
         public bool ClockEnabled = true;
@@ -42,6 +42,8 @@ namespace emmVRC.Objects
 
         public bool CameraPlus = true;
 
+        public bool IgnoreWorldCreatorTips = false;
+
         // Avatar List render limits
         public int FavoriteRenderLimit = 50;
         public int SearchRenderLimit = 100;
@@ -51,6 +53,9 @@ namespace emmVRC.Objects
 
         // FPS limit
         public int FPSLimit = 144;
+
+        // Speed modifier
+        public float SpeedModifier = 2f;
 
         // Last seen startup message
         public int LastSeenStartupMessage = -1;

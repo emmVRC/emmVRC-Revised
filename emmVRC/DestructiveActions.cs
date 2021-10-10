@@ -19,8 +19,7 @@ namespace emmVRC
     {
         public static void ForceQuit()
         {
-            if (NetworkClient.webToken != null)
-                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout").NoAwait("Logout");
+            NetworkClient.Logout();
             Thread quitThread = new Thread(QuitAfterQuit)
             {
                 IsBackground = true,

@@ -8,10 +8,12 @@ using emmVRC.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 using VRC.Animation;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Menus
 {
-    internal class PlayerTweaksMenu
+    [Priority(50)]
+    internal class PlayerTweaksMenu : MelonLoaderEvents
     {
         internal static QMNestedButton baseMenu;
         internal static GameObject SpeedText;
@@ -32,7 +34,7 @@ namespace emmVRC.Menus
         internal static Objects.Slider SpeedSlider;
 
 
-        internal static void Initialize()
+        public override void OnUiManagerInit()
         {
             baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 192948, 102394, "Player\nTweaks", "");
             baseMenu.getMainButton().DestroyMe();
@@ -76,30 +78,30 @@ namespace emmVRC.Menus
             WaypointMenu.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
             WaypointMenu.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 96f);
 
-            FlightToggle = new QMToggleButton(baseMenu, 2, 1, "Flight", () => { 
-                Hacks.Flight.FlightEnabled = true;
-            }, "Disabled", () => { 
-                Hacks.Flight.FlightEnabled = false;
-                if (Hacks.Flight.NoclipEnabled) { Hacks.Flight.NoclipEnabled = false; 
+            FlightToggle = new QMToggleButton(baseMenu, 2, 1, "Flight", () => {
+                Functions.PlayerHacks.Flight.SetFlyActive(true);
+            }, "Disabled", () => {
+                if (Functions.PlayerHacks.Flight.IsNoClipEnabled) {
+                    Functions.PlayerHacks.Flight.SetNoClipActive(false);
                     NoclipToggle.setToggleState(false);
-                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetComponent<VRCMotionState>().field_Private_CharacterController_0.enabled = true;
-                } 
+                }
+                Functions.PlayerHacks.Flight.SetFlyActive(false);
             }, "TOGGLE: Enables flight. Requires Risky Functions");
             
-            NoclipToggle = new QMToggleButton(baseMenu, 3, 1, "Noclip", () => { 
-                Hacks.Flight.NoclipEnabled = true; 
-                if (!Hacks.Flight.FlightEnabled) {
-                    Hacks.Flight.FlightEnabled = true; 
+            NoclipToggle = new QMToggleButton(baseMenu, 3, 1, "Noclip", () => {
+                if (!Functions.PlayerHacks.Flight.IsFlyEnabled) {
+                    Functions.PlayerHacks.Flight.SetFlyActive(true);
                     FlightToggle.setToggleState(true); 
-                } 
-            }, "Disabled", () => { 
-                Hacks.Flight.NoclipEnabled = false;
+                }
+                Functions.PlayerHacks.Flight.SetNoClipActive(true);
+            }, "Disabled", () => {
+                Functions.PlayerHacks.Flight.SetNoClipActive(false);
             }, "TOGGLE: Enables NoClip. Requires Risky Functions");
             
             ESPToggle = new QMToggleButton(baseMenu, 4, 1, "ESP On", () => {
-                Hacks.ESP.ESPEnabled = true;
+                Functions.PlayerHacks.ESP.SetActive(true);
             }, "ESP Off", () => {
-                Hacks.ESP.ESPEnabled = false;
+                Functions.PlayerHacks.ESP.SetActive(false);
             }, "TOGGLE: Enables ESP for all the players in the instance. Requires Risky Functions");
 
             ReloadAllAvatars = new QMSingleButton(baseMenu, 5, 1, "Reload\nAll\nAvatars", () =>
@@ -109,16 +111,14 @@ namespace emmVRC.Menus
 
             SpeedToggle = new QMToggleButton(baseMenu, 4, 2, "Speed On", () =>
             {
-                Hacks.Speed.SpeedModified = true;
+                Functions.PlayerHacks.Speed.SetActive(true);
                 SpeedSlider.slider.GetComponent<Slider>().enabled = true;
                 SpeedReset.getGameObject().GetComponent<Button>().enabled = true;
                 SpeedMinusButton.getGameObject().GetComponent<Button>().enabled = true;
                 SpeedPlusButton.getGameObject().GetComponent<Button>().enabled = true;
-                Hacks.Speed.Modifier = SpeedSlider.slider.GetComponent<Slider>().value;
-                SpeedText.GetComponent<Text>().text = "Speed: " + SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value.ToString("N2");
             }, "Speed Off", () =>
             {
-                Hacks.Speed.SpeedModified = false;
+                Functions.PlayerHacks.Speed.SetActive(false);
                 SpeedSlider.slider.GetComponent<Slider>().enabled = false;
                 SpeedReset.getGameObject().GetComponent<Button>().enabled = false;
                 SpeedMinusButton.getGameObject().GetComponent<Button>().enabled = false;
@@ -127,10 +127,11 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables the Speed modifier. Requires Risky Functions");
             SpeedSlider = new Objects.Slider(baseMenu.getMenuName(), 1, 2, (float val) =>
             {
-                Hacks.Speed.Modifier = val;
-                if (Hacks.Speed.SpeedModified)
-                    SpeedText.GetComponent<Text>().text = "Speed: " + val.ToString("N2");
-            }, 0.5f);
+                Configuration.JSONConfig.SpeedModifier = val;
+                Functions.PlayerHacks.Speed.SetActive(Functions.PlayerHacks.Speed.IsEnabled);
+                if (Functions.PlayerHacks.Speed.IsEnabled)
+                    SpeedText.GetComponent<Text>().text = "Speed: " + Configuration.JSONConfig.SpeedModifier.ToString("N2");
+            }, Configuration.JSONConfig.SpeedModifier);
             SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().enabled = false;
             SpeedSlider.slider.GetComponent<RectTransform>().anchoredPosition += new Vector2(256f, -104f);
             SpeedSlider.slider.GetComponent<RectTransform>().sizeDelta *= new Vector2(0.85f, 1f);
@@ -138,8 +139,9 @@ namespace emmVRC.Menus
 
             SpeedReset = new QMSingleButton(baseMenu, 3, 2, "Reset", () =>
             {
-                SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value = 1f;
-                Hacks.Speed.Modifier = SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value;
+                SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value = 2f;
+                Functions.PlayerHacks.Speed.SetActive(Functions.PlayerHacks.Speed.IsEnabled);
+                Configuration.JSONConfig.SpeedModifier = 2f;
                 SpeedText.GetComponent<Text>().text = "Speed: " + SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value.ToString("N2");
             }, "Resets the speed modifier to the default value");
             SpeedReset.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
@@ -149,7 +151,8 @@ namespace emmVRC.Menus
             SpeedMinusButton = new QMSingleButton(baseMenu, 1, 2, "-", () =>
             {
                 SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value -= 0.25f;
-                Hacks.Speed.Modifier = SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value;
+                Functions.PlayerHacks.Speed.SetActive(Functions.PlayerHacks.Speed.IsEnabled);
+                Configuration.JSONConfig.SpeedModifier = SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value;
                 SpeedText.GetComponent<Text>().text = "Speed: " + SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value.ToString("N2");
             }, "Decrease the speed modifier by 0.25");
             SpeedMinusButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(2.0175f, 2.0175f);
@@ -159,7 +162,8 @@ namespace emmVRC.Menus
             SpeedPlusButton = new QMSingleButton(baseMenu, 3, 2, "+", () =>
             {
                 SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value += 0.25f;
-                Hacks.Speed.Modifier = SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value;
+                Functions.PlayerHacks.Speed.SetActive(Functions.PlayerHacks.Speed.IsEnabled);
+                Configuration.JSONConfig.SpeedModifier = SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value;
                 SpeedText.GetComponent<Text>().text = "Speed: " + SpeedSlider.slider.GetComponent<UnityEngine.UI.Slider>().value.ToString("N2");
             }, "Increase the speed modifier by 0.25");
             SpeedPlusButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(2.0175f, 2.0175f);
@@ -171,6 +175,11 @@ namespace emmVRC.Menus
             SpeedText.GetComponent<UnityEngine.UI.Text>().fontStyle = FontStyle.Normal;
             SpeedText.GetComponent<UnityEngine.UI.Text>().text = "Speed: Disabled";
             SpeedText.GetComponent<RectTransform>().anchoredPosition = SpeedMinusButton.getGameObject().GetComponent<RectTransform>().anchoredPosition + new Vector2(192f, 192f);
+            Components.EnableDisableListener listener = FlightToggle.getGameObject().transform.parent.gameObject.AddComponent<Components.EnableDisableListener>();
+            listener.OnEnabled += () =>
+            {
+                SetRiskyFuncsAllowed(RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            };
         }
         internal static void SetRiskyFuncsAllowed(bool state)
         {
@@ -198,6 +207,17 @@ namespace emmVRC.Menus
                 SpeedSlider.slider.GetComponent<Slider>().enabled = false;
                 SpeedText.GetComponent<Text>().text = (Configuration.JSONConfig.RiskyFunctionsEnabled ? "     Risky Functions\n        Not allowed" : "     Risky Functions\n        Not enabled");
                 EnableJumpButton.getGameObject().GetComponent<Button>().enabled = false;
+            }
+        }
+
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        {
+            if (buildIndex == -1)
+            {
+                Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(false, true);
+                Menus.PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
+                Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(false, true);
+                Menus.PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
             }
         }
     }

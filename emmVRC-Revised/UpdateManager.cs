@@ -1,45 +1,32 @@
 ﻿using System;
-using System.Text;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Security.Cryptography;
 
 namespace emmVRCLoader
 {
-    public class UpdateManager
+    public static class UpdateManager
     {
-        private static string WebsiteURL = "https://dl.emmvrc.com/update.php";
-        public static bool LoaderNeedsUpdate = false;
-        public static bool HasCheckedLoader = false;
-        public static bool HasCheckedUpdate = false;
-        public static bool HasCheckedLoadLib = false;
-        public static bool LoadLibCheck = true;
-        internal static Byte[] downloadedLib;
+        private const string WebsiteURL = "https://dl.emmvrc.com/update.php";
 
-        public static void Check()
+        private static string CachedVersionPath => Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll");
+        private static string CachedParanoidVersionPath => Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.new.dll");
+
+        public static byte[] Check()
         {
-            if (!HasCheckedUpdate)
+            if (!IsLibLatest())
             {
-                if (!IsLibLatest())
-                {
-                    Logger.Log("[emmVRCLoader] Downloading emmVRC...");
-                    DownloadLib();
-                }
-                else
-                {
-                    downloadedLib = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"));
-                }
-                HasCheckedUpdate = true;
+                Logger.Log("Downloading emmVRC...");
+                return DownloadLib();
+            }
+            else
+            {
+                return File.ReadAllBytes(CachedVersionPath);
             }
         }
 
-        public static void LoaderCheck()
-        {
-            HasCheckedLoader = true;
-        }
-
-        public static void DownloadLib()
+        public static byte[] DownloadLib()
         {
             try
             {
@@ -49,32 +36,95 @@ namespace emmVRCLoader
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    Logger.LogError("[emmVRCLoader] Error occured while fetching emmVRC: " + response.StatusDescription);
+                    Logger.LogError("Error occured while fetching emmVRC: " + response.StatusDescription);
+                    return null;
                 }
                 else
                 {
                     StreamReader reader = new StreamReader(response.GetResponseStream());
                     string resultString = reader.ReadToEnd();
-                    downloadedLib = Convert.FromBase64String(resultString);
-                    File.WriteAllBytes(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"), downloadedLib);
-                }
+                    byte[] assembly = Convert.FromBase64String(resultString);
 
+                    if (!emmVRCLoaderMod.isParanoidMode)
+                    {
+                        File.WriteAllBytes(CachedVersionPath, assembly);
+                    }
+                    else
+                    {
+                        File.WriteAllBytes(CachedParanoidVersionPath, assembly);
+
+                        ParanoidMode();
+
+                        File.Delete(CachedVersionPath);
+                        File.Move(CachedParanoidVersionPath, CachedVersionPath);
+                    }
+                    return assembly;
+                }
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex.ToString());
+                return null;
             }
         }
+
         public static bool IsLibLatest()
         {
-            if (Environment.CommandLine.Contains("--emmvrc.devmode")) return true;
-            if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"))) return false;
+            if (Environment.CommandLine.Contains("--emmvrc.devmode"))
+            {
+                Logger.LogWarning("You have emmVRC's dev mode on, which is well, only meant for devs!");
+                Logger.LogWarning("Unless you understand what is does,");
+                Logger.LogWarning("I would recommend you turn it off, as it prevents updates.");
+                Logger.LogWarning("To turn it off, simply remove the \"--emmvrc.devmode\" launch option.");
+                return true;
+            }
+
+            if (emmVRCLoaderMod.isParanoidMode)
+            {
+                try
+                {
+                    // If the current emmVRC.dll is alr newest, then delete the emmVRC.new.dll and continue
+                    if (CheckHashOfFile(CachedVersionPath))
+                    {
+                        File.Delete(CachedParanoidVersionPath);
+                        return true;
+                    }
+
+                    // If not, then replace the emmVRC.dll with emmVRC.new.dll and check the hash
+                    if (File.Exists(CachedParanoidVersionPath))
+                    {
+                        File.Delete(CachedVersionPath);
+                        File.Move(CachedParanoidVersionPath, CachedVersionPath);
+                    }
+
+                    return CheckHashOfFile(CachedVersionPath);
+                }
+                catch (Exception ex)
+                {
+                    ParanoidMode();
+                    throw ex;
+                }
+            }
+            else
+            {
+                if (File.Exists(CachedParanoidVersionPath))
+                    File.Delete(CachedParanoidVersionPath);
+
+                return CheckHashOfFile(CachedVersionPath);
+            }
+        }
+
+        private static bool CheckHashOfFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+                return false;
+
             try
             {
                 MD5 md5 = MD5.Create();
-                FileStream libStream = File.OpenRead(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"));
-                string md5hash = BitConverter.ToString(md5.ComputeHash(libStream)).Replace("-", "").ToLower();
-
+                string md5hash;
+                using (FileStream libStream = File.OpenRead(filePath))
+                    md5hash = BitConverter.ToString(md5.ComputeHash(libStream)).Replace("-", "").ToLower();
                 WebRequest request = WebRequest.Create(WebsiteURL + "?lib=" + md5hash);
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -87,42 +137,56 @@ namespace emmVRCLoader
                         return false;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                ex = new Exception();
                 return true;
             }
             return false;
         }
+
         public static bool ShouldLoadLib()
         {
-            if (!HasCheckedLoadLib)
+            bool loadLibCheck = true;
+            try
             {
-                try
-                {
-                    Logger.Log("[emmVRCLoader] Checking if emmVRC can Load...");
+                Logger.Log("Checking if emmVRC can Load...");
 
-                    WebRequest request = WebRequest.Create(WebsiteURL + ("?shouldload"));
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        StreamReader reader = new StreamReader(response.GetResponseStream());
-                        string resultString = reader.ReadToEnd();
-                        if (resultString != "true")
-                        {
-                            Logger.LogError("[emmVRCLoader] emmVRC can't be loaded...");
-                            LoadLibCheck = false;
-                        }
-                        else
-                            Logger.Log("[emmVRCLoader] emmVRC can be loaded!");
-                    }
-                } catch (Exception ex)
+                WebRequest request = WebRequest.Create(WebsiteURL + ("?shouldload"));
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    ex = new Exception();
-                    Logger.LogError("emmVRC could not be accessed. Loading from disk, if possible...");
+                    StreamReader reader = new StreamReader(response.GetResponseStream());
+                    string resultString = reader.ReadToEnd();
+                    if (resultString != "true")
+                    {
+                        Logger.LogError("emmVRC can't be loaded...");
+                        loadLibCheck = false;
+                    }
+                    else
+                        Logger.Log("emmVRC can be loaded!");
                 }
             }
-            return LoadLibCheck;
+            catch
+            {
+                Logger.LogError("emmVRC could not be accessed. Loading from disk, if possible...");
+            }
+
+            return loadLibCheck;
+        }
+
+        private static void ParanoidMode()
+        {
+            Logger.LogWarning("-----------------------------------------------------------------------------");
+            Logger.LogWarning("Paranoid mode is on!");
+            Logger.LogWarning("emmVRC has auto-updated. If you would like to inspect the new file,");
+            Logger.LogWarning("it is located in the \"Dependencies\" folder with the name \"emmVRC.new.dll\".");
+            Logger.LogWarning("Please enter \"continue\" to continue with the new update");
+            Logger.LogWarning("or you may enter anything else to close the game.");
+            Logger.LogWarning("To disable paranoid mode, please remove the \"--emmvrc.paranoid\" launch option.");
+            Logger.LogWarning("-----------------------------------------------------------------------------");
+
+            if (Console.ReadLine() != "continue")
+                Process.GetCurrentProcess().Kill();
         }
     }
 }

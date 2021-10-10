@@ -25,6 +25,7 @@ namespace emmVRC.Objects
                 {
                     ex = new Exception();
                 }
+            
             slider.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             slider.transform.localPosition = basePosition.getGameObject().transform.localPosition;
             slider.GetComponentInChildren<RectTransform>().anchorMin += new Vector2(0.06f, 0);
@@ -32,6 +33,13 @@ namespace emmVRC.Objects
             slider.GetComponentInChildren<UnityEngine.UI.Slider>().onValueChanged = new UnityEngine.UI.Slider.SliderEvent();
             slider.GetComponentInChildren<UnityEngine.UI.Slider>().value = defaultValue;
             slider.GetComponentInChildren<UnityEngine.UI.Slider>().onValueChanged.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<float>>(evt));
+
+            Components.EnableDisableListener listener = slider.AddComponent<Components.EnableDisableListener>();
+            listener.OnEnabled += () => {
+                slider.GetComponentInChildren<UnityEngine.UI.Slider>().value = defaultValue;
+                GameObject.DestroyImmediate(listener);
+            };
+
         }
     }
 }

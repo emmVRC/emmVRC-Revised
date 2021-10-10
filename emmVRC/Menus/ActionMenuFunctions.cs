@@ -32,11 +32,11 @@ namespace emmVRC.Menus
         //private static bool justBecameActive = true;
         public static IEnumerator Initialize()
         {
-            while (Resources.onlineSprite == null || Resources.onlineSprite.texture == null)
+            while (Functions.Core.Resources.onlineSprite == null || Functions.Core.Resources.onlineSprite.texture == null)
                 yield return new WaitForEndOfFrame();
-            functionsMenu = new CustomActionMenu.Page(CustomActionMenu.BaseMenu.MainMenu, "emmVRC\nFunctions", Resources.onlineSprite.texture);
-            riskyFunctionsMenu = new CustomActionMenu.Page(functionsMenu, "Risky\nFunctions", Resources.flyTexture);
-            favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Resources.rpSprite.texture);
+            functionsMenu = new CustomActionMenu.Page(CustomActionMenu.BaseMenu.MainMenu, "emmVRC\nFunctions", Functions.Core.Resources.onlineSprite.texture);
+            riskyFunctionsMenu = new CustomActionMenu.Page(functionsMenu, "Risky\nFunctions", Functions.Core.Resources.flyTexture);
+            favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Functions.Core.Resources.rpSprite.texture);
             favouriteEmojiButtons = new List<CustomActionMenu.Button>();
             for (int i = 0; i < 8; i++)
             {
@@ -53,23 +53,23 @@ namespace emmVRC.Menus
 
             flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () =>
             {
-                if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.FlightToggle.setToggleState(!Flight.FlightEnabled, true);
+                if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                    PlayerTweaksMenu.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
             noclipButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Noclip:\nOff", () =>
             {
-                if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.NoclipToggle.setToggleState(!Flight.NoclipEnabled, true);
+                if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                    PlayerTweaksMenu.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
             speedButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Speed:\nOff", () =>
             {
-                if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.SpeedToggle.setToggleState(!Speed.SpeedModified, true);
+                if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                    PlayerTweaksMenu.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
             espButton = new CustomActionMenu.Button(riskyFunctionsMenu, "ESP:\nOff", () =>
             {
-                if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.ESPToggle.setToggleState(!ESP.ESPEnabled, true);
+                if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                    PlayerTweaksMenu.ESPToggle.setToggleState(!Functions.PlayerHacks.ESP.IsEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
 
             /*avatarParametersMenu = new CustomActionMenu.Page(functionsMenu, "Avatar 3.0\nParameters", Resources.rpSprite.texture);
@@ -98,16 +98,16 @@ namespace emmVRC.Menus
                 }
                 if (flightButton.currentPedalOption != null)
                 {
-                    if (RiskyFunctionsManager.RiskyFuncsAreAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                    if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                     {
-                        flightButton.SetButtonText("Flight:\n" + (Flight.FlightEnabled ? "On" : "Off"));
-                        flightButton.SetIcon(Flight.FlightEnabled ? Resources.toggleOnTexture : Resources.toggleOffTexture);
-                        noclipButton.SetButtonText("Noclip:\n" + (Flight.NoclipEnabled ? "On" : "Off"));
-                        noclipButton.SetIcon(Flight.NoclipEnabled ? Resources.toggleOnTexture : Resources.toggleOffTexture);
-                        speedButton.SetButtonText("Speed:\n" + (Speed.SpeedModified ? "On" : "Off"));
-                        speedButton.SetIcon(Speed.SpeedModified ? Resources.toggleOnTexture : Resources.toggleOffTexture);
-                        espButton.SetButtonText("ESP:\n" + (ESP.ESPEnabled ? "On" : "Off"));
-                        espButton.SetIcon(ESP.ESPEnabled ? Resources.toggleOnTexture : Resources.toggleOffTexture);
+                        flightButton.SetButtonText("Flight:\n" + (Functions.PlayerHacks.Flight.IsFlyEnabled ? "On" : "Off"));
+                        flightButton.SetIcon(Functions.PlayerHacks.Flight.IsFlyEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
+                        noclipButton.SetButtonText("Noclip:\n" + (Functions.PlayerHacks.Flight.IsNoClipEnabled ? "On" : "Off"));
+                        noclipButton.SetIcon(Functions.PlayerHacks.Flight.IsNoClipEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
+                        speedButton.SetButtonText("Speed:\n" + (Functions.PlayerHacks.Speed.IsEnabled ? "On" : "Off"));
+                        speedButton.SetIcon(Functions.PlayerHacks.Speed.IsEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
+                        espButton.SetButtonText("ESP:\n" + (Functions.PlayerHacks.ESP.IsEnabled ? "On" : "Off"));
+                        espButton.SetIcon(Functions.PlayerHacks.ESP.IsEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
                         flightButton.SetEnabled(true);
                         noclipButton.SetEnabled(true);
                         speedButton.SetEnabled(true);

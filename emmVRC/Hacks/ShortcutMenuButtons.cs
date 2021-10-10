@@ -9,12 +9,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using emmVRC.Objects;
+using emmVRC.Objects.ModuleBases;
 using VRC.Core;
 using VRC;
 
 namespace emmVRC.Hacks
 {
-    public class ShortcutMenuButtons
+    public class ShortcutMenuButtons : MelonLoaderEvents
     {
         public static QMSingleButton logoButton;
         public static GameObject emojiButton;
@@ -27,6 +28,10 @@ namespace emmVRC.Hacks
         public static GameObject vrcPlusUserIconCameraButton;
         public static GameObject vrcPlusMiniBanner;
         public static GameObject vrcPlusMainBanner;
+        public override void OnUiManagerInit()
+        {
+            MelonLoader.MelonCoroutines.Start(Process());
+        }
 
         public static IEnumerator Process()
         {
@@ -35,8 +40,8 @@ namespace emmVRC.Hacks
             if (logoButton == null)
             {
                 logoButton = new QMSingleButton("ShortcutMenu", Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY, "", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
-                while (Resources.onlineSprite == null) yield return null;
-                logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Resources.onlineSprite;
+                while (Functions.Core.Resources.onlineSprite == null) yield return null;
+                logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Functions.Core.Resources.onlineSprite;
             }
             logoButton.setActive(Configuration.JSONConfig.LogoButtonEnabled);
             logoButton.getGameObject().transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.zero : Vector3.one);

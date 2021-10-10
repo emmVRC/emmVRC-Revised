@@ -14,12 +14,14 @@ using emmVRC.Objects;
 using VRC.Core;
 //using TMPro;
 using VRC;
+using emmVRC.Objects.ModuleBases;
 
 #pragma warning disable 4014
 
 namespace emmVRC.Menus
 {
-    public class SettingsMenu
+    [Priority(0)]
+    public class SettingsMenu : MelonLoaderEvents
     {
         // Base menu for the Settings menu
         public static PaginatedMenu baseMenu;
@@ -139,7 +141,7 @@ namespace emmVRC.Menus
         private static bool canToggleNetwork = true;
 
 
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             // Initialize the Paginated Menu for the Settings menu.
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 1024, 768, "Settings", "The base menu for the settings menu", null);
@@ -151,7 +153,7 @@ namespace emmVRC.Menus
                 {
                     Configuration.JSONConfig = new Objects.Config { WelcomeMessageShown = true };
                     Configuration.SaveConfig();
-                    ColorChanger.ApplyIfApplicable();
+                    Functions.UI.ColorChanger.ApplyIfApplicable();
                     Nameplates.colorChanged = true;
                     ShortcutMenuButtons.Process();
                     emmVRCLoader.Logger.Log("emmVRC settings have been reverted.");
@@ -166,13 +168,8 @@ namespace emmVRC.Menus
                 VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Would you like to export your emmVRC Favorite Avatars?", "Yes", () =>
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
-                    foreach (ApiAvatar avtr in CustomAvatarFavorites.LoadedAvatars)
-                    {
-                        exportedAvatars.Add(new ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
-                    }
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
-                    Managers.NotificationManager.AddNotification("Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
+                    Functions.UI.CustomAvatarFavorites.ExportAvatars();
+                    Managers.NotificationManager.AddNotification("Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alertSprite, -1);
                 }, "No", () =>
                 {
                     VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
@@ -188,7 +185,6 @@ namespace emmVRC.Menus
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
                     Configuration.JSONConfig.RiskyFunctionsWarningShown = true;
                     Configuration.SaveConfig();
-                    RiskyFunctionsManager.CheckThisWrld().NoAwait(nameof(RiskyFunctionsManager.CheckThisWrld));
                     RefreshMenu();
                 }), "Decline", new System.Action(() =>
                 {
@@ -200,7 +196,6 @@ namespace emmVRC.Menus
                 {
                     Configuration.JSONConfig.RiskyFunctionsEnabled = true;
                     Configuration.SaveConfig();
-                    RiskyFunctionsManager.CheckThisWrld().NoAwait(nameof(RiskyFunctionsManager.CheckThisWrld));
                     RefreshMenu();
                 }
             }, "Disabled", () =>
@@ -209,11 +204,11 @@ namespace emmVRC.Menus
                 Configuration.SaveConfig();
                 RefreshMenu();
                 PlayerTweaksMenu.SetRiskyFuncsAllowed(false);
-                if (Flight.FlightEnabled || Flight.NoclipEnabled)
+                if (Functions.PlayerHacks.Flight.IsFlyEnabled || Functions.PlayerHacks.Flight.IsNoClipEnabled)
                     PlayerTweaksMenu.FlightToggle.setToggleState(false, true);
-                if (Speed.SpeedModified)
+                if (Functions.PlayerHacks.Speed.IsEnabled)
                     PlayerTweaksMenu.SpeedToggle.setToggleState(false, true);
-                if (ESP.ESPEnabled)
+                if (Functions.PlayerHacks.ESP.IsEnabled)
                     PlayerTweaksMenu.ESPToggle.setToggleState(false, true);
             }, "TOGGLE: Enables the Risky Functions, which contains functions that shouldn't be used in public worlds. This includes flight, noclip, speed, and teleporting/waypoints");
             VRFlightControls = new PageItem("VR Flight\nControls", () =>
@@ -227,7 +222,7 @@ namespace emmVRC.Menus
             }, "TOGGLE: Enables the enhanced VR flight controls. May not work on Windows Mixed Reality");
             GlobalDynamicBones = new PageItem("Global\nDynamic Bones", () =>
             {
-                if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
+                if (!Functions.Core.ModCompatibility.MultiplayerDynamicBones)
                 {
                     Configuration.JSONConfig.GlobalDynamicBonesEnabled = true;
                     Configuration.SaveConfig();
@@ -284,29 +279,29 @@ namespace emmVRC.Menus
             {
                 Configuration.JSONConfig.UIExpansionKitIntegration = true;
                 Configuration.SaveConfig();
-                if (ModCompatibility.FlightButton != null)
-                    ModCompatibility.FlightButton.SetActive(true);
-                if (ModCompatibility.NoclipButton != null)
-                    ModCompatibility.NoclipButton.SetActive(true);
-                if (ModCompatibility.SpeedButton != null)
-                    ModCompatibility.SpeedButton.SetActive(true);
-                if (ModCompatibility.ESPButton != null)
-                    ModCompatibility.ESPButton.SetActive(true);
+                if (Functions.Core.ModCompatibility.FlightButton != null)
+                    Functions.Core.ModCompatibility.FlightButton.SetActive(true);
+                if (Functions.Core.ModCompatibility.NoclipButton != null)
+                    Functions.Core.ModCompatibility.NoclipButton.SetActive(true);
+                if (Functions.Core.ModCompatibility.SpeedButton != null)
+                    Functions.Core.ModCompatibility.SpeedButton.SetActive(true);
+                if (Functions.Core.ModCompatibility.ESPButton != null)
+                    Functions.Core.ModCompatibility.ESPButton.SetActive(true);
                 RefreshMenu();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.UIExpansionKitIntegration = false;
                 Configuration.SaveConfig();
-                if (ModCompatibility.FlightButton != null)
-                    ModCompatibility.FlightButton.SetActive(false);
-                if (ModCompatibility.NoclipButton != null)
-                    ModCompatibility.NoclipButton.SetActive(false);
-                if (ModCompatibility.SpeedButton != null)
-                    ModCompatibility.SpeedButton.SetActive(false);
-                if (ModCompatibility.ESPButton != null)
-                    ModCompatibility.ESPButton.SetActive(false);
+                if (Functions.Core.ModCompatibility.FlightButton != null)
+                    Functions.Core.ModCompatibility.FlightButton.SetActive(false);
+                if (Functions.Core.ModCompatibility.NoclipButton != null)
+                    Functions.Core.ModCompatibility.NoclipButton.SetActive(false);
+                if (Functions.Core.ModCompatibility.SpeedButton != null)
+                    Functions.Core.ModCompatibility.SpeedButton.SetActive(false);
+                if (Functions.Core.ModCompatibility.ESPButton != null)
+                    Functions.Core.ModCompatibility.ESPButton.SetActive(false);
                 RefreshMenu();
-            }, "TOGGLE: Shows the Risky Functions buttons in the UI Expansion Kit menu", ModCompatibility.UIExpansionKit);
+            }, "TOGGLE: Shows the Risky Functions buttons in the UI Expansion Kit menu", Functions.Core.ModCompatibility.UIExpansionKit);
             TrackingSaving = new PageItem("Calibration\nSaving", () =>
             {
                 Configuration.JSONConfig.TrackingSaving = true;
@@ -336,11 +331,11 @@ namespace emmVRC.Menus
             baseMenu.pageItems.Add(EveryoneGlobalDynamicBones);
             baseMenu.pageItems.Add(VRFlightControls);
             baseMenu.pageItems.Add(ActionMenuIntegration);
-            if (!ModCompatibility.FBTSaver)
+            if (!Functions.Core.ModCompatibility.FBTSaver)
                 baseMenu.pageItems.Add(TrackingSaving);
             else
                 baseMenu.pageItems.Add(PageItem.Space);
-            if (ModCompatibility.UIExpansionKit)
+            if (Functions.Core.ModCompatibility.UIExpansionKit)
                 baseMenu.pageItems.Add(UIExpansionKitIntegration);
             else
                 baseMenu.pageItems.Add(PageItem.Space);
@@ -492,9 +487,8 @@ namespace emmVRC.Menus
                     Configuration.JSONConfig.emmVRCNetworkEnabled = true;
                     Configuration.SaveConfig();
                     RefreshMenu();
-                    Network.NetworkClient.InitializeClient();
+                    Network.NetworkClient.ClearAndLogin();
                     //Network.NetworkClient.PromptLogin();
-                    MelonLoader.MelonCoroutines.Start(emmVRC.loadNetworked());
                 }
                 else
                 {
@@ -614,7 +608,7 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.NotificationButtonPositionY = Mathf.FloorToInt(vec.y);
                 Configuration.SaveConfig();
                 Managers.NotificationManager.NotificationMenu.getMainButton().setLocation(Mathf.FloorToInt(vec.x), Mathf.FloorToInt(vec.y));
-                Managers.NotificationManager.AddNotification("Your new button position has been saved.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Resources.alertSprite, -1);
+                Managers.NotificationManager.AddNotification("Your new button position has been saved.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alertSprite, -1);
             }, "", "Select the new position for the Notification button", null);
             TabMode = new PageItem("Tab Mode", () =>
             {
@@ -625,7 +619,7 @@ namespace emmVRC.Menus
                 if (ShortcutMenuButtons.logoButton != null)
                     ShortcutMenuButtons.logoButton.getGameObject().transform.localScale = Vector3.zero;
                 Managers.NotificationManager.NotificationMenu.getMainButton().getGameObject().transform.localScale = Vector3.zero;
-                TabMenu.newTab.transform.localScale = Vector3.one;
+                Functions.UI.TabMenu.newTab.transform.localScale = Vector3.one;
                 RefreshMenu();
             }, "Disabled", () =>
             {
@@ -636,7 +630,7 @@ namespace emmVRC.Menus
                 if (ShortcutMenuButtons.logoButton != null)
                     ShortcutMenuButtons.logoButton.getGameObject().transform.localScale = Vector3.one;
                 Managers.NotificationManager.NotificationMenu.getMainButton().getGameObject().transform.localScale = Vector3.one;
-                TabMenu.newTab.transform.localScale = Vector3.zero;
+                Functions.UI.TabMenu.newTab.transform.localScale = Vector3.zero;
                 RefreshMenu();
             }, "TOGGLE: Enables the emmVRC Tab, which replaces the Shortcut Menu buttons with a menu.");
             StealthMode = new PageItem("Stealth Mode", () =>
@@ -687,26 +681,26 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.UIColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
-                if (ModCompatibility.UIExpansionKit)
-                    MelonLoader.MelonCoroutines.Start(ModCompatibility.ColorUIExpansionKit());
+                Functions.UI.ColorChanger.ApplyIfApplicable();
+                if (Functions.Core.ModCompatibility.UIExpansionKit)
+                    MelonLoader.MelonCoroutines.Start(Functions.Core.ModCompatibility.ColorUIExpansionKit());
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.UIColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
-                if (ModCompatibility.UIExpansionKit)
-                    MelonLoader.MelonCoroutines.Start(ModCompatibility.ColorUIExpansionKit());
+                Functions.UI.ColorChanger.ApplyIfApplicable();
+                if (Functions.Core.ModCompatibility.UIExpansionKit)
+                    MelonLoader.MelonCoroutines.Start(Functions.Core.ModCompatibility.ColorUIExpansionKit());
             }, "TOGGLE: Enables the color changing module, which affects UI, ESP, and loading");
             UIColorChangePicker = new ColorPicker(baseMenu.menuBase.getMenuName(), 1001, 1000, "UI Color", "Select the color for the UI", (UnityEngine.Color newColor) =>
             {
                 Configuration.JSONConfig.UIColorHex = ColorConversion.ColorToHex(newColor, true);
                 Configuration.SaveConfig();
                 LoadMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
-                if (ModCompatibility.UIExpansionKit)
-                    MelonLoader.MelonCoroutines.Start(ModCompatibility.ColorUIExpansionKit());
+                Functions.UI.ColorChanger.ApplyIfApplicable();
+                if (Functions.Core.ModCompatibility.UIExpansionKit)
+                    MelonLoader.MelonCoroutines.Start(Functions.Core.ModCompatibility.ColorUIExpansionKit());
             }, () => { LoadMenu(); }, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UIColorHex), Libraries.ColorConversion.HexToColor("#0EA6AD"));
             UIColorChangePickerButton = new PageItem("Select UI\nColor", () =>
             {
@@ -717,39 +711,39 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.UIActionMenuColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
+                Functions.UI.ColorChanger.ApplyIfApplicable();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.UIActionMenuColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
+                Functions.UI.ColorChanger.ApplyIfApplicable();
             }, "TOGGLE: Enables the color changing module for the radial menu");
             UIMicIconColorChanging = new PageItem("Muted Icon\nColor Change", () =>
             {
                 Configuration.JSONConfig.UIMicIconColorChangingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
+                Functions.UI.ColorChanger.ApplyIfApplicable();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.UIMicIconColorChangingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
+                Functions.UI.ColorChanger.ApplyIfApplicable();
             }, "TOGGLE: Enables the color changing module for the Muted Microphone icon on the HUD");
             UIMicIconPulse = new PageItem("Muted Icon\nPulsing", () =>
             {
                 Configuration.JSONConfig.UIMicIconPulsingEnabled = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
+                Functions.UI.ColorChanger.ApplyIfApplicable();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.UIMicIconPulsingEnabled = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ColorChanger.ApplyIfApplicable();
+                Functions.UI.ColorChanger.ApplyIfApplicable();
             }, "TOGGLE: Enables or disables VRChat's new pulsating effect on the Microphone icon");
             UIExpansionKitColorChanging = new PageItem("UI Expansion\nKit Coloring", () =>
             {
@@ -827,13 +821,13 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.CameraPlus = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.CameraPlus.SetCameraPlus();
+                Functions.WorldHacks.CameraPlus.SetCameraPlus();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.CameraPlus = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.CameraPlus.SetCameraPlus();
+                Functions.WorldHacks.CameraPlus.SetCameraPlus();
             }, "TOGGLE: Enables CameraPlus, which adds additional buttons and functions to the VRChat camera");
             if (!Configuration.JSONConfig.StealthMode)
             {
@@ -842,7 +836,7 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(UIActionMenuColorChanging);
                 baseMenu.pageItems.Add(UIMicIconColorChanging);
                 baseMenu.pageItems.Add(UIMicIconPulse);
-                if (ModCompatibility.UIExpansionKit)
+                if (Functions.Core.ModCompatibility.UIExpansionKit)
                     baseMenu.pageItems.Add(UIExpansionKitColorChanging);
                 else
                     baseMenu.pageItems.Add(PageItem.Space);
@@ -941,7 +935,7 @@ namespace emmVRC.Menus
             if (!Configuration.JSONConfig.StealthMode)
             {
                 baseMenu.pageItems.Add(NameplateColorChanging);
-                if (!Libraries.ModCompatibility.OGTrustRank)
+                if (!Functions.Core.ModCompatibility.OGTrustRank)
                 {
                     baseMenu.pageItems.Add(PageItem.Space);
                     baseMenu.pageItems.Add(PageItem.Space);
@@ -952,7 +946,7 @@ namespace emmVRC.Menus
                 baseMenu.pageItems.Add(UserNameplateColorPickerButton);
                 baseMenu.pageItems.Add(KnownUserNameplateColorPickerButton);
                 baseMenu.pageItems.Add(TrustedUserNameplateColorPickerButton);
-                if (Libraries.ModCompatibility.OGTrustRank)
+                if (Functions.Core.ModCompatibility.OGTrustRank)
                 {
                     baseMenu.pageItems.Add(VeteranUserNameplateColorPickerButton);
                     baseMenu.pageItems.Add(LegendaryUserNameplateColorPickerButton);
@@ -1040,76 +1034,68 @@ namespace emmVRC.Menus
                 Configuration.JSONConfig.DisableReportUserButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableReportUserButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "TOGGLE: Disables the 'Report User' button in the User Interact Menu. Its functionality can be found in the Social menu");
             DisablePlaylists = new PageItem("Disable\nPlaylists", () =>
             {
                 Configuration.JSONConfig.DisablePlaylistsButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisablePlaylistsButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "TOGGLE: Disables the 'Playlists' button in the User Interact Menu. Its functionality can be found in the Social menu");
             DisableAvatarStats = new PageItem("Disable\nAvatar Stats", () =>
             {
                 Configuration.JSONConfig.DisableAvatarStatsButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableAvatarStatsButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "TOGGLE: Disables the 'Avatar Stats' button in the User Interact Menu.");
             MinimalWarnKick = new PageItem("Minimal Warn\nKick Button", () =>
             {
                 Configuration.JSONConfig.MinimalWarnKickButton = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "Disabled", () =>
             {
                 Configuration.JSONConfig.MinimalWarnKickButton = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                UserInteractMenuButtons.Initialize();
             }, "TOGGLE: Combines the Warn and Kick buttons into one space, to make room for more buttons");
             DisableOneHandMovement = new PageItem("Disable\nHand Movement", () =>
             {
                 Configuration.JSONConfig.DisableOneHandMovement = true;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ActionMenuTweaks.Apply();
+                Functions.UI.ActionMenuTweaks.Apply();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableOneHandMovement = false;
                 Configuration.SaveConfig();
                 RefreshMenu();
-                Hacks.ActionMenuTweaks.Apply();
+                Functions.UI.ActionMenuTweaks.Apply();
             }, "TOGGLE: Disables the one-handed movement indicator when one of your VR Controllers has lost tracking");
             DisableMicTooltip = new PageItem("Disable\nMic Tooltip", () =>
             {
                 Configuration.JSONConfig.DisableMicTooltip = true;
                 Configuration.SaveConfig();
-                Hacks.UnscaledUITweaks.Process();
+                Functions.UI.UnscaledUI.Process();
             }, "Enabled", () =>
             {
                 Configuration.JSONConfig.DisableMicTooltip = false;
                 Configuration.SaveConfig();
-                Hacks.UnscaledUITweaks.Process();
+                Functions.UI.UnscaledUI.Process();
             }, "TOGGLE: Disables the \"Hold V\" tooltip above the microphone indicator in the UI");
             if (!Configuration.JSONConfig.StealthMode)
             {

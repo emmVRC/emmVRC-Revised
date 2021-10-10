@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 using emmVRC.Libraries;
 using emmVRC.Menus;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Hacks
 {
-    public class AlarmClock
+    public class AlarmClock : MelonLoaderEvents
     {
         public static bool AlarmEnabled = false;
         public static string AlarmTimeString = "00:00";
@@ -42,10 +43,14 @@ namespace emmVRC.Hacks
         private static QMToggleButton instanceAlarmPersistentEnabled;
         private static QMSingleButton instanceAlarmTime;
 
+        public override void OnUiManagerInit()
+        {
+            MelonLoader.MelonCoroutines.Start(Initialize());
+        }
 
         public static IEnumerator Initialize()
         {
-            while (Resources.onlineSprite == null) yield return new WaitForSeconds(1f);
+            while (Functions.Core.Resources.onlineSprite == null) yield return new WaitForSeconds(1f);
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds"));
             if (Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")).Length > 0) // TODO: Fix audio loading
@@ -73,7 +78,7 @@ namespace emmVRC.Hacks
                 }
             } else
             {
-                alarmClips.Add(Resources.alarmTone);
+                alarmClips.Add(Functions.Core.Resources.alarmTone);
             }
             while (GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup") == null) yield return new WaitForEndOfFrame();
             referenceSource = GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup").GetComponentInChildren<AudioSource>(true);
@@ -185,7 +190,7 @@ namespace emmVRC.Hacks
                         emmVRCLoader.Logger.LogDebug("Alarm triggered");
                         alarmSource.clip = (alarmClips.Count > 1 ? alarmClips[new System.Random().Next(alarmClips.Count)] : alarmClips.First());
                         if (alarmSource.clip == null)
-                            alarmSource.clip = Resources.alarmTone;
+                            alarmSource.clip = Functions.Core.Resources.alarmTone;
                         alarmSource.Play();
                         Managers.NotificationManager.AddNotification("Your alarm for " + (Hour24 ? (new DateTime() + alarmTimeActual).ToString("hh:mm") : (new DateTime() + alarmTimeActual).ToString("HH:mm tt")) + " is ringing.", "Snooze\n(15 min)", () => {
                             alarmTimeActual += new TimeSpan(0, 15, 0);
@@ -201,18 +206,18 @@ namespace emmVRC.Hacks
                                 alarmEnabled.setToggleState(false);
                             }
                             Managers.NotificationManager.DismissCurrentNotification();
-                        }, Resources.alarmSprite);
+                        }, Functions.Core.Resources.alarmSprite);
                     }
                 }
                 if (InstanceAlarmEnabled && !InstanceAlarmTriggered)
                 {
-                    if (TimeSpan.FromSeconds(InfoBarClock.instanceTime) == instanceAlarmTimeActual)
+                    if ( DateTime.Now - Functions.UI.InfoBarClock.instanceJoinedTime == instanceAlarmTimeActual)
                     {
                         InstanceAlarmTriggered = true;
                         emmVRCLoader.Logger.LogDebug("Instance Alarm triggered");
                         alarmSource.clip = (alarmClips.Count > 1 ? alarmClips[new System.Random().Next(alarmClips.Count)] : alarmClips.First());
                         if (alarmSource.clip == null)
-                            alarmSource.clip = Resources.alarmTone;
+                            alarmSource.clip = Functions.Core.Resources.alarmTone;
                         alarmSource.Play();
                         Managers.NotificationManager.AddNotification("Your instance alarm for " + ((new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss")) + " is ringing.", "Snooze\n(15 min)", () => {
                             instanceAlarmTimeActual += new TimeSpan(0, 15, 0);
@@ -228,7 +233,7 @@ namespace emmVRC.Hacks
                                 instanceAlarmEnabled.setToggleState(false);
                             }
                             Managers.NotificationManager.DismissCurrentNotification();
-                        }, Resources.alarmSprite);
+                        }, Functions.Core.Resources.alarmSprite);
                     }
                 }
                 if (alarmSource.isPlaying && ((!AlarmEnabled && !InstanceAlarmEnabled) || (!AlarmTriggered && !InstanceAlarmTriggered)))

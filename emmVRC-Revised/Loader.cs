@@ -1,6 +1,8 @@
 ﻿using MelonLoader;
-using System.IO;
+using System;
 using System.Reflection;
+
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace emmVRCLoader
 {
@@ -10,78 +12,31 @@ namespace emmVRCLoader
         public const string Name = "emmVRCLoader";
         public const string Author = "The emmVRC Team";
         public const string Company = "emmVRC";
-        public const string Version = "1.4.0";
+        public const string Version = "1.5.0";
         public const string DownloadLink = "https://dl.emmvrc.com/downloads/emmVRCLoader.dll";
     }
+
+    // Never have your class the same name as the namespace it's just annoying
     [Obfuscation(Exclude = true)]
-    public class emmVRCLoader : MelonMod
+    public class emmVRCLoaderMod : MelonMod
     {
+        public static emmVRCLoaderMod instance;
+        public static bool isDebug;
+        public static bool isParanoidMode;
         public override void OnApplicationStart()
         {
-            //MelonModLogger.Log("OnApplicationStart");
-            //MelonModLogger.Log(Directory.GetCurrentDirectory());
+            isDebug = Environment.CommandLine.Contains("--emmvrc.debug");
+            isParanoidMode = Environment.CommandLine.Contains("--emmvrc.paranoid");
+            instance = this;
             Bootstrapper.Start();
         }
-
-        public override void OnLevelWasLoaded(int level)
-        {
-            if (Bootstrapper.mod != null)
-            Bootstrapper.mod.OnLevelWasLoaded(level);
-            // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnLevelWasLoaded");
-        }
-
-        public override void OnLevelWasInitialized(int level)
-        {
-            if (Bootstrapper.mod != null)
-                Bootstrapper.mod.OnLevelWasInitialized(level);
-            // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnLevelWasInitialized");
-        }
-
-        private bool is_pressed = false;
-        public override void OnUpdate()
-        {
-            if (Bootstrapper.mod != null)
-                Bootstrapper.mod.OnUpdate();
-            // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnUpdate");
-        }
-
-        public override void OnFixedUpdate()
-        {
-            if (Bootstrapper.mod != null)
-                Bootstrapper.mod.OnFixedUpdate();
-            // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnFixedUpdate");
-        }
-
-        public override void OnLateUpdate()
-        {
-            if (Bootstrapper.mod != null)
-                Bootstrapper.mod.OnLateUpdate();
-            // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnLateUpdate");
-        }
-
-        public override void OnGUI()
-        {
-            if (Bootstrapper.mod != null)
-                Bootstrapper.mod.OnGUI();
-            // Currently only works in MUPOT Mode
-            //MelonModLogger.Log("OnGUI");
-        }
-
-        public override void OnApplicationQuit()
-        {
-            if (Bootstrapper.mod != null)
-                Bootstrapper.mod.OnApplicationQuit();
-            // MelonModLogger.Log("OnApplicationQuit");
-        }
-        public override void VRChat_OnUiManagerInit()
-        {
-            if (Bootstrapper.mod != null)
-                Bootstrapper.mod.OnUIManagerInit();
-        }
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName) => Bootstrapper.mod?.OnSceneWasLoaded(buildIndex, sceneName);
+        public override void OnSceneWasInitialized(int buildIndex, string sceneName) => Bootstrapper.mod?.OnSceneWasInitialized(buildIndex, sceneName);
+        public override void OnSceneWasUnloaded(int buildIndex, string sceneName) => Bootstrapper.mod?.OnSceneWasUnloaded(buildIndex, sceneName);
+        public override void OnUpdate() => Bootstrapper.mod?.OnUpdate();
+        public override void OnFixedUpdate() => Bootstrapper.mod?.OnFixedUpdate();
+        public override void OnLateUpdate() => Bootstrapper.mod?.OnLateUpdate();
+        public override void OnGUI() => Bootstrapper.mod?.OnGUI();
+        public override void OnApplicationQuit() => Bootstrapper.mod?.OnApplicationQuit();
     }
 }

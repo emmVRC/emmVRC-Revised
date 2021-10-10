@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 using emmVRC.Libraries;
 using UnityEngine;
 using UnityEngine.Networking;
+using emmVRC.Objects.ModuleBases;
 
 
 namespace emmVRC.Menus
 {
-    public class CreditsMenu
+    public class CreditsMenu : MelonLoaderEvents
     {
         public static PaginatedMenu baseMenu;
         public static ScrollingTextMenu noticeMenu;
         //public static TextDisplayMenu licensesMenu;
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 7628, 12024, "Supporters", "", null);
             baseMenu.menuEntryButton.DestroyMe();

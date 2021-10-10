@@ -8,10 +8,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using emmVRC.Menus;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Managers
 {
-    public class NotificationManager
+    public class NotificationManager : MelonLoaderEvents
     {
         private static bool Enabled = true;
         private static int notificationActiveTimer = 0;
@@ -23,16 +24,16 @@ namespace emmVRC.Managers
         //private static List<GameObject> VanillaIcons = new List<GameObject>();
         internal static List<Notification> Notifications = new List<Notification>();
         private static bool blink = false;
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
-
+            if (Configuration.JSONConfig.StealthMode) return;
             // Initialize the emmVRC Notification icon, based on the vanilla Notification icon
             //HudVoiceIndicator vanillaIcon = GameObject.FindObjectOfType<HudVoiceIndicator>();
             GameObject referenceObject = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud/NotificationDotParent/NotificationDot");
             NotificationManager.NotificationIcon = GameObject.Instantiate(referenceObject, referenceObject.transform.parent);
             //NotificationManager.NotificationIcon.GetComponent<RectTransform>().anchoredPosition += new Vector2(128f, 0f);
             NotificationManager.NotificationIcon.name = "emmVRCNotificationIcon";
-            NotificationIcon.GetComponent<Image>().sprite = Resources.alertSprite;
+            NotificationIcon.GetComponent<Image>().sprite = Functions.Core.Resources.alertSprite;
             //NotificationIcon.GetComponent<Image>().color = Color.white;
             // Populate the list of vanilla icons, for use in checks later
             /*try
@@ -118,10 +119,11 @@ namespace emmVRC.Managers
                             NotificationMenu.getMainButton().setActive(true);
                             NotificationMenu.getMainButton().setButtonText((blink ? "<color=#FF69B4>" + Notifications.Count + "</color>" : "" + Notifications.Count) + "\nemmVRC\nNotifications");
                             NotificationMenu.getMainButton().setToolTip(Notifications.Count + " new emmVRC notifications are available!" + (Notifications[0].Timeout != -1 ? " This notification will expire in " + Notifications[0].Timeout + " seconds." : ""));
-                            if (Configuration.JSONConfig.TabMode && Hacks.TabMenu.badge != null)
+                            if (Configuration.JSONConfig.TabMode && 
+                                Functions.UI.TabMenu.badge != null)
                             {
-                                Hacks.TabMenu.badge.SetActive(true);
-                                Hacks.TabMenu.badge.GetComponentInChildren<Text>().text = Notifications.Count + " NEW";
+                                Functions.UI.TabMenu.badge.SetActive(true);
+                                Functions.UI.TabMenu.badge.GetComponentInChildren<Text>().text = Notifications.Count + " NEW";
                             }
                         }
                         else
@@ -129,9 +131,9 @@ namespace emmVRC.Managers
                             NotificationIcon.SetActive(false);
                             NotificationMenu.getMainButton().setActive(false);
                             notificationActiveTimer = 0;
-                            if (Configuration.JSONConfig.TabMode && Hacks.TabMenu.badge != null)
+                            if (Configuration.JSONConfig.TabMode && Functions.UI.TabMenu.badge != null)
                             {
-                                Hacks.TabMenu.badge.SetActive(false);
+                                Functions.UI.TabMenu.badge.SetActive(false);
                             }
                         }
                         if (Notifications.Count > 0 && Notifications[0].Timeout != -1)
@@ -165,7 +167,7 @@ namespace emmVRC.Managers
                 Button1Action = button1Action,
                 Button2Action = button2Action,
                 Button3Action = button3Action,
-                Icon = (notificationIcon == null ? Resources.errorSprite : notificationIcon),
+                Icon = (notificationIcon == null ? Functions.Core.Resources.errorSprite : notificationIcon),
                 Timeout = timeout
             };
             Notifications.Add(newNotification);

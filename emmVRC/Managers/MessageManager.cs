@@ -4,6 +4,7 @@ using emmVRC.Network.Objects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using emmVRC.Objects.ModuleBases;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ using Transmtn;
 using Transmtn.DTO;
 
 #pragma warning disable 4014
+
+// This class is moreso here as a novelty. Messaging isn't in emmVRC, and hasn't been for a fair bit.
+// Maybe with the network rewrites, we can do it again...
 
 namespace emmVRC.Managers
 {
@@ -28,14 +32,11 @@ namespace emmVRC.Managers
         public string body;
         public string icon;
     }
-    public class MessageManager
+    public class MessageManager : MelonLoaderEvents
     {
         private static List<PendingMessage> pendingMessages = new List<PendingMessage>();
         public static bool messageRead = true;
-        public static void Initialize()
-        {
-            MelonLoader.MelonCoroutines.Start(CheckLoop());
-        }/*
+        /*
         public static IEnumerator SendMessage(string message, string targetId)
         {
             if (NetworkClient.webToken != null && Configuration.JSONConfig.emmVRCNetworkEnabled)

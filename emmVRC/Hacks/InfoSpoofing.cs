@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using emmVRC.Libraries;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Hacks
 {
@@ -171,37 +172,68 @@ namespace emmVRC.Hacks
             generatedSpoofName = protoString;
         }
     }
-    public class InfoSpoofing
+    public class InfoSpoofing : MelonLoaderEvents, IWithGUI
     {
         private static bool Enabled = true;
         private static bool wasEnabled1 = false;
         private static bool wasEnabled2 = false;
         private static List<Transform> objectRoots;
 
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
+            if (Configuration.JSONConfig.StealthMode) return;
             NameSpoofGenerator.GenerateNewName();
-            MelonLoader.MelonCoroutines.Start(Loop());
         }
-        private static IEnumerator Loop()
+        public void OnGUI()
         {
-            while (Enabled)
+            if (QuickMenuUtils.GetQuickMenuInstance() == null || QuickMenuUtils.GetQuickMenuInstance().gameObject == null) return;
+            if (objectRoots == null)
             {
-                yield return new WaitForEndOfFrame();
-                if (objectRoots == null)
+                if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social") != null)
+                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo") != null)
+                        if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo") != null)
+                        {
+                            objectRoots = new List<Transform>();
+                            objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social"));
+                            objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo"));
+                            objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo"));
+                            objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings"));
+                        }
+            }
+            if ((Configuration.JSONConfig.InfoSpoofingEnabled) && objectRoots != null)
+            {
+                try
                 {
-                    if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social") != null)
-                        if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo") != null)
-                            if (QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo") != null)
+                    if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
+                    {
+                        foreach (Transform trns in objectRoots)
+                        {
+                            if (trns.gameObject.activeInHierarchy)
                             {
-                                objectRoots = new List<Transform>();
-                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Social"));
-                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/WorldInfo"));
-                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/UserInfo"));
-                                objectRoots.Add(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings"));
+                                foreach (Text text in trns.GetComponentsInChildren<Text>())
+                                {
+                                    if (text.text.Contains(VRC.Core.APIUser.CurrentUser.GetName()))
+                                        text.text = text.text.Replace(VRC.Core.APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
+                                }
+                                wasEnabled1 = true;
                             }
+                        }
+                        if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy)
+                        {
+                            foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<Text>())
+                            {
+                                if (text.text.Contains(VRC.Core.APIUser.CurrentUser.GetName()))
+                                    text.text = text.text.Replace(VRC.Core.APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
+                            }
+                            wasEnabled2 = true;
+                        }
+                    }
                 }
-                if ((Configuration.JSONConfig.InfoSpoofingEnabled) && objectRoots != null)
+                catch (Exception ex)
+                {
+                    ex = new Exception();
+                }
+                if (!Configuration.JSONConfig.InfoSpoofingEnabled && (wasEnabled1 || wasEnabled2) && objectRoots != null)
                 {
                     try
                     {
@@ -209,72 +241,38 @@ namespace emmVRC.Hacks
                         {
                             foreach (Transform trns in objectRoots)
                             {
-                                if (trns.gameObject.activeInHierarchy)
+                                if (trns.gameObject.activeInHierarchy && wasEnabled1)
                                 {
                                     foreach (Text text in trns.GetComponentsInChildren<Text>())
-                                    {
-                                        if (text.text.Contains(VRC.Core.APIUser.CurrentUser.GetName()))
-                                            text.text = text.text.Replace(VRC.Core.APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
-                                    }
-                                    wasEnabled1 = true;
-                                }
-                            }
-                            if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy)
-                            {
-                                foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<Text>())
-                                {
-                                    if (text.text.Contains(VRC.Core.APIUser.CurrentUser.GetName()))
-                                        text.text = text.text.Replace(VRC.Core.APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));
-                                }
-                                wasEnabled2 = true;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex = new Exception();
-                    }
-                    if (!Configuration.JSONConfig.InfoSpoofingEnabled && (wasEnabled1 || wasEnabled2) && objectRoots != null)
-                    {
-                        try
-                        {
-                            if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
-                            {
-                                foreach (Transform trns in objectRoots)
-                                {
-                                    if (trns.gameObject.activeInHierarchy && wasEnabled1)
-                                    {
-                                        foreach (Text text in trns.GetComponentsInChildren<Text>())
-                                        {
-                                            if (text.text.Contains(NameSpoofGenerator.spoofedName))
-                                            {
-                                                text.text = text.text.Replace(NameSpoofGenerator.spoofedName, VRC.Core.APIUser.CurrentUser.GetName());
-                                            }
-                                        }
-                                        wasEnabled1 = false;
-                                    }
-                                }
-                                if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy && wasEnabled2)
-                                {
-                                    foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<Text>())
                                     {
                                         if (text.text.Contains(NameSpoofGenerator.spoofedName))
                                         {
                                             text.text = text.text.Replace(NameSpoofGenerator.spoofedName, VRC.Core.APIUser.CurrentUser.GetName());
                                         }
                                     }
-                                    wasEnabled2 = false;
+                                    wasEnabled1 = false;
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            emmVRCLoader.Logger.LogError("Spoofer error: " + ex.ToString());
+                            if (QuickMenuUtils.GetQuickMenuInstance().gameObject.activeInHierarchy && wasEnabled2)
+                            {
+                                foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().gameObject.GetComponentsInChildren<Text>())
+                                {
+                                    if (text.text.Contains(NameSpoofGenerator.spoofedName))
+                                    {
+                                        text.text = text.text.Replace(NameSpoofGenerator.spoofedName, VRC.Core.APIUser.CurrentUser.GetName());
+                                    }
+                                }
+                                wasEnabled2 = false;
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogError("Spoofer error: " + ex.ToString());
+                    }
                 }
-
             }
+
         }
     }
 }

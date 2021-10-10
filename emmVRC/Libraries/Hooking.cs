@@ -39,7 +39,7 @@ namespace emmVRC.Libraries
             }
             try
             {
-                if (!Libraries.ModCompatibility.PortalConfirmation)
+                if (!Functions.Core.ModCompatibility.PortalConfirmation)
                 {
                     instanceHarmony.Patch(typeof(PortalInternal).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 0 && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == " was at capacity, cannot enter.")), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("OnPortalEntered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                 }
@@ -58,40 +58,7 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogError("Station patching failed: " + ex.ToString());
             }
-            try
-            {
-                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_VRCEventDelegate_1_Player_0.Method_Public_Void_UnityAction_1_T_0(new System.Action<Player>((Player plr) =>
-                {
-                    if (event1Action == null && event2Action == null)
-                    {
-                        event1Action = (Player plr2) => { NetworkManagerHooking.OnPlayerJoined(plr2); };
-                        event2Action = (Player plr3) => { NetworkManagerHooking.OnPlayerLeft(plr3); };
-                        event1Action.Invoke(plr);
-                    }
-                    else
-                    {
-                        event1Action.Invoke(plr);
-                    }
-                }));
-                NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_VRCEventDelegate_1_Player_1.Method_Public_Void_UnityAction_1_T_1(new System.Action<Player>((Player plr) =>
-                {
-                    if (event1Action == null && event2Action == null)
-                    {
-                        event2Action = (Player plr2) => { NetworkManagerHooking.OnPlayerJoined(plr2); };
-                        event1Action = (Player plr3) => { NetworkManagerHooking.OnPlayerLeft(plr3); };
-                        event2Action.Invoke(plr);
-                    }
-                    else
-                    {
-                        event2Action.Invoke(plr);
-                    }
-                }));
-            }
-            catch (Exception ex)
-            {
-                emmVRCLoader.Logger.LogError("Network Manager hooking failed: " + ex.ToString());
-            }
-            if (!ModCompatibility.FBTSaver && !ModCompatibility.IKTweaks && !Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Yet another of yet another crusty Oculus check
+            if (!Functions.Core.ModCompatibility.FBTSaver && !Functions.Core.ModCompatibility.IKTweaks && !Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Yet another of yet another crusty Oculus check
             {
                 try
                 {
@@ -119,7 +86,7 @@ namespace emmVRC.Libraries
             {
                 foreach (MethodInfo method in typeof(PlayerNameplate).GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => methodMatchRegex.IsMatch(x.Name)))
                 {
-                    emmVRCLoader.Logger.LogDebug($"Found target Rebuild method ({method.Name})", true);
+                    emmVRCLoader.Logger.LogDebug($"Found target Rebuild method ({method.Name})");
                     instanceHarmony.Patch(method, null, new HarmonyMethod(typeof(Hooking).GetMethod("OnRebuild", BindingFlags.NonPublic | BindingFlags.Static)));
                 }
             }
@@ -167,7 +134,7 @@ namespace emmVRC.Libraries
             else
             {
                 Managers.AvatarPermissionManager.ProcessAvatar(__0, descriptor);
-                if (!Libraries.ModCompatibility.MultiplayerDynamicBones)
+                if (!Functions.Core.ModCompatibility.MultiplayerDynamicBones)
                 {
                     Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, descriptor);
                 }
@@ -199,7 +166,7 @@ namespace emmVRC.Libraries
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
                 else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
-                if (Configuration.JSONConfig.NameplateColorChangingEnabled && !ModCompatibility.OGTrustRank)
+                if (Configuration.JSONConfig.NameplateColorChangingEnabled && !Functions.Core.ModCompatibility.OGTrustRank)
                 {
                     APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;
                     if (user.isFriend)
@@ -217,11 +184,11 @@ namespace emmVRC.Libraries
         }
         private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
         {
-            if (__0 != null && FBTSaving.IsPreviouslyCalibrated(__0) && RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.TrackingSaving)
+            if (__0 != null && Functions.PlayerHacks.FBTSaving.IsPreviouslyCalibrated(__0) && RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.TrackingSaving)
             {
                 emmVRCLoader.Logger.LogDebug("Avatar was previously calibrated, loading calibration data");
                 __result = true;
-                FBTSaving.LoadCalibrationInfo(__instance, __0);
+                Functions.PlayerHacks.FBTSaving.LoadCalibrationInfo(__instance, __0);
                 return false;
             }
             else
@@ -238,9 +205,9 @@ namespace emmVRC.Libraries
             {
                 emmVRCLoader.Logger.LogDebug("Saving calibration info...");
                 if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0 != null)
-                    MelonLoader.MelonCoroutines.Start(FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id));
+                    MelonLoader.MelonCoroutines.Start(Functions.PlayerHacks.FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id));
                 else if (VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_VRCAvatarManager_0.field_Private_ApiAvatar_1 != null)
-                    MelonLoader.MelonCoroutines.Start(FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1.id));
+                    MelonLoader.MelonCoroutines.Start(Functions.PlayerHacks.FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1.id));
                 else
                     emmVRCLoader.Logger.LogError("Could not fetch avatar information for this avatar");
             }

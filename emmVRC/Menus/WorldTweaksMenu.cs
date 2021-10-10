@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using emmVRC.Libraries;
 using UnityEngine;
 using UnityEngine.UI;
+using emmVRC.Objects.ModuleBases;
+
 namespace emmVRC.Menus
 {
-    public class WorldTweaksMenu
+    [Priority(50)]
+    public class WorldTweaksMenu : MelonLoaderEvents
     {
         public static QMNestedButton baseMenu;
         public static QMSingleButton OptimizeMirrorsButton;
@@ -28,7 +31,7 @@ namespace emmVRC.Menus
         public static QMToggleButton PickupObjectToggle;
         public static QMToggleButton AvatarPedestalToggle;
 
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 192384, 129302, "World\nTweaks", "");
             baseMenu.getMainButton().DestroyMe();
@@ -39,17 +42,7 @@ namespace emmVRC.Menus
             BeautifyMirrorsButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
             BeautifyMirrorsButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
             RevertMirrorsButton = new QMSingleButton(baseMenu, 2, 0, "Revert\nMirrors", () => { Hacks.MirrorTweaks.Revert(); }, "Reverts the mirrors in the world to their default reflections");
-
-            //OptimizePedestalsButton = new QMSingleButton(baseMenu, 1, 1, "Disable\nPedestals", () => { Hacks.PedestalTweaks.Disable(); }, "Disables all the pedestals in the world, for optimization");
-            //OptimizePedestalsButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
-            //OptimizePedestalsButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 96f);
-            //RevertPedestalsButton = new QMSingleButton(baseMenu, 2, 1, "Enable\nPedestals", () => { Hacks.PedestalTweaks.Revert(); }, "Reverts the pedestals in the world to their default visibility");
-            //RevertPedestalsButton = new QMSingleButton(baseMenu, 1, 1, "Enable\nPedestals", () => { Hacks.PedestalTweaks.Revert(); }, "Reverts the pedestals in the world to their default visibility");
-            //RevertPedestalsButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1f, 2.0175f);
-            //RevertPedestalsButton.getGameObject().GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -96f);
-
-
-            ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { new PortalInternal().Method_Private_Void_String_String_PDM_0(RoomManager.field_Internal_Static_ApiWorld_0.id, RoomManager.field_Internal_Static_ApiWorldInstance_0.instanceId); }, "Loads the current instance again");
+            ReloadWorldButton = new QMSingleButton(baseMenu, 3, 0, "Reload\nWorld", () => { VRCFlowManager.prop_VRCFlowManager_0.EnterWorld(RoomManager.field_Internal_Static_ApiWorld_0.id, RoomManager.field_Internal_Static_ApiWorldInstance_0.instanceId); }, "Loads the current instance again");
             PortalBlockToggle = new QMToggleButton(baseMenu, 4, 0, "Portals On", () => { Configuration.JSONConfig.PortalBlockingEnable = false; Configuration.SaveConfig(); }, "Portals Off", () => { Configuration.JSONConfig.PortalBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables portals in the current world", null, null, false, true);
             PortalBlockToggle.setToggleState(!Configuration.JSONConfig.PortalBlockingEnable);
             ChairBlockToggle = new QMToggleButton(baseMenu, 4, 1, "Chairs On", () => { Configuration.JSONConfig.ChairBlockingEnable = false; Configuration.SaveConfig(); }, "Chairs Off", () => { Configuration.JSONConfig.ChairBlockingEnable = true; Configuration.SaveConfig(); }, "TOGGLE: Enables or disables chairs in the current world", null, null, false, true);
@@ -58,18 +51,18 @@ namespace emmVRC.Menus
             #region Korty's Addons
             ItemESPToggle = new QMToggleButton(baseMenu, 1, 1, "Item ESP", () =>
             {
-                Hacks.WorldFunctions.ToggleItemESP(true);
+                Functions.UI.WorldFunctions.ToggleItemESP(true);
             }, "Disabled", () =>
             {
-                Hacks.WorldFunctions.ToggleItemESP(false);
+                Functions.UI.WorldFunctions.ToggleItemESP(false);
             }, "TOGGLE: An Outline around all Pickup-able items in the world");
 
             TriggerESPToggle = new QMToggleButton(baseMenu, 2, 1, "Trigger ESP", () =>
             {
-                Hacks.WorldFunctions.ToggleTriggerESP(true);
+                Functions.UI.WorldFunctions.ToggleTriggerESP(true);
             }, "Disabled", () =>
             {
-                Hacks.WorldFunctions.ToggleTriggerESP(false);
+                Functions.UI.WorldFunctions.ToggleTriggerESP(false);
             }, "TOGGLE: An Outline around all triggers in the world\n(Some may not show due to area triggers blocking anything being behide larger area triggers)");
 
             VRCPickupToggle = new QMToggleButton(baseMenu, 1, 2, "Enable\nItem Pickup", () =>
@@ -119,10 +112,16 @@ namespace emmVRC.Menus
             }, "Toggles all the avatar pedestals in the world.");
             AvatarPedestalToggle.setToggleState(!Configuration.JSONConfig.DisableAvatarPedestals);
             #endregion
+            Components.EnableDisableListener listener = OptimizeMirrorsButton.getGameObject().transform.parent.gameObject.AddComponent<Components.EnableDisableListener>();
+            listener.OnEnabled += () =>
+            {
+                SetRiskyFuncsAllowed(Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            };
         }
 
-        public static void DisableOnSceneLoad()
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
+            if (buildIndex != -1) return;
             ItemESPToggle.setToggleState(false, true);
             TriggerESPToggle.setToggleState(false, true);
         }
