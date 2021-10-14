@@ -65,21 +65,33 @@ namespace emmVRC.Functions.Core
             if (UIExpansionKit)
             {
                 emmVRCLoader.Logger.LogDebug("Detected UIExpansionKit");
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorChangingEnabled", () => {
+                    if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
+                        MelonLoader.MelonCoroutines.Start(ColorUIExpansionKit());
+                    }));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorHex", () => {
+                    if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
+                        MelonLoader.MelonCoroutines.Start(ColorUIExpansionKit());
+                }));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIExpansionKitColorChangingEnabled", () => {
+                    if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
+                        MelonLoader.MelonCoroutines.Start(ColorUIExpansionKit());
+                }));
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nFlight", new System.Action(() => {
                             if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenu.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
+                        PlayerTweaksMenuLegacy.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { FlightButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); })});
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nNoclip", new System.Action(() => {
                                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenu.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
+                        PlayerTweaksMenuLegacy.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { NoclipButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nSpeed", new System.Action(() => {
                                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenu.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
+                        PlayerTweaksMenuLegacy.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { SpeedButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nESP", new System.Action(() => {
                                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenu.ESPToggle.setToggleState(!Functions.PlayerHacks.ESP.IsEnabled, true);
+                        PlayerTweaksMenuLegacy.ESPToggle.setToggleState(!Functions.PlayerHacks.ESP.IsEnabled, true);
                         }), new Action<GameObject>((GameObject obj) => { ESPButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
                     MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterWaitConditionBeforeDecorating", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { ColorUIExpansionKit() });

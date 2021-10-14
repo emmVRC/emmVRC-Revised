@@ -28,8 +28,7 @@ namespace emmVRC.Functions.UI
             {
                 if (Configuration.JSONConfig.UIVolumeMute && flt != 0)
                 {
-                    Configuration.JSONConfig.UIVolumeMute = false;
-                    Configuration.SaveConfig();
+                    Configuration.WriteConfigOption("UIVolumeMute", false);
                     UIVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.UIVolumeMute ? "U" : "M");
                 }
             }));
@@ -38,8 +37,7 @@ namespace emmVRC.Functions.UI
             {
                 if (Configuration.JSONConfig.WorldVolumeMute && flt != 0)
                 {
-                    Configuration.JSONConfig.WorldVolumeMute = false;
-                    Configuration.SaveConfig();
+                    Configuration.WriteConfigOption("WorldVolumeMute", false);
                     WorldVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.WorldVolumeMute ? "U" : "M");
                 }
             }));
@@ -48,8 +46,7 @@ namespace emmVRC.Functions.UI
             {
                 if (Configuration.JSONConfig.VoiceVolumeMute && flt != 0)
                 {
-                    Configuration.JSONConfig.VoiceVolumeMute = false;
-                    Configuration.SaveConfig();
+                    Configuration.WriteConfigOption("VoiceVolumeMute", false);
                     VoiceVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.VoiceVolumeMute ? "U" : "M");
                 }
             }));
@@ -58,8 +55,7 @@ namespace emmVRC.Functions.UI
             {
                 if (Configuration.JSONConfig.AvatarVolumeMute && flt != 0)
                 {
-                    Configuration.JSONConfig.AvatarVolumeMute = false;
-                    Configuration.SaveConfig();
+                    Configuration.WriteConfigOption("AvatarVolumeMute", false);
                     AvatarVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.AvatarVolumeMute ? "U" : "M");
                 }
             }));
@@ -78,17 +74,15 @@ namespace emmVRC.Functions.UI
             {
                 if (!Configuration.JSONConfig.UIVolumeMute)
                 {
-                    Configuration.JSONConfig.UIVolumeMute = true;
-                    Configuration.JSONConfig.UIVolume = UIVolumeSlider.value;
+                    Configuration.WriteConfigOption("UIVolumeMute", true);
+                    Configuration.WriteConfigOption("UIVolume", UIVolumeSlider.value);
                     UIVolumeSlider.value = 0f;
-                    Configuration.SaveConfig();
                     UIVolumeMuteButton.GetComponentInChildren<Text>().text = "U";
                 }
                 else
                 {
-                    Configuration.JSONConfig.UIVolumeMute = false;
+                    Configuration.WriteConfigOption("UIVolumeMute", false);
                     UIVolumeSlider.value = Configuration.JSONConfig.UIVolume;
-                    Configuration.SaveConfig();
                     UIVolumeMuteButton.GetComponentInChildren<Text>().text = "M";
                 }
             }));
@@ -96,17 +90,15 @@ namespace emmVRC.Functions.UI
             {
                 if (!Configuration.JSONConfig.WorldVolumeMute)
                 {
-                    Configuration.JSONConfig.WorldVolumeMute = true;
-                    Configuration.JSONConfig.WorldVolume = WorldVolumeSlider.value;
+                    Configuration.WriteConfigOption("WorldVolumeMute", true);
+                    Configuration.WriteConfigOption("WorldVolume", UIVolumeSlider.value);
                     WorldVolumeSlider.value = 0f;
-                    Configuration.SaveConfig();
                     WorldVolumeMuteButton.GetComponentInChildren<Text>().text = "U";
                 }
                 else
                 {
-                    Configuration.JSONConfig.WorldVolumeMute = false;
+                    Configuration.WriteConfigOption("WorldVolumeSlider", false);
                     WorldVolumeSlider.value = Configuration.JSONConfig.WorldVolume;
-                    Configuration.SaveConfig();
                     WorldVolumeMuteButton.GetComponentInChildren<Text>().text = "M";
                 }
             }));
@@ -114,17 +106,15 @@ namespace emmVRC.Functions.UI
             {
                 if (!Configuration.JSONConfig.VoiceVolumeMute)
                 {
-                    Configuration.JSONConfig.VoiceVolumeMute = true;
-                    Configuration.JSONConfig.VoiceVolume = VoicesVolumeSlider.value;
+                    Configuration.WriteConfigOption("VoiceVolumeMute", true);
+                    Configuration.WriteConfigOption("VoiceVolume", UIVolumeSlider.value);
                     VoicesVolumeSlider.value = 0f;
-                    Configuration.SaveConfig();
                     VoiceVolumeMuteButton.GetComponentInChildren<Text>().text = "U";
                 }
                 else
                 {
-                    Configuration.JSONConfig.VoiceVolumeMute = false;
+                    Configuration.WriteConfigOption("VoiceVolumeMute", false);
                     VoicesVolumeSlider.value = Configuration.JSONConfig.VoiceVolume;
-                    Configuration.SaveConfig();
                     VoiceVolumeMuteButton.GetComponentInChildren<Text>().text = "M";
                 }
             }));
@@ -132,17 +122,15 @@ namespace emmVRC.Functions.UI
             {
                 if (!Configuration.JSONConfig.AvatarVolumeMute)
                 {
-                    Configuration.JSONConfig.AvatarVolumeMute = true;
-                    Configuration.JSONConfig.AvatarVolume = AvatarVolumeSlider.value;
+                    Configuration.WriteConfigOption("AvatarVolumeMute", true);
+                    Configuration.WriteConfigOption("AvatarVolume", UIVolumeSlider.value);
                     AvatarVolumeSlider.value = 0f;
-                    Configuration.SaveConfig();
                     AvatarVolumeMuteButton.GetComponentInChildren<Text>().text = "U";
                 }
                 else
                 {
-                    Configuration.JSONConfig.AvatarVolumeMute = false;
+                    Configuration.WriteConfigOption("AvatarVolumeMute", false);
                     AvatarVolumeSlider.value = Configuration.JSONConfig.AvatarVolume;
-                    Configuration.SaveConfig();
                     AvatarVolumeMuteButton.GetComponentInChildren<Text>().text = "M";
                 }
             }));

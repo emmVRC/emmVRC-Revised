@@ -24,7 +24,14 @@ namespace emmVRC.Functions.UI
         public override void OnUiManagerInit()
         {
             if (!Configuration.JSONConfig.StealthMode)
+            {
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorChangingEnabled", ApplyIfApplicable));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorHex", ApplyIfApplicable));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIActionMenuColorChangingEnabled", ApplyIfApplicable));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIMicIconColorChangingEnabled", ApplyIfApplicable));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIMicIconPulsingEnabled", ApplyIfApplicable));
                 ApplyIfApplicable();
+            }
         }
         public static void ApplyIfApplicable()
         {

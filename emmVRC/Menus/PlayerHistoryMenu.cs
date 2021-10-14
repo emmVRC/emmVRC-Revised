@@ -1,79 +1,84 @@
-﻿using emmVRC.Libraries;
-using emmVRC.Hacks;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VRC.Core;
-using UnityEngine;
 using emmVRC.Objects;
 using emmVRC.Objects.ModuleBases;
+using emmVRC.Utils;
+using UnityEngine;
+using VRC.Core;
 
 namespace emmVRC.Menus
 {
-    public class InstancePlayer
-    {
-        public string Name = "";
-        public string UserID = "";
-        public string TimeJoinedStamp = "";
-    }
+    [Priority(55)]
     public class PlayerHistoryMenu : MelonLoaderEvents
     {
-        public static PaginatedMenu baseMenu;
-        private static PageItem toggleHistory;
-        private static PageItem toggleJoinLeaveLog;
-        //public static List<string> currentPlayersNames;
-        public static List<InstancePlayer> currentPlayers;
-        public static int Timeout = 0;
-        private static List<PageItem> currentInstancePlayers;
-        public override void OnUiManagerInit()
-        {
-            baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 10293, 12934, "Player\nHistory", "If you're reading this, hi!", null);
-            baseMenu.menuEntryButton.DestroyMe();
-            toggleHistory = new PageItem("Enable", () => {
-                Configuration.JSONConfig.PlayerHistoryEnable = true;
-                Configuration.SaveConfig();
-            }, "Disable", () => {
-                Configuration.JSONConfig.PlayerHistoryEnable = false;
-                Configuration.SaveConfig();
-            }, "TOGGLE: Enables or disables the Player History");
-            toggleJoinLeaveLog = new PageItem("Log Join\nand Leaves", () =>
-            {
-                Configuration.JSONConfig.LogPlayerJoin = true;
-                Configuration.SaveConfig();
-            }, "Disable", () => {
-                Configuration.JSONConfig.LogPlayerJoin = false;
-                Configuration.SaveConfig();
-            }, "TOGGLE: Enables the logging of the names of players to the console and the emmVRC log upon joining and leaving. Please disable this before sending support requests!");
-            baseMenu.pageItems.Add(toggleHistory);
-            baseMenu.pageItems.Add(toggleJoinLeaveLog);
-            currentInstancePlayers = new List<PageItem>();
-            //currentPlayersNames = new List<string>();
-            currentPlayers = new List<InstancePlayer>();
+        public static MenuPage playerHistoryPage;
+        private static SingleButton playerHistoryButton;
 
-            Utils.NetworkEvents.OnPlayerJoined += (VRC.Player plr) =>
-            {
-                if (Configuration.JSONConfig.PlayerHistoryEnable && plr.prop_APIUser_0 != null && plr.prop_APIUser_0.id != APIUser.CurrentUser.id)
-                    currentPlayers.Add(new InstancePlayer { Name = plr.prop_APIUser_0.GetName(), UserID = plr.prop_APIUser_0.id, TimeJoinedStamp = DateTime.Now.ToShortTimeString() });
-            };
-        }
-        public static void ShowMenu()
+        private static ButtonGroup optionsGroup;
+        private static ToggleButton historyToggle;
+        private static ToggleButton logPlayerToggle;
+
+        private static ButtonGroup mainHistoryGroup;
+
+        private static int Timeout = 0;
+        private static List<SimpleSingleButton> playerHistoryButtons;
+        private static List<ButtonGroup> playerHistoryGroups;
+
+        private static bool _initialized = false;
+
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            toggleHistory.SetToggleState(Configuration.JSONConfig.PlayerHistoryEnable);
-            toggleJoinLeaveLog.SetToggleState(Configuration.JSONConfig.LogPlayerJoin);
-            if (currentInstancePlayers.Count > 0)
+            if (buildIndex != -1 || _initialized) return;
+
+            playerHistoryPage = new MenuPage("emmVRC_PlayerHistory", "Player History", false, true);
+            playerHistoryButton = new SingleButton(Menus.FunctionsMenu.featuresGroup, "Player\nHistory", () => { OpenMenu(); }, "View all the players that have been in your instance since you joined", Functions.Core.Resources.PlayerHistoryIcon);
+
+            optionsGroup = new ButtonGroup(playerHistoryPage, "Options");
+            historyToggle = new ToggleButton(optionsGroup, "Player\nHistory", (bool val) =>
             {
-                foreach (PageItem itm in currentInstancePlayers)
+                Configuration.WriteConfigOption("PlayerHistoryEnable", val);
+                if (!val)
                 {
-                    baseMenu.pageItems.Remove(itm);
-                }
-            }
-            currentInstancePlayers = new List<PageItem>();
-            foreach (InstancePlayer plr in currentPlayers)
+                    foreach (SimpleSingleButton btn in playerHistoryButtons)
+                        GameObject.Destroy(btn.gameObject);
+                    foreach (ButtonGroup grp in playerHistoryGroups)
+                        grp.Destroy();
+                }    
+            }, "Enable player history for this menu", "Disable player history for this menu");
+            logPlayerToggle = new ToggleButton(optionsGroup, "Log Join\nand Leaves", (bool val) =>
             {
-                PageItem player = new PageItem(plr.Name, () => {
+                Configuration.WriteConfigOption("LogPlayerJoin", val);
+            }, "Enable logging of joined players to the console", "Disable logging of joined players to the console");
+
+            mainHistoryGroup = new ButtonGroup(playerHistoryPage, "History");
+
+            playerHistoryButtons = new List<SimpleSingleButton>();
+            playerHistoryGroups = new List<ButtonGroup>();
+
+            _initialized = true;
+        }
+        private static void OpenMenu()
+        {
+            foreach (SimpleSingleButton btn in playerHistoryButtons)
+                GameObject.Destroy(btn.gameObject);
+            foreach (ButtonGroup grp in playerHistoryGroups)
+                grp.Destroy();
+            int indexCount = 0;
+            foreach (InstancePlayer plr in Functions.PlayerHacks.PlayerHistory.currentPlayers)
+            {
+                if (indexCount == 4)
+                {
+                    playerHistoryGroups.Add(new ButtonGroup(playerHistoryPage, ""));
+                    indexCount = 0;
+                }
+                else
+                    indexCount++;
+                SimpleSingleButton playerButton = new SimpleSingleButton(mainHistoryGroup, plr.Name, () =>
+                {
                     if (Timeout == 0 && NetworkConfig.Instance.APICallsAllowed)
                     {
                         APIUser.FetchUser(plr.UserID, new System.Action<APIUser>((VRC.Core.APIUser usr) => { QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0 = usr; QuickMenu.prop_QuickMenu_0.Method_Public_Void_EnumNPublicSealedvaUnWoAvSoSeUsDeSaCuUnique_Boolean_0((QuickMenu.EnumNPublicSealedvaUnWoAvSoSeUsDeSaCuUnique)4, false); }), new System.Action<string>((string str) => {
@@ -82,20 +87,13 @@ namespace emmVRC.Menus
                         Timeout = 5;
                         MelonLoader.MelonCoroutines.Start(WaitForTimeout());
                     }
-                }, "Joined "+plr.TimeJoinedStamp, true);
-                baseMenu.pageItems.Add(player);
-                currentInstancePlayers.Add(player);
+                }, "Joined " + plr.TimeJoinedStamp);
+                playerButton.gameObject.transform.SetAsFirstSibling();
+                playerHistoryButtons.Add(playerButton);
             }
-            /*foreach (string str in currentPlayersNames)
-            {
-                PageItem player = new PageItem(str, null, "", true);
-                baseMenu.pageItems.Add(player);
-                currentInstancePlayers.Add(player);
-            }*/
-
-            baseMenu.OpenMenu();
+            playerHistoryPage.OpenMenu();
         }
-        public static IEnumerator WaitForTimeout()
+        private static IEnumerator WaitForTimeout()
         {
             while (Timeout != 0)
             {
@@ -104,5 +102,4 @@ namespace emmVRC.Menus
             }
         }
     }
-    
 }

@@ -17,7 +17,7 @@ namespace emmVRC.Menus
 
         public override void OnUiManagerInit()
         {
-            baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 1920, 1080, "Disabled\nButtons", "Contains buttons from the Quick Menu that were disabled by emmVRC");
+            baseMenu = new QMNestedButton(FunctionsMenuLegacy.baseMenu.menuBase, 1920, 1080, "Disabled\nButtons", "Contains buttons from the Quick Menu that were disabled by emmVRC");
             baseMenu.getMainButton().DestroyMe();
             emojiButton = new QMSingleButton(baseMenu, 1, 0, "Emoji", () => {
                 QuickMenuUtils.ShowQuickmenuPage("EmojiMenu");

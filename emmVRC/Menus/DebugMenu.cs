@@ -34,7 +34,7 @@ namespace emmVRC.Menus
         public static PaginatedMenu debugActionsMenu;
         public override void OnUiManagerInit()
         {
-            menuBase = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 10293, 20934, "Debug", "");
+            menuBase = new QMNestedButton(FunctionsMenuLegacy.baseMenu.menuBase, 10293, 20934, "Debug", "");
             menuBase.getMainButton().DestroyMe();
             //loadDebugModuleButton = new QMSingleButton(menuBase, 1, 0, "Load\nDebug\nModule", () => { MelonLoader.MelonCoroutines.Start(loadDebugModule()); }, "Loads a test module from .DLL, in order to assist with testing and development of new features");
 

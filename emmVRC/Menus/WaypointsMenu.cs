@@ -15,7 +15,6 @@ namespace emmVRC.Menus
     public class WaypointsMenu : MelonLoaderEvents
     {
         public static PaginatedMenu baseMenu;
-        private static QMSingleButton waypoint1Button;
         private static PageItem NewWaypointButton;
 
         public static QMNestedButton selectedWaypointMenu;
@@ -25,11 +24,10 @@ namespace emmVRC.Menus
         private static QMSingleButton removeButton;
 
         private static int selectedWaypoint = 0;
-        private static string currentWorldID = "";
 
         public override void OnUiManagerInit()
         {
-            baseMenu = new PaginatedMenu(PlayerTweaksMenu.baseMenu, 19293, 10234, "Waypoints", "", null);
+            baseMenu = new PaginatedMenu(PlayerTweaksMenuLegacy.baseMenu, 19293, 10234, "Waypoints", "", null);
             baseMenu.menuEntryButton.DestroyMe();
             
 

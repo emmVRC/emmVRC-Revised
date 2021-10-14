@@ -1,247 +1,138 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using emmVRC.Libraries;
-using emmVRC.Menus;
+﻿using emmVRC.Functions.Other;
+using emmVRC.Objects;
 using emmVRC.Objects.ModuleBases;
+using emmVRC.Managers;
+using emmVRC.Libraries;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
-namespace emmVRC.Hacks
+namespace emmVRC.Menus
 {
-    public class AlarmClock : MelonLoaderEvents
+    public class AlarmClockMenu : MelonLoaderEvents
     {
-        public static bool AlarmEnabled = false;
-        public static string AlarmTimeString = "00:00";
-        public static TimeSpan alarmTimeActual;
+        public static PaginatedMenu Menu { get; private set; }
 
-        public static bool InstanceAlarmEnabled = false;
-        public static string InstanceAlarmTimeString = "00:00";
-        public static TimeSpan instanceAlarmTimeActual;
+        public static QMNestedButton AlarmMenu { get; private set; }
 
-        public static bool AlarmTriggered = false;
-        public static bool InstanceAlarmTriggered = false;
-        private static List<AudioClip> alarmClips = new List<AudioClip>();
-        private static AudioSource referenceSource;
-        private static AudioSource alarmSource;
+        private static Alarm currentAlarm;
 
-        public static bool Hour24 = false;
+        private static QMToggleButton enabledToggle;
+        private static QMToggleButton repeatsToggle;
+        private static Objects.Slider volumeSlider;
+        private static QMToggleButton systemTimeToggle;
+        private static QMSingleButton setTimeButton;
 
-        public static QMNestedButton baseMenu;
-
-        private static QMNestedButton alarmMenu;
-        private static QMToggleButton alarmEnabled;
-        private static QMToggleButton alarmPersistentEnabled;
-        private static QMSingleButton alarmTime;
-
-        private static QMNestedButton instanceAlarmMenu;
-        private static QMToggleButton instanceAlarmEnabled;
-        private static QMToggleButton instanceAlarmPersistentEnabled;
-        private static QMSingleButton instanceAlarmTime;
+        public override void OnApplicationStart()
+        {
+            AlarmClock.OnAlarmTrigger += OnAlarmTrigger;
+        }
 
         public override void OnUiManagerInit()
         {
-            MelonLoader.MelonCoroutines.Start(Initialize());
+            Menu = new PaginatedMenu(FunctionsMenuLegacy.baseMenu.menuBase.getMenuName(), 10293, 12931, "emmVRCAlarmClockMenu", "", null);
+            Menu.menuEntryButton.DestroyMe();
+
+            new QMSingleButton(Menu.menuBase, 5, 1, "Add\nAlarm", new Action(() =>
+            {
+                // Gets highest current id
+                currentAlarm = new Alarm(AlarmClock.Alarms.Count > 0 ? AlarmClock.Alarms.Max(alarm => alarm.Id) + 1 : 0);
+                AlarmClock.Alarms.Add(currentAlarm);
+                AlarmClock.SaveConfig();
+                Refresh();
+            }), "Add a new alarm to the list.");
+
+            AlarmMenu = new QMNestedButton(Menu.menuBase, 19283, 10223, "emmVRCAlarmClockConfigMenu", "");
+            AlarmMenu.getMainButton().DestroyMe();
+
+            enabledToggle = new QMToggleButton(AlarmMenu, 1, 0, "Enabled", () => { currentAlarm.IsEnabled = true; AlarmClock.SaveConfig(); }, "Disabled", () => { currentAlarm.IsEnabled = false; AlarmClock.SaveConfig(); }, "TOGGLE: Enable the alarm.");
+            new QMSingleButton(AlarmMenu, 2, 0, "Set Alarm\nName", new Action(() =>
+            {
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the alarm name", "", UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) =>
+                {
+                    currentAlarm.Name = time;
+                    AlarmClock.SaveConfig();
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
+                }), null, "");
+            }), "Set the name of the alarm.");
+            repeatsToggle = new QMToggleButton(AlarmMenu, 3, 0, "Repeats", () => { currentAlarm.Repeats = true; AlarmClock.SaveConfig(); }, "Disabled", () => { }, "TOGGLE: Have the alarm repeat.");
+            new QMSingleButton(AlarmMenu, 4, 0, "Remove", new Action(() => { AlarmClock.Alarms.Remove(currentAlarm); AlarmClock.SaveConfig(); Open(); }), "Deletes the alarm.");
+
+            volumeSlider = new Objects.Slider(AlarmMenu.getMenuName(), 2, 1, new Action<float>((value) => { if (currentAlarm == null) return; currentAlarm.Volume = value; AlarmClock.SaveConfig(); }), 0.5f);
+            volumeSlider.slider.GetComponent<RectTransform>().localScale *= 1.5f;
+            //new Label(AlarmMenu.rectTransform, new Vector2(1, 1), "Volume", "VolumeSliderLabel");
+
+            systemTimeToggle = new QMToggleButton(AlarmMenu, 1, 2, "System Time", () => { currentAlarm.IsSystemTime = true; AlarmClock.SaveConfig(); OpenAlarmMenu(); }, "Instance Time", () => {currentAlarm.IsSystemTime = false; AlarmClock.SaveConfig(); OpenAlarmMenu(); }, "TOGGLE: Switch between System time and Instance time");
+
+            setTimeButton = new QMSingleButton(AlarmMenu, 3, 2, "Alarm\nTime", new Action(()
+                =>
+            {
+                VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowInputPopup("Set Alarm Time", "", InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, Text>((input, keycodes, text) =>
+                {
+                    if (DateTime.TryParse(input, out DateTime inputTime))
+                    {
+                        TimeSpan realTime = new TimeSpan(inputTime.Hour, inputTime.Minute, inputTime.Second);
+                        currentAlarm.Time = realTime.Ticks;
+                        AlarmClock.SaveConfig();
+                    }
+                    else
+                    {
+                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("Error", "Input invalid, please try again!", 10f);
+                    }
+                }), null, "Enter a time...");
+            }), "Enter a time for the alarm");
+            //setTimeButton.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, UiManager.buttonSize * 3);
+            //setTimeButton.TextComponent.rectTransform.anchoredPosition = new Vector2(UiManager.buttonSize * 1.5f, UiManager.buttonSize / 2);
+            //setTimeButton.TextComponent.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, UiManager.buttonSize * 3);
         }
 
-        public static IEnumerator Initialize()
+        public static void Open()
         {
-            while (Functions.Core.Resources.onlineSprite == null) yield return new WaitForSeconds(1f);
-            if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")))
-                Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds"));
-            if (Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")).Length > 0) // TODO: Fix audio loading
-            {
-                foreach (string audioFile in Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AlarmSounds")))
-                {
-                    if (audioFile.Contains(".ogg") || audioFile.Contains(".wav"))
-                    {
-                        emmVRCLoader.Logger.LogDebug("Processing alarm clip " + audioFile);
-                        UnityEngine.Networking.UnityWebRequest CustomLoadingMusicRequest = UnityEngine.Networking.UnityWebRequest.Get(string.Format("file://{0}", audioFile).Replace(@"\", "/"));
-                        CustomLoadingMusicRequest.SendWebRequest();
-                        while (!CustomLoadingMusicRequest.isDone) yield return null;
-                        //WWW CustomLoadingMusicWWW = new WWW(string.Format("file://{0}", availableCustomMenuMusics[randomIndex]).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
-                        AudioClip alarmClip = null;
-                        if (CustomLoadingMusicRequest.isHttpError)
-                            emmVRCLoader.Logger.LogError("Could not load music file: " + CustomLoadingMusicRequest.error);
-                        else
-                            alarmClip = UnityEngine.Networking.WebRequestWWW.InternalCreateAudioClipUsingDH(CustomLoadingMusicRequest.downloadHandler, CustomLoadingMusicRequest.url, false, false, AudioType.UNKNOWN);
-                        //WWW AlarmClipWWW = new WWW(string.Format("file://{0}", audioFile).Replace(@"\", "/"), null, new Il2CppSystem.Collections.Generic.Dictionary<string, string>());
-                        //AudioClip alarmClip = AlarmClipWWW.GetAudioClip();
-                        //while (!AlarmClipWWW.isDone || alarmClip.loadState == AudioDataLoadState.Loading) yield return new WaitForEndOfFrame();
-                        alarmClip.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-                        alarmClips.Add(alarmClip);
-                    }
-                }
-            } else
-            {
-                alarmClips.Add(Functions.Core.Resources.alarmTone);
-            }
-            while (GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup") == null) yield return new WaitForEndOfFrame();
-            referenceSource = GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup").GetComponentInChildren<AudioSource>(true);
-            GameObject alarmSourceObj = GameObject.Instantiate(referenceSource.gameObject);
-            alarmSourceObj.transform.parent = null;
-            alarmSourceObj.name = "AlarmSound";
-            GameObject.DontDestroyOnLoad(alarmSourceObj);
-            alarmSource = alarmSourceObj.GetComponent<AudioSource>();
-            alarmSource.clip = null;
-
-            Hour24 = !System.Globalization.DateTimeFormatInfo.CurrentInfo.ShortTimePattern.ToLower().Contains("h");
-            alarmTimeActual = TimeSpan.FromSeconds(Configuration.JSONConfig.AlarmTime);
-            AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt", CultureInfo.InvariantCulture));
-
-            AlarmEnabled = Configuration.JSONConfig.PersistentAlarm;
-            InstanceAlarmEnabled = Configuration.JSONConfig.PersistentInstanceAlarm;
-
-            instanceAlarmTimeActual = TimeSpan.FromSeconds(Configuration.JSONConfig.InstanceAlarmTime);
-            InstanceAlarmTimeString = (new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss");
-
-            baseMenu = new QMNestedButton(FunctionsMenu.baseMenu.menuBase, 19283, 10293, "", "");
-            baseMenu.getMainButton().DestroyMe();
-            alarmMenu = new QMNestedButton(baseMenu, 1, 0, "Basic\nAlarm", "Configure the basic alarm clock, which uses system time");
-            alarmEnabled = new QMToggleButton(alarmMenu, 1, 0, "Alarm\nEnabled", () =>
-            {
-                AlarmEnabled = true;
-                AlarmTriggered = false;
-            }, "Disabled", () =>
-            {
-                AlarmEnabled = false;
-                AlarmTriggered = false;
-            }, "TOGGLE: Enables the alarm clock for the time provided", null, null, false, AlarmEnabled);
-            alarmPersistentEnabled = new QMToggleButton(alarmMenu, 2, 0, "Keep Alarm", () =>
-            {
-                Configuration.JSONConfig.PersistentAlarm = true;
-                Configuration.JSONConfig.AlarmTime = (uint)alarmTimeActual.TotalSeconds;
-                Configuration.SaveConfig();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.PersistentAlarm = false;
-                Configuration.SaveConfig();
-            }, "TOGGLE: Allow this alarm to stay on, even across restarts", null, null, false, Configuration.JSONConfig.PersistentAlarm);
-            alarmTime = new QMSingleButton(alarmMenu, 3, 0, "Time:\n" + AlarmTimeString, () =>
-            {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the alarm time", AlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
-                    alarmTimeActual = new TimeSpan(DateTime.Parse(time).Hour, DateTime.Parse(time).Minute, DateTime.Parse(time).Second);
-                    AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt", CultureInfo.InvariantCulture));
-                    if (Configuration.JSONConfig.PersistentAlarm)
-                    {
-                        Configuration.JSONConfig.AlarmTime = (uint)alarmTimeActual.TotalSeconds;
-                        Configuration.SaveConfig();
-                    }
-                    alarmTime.setButtonText("Time:\n" + AlarmTimeString);
-                }), null, Hour24 ? "00:00" : "00:00 PM");
-            }, "The time the alarm will go off. Select to change.");
-            AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt"));
-            alarmTime.setButtonText("Time:\n" + AlarmTimeString);
-
-            instanceAlarmMenu = new QMNestedButton(baseMenu, 2, 0, "Instance\nAlarm", "Configure the instance alarm clock, which uses the time you've been in the current instance");
-            instanceAlarmEnabled = new QMToggleButton(instanceAlarmMenu, 1, 0, "Instance\nAlarm Enabled", () =>
-            {
-                InstanceAlarmEnabled = true;
-                InstanceAlarmTriggered = false;
-            }, "Disabled", () =>
-            {
-                InstanceAlarmEnabled = false;
-                InstanceAlarmTriggered = false;
-            }, "TOGGLE: Enables the instance alarm clock for the time provided");
-            instanceAlarmPersistentEnabled = new QMToggleButton(instanceAlarmMenu, 2, 0, "Keep Instance\nAlarm", () =>
-            {
-                Configuration.JSONConfig.PersistentInstanceAlarm = true;
-                Configuration.JSONConfig.InstanceAlarmTime = (uint)instanceAlarmTimeActual.TotalSeconds;
-                Configuration.SaveConfig();
-            }, "Disabled", () =>
-            {
-                Configuration.JSONConfig.PersistentInstanceAlarm = false;
-                Configuration.SaveConfig();
-            }, "TOGGLE: Allow this alarm to stay on, even across restarts");
-            instanceAlarmTime = new QMSingleButton(instanceAlarmMenu, 3, 0, "Instance\nTime:\n" + InstanceAlarmTimeString, () =>
-            {
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowInputPopup("Enter the instance alarm time", InstanceAlarmTimeString, UnityEngine.UI.InputField.InputType.Standard, false, "Accept", new System.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, UnityEngine.UI.Text>((string time, Il2CppSystem.Collections.Generic.List<KeyCode> keycodes, UnityEngine.UI.Text txt) => {
-                    instanceAlarmTimeActual = new TimeSpan(DateTime.Parse(time).Hour, DateTime.Parse(time).Minute, DateTime.Parse(time).Second);
-                    InstanceAlarmTimeString = (new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss");
-                    if (Configuration.JSONConfig.PersistentInstanceAlarm)
-                    {
-                        Configuration.JSONConfig.InstanceAlarmTime = (uint)instanceAlarmTimeActual.TotalSeconds;
-                        Configuration.SaveConfig();
-                    }
-                    instanceAlarmTime.setButtonText("Time:\n" + InstanceAlarmTimeString);
-                }), null, "00:00");
-            }, "The time the instance alarm will go off. Select to change.");
-            MelonLoader.MelonCoroutines.Start(Loop());
+            Refresh();
+            Menu.OpenMenu();
         }
-        public static IEnumerator Loop()
+
+        private static void Refresh()
         {
-            while (true)
+            Menu.pageItems.Clear();
+            for (int i = 0; i < AlarmClock.Alarms.Count; i++)
             {
-                yield return new WaitForFixedUpdate();
-                if (alarmSource != null && referenceSource != null)
+                int k = i;
+                Menu.pageItems.Add(new PageItem(AlarmClock.Alarms[k].Name, new Action(() =>
                 {
-                    alarmSource.volume = referenceSource.volume;
-                    alarmSource.outputAudioMixerGroup = referenceSource.outputAudioMixerGroup;
-                }
-                if (AlarmEnabled && !AlarmTriggered)
-                {
-                    if (DateTime.Now.TimeOfDay.Hours == alarmTimeActual.Hours && DateTime.Now.TimeOfDay.Minutes == alarmTimeActual.Minutes && DateTime.Now.TimeOfDay.Seconds == alarmTimeActual.Seconds && !AlarmTriggered)
-                    {
-                        AlarmTriggered = true;
-                        emmVRCLoader.Logger.LogDebug("Alarm triggered");
-                        alarmSource.clip = (alarmClips.Count > 1 ? alarmClips[new System.Random().Next(alarmClips.Count)] : alarmClips.First());
-                        if (alarmSource.clip == null)
-                            alarmSource.clip = Functions.Core.Resources.alarmTone;
-                        alarmSource.Play();
-                        Managers.NotificationManager.AddNotification("Your alarm for " + (Hour24 ? (new DateTime() + alarmTimeActual).ToString("hh:mm") : (new DateTime() + alarmTimeActual).ToString("HH:mm tt")) + " is ringing.", "Snooze\n(15 min)", () => {
-                            alarmTimeActual += new TimeSpan(0, 15, 0);
-                            AlarmTimeString = (Hour24 ? (new DateTime() + alarmTimeActual).ToString("HH:mm") : (new DateTime() + alarmTimeActual).ToString("hh:mm tt", CultureInfo.InvariantCulture));
-                            AlarmTriggered = false;
-                            alarmTime.setButtonText("Time:\n" + AlarmTimeString);
-                            Managers.NotificationManager.DismissCurrentNotification();
-                        }, "Dismiss", () => {
-                            AlarmTriggered = false;
-                            if (!Configuration.JSONConfig.PersistentAlarm)
-                            {
-                                AlarmEnabled = false;
-                                alarmEnabled.setToggleState(false);
-                            }
-                            Managers.NotificationManager.DismissCurrentNotification();
-                        }, Functions.Core.Resources.alarmSprite);
-                    }
-                }
-                if (InstanceAlarmEnabled && !InstanceAlarmTriggered)
-                {
-                    if ( DateTime.Now - Functions.UI.InfoBarClock.instanceJoinedTime == instanceAlarmTimeActual)
-                    {
-                        InstanceAlarmTriggered = true;
-                        emmVRCLoader.Logger.LogDebug("Instance Alarm triggered");
-                        alarmSource.clip = (alarmClips.Count > 1 ? alarmClips[new System.Random().Next(alarmClips.Count)] : alarmClips.First());
-                        if (alarmSource.clip == null)
-                            alarmSource.clip = Functions.Core.Resources.alarmTone;
-                        alarmSource.Play();
-                        Managers.NotificationManager.AddNotification("Your instance alarm for " + ((new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss")) + " is ringing.", "Snooze\n(15 min)", () => {
-                            instanceAlarmTimeActual += new TimeSpan(0, 15, 0);
-                            InstanceAlarmTriggered = false;
-                            InstanceAlarmTimeString = (new DateTime() + instanceAlarmTimeActual).ToString("HH:mm:ss");
-                            instanceAlarmTime.setButtonText("Time:\n" + InstanceAlarmTimeString);
-                            Managers.NotificationManager.DismissCurrentNotification();
-                        }, "Dismiss", () => {
-                            InstanceAlarmTriggered = false;
-                            if (!Configuration.JSONConfig.PersistentInstanceAlarm)
-                            {
-                                InstanceAlarmEnabled = false;
-                                instanceAlarmEnabled.setToggleState(false);
-                            }
-                            Managers.NotificationManager.DismissCurrentNotification();
-                        }, Functions.Core.Resources.alarmSprite);
-                    }
-                }
-                if (alarmSource.isPlaying && ((!AlarmEnabled && !InstanceAlarmEnabled) || (!AlarmTriggered && !InstanceAlarmTriggered)))
-                {
-                    emmVRCLoader.Logger.LogDebug("Alarm stopped");
-                    alarmSource.Stop();
-                }
+                    currentAlarm = AlarmClock.Alarms[k];
+                    OpenAlarmMenu();
+                }),  $"Edit the \"{AlarmClock.Alarms[k].Name}\" alarm."));
             }
+            Menu.pageItems.Add(PageItem.Space);
+            Menu.OpenMenu();
+        }
+
+        private static void OnAlarmTrigger(Alarm alarm)
+        {
+            Managers.NotificationManager.AddNotification($"Your alarm \"{alarm.Name}\" has gone off.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alarmSprite);
+            // TODO: Add sound 
+        }
+
+        private static void OpenAlarmMenu()
+        {
+            AlarmMenu.Open();
+
+            enabledToggle.setToggleState(currentAlarm.IsEnabled);
+            repeatsToggle.setToggleState(currentAlarm.Repeats);
+            volumeSlider.slider.GetComponent<UnityEngine.UI.Slider>().value = currentAlarm.Volume;
+            systemTimeToggle.setToggleState(currentAlarm.IsSystemTime);
+
+            bool uses24HourTime = DateTimeFormatInfo.CurrentInfo.AMDesignator == "";
+            string timeString;
+            if (currentAlarm.IsSystemTime)
+                timeString = uses24HourTime ? new DateTime(currentAlarm.Time).ToString("t") : new DateTime(currentAlarm.Time).ToString("h:mm tt");
+            else
+                timeString = new TimeSpan(currentAlarm.Time).ToString("c");
+            setTimeButton.setButtonText("Set Alarm Time:\n" + timeString);
         }
     }
 }

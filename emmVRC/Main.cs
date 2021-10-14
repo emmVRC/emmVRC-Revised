@@ -115,7 +115,9 @@ namespace emmVRC
             {
                 emmVRCLoader.Logger.LogError("One or more compatibility issues were detected. See above for details. emmVRC cannot start.");
                 MessageBox.Show("One or more compatibility issues were detected. See the console for more details. emmVRC cannot start.", "emmVRC", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            } else { 
+            }
+            else
+            {
                 var watch = new System.Diagnostics.Stopwatch();
                 watch.Start();
 
@@ -129,28 +131,6 @@ namespace emmVRC
                     {
                         emmVRCLoader.Logger.LogError($"emmVRC encountered an exception while running UiManagerInit of \"{listener.GetType().FullName}\":\n" + ex.ToString());
                     }
-                }
-
-                // Initialize the Nameplate color changer
-                emmVRCLoader.Logger.LogDebug("Initializing Nameplate Color Changing module...");
-                Hacks.Nameplates.Initialize();
-
-                // Initialize the custom Main Menu page system
-                //Hacks.CustomMainMenuPage.Initialize();
-
-                if (!Configuration.JSONConfig.StealthMode)
-                {
-                    emmVRCLoader.Logger.LogDebug("Initializing Action Menu module...");
-                    MelonLoader.MelonCoroutines.Start(Menus.ActionMenuFunctions.Initialize());
-                }
-
-                // Initialize the emmVRC HUD
-                if (!Configuration.JSONConfig.StealthMode)
-                {
-                    if (Configuration.JSONConfig.VRHUDInDesktop || UnityEngine.XR.XRDevice.isPresent)
-                        MelonLoader.MelonCoroutines.Start(Menus.VRHUD.Initialize());
-                    else
-                        MelonLoader.MelonCoroutines.Start(Menus.DesktopHUD.Initialize());
                 }
 
                 // Applying some quick commands on OnSceneLoaded
@@ -174,23 +154,22 @@ namespace emmVRC
                     Hacks.UserInfoTweaks.Initialize();
                 }
 
-                emmVRCLoader.Logger.LogDebug("Initializing Emoji Favourites system...");
-                MelonLoader.MelonCoroutines.Start(Hacks.EmojiFavourites.Initialize());
-
-                // Initialize hooking, for things such as Global Dynamic Bones
-                emmVRCLoader.Logger.LogDebug("Initializing hooks...");
-                Libraries.Hooking.Initialize();
-
                 // At this point, if no errors have occured, emmVRC is done initializing
                 watch.Stop();
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
 
-
                 Initialized = true;
+                //DebugManager.DebugActions.Add(new DebugAction
+                //{
+                //    ActionKey = KeyCode.Alpha0,
+                //    ActionAction = () =>
+                //    {
+                //        VRC.DataModel.IUser user = RoomManager.field_Private_Static_List_1_IUser_0.ToArray().First(a => a.ID == VRC.Core.APIUser.CurrentUser.id);
+                //        Utils.ButtonAPI.GetQuickMenuInstance().ShowSelectedUserPage(true, user);
+                //    }
+                //});
 
-                // Debug actions need to go before this
-                DebugMenu.PopulateDebugMenu();
             }
         }
 
@@ -203,18 +182,15 @@ namespace emmVRC
             //MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
             if (Configuration.JSONConfig.LastVersion != Attributes.Version)
             {
-                Configuration.JSONConfig.LastVersion = Attributes.Version;
-                Configuration.SaveConfig();
+                Configuration.WriteConfigOption("LastVersion", Attributes.Version);
                 Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Attributes.Version + "!", "View\nChangelog", () =>
                 { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Functions.Core.Resources.alertSprite, -1);
             }
             if (Functions.Core.ModCompatibility.MultiplayerDynamicBones && Configuration.JSONConfig.GlobalDynamicBonesEnabled)
             {
-                Configuration.JSONConfig.GlobalDynamicBonesEnabled = false;
-                Configuration.SaveConfig();
+                Configuration.WriteConfigOption("GlobalDynamicBonesEnabled", false);
                 Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alertSprite, -1);
             }
-            PlayerHistoryMenu.currentPlayers = new System.Collections.Generic.List<InstancePlayer>();
 
             #region Korty's Addons
             Hacks.ComponentToggle.OnLevelLoad();
@@ -293,8 +269,7 @@ namespace emmVRC
                 {
                     Managers.NotificationManager.AddNotification("Welcome to the new emmVRC! For updates regarding the client, teasers for new features, and bug reports and support, join the Discord!", "Open\nDiscord", () =>
                     { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); Managers.NotificationManager.DismissCurrentNotification(); }, "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Functions.Core.Resources.alertSprite);
-                    Configuration.JSONConfig.WelcomeMessageShown = true;
-                    Configuration.SaveConfig();
+                    Configuration.WriteConfigOption("WelcomeMessageShown", true);
                 }
             }
 
@@ -344,10 +319,7 @@ namespace emmVRC
         }
         public static void OnApplicationQuit()
         {
-            if (!Initialized)
-                return;
-            if (NetworkClient.webToken != null)
-                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout").NoAwait("Logout");
+            NetworkClient.Logout();
         }
     }
 }

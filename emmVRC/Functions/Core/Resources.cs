@@ -43,6 +43,20 @@ namespace emmVRC.Functions.Core
         public static Sprite zoomIn;
         public static Sprite zoomOut;
 
+        public static Sprite WorldIcon;
+        public static Sprite WorldHistoryIcon;
+        public static Sprite PlayerIcon;
+        public static Sprite PlayerHistoryIcon;
+        public static Sprite ProgramsIcon;
+        public static Sprite SettingsIcon;
+        public static Sprite AlarmClockIcon;
+        public static Sprite TeamIcon;
+        public static Sprite SupporterIcon;
+        public static Sprite ChangelogIcon;
+        public static Sprite CheckMarkIcon;
+
+
+
         public static AudioClip customLoadingMusic;
 
         // Texture for use on the emmVRC Network panel
@@ -173,6 +187,19 @@ namespace emmVRC.Functions.Core
             emmHUDLogo = LoadSprite("emmSimplifedLogo.png");
 
             TabIcon = LoadSprite("TabIcon.png");
+
+            WorldIcon = LoadSprite("Globe.png");
+            WorldHistoryIcon = LoadSprite("GlobeHistory.png");
+            PlayerIcon = LoadSprite("Player.png");
+            PlayerHistoryIcon = LoadSprite("PlayerHistory.png");
+            SupporterIcon = LoadSprite("Heart.png");
+            ProgramsIcon = LoadSprite("Programs.png");
+            SettingsIcon = LoadSprite("Settings.png");
+            AlarmClockIcon = LoadSprite("AlarmClock.png");
+            TeamIcon = LoadSprite("RoseIcon.png");
+            ChangelogIcon = LoadSprite("Changelog.png");
+
+            CheckMarkIcon = LoadSprite("Checkmark.png");
 
             panelTexture = LoadTexture("Panel.png");
 

@@ -13,8 +13,11 @@ namespace emmVRC.Functions.UI
     {
         public override void OnUiManagerInit()
         {
-            if (!Configuration.JSONConfig.StealthMode)
+            if (!Configuration.JSONConfig.StealthMode && Functions.Other.BuildNumber.buildNumber <= 1134)
+            {
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableOneHandMovement", Apply));
                 Apply();
+            }
         }
         public static void Apply()
         {

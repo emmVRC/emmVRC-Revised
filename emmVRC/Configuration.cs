@@ -1,4 +1,4 @@
-﻿using Il2CppSystem;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,11 @@ namespace emmVRC
 {
     public class Configuration
     {
-        public static Config JSONConfig;
+        public static Config JSONConfig { get; private set; }
+        public static List<KeyValuePair<string, Action>> onConfigUpdated;
         public static void Initialize()
         {
+            onConfigUpdated = new List<KeyValuePair<string, Action>>();
             Directory.CreateDirectory(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC"));
             if (File.Exists(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"))){
                 //JSONConfig = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json")));
@@ -43,7 +45,27 @@ namespace emmVRC
                 JSONConfig = new Config();
             }
         }
-        public static void SaveConfig()
+        public static void WriteConfigOption(string configOptionName, object newValue)
+        {
+            if (!typeof(Config).GetFields().Any(a => a.Name == configOptionName))
+            {
+                emmVRCLoader.Logger.LogError("Invalid configuration option specified: "+configOptionName);
+                return;
+            }
+            typeof(Config).GetField(configOptionName).SetValue(JSONConfig, newValue);
+            SaveConfig();
+            foreach (KeyValuePair<string, Action> listener in onConfigUpdated)
+                if (listener.Key == configOptionName)
+                    listener.Value.Invoke();
+        }
+        public static void WipeConfig()
+        {
+            JSONConfig = new Objects.Config { WelcomeMessageShown = true };
+            SaveConfig();
+            foreach (KeyValuePair<string, Action> listenerAction in onConfigUpdated)
+                listenerAction.Value.Invoke();
+        }
+        private static void SaveConfig()
         {
             File.WriteAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/config.json"), TinyJSON.Encoder.Encode(JSONConfig, TinyJSON.EncodeOptions.PrettyPrint));
         }

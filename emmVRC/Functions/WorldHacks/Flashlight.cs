@@ -19,8 +19,8 @@ namespace emmVRC.Functions.WorldHacks
 
         public override void OnApplicationStart()
         {
-            Functions.UI.FlashlightMenu.LightColorChanged += new Action<Color>((newValue) => { if (flashlight == null) return; flashlight.color = newValue; headlight.color = newValue; });
-            Functions.UI.FlashlightMenu.LightStrengthChanged += new Action<float>((newValue) => { if (flashlight == null) return; flashlight.range = newValue; headlight.range = newValue; });
+            Menus.FlashlightMenuLegacy.LightColorChanged += new Action<Color>((newValue) => { if (flashlight == null) return; flashlight.color = newValue; headlight.color = newValue; });
+            Menus.FlashlightMenuLegacy.LightStrengthChanged += new Action<float>((newValue) => { if (flashlight == null) return; flashlight.range = newValue; headlight.range = newValue; });
             }
 
         public override void OnUiManagerInit()

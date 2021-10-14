@@ -9,7 +9,7 @@ using VRC.Core;
 
 namespace emmVRC.Functions.Other
 {
-    [Priority(1)]
+    [Priority(-1)]
     public class BuildNumber : MelonLoaderEvents
     {
         public static int buildNumber;

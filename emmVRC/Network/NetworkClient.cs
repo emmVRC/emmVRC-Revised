@@ -48,7 +48,13 @@ namespace emmVRC.Network
         public static HttpClient httpClient { get; set; }
         public override void OnUiManagerInit()
         {
-            
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("emmVRCNetworkEnabled", () =>
+            {
+                if (Configuration.JSONConfig.emmVRCNetworkEnabled)
+                    Network.NetworkClient.ClearAndLogin();
+                else
+                    Logout();
+            }));
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -114,8 +120,7 @@ namespace emmVRC.Network
                 if (NetworkConfig.Instance.MessageID != -1 && Configuration.JSONConfig.LastSeenStartupMessage != NetworkConfig.Instance.MessageID){
                     Managers.NotificationManager.AddNotification(NetworkConfig.Instance.StartupMessage, "Dismiss", () =>
                     {
-                        Configuration.JSONConfig.LastSeenStartupMessage = NetworkConfig.Instance.MessageID;
-                        Configuration.SaveConfig();
+                        Configuration.WriteConfigOption("LastSeenStartupMessage", NetworkConfig.Instance.MessageID);
                         Managers.NotificationManager.DismissCurrentNotification();
                     }, "", null, Functions.Core.Resources.alertSprite);
                 }

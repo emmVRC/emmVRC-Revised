@@ -12,7 +12,7 @@ using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Functions.UI
 {
-    public class UIElementsMenu : MelonLoaderEvents
+    public class UIElementsMenuLegacy : MelonLoaderEvents
     {
         public static QMToggleButton ToggleHUD;
         private bool initialized = false;
@@ -20,13 +20,11 @@ namespace emmVRC.Functions.UI
         {
             ToggleHUD = new QMToggleButton("UIElementsMenu", 1, 2, "HUD On", () =>
             {
-                Configuration.JSONConfig.UIVisible = true;
-                Configuration.SaveConfig();
+                Configuration.WriteConfigOption("UIVisible", true);
                 QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").GetComponent<Button>().onClick.Invoke();
             }, "HUD Off", () =>
             {
-                Configuration.JSONConfig.UIVisible = false;
-                Configuration.SaveConfig();
+                Configuration.WriteConfigOption("UIVisible", false);
                 QuickMenuUtils.GetQuickMenuInstance().transform.Find("UIElementsMenu/ToggleHUDButton").GetComponent<Button>().onClick.Invoke();
             }, "TOGGLE: Select to Turn the HUD On/Off");
 

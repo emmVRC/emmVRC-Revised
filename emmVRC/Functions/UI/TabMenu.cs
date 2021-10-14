@@ -26,6 +26,15 @@ namespace emmVRC.Functions.UI
         public override void OnUiManagerInit()
         {
             if (Configuration.JSONConfig.StealthMode) return;
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("TabMode", () =>
+            {
+                if (FunctionsMenuLegacy.baseMenu.menuEntryButton != null)
+                    FunctionsMenuLegacy.baseMenu.menuEntryButton.getGameObject().transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.zero : Vector3.one);
+                if (Hacks.ShortcutMenuButtons.logoButton != null)
+                    Hacks.ShortcutMenuButtons.logoButton.getGameObject().transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.zero : Vector3.one);
+                Managers.NotificationManager.NotificationMenu.getMainButton().getGameObject().transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.zero : Vector3.one);
+                newTab.transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.one : Vector3.zero);
+            }));
             MelonLoader.MelonCoroutines.Start(Initialize());
         }
         public static IEnumerator Initialize()
@@ -44,7 +53,7 @@ namespace emmVRC.Functions.UI
             logoButton = new QMSingleButton(tabMenu, 1, 0, "", () => { if (Configuration.JSONConfig.LogoButtonEnabled) System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
             functionsButton = new QMSingleButton(tabMenu, 1, 1, "Functions", () => {
                 QuickMenu.prop_QuickMenu_0.transform.Find("QuickModeTabs/HomeTab").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
-                FunctionsMenu.baseMenu.menuEntryButton.getGameObject().GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+                FunctionsMenuLegacy.baseMenu.menuEntryButton.getGameObject().GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             }, "Extra functions that can enhance the user experience or provide practical features");
             notificationsButton = new QMSingleButton(tabMenu, 2, 1, "0\n<color=#FF69B4>emmVRC</color>\nNotifications", () =>
             {

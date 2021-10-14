@@ -10,10 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
 using UnityEngine;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Hacks
 {
-    public class EmojiFavourites
+    public class EmojiFavourites : MelonLoaderEvents
     {
         public static QMNestedButton baseMenu;
         public static PaginatedMenu AvailableEmojiMenu;
@@ -21,6 +22,11 @@ namespace emmVRC.Hacks
         private static QMSingleButton availableEmojiMenuButton;
         private static QMSingleButton currentEmojiMenuButton;
         public static List<GameObject> AvailableEmojis;
+        public override void OnUiManagerInit()
+        {
+            if (Functions.Other.BuildNumber.buildNumber > 1134) return;
+            MelonLoader.MelonCoroutines.Start(Initialize());
+        }
         public static IEnumerator Initialize()
         {
             baseMenu = new QMNestedButton("ShortcutMenu", 13213, 29481, "", "");
@@ -80,8 +86,10 @@ namespace emmVRC.Hacks
                         int emojiValue = i;
                         PageItem itm = new PageItem("", () =>
                         {
-                            Configuration.JSONConfig.FavouritedEmojis.Add(emojiValue);
-                            Configuration.SaveConfig();
+                            List<int> favouritedEmojis = new List<int>();
+                            favouritedEmojis.AddRange(Configuration.JSONConfig.FavouritedEmojis.ToArray());
+                            favouritedEmojis.Add(emojiValue);
+                            Configuration.WriteConfigOption("FavouritedEmojis", favouritedEmojis);
                             QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
                         }, AvailableEmojis[i].name.Replace("Emoji", "").Replace("_", " "));
                         Texture2D text = AvailableEmojis[i].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>();
@@ -110,8 +118,10 @@ namespace emmVRC.Hacks
                 int delEmojiValue = emojiValue;
                 PageItem itm = new PageItem("", () =>
                 {
-                    Configuration.JSONConfig.FavouritedEmojis.Remove(delEmojiValue);
-                    Configuration.SaveConfig();
+                    List<int> favouritedEmojis = new List<int>();
+                    favouritedEmojis.AddRange(Configuration.JSONConfig.FavouritedEmojis.ToArray());
+                    favouritedEmojis.Remove(emojiValue);
+                    Configuration.WriteConfigOption("FavouritedEmojis", favouritedEmojis);
                     QuickMenuUtils.ShowQuickmenuPage(baseMenu.getMenuName());
                 }, AvailableEmojis[emojiValue].name.Replace("Emoji", "").Replace("_", " "));
                 Texture2D text = AvailableEmojis[emojiValue].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>();

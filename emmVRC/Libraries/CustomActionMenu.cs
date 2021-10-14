@@ -6,30 +6,29 @@ using System.Threading.Tasks;
 using UnhollowerRuntimeLib;
 using UnhollowerRuntimeLib.XrefScans;
 using UnityEngine;
+using emmVRC.Objects.ModuleBases;
+
 
 namespace emmVRC.Libraries
 {
-    public static class CustomActionMenu
+    [Priority(25)]
+    public class CustomActionMenu : MelonLoaderEvents
     {
         private static List<Page> customPages = new List<Page>();
         private static List<Button> mainMenuButtons = new List<Button>();
-        private static bool Initialized = false;
         public static ActionMenu activeActionMenu;
 
         public static Texture2D ToggleOffTexture;
         public static Texture2D ToggleOnTexture;
 
-        public static bool isOpen(this ActionMenuOpener actionMenuOpener)
-        {
-            return actionMenuOpener.field_Private_Boolean_0;
-        }
+
         private static ActionMenuOpener GetActionMenuOpener()
         {
-            if (!ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0.isOpen() && ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1.isOpen())
+            if (!ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0.field_Private_Boolean_0 && ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1.field_Private_Boolean_0)
             {
                 return ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1;
             }
-            else if (ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0.isOpen() && !ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1.isOpen())
+            else if (ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0.field_Private_Boolean_0 && !ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_1.field_Private_Boolean_0)
             {
                 return ActionMenuDriver.field_Public_Static_ActionMenuDriver_0.field_Public_ActionMenuOpener_0;
             }
@@ -40,17 +39,13 @@ namespace emmVRC.Libraries
                 return null; //Which one to return ¯\_(ツ)_/¯ Mystery till I figure something smart out
             }
             */
-
-
         }
 
-        private static void Initialize()
+        public override void OnUiManagerInit()
         {
-            Harmony.HarmonyInstance inst = Harmony.HarmonyInstance.Create("customActionMenuHarmony");
-            inst.Patch(typeof(ActionMenu).GetMethods().FirstOrDefault(it => UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == "Emojis")), null, new Harmony.HarmonyMethod(typeof(CustomActionMenu).GetMethod("OpenMainPage", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+            emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(typeof(ActionMenu).GetMethods().FirstOrDefault(it => UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == "Emojis")), null, new HarmonyLib.HarmonyMethod(typeof(CustomActionMenu).GetMethod("OpenMainPage", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
             ToggleOffTexture = UnityEngine.Resources.Load<Texture2D>("GUI_Toggle_OFF");
             ToggleOnTexture = UnityEngine.Resources.Load<Texture2D>("GUI_Toggle_ON");
-            Initialized = true;
         }
         private static void OpenMainPage(ActionMenu __instance)
         {
@@ -61,7 +56,11 @@ namespace emmVRC.Libraries
                 {
                     var newButton = activeActionMenu.Method_Private_PedalOption_0();
                     newButton.prop_String_0 = btn.ButtonText;
-                    newButton.field_Public_MulticastDelegateNPublicSealedBoUnique_0 = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
+                    btn.ButtonAction += () => {
+                        emmVRCLoader.Logger.LogDebug("Button was pushed :CatShrug:");
+                    };
+                    newButton.field_Public_Func_1_Boolean_0 = new Func<bool>(delegate { btn.ButtonAction.Invoke(); return true; });
+                    //newButton.field_Public_MulticastDelegateNPublicSealedBoUnique_0 = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
                     if (btn.ButtonIcon != null)
                         newButton.prop_Texture2D_0 = btn.ButtonIcon;
                     btn.currentPedalOption = newButton;
@@ -80,8 +79,6 @@ namespace emmVRC.Libraries
             public Button menuEntryButton;
             public Page(BaseMenu baseMenu, string buttonText, Texture2D buttonIcon = null)
             {
-                if (!Initialized)
-                    Initialize();
                 if (baseMenu == BaseMenu.MainMenu)
                 {
                     menuEntryButton = new Button(BaseMenu.MainMenu, buttonText, delegate { OpenMenu(null); }, buttonIcon);
@@ -89,23 +86,20 @@ namespace emmVRC.Libraries
             }
             public Page(Page basePage, string buttonText, Texture2D buttonIcon = null)
             {
-                if (!Initialized)
-                    Initialize();
                 previousPage = basePage;
                 menuEntryButton = new Button(previousPage, buttonText, delegate { OpenMenu(basePage); }, buttonIcon);
             }
             
             public void OpenMenu(Page currentPage)
             {
-                if (!Initialized)
-                    Initialize();
                 GetActionMenuOpener().field_Public_ActionMenu_0.Method_Public_ObjectNPublicAcTeAcStGaUnique_Action_Action_Texture2D_String_0((new Action(delegate
                 {
-                    foreach(Button btn in buttons)
-                    {
-                        var newButton = GetActionMenuOpener().field_Public_ActionMenu_0.Method_Private_PedalOption_0();
-                        newButton.prop_String_0 = btn.ButtonText; // Button Text
-                        newButton.field_Public_MulticastDelegateNPublicSealedBoUnique_0 = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
+                foreach (Button btn in buttons)
+                {
+                    var newButton = GetActionMenuOpener().field_Public_ActionMenu_0.Method_Private_PedalOption_0();
+                    newButton.prop_String_0 = btn.ButtonText; // Button Text
+                        newButton.field_Public_Func_1_Boolean_0 = new Func<bool>(delegate{ btn.ButtonAction.Invoke(); return true; });
+                        //newButton.field_Public_MulticastDelegateNPublicSealedBoUnique_0 = DelegateSupport.ConvertDelegate<PedalOption.MulticastDelegateNPublicSealedBoUnique>(btn.ButtonAction);
                         newButton.prop_Boolean_0 = btn.IsEnabled;
                         if (btn.ButtonIcon != null)
                             newButton.prop_Texture2D_0 = btn.ButtonIcon; // Button Texture
@@ -123,8 +117,6 @@ namespace emmVRC.Libraries
             public PedalOption currentPedalOption;
             public Button(BaseMenu baseMenu, string buttonText, System.Action buttonAction, Texture2D buttonIcon = null)
             {
-                if (!Initialized)
-                    Initialize();
                 this.ButtonText = buttonText;
                 this.ButtonAction = buttonAction;
                 this.ButtonIcon = buttonIcon;
@@ -135,8 +127,6 @@ namespace emmVRC.Libraries
             }
             public Button(Page basePage, string buttonText, System.Action buttonAction, Texture2D buttonIcon = null)
             {
-                if (!Initialized)
-                    Initialize();
                 this.ButtonText = buttonText;
                 this.ButtonAction = buttonAction;
                 this.ButtonIcon = buttonIcon;

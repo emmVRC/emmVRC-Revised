@@ -19,7 +19,7 @@ namespace emmVRC.Menus
         //public static TextDisplayMenu licensesMenu;
         public override void OnUiManagerInit()
         {
-            baseMenu = new PaginatedMenu(FunctionsMenu.baseMenu.menuBase, 7628, 12024, "Supporters", "", null);
+            baseMenu = new PaginatedMenu(FunctionsMenuLegacy.baseMenu.menuBase, 7628, 12024, "Supporters", "", null);
             baseMenu.menuEntryButton.DestroyMe();
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Emilia</color>", null, "Main developer of emmVRC"));
             baseMenu.pageItems.Add(new PageItem("<color=#E91E63>Hordini</color>", null, "Supporter, community manager, and major cutie"));

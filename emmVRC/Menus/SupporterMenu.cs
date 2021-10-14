@@ -23,7 +23,7 @@ namespace emmVRC.Menus
         public static ScrollingTextMenu baseMenu;
         public override void OnUiManagerInit()
         {
-            baseMenu = new ScrollingTextMenu(FunctionsMenu.baseMenu.menuBase, 768, 1024, "Supporters", "", null, "", "");
+            baseMenu = new ScrollingTextMenu(FunctionsMenuLegacy.baseMenu.menuBase, 768, 1024, "Supporters", "", null, "", "");
             baseMenu.menuEntryButton.DestroyMe();
         }
         public static void LoadMenu()

@@ -8,6 +8,7 @@ namespace emmVRC.Managers
 {
     public class RiskyFunctionsManager : MelonLoaderEvents
     {
+        public static event Action<bool> RiskyFuncsProcessed; 
         public static bool AreRiskyFunctionsAllowed
         {
             get => _areRiskyFunctionsAllowed;
@@ -39,10 +40,12 @@ namespace emmVRC.Managers
                 {
                     case "allowed":
                         AreRiskyFunctionsAllowed = true;
+                        RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
                         return;
 
                     case "denied":
                         AreRiskyFunctionsAllowed = false;
+                        RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
                         return;
                 }
             }
@@ -50,11 +53,13 @@ namespace emmVRC.Managers
             if (GameObject.Find("eVRCRiskFuncEnable") != null || GameObject.Find("UniversalRiskyFuncEnable") != null)
             {
                 AreRiskyFunctionsAllowed = true;
+                RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
                 return;
             }
             else if (GameObject.Find("eVRCRiskFuncDisable") != null || GameObject.Find("UniversalRiskyFuncDisable") != null)
             {
                 AreRiskyFunctionsAllowed = false;
+                RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
                 return;
             }
             if ((GameObject.Find("eVRCRiskFuncEnable") != null || GameObject.Find("eVRCRiskFuncDisable") != null) && RoomManager.field_Internal_Static_ApiWorld_0.authorId == APIUser.CurrentUser.id && !Configuration.JSONConfig.IgnoreWorldCreatorTips)
@@ -62,8 +67,7 @@ namespace emmVRC.Managers
                 emmVRCLoader.Logger.Log("[NOTICE] The eVRCRiskFuncDisable/Enable objects are soon to be deprecated. Instead, please use \"UniversalRiskyFuncDisable\" and \"UniversalRiskyFuncEnable\"");
                 NotificationManager.AddNotification("The eVRCRiskFuncDisable/Enable objects are soon to be deprecated. Instead, please use \"UniversalRiskyFuncDisable\" and \"UniversalRiskyFuncEnable\"", "Dismiss", NotificationManager.DismissCurrentNotification, "Never show\nagain", () =>
                 {
-                    Configuration.JSONConfig.IgnoreWorldCreatorTips = true;
-                    Configuration.SaveConfig();
+                    Configuration.WriteConfigOption("IgnoreWorldCreatorTips", true);
                 }, Functions.Core.Resources.alertSprite);
             }
 
@@ -72,11 +76,13 @@ namespace emmVRC.Managers
                 if (worldTag.ToLower().Contains("game") || worldTag.ToLower().Contains("club"))
                 {
                     AreRiskyFunctionsAllowed = false;
+                    RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
                     return;
                 }
             }
 
             AreRiskyFunctionsAllowed = true;
+            RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
         }
     }
 }

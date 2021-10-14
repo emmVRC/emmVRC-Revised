@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VRC.Core;
 using VRC.SDKBase;
+using emmVRC.Objects.ModuleBases;
 
-namespace emmVRC.Hacks
+namespace emmVRC.Functions.PlayerHacks
 {
-    public class GlobalDynamicBones
+    public class GlobalDynamicBones : MelonLoaderEvents
     {
         // Cache for all the current dynamic bones in the world
         private static List<DynamicBone> currentWorldDynamicBones = new List<DynamicBone>();
@@ -18,32 +19,36 @@ namespace emmVRC.Hacks
         // Cache for all the current dynamic bone colliders in the world
         private static List<DynamicBoneCollider> currentWorldDynamicBoneColliders = new List<DynamicBoneCollider>();
 
-        public static void ProcessDynamicBones(GameObject avatarObject, VRC_AvatarDescriptor avatarDescriptor)
+        public override void OnUiManagerInit()
+        {
+            if (Functions.Core.ModCompatibility.MultiplayerDynamicBones) return;
+            Utils.NetworkEvents.OnAvatarInstantiated += (plr, avtr, gobj) => ProcessDynamicBones(gobj, avtr, plr);
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("GlobalDynamicBonesEnabled", Utils.PlayerUtils.ReloadAllAvatars));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FriendGlobalDynamicBonesEnabled", Utils.PlayerUtils.ReloadAllAvatars));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("EveryoneGlobalDynamicBonesEnabled", Utils.PlayerUtils.ReloadAllAvatars));
+        }
+
+        public static void ProcessDynamicBones(GameObject avatarObject, ApiAvatar avtr, VRCPlayer player)
         {
             // Check if we should do anything at all
             if (Configuration.JSONConfig.GlobalDynamicBonesEnabled)
             {
                 if (avatarObject == null)
                     emmVRCLoader.Logger.LogDebug("Avatar object is null");
-                if (avatarDescriptor == null)
-                    emmVRCLoader.Logger.LogDebug("Avatar descriptor is null");
-                else
-                {
-                    if (avatarDescriptor.GetComponent<PipelineManager>() == null)
-                        emmVRCLoader.Logger.LogDebug("Avatar pipeline is null");
-                }
-                if (avatarObject == null)
-                    emmVRCLoader.Logger.LogDebug("Avatar VRCPlayer is null");
-                if (avatarObject == null || avatarDescriptor == null || avatarDescriptor.GetComponent<PipelineManager>() == null || avatarDescriptor.GetComponentInParent<VRCPlayer>() == null) return;
+                if (avtr == null)
+                    emmVRCLoader.Logger.LogDebug("APIAvatar is invalid");
+                if (player == null)
+                    emmVRCLoader.Logger.LogDebug("Player is invalid");
+                if (avatarObject == null || avtr == null || player == null) return;
 
                 // Grab avatar permissions for the loaded avatar
-                AvatarPermissions aperms = AvatarPermissions.GetAvatarPermissions(avatarDescriptor.GetComponent<PipelineManager>().blueprintId);
+                AvatarPermissions aperms = AvatarPermissions.GetAvatarPermissions(avtr.id);
 
                 // Grab user permissions for the avatar's user
-                UserPermissions uperms = UserPermissions.GetUserPermissions(avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id);
+                UserPermissions uperms = UserPermissions.GetUserPermissions(player._player.prop_APIUser_0.id);
 
                 // If the user can have global dynamic bones (or is you), or "Everyone Global Dynamic Bones" is on...
-                if (uperms.GlobalDynamicBonesEnabled || avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id == APIUser.CurrentUser.id || Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled || ( Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled && APIUser.IsFriendsWith(avatarDescriptor.GetComponentInParent<VRCPlayer>().prop_Player_0.prop_APIUser_0.id)))
+                if (uperms.GlobalDynamicBonesEnabled || player == VRCPlayer.field_Internal_Static_VRCPlayer_0 || Configuration.JSONConfig.EveryoneGlobalDynamicBonesEnabled || ( Configuration.JSONConfig.FriendGlobalDynamicBonesEnabled && APIUser.IsFriendsWith(player._player.prop_APIUser_0.id)))
                 {
                     emmVRCLoader.Logger.LogDebug("Global Dynamic Bones is allowed for this user, processing...");
                     // If neither Hand nor Feet colliders is turned on, fetch all the colliders from the avatar and add them to cache

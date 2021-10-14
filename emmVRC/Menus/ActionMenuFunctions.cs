@@ -8,11 +8,12 @@ using emmVRC.Hacks;
 using emmVRC.Libraries;
 using emmVRC.Managers;
 using emmVRC.Network.Objects;
+using emmVRC.Objects.ModuleBases;
 using UnityEngine;
 
 namespace emmVRC.Menus
 {
-    public class ActionMenuFunctions
+    public class ActionMenuFunctions : MelonLoaderEvents, IWithLateUpdate
     {
         public static CustomActionMenu.Page functionsMenu;
         public static CustomActionMenu.Page favouriteEmojisMenu;
@@ -30,6 +31,10 @@ namespace emmVRC.Menus
         private static int currentEmojiPlaying = -1;
 
         //private static bool justBecameActive = true;
+        public override void OnUiManagerInit()
+        {
+            MelonLoader.MelonCoroutines.Start(Initialize());
+        }
         public static IEnumerator Initialize()
         {
             while (Functions.Core.Resources.onlineSprite == null || Functions.Core.Resources.onlineSprite.texture == null)
@@ -54,22 +59,22 @@ namespace emmVRC.Menus
             flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
+                    PlayerTweaksMenuLegacy.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
             noclipButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Noclip:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
+                    PlayerTweaksMenuLegacy.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
             speedButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Speed:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
+                    PlayerTweaksMenuLegacy.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
             espButton = new CustomActionMenu.Button(riskyFunctionsMenu, "ESP:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenu.ESPToggle.setToggleState(!Functions.PlayerHacks.ESP.IsEnabled, true);
+                    PlayerTweaksMenuLegacy.ESPToggle.setToggleState(!Functions.PlayerHacks.ESP.IsEnabled, true);
             }, CustomActionMenu.ToggleOffTexture);
 
             /*avatarParametersMenu = new CustomActionMenu.Page(functionsMenu, "Avatar 3.0\nParameters", Resources.rpSprite.texture);
@@ -83,60 +88,54 @@ namespace emmVRC.Menus
                 Hacks.AvatarPropertySaving.ClearAvatarParameters();
                 VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Avatar parameters have been cleared.");
             }, Resources.deleteTexture);*/
-            MelonLoader.MelonCoroutines.Start(Loop());
         }
-        public static IEnumerator Loop()
+        public void LateUpdate()
         {
-            while (true)
+            if (functionsMenu == null) return;
+            if (emojiMenu == null)
             {
-                yield return new WaitForEndOfFrame();
-                if (emojiMenu == null)
+                emojiMenu = QuickMenu.prop_QuickMenu_0.transform.Find("EmojiMenu").GetComponent<EmojiMenu>();
+            }
+            if (flightButton.currentPedalOption != null)
+            {
+                if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                 {
-                    if (QuickMenu.prop_QuickMenu_0.transform.Find("EmojiMenu").GetComponent<EmojiMenu>() == null)
-                        yield return new WaitForSeconds(1f);
-                    emojiMenu = QuickMenu.prop_QuickMenu_0.transform.Find("EmojiMenu").GetComponent<EmojiMenu>();
+                    flightButton.SetButtonText("Flight:\n" + (Functions.PlayerHacks.Flight.IsFlyEnabled ? "On" : "Off"));
+                    flightButton.SetIcon(Functions.PlayerHacks.Flight.IsFlyEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
+                    noclipButton.SetButtonText("Noclip:\n" + (Functions.PlayerHacks.Flight.IsNoClipEnabled ? "On" : "Off"));
+                    noclipButton.SetIcon(Functions.PlayerHacks.Flight.IsNoClipEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
+                    speedButton.SetButtonText("Speed:\n" + (Functions.PlayerHacks.Speed.IsEnabled ? "On" : "Off"));
+                    speedButton.SetIcon(Functions.PlayerHacks.Speed.IsEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
+                    espButton.SetButtonText("ESP:\n" + (Functions.PlayerHacks.ESP.IsEnabled ? "On" : "Off"));
+                    espButton.SetIcon(Functions.PlayerHacks.ESP.IsEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
+                    flightButton.SetEnabled(true);
+                    noclipButton.SetEnabled(true);
+                    speedButton.SetEnabled(true);
+                    espButton.SetEnabled(true);
                 }
-                if (flightButton.currentPedalOption != null)
+                else
                 {
-                    if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    {
-                        flightButton.SetButtonText("Flight:\n" + (Functions.PlayerHacks.Flight.IsFlyEnabled ? "On" : "Off"));
-                        flightButton.SetIcon(Functions.PlayerHacks.Flight.IsFlyEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
-                        noclipButton.SetButtonText("Noclip:\n" + (Functions.PlayerHacks.Flight.IsNoClipEnabled ? "On" : "Off"));
-                        noclipButton.SetIcon(Functions.PlayerHacks.Flight.IsNoClipEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
-                        speedButton.SetButtonText("Speed:\n" + (Functions.PlayerHacks.Speed.IsEnabled ? "On" : "Off"));
-                        speedButton.SetIcon(Functions.PlayerHacks.Speed.IsEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
-                        espButton.SetButtonText("ESP:\n" + (Functions.PlayerHacks.ESP.IsEnabled ? "On" : "Off"));
-                        espButton.SetIcon(Functions.PlayerHacks.ESP.IsEnabled ? Functions.Core.Resources.toggleOnTexture : Functions.Core.Resources.toggleOffTexture);
-                        flightButton.SetEnabled(true);
-                        noclipButton.SetEnabled(true);
-                        speedButton.SetEnabled(true);
-                        espButton.SetEnabled(true);
-                    }
-                    else
-                    {
-                        flightButton.SetEnabled(false);
-                        noclipButton.SetEnabled(false);
-                        speedButton.SetEnabled(false);
-                        espButton.SetEnabled(false);
-                    }
+                    flightButton.SetEnabled(false);
+                    noclipButton.SetEnabled(false);
+                    speedButton.SetEnabled(false);
+                    espButton.SetEnabled(false);
                 }
-                if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Count != 0)
-                {
-                    for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                        favouriteEmojiButtons[i].SetIcon(EmojiFavourites.AvailableEmojis[Configuration.JSONConfig.FavouritedEmojis[i]].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>());
-                    for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                        favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetIcon(null);
-                }
-                if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
-                {
-                    for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                        if (favouriteEmojiButtons[i].currentPedalOption != null)
-                            favouriteEmojiButtons[i].SetEnabled(!playingEmoji);
-                    for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                        if (favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].currentPedalOption != null)
-                            favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetEnabled(false);
-                }
+            }
+            if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Count != 0)
+            {
+                for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                    favouriteEmojiButtons[i].SetIcon(EmojiFavourites.AvailableEmojis[Configuration.JSONConfig.FavouritedEmojis[i]].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>());
+                for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                    favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetIcon(null);
+            }
+            if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
+            {
+                for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                    if (favouriteEmojiButtons[i].currentPedalOption != null)
+                        favouriteEmojiButtons[i].SetEnabled(!playingEmoji);
+                for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+                    if (favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].currentPedalOption != null)
+                        favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetEnabled(false);
             }
         }
         private static IEnumerator EmojiTimeout()

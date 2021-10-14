@@ -272,9 +272,8 @@ namespace emmVRC.Functions.UI
                         break;
                 }
                 currentPage = 0;
-                Configuration.JSONConfig.SortingMode = (int)currentSortingMode;
-                Configuration.JSONConfig.SortingInverse = sortingInverse;
-                Configuration.SaveConfig();
+                Configuration.WriteConfigOption("SortingMode", (int)currentSortingMode);
+                Configuration.WriteConfigOption("SortingInverse", sortingInverse);
                 MelonLoader.MelonCoroutines.Start(JumpToStart());
                 MelonLoader.MelonCoroutines.Start(RefreshMenu(0.5f));
             }));

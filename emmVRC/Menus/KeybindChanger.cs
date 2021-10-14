@@ -29,7 +29,7 @@ namespace emmVRC.Menus
         public static bool InMenu = false;
         public override void OnUiManagerInit()
         {
-            baseMenu = new QMNestedButton(Menus.SettingsMenu.baseMenu.menuBase, 10293, 10239, "a02k3212", "");
+            baseMenu = new QMNestedButton(Menus.SettingsMenuLegacy.baseMenu.menuBase, 10293, 10239, "a02k3212", "");
             baseMenu.getMainButton().DestroyMe();
 
             acceptButton = new QMSingleButton(baseMenu, 1, 2, "Accept", () => { acceptAction.Invoke(mainKey, modifierKey1); fetchingKeys = false; modifierKey1 = KeyCode.None; mainKey = KeyCode.None; }, "Accept this keybind");

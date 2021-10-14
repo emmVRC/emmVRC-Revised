@@ -31,6 +31,47 @@ namespace emmVRC.Hacks
         public override void OnUiManagerInit()
         {
             MelonLoader.MelonCoroutines.Start(Process());
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonX", CalcLogoPosition));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonY", CalcLogoPosition));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FunctionsButtonX", CalcFunctionsPosition));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FunctionsButtonY", CalcFunctionsPosition));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("NotificationButtonPositionX", CalcNotificationsPosition));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("NotificationButtonPositionY", CalcNotificationsPosition));
+
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonEnabled", () => MelonLoader.MelonCoroutines.Start(Process())));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableReportWorldButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableEmojiButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableEmoteButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableRankToggleButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableOldInviteButtons", () => MelonLoader.MelonCoroutines.Start(Process())));
+
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableVRCPlusAds", () => MelonLoader.MelonCoroutines.Start(Process())));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableVRCPlusQMButtons", () => MelonLoader.MelonCoroutines.Start(Process())));
+        }
+
+        public static void CalcLogoPosition()
+        {
+
+            QMSingleButton tempPosition = new QMSingleButton("ShortcutMenu", 1, 0, "", null, "");
+            logoButton.getGameObject().GetComponent<RectTransform>().anchoredPosition = tempPosition.getGameObject().GetComponent<RectTransform>().anchoredPosition;
+            tempPosition.DestroyMe();
+            logoButton.setLocation(Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY);
+        }
+        public static void CalcFunctionsPosition()
+        {
+            QMSingleButton tempPosition = new QMSingleButton("ShortcutMenu", 1, 0, "", null, "");
+            Menus.FunctionsMenuLegacy.baseMenu.menuEntryButton.getGameObject().GetComponent<RectTransform>().anchoredPosition = tempPosition.getGameObject().GetComponent<RectTransform>().anchoredPosition;
+            tempPosition.DestroyMe();
+            Menus.FunctionsMenuLegacy.baseMenu.menuEntryButton.setLocation(Configuration.JSONConfig.FunctionsButtonX, Configuration.JSONConfig.FunctionsButtonY);
+        }
+        public static void CalcNotificationsPosition()
+        {
+            QMSingleButton tempPosition = new QMSingleButton("ShortcutMenu", 1, 0, "", null, "");
+            Managers.NotificationManager.NotificationMenu.getMainButton().getGameObject().GetComponent<RectTransform>().anchoredPosition = tempPosition.getGameObject().GetComponent<RectTransform>().anchoredPosition;
+            tempPosition.DestroyMe();
+
+            Managers.NotificationManager.NotificationMenu.getMainButton().setLocation(Configuration.JSONConfig.NotificationButtonPositionX, Configuration.JSONConfig.NotificationButtonPositionY);
+            Managers.NotificationManager.AddNotification("Your new button position has been saved.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alertSprite, -1);
         }
 
         public static IEnumerator Process()

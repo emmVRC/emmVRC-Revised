@@ -21,7 +21,8 @@ namespace emmVRC.Functions.WorldHacks
         private static Transform camera_body;
         public override void OnUiManagerInit()
         {
-            if (Configuration.JSONConfig.StealthMode || Functions.Core.ModCompatibility.CameraPlus) return;
+            if (Configuration.JSONConfig.StealthMode || Functions.Core.ModCompatibility.CameraPlus || Functions.Other.BuildNumber.buildNumber > 1134) return;
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("CameraPlus", SetCameraPlus));
             MelonLoader.MelonCoroutines.Start(Initialize());
         }
         public static IEnumerator Initialize()

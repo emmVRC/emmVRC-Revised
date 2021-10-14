@@ -41,14 +41,19 @@
     <Compile Include="Components\VRC_UdonPickupTrigger.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
+    <Compile Include="Functions\Core\AlarmClock.cs" />
     <Compile Include="Functions\Other\AnniversaryMode.cs" />
     <Compile Include="Functions\Other\BuildNumber.cs" />
     <Compile Include="Functions\Other\HashCalculator.cs" />
     <Compile Include="Functions\Other\LaunchOptions.cs" />
     <Compile Include="Functions\Other\PlayerJoinLeaveMessages.cs" />
+    <Compile Include="Functions\Other\Programs.cs" />
+    <Compile Include="Functions\PlayerHacks\PlayerHistory.cs" />
     <Compile Include="Functions\PlayerHacks\Waypoints.cs" />
     <Compile Include="Functions\UI\ActionMenuTweaks.cs" />
-    <Compile Include="Functions\UI\FlashlightMenu.cs" />
+    <Compile Include="Functions\WorldHacks\InstanceHistory.cs" />
+    <Compile Include="Menus\ProgramsMenu.cs" />
+    <Compile Include="Menus\Legacy\FlashlightMenuLegacy.cs" />
     <Compile Include="Hacks\AlarmClock.cs" />
     <Compile Include="Functions\UI\AvatarMenu.cs" />
     <Compile Include="Functions\WorldHacks\CameraPlus.cs" />
@@ -73,7 +78,7 @@
     <Compile Include="Functions\PlayerHacks\MasterCrown.cs" />
     <Compile Include="Hacks\PedestalTweaks.cs" />
     <Compile Include="Hacks\MirrorTweaks.cs" />
-    <Compile Include="Hacks\Nameplates.cs" />
+    <Compile Include="Functions\PlayerHacks\Nameplates.cs" />
     <Compile Include="Hacks\SocialMessenger.cs" />
     <Compile Include="Functions\UI\TabMenu.cs" />
     <Compile Include="Functions\UI\UnscaledUITweaks.cs" />
@@ -100,9 +105,9 @@
     <Compile Include="Libraries\emmVRC_Trigger.cs" />
     <Compile Include="Libraries\EULA.cs" />
     <Compile Include="Libraries\Extensions.cs" />
-    <Compile Include="Libraries\GameObjectUtils.cs" />
     <Compile Include="Libraries\Hooking.cs" />
     <Compile Include="Libraries\InstanceIDUtilities.cs" />
+    <Compile Include="Menus\FunctionsMenu.cs" />
     <Compile Include="Menus\KeybindChanger.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
     <Compile Include="Libraries\MainMenuUtils.cs" />
@@ -115,6 +120,13 @@
     <Compile Include="Libraries\PlayerUtils.cs" />
     <Compile Include="Libraries\PopupManagerUtils.cs" />
     <Compile Include="Libraries\QuickMenuUtils.cs" />
+    <Compile Include="Menus\PlayerHistoryMenu.cs" />
+    <Compile Include="Menus\PlayerTweaksMenu.cs" />
+    <Compile Include="Menus\InstanceHistoryMenu.cs" />
+    <Compile Include="Menus\SettingsMenu.cs" />
+    <Compile Include="Menus\WorldTweaksMenu.cs" />
+    <Compile Include="Objects\Alarm.cs" />
+    <Compile Include="Objects\InstancePlayer.cs" />
     <Compile Include="Objects\Waypoint.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\NetworkEvents.cs" />
@@ -147,22 +159,20 @@
     <Compile Include="Menus\CreditsMenu.cs" />
     <Compile Include="Menus\DebugMenu.cs" />
     <Compile Include="Functions\WorldHacks\Flashlight.cs" />
-    <Compile Include="Menus\PlayerHistoryMenu.cs" />
+    <Compile Include="Menus\Legacy\PlayerHistoryMenuLegacy.cs" />
     <Compile Include="Menus\ReportWorldMenu.cs" />
-    <Compile Include="Menus\VRHUD.cs" />
-    <Compile Include="Menus\DesktopHUD.cs" />
+    <Compile Include="Functions\UI\HUD.cs" />
     <Compile Include="Menus\DisabledButtonMenu.cs" />
-    <Compile Include="Menus\FunctionsMenu.cs" />
-    <Compile Include="Menus\InstanceHistory.cs" />
+    <Compile Include="Menus\Legacy\FunctionsMenuLegacy.cs" />
     <Compile Include="Functions\UI\LoadingScreen.cs" />
-    <Compile Include="Menus\PlayerTweaksMenu.cs" />
-    <Compile Include="Menus\InstanceHistoryMenu.cs" />
-    <Compile Include="Menus\ProgramMenu.cs" />
-    <Compile Include="Menus\SettingsMenu.cs" />
+    <Compile Include="Menus\Legacy\PlayerTweaksMenuLegacy.cs" />
+    <Compile Include="Menus\Legacy\InstanceHistoryMenuLegacy.cs" />
+    <Compile Include="Menus\Legacy\ProgramMenuLegacy.cs" />
+    <Compile Include="Menus\Legacy\SettingsMenuLegacy.cs" />
     <Compile Include="Menus\SupporterMenu.cs" />
     <Compile Include="Menus\UserTweaksMenu.cs" />
     <Compile Include="Menus\WaypointsMenu.cs" />
-    <Compile Include="Menus\WorldTweaksMenu.cs" />
+    <Compile Include="Menus\Legacy\WorldTweaksMenuLegacy.cs" />
     <Compile Include="Network\Authentication\Authentication.cs" />
     <Compile Include="Network\HTTPResponse.cs" />
     <Compile Include="Network\NetworkClient.cs" />
@@ -233,6 +243,9 @@
     </Reference>
     <Reference Include="AVProVideo.Runtime">
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\AVProVideo.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="DataModel">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\DataModel.dll</HintPath>
     </Reference>
     <Reference Include="emmVRCLoader, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -420,6 +433,15 @@
     </Reference>
     <Reference Include="VRC.Udon.Wrapper">
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.Udon.Wrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.UI.Core">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.UI.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.UI.Elements">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.UI.Elements.dll</HintPath>
+    </Reference>
+    <Reference Include="VRC.UI.Shared">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\VRC.UI.Shared.dll</HintPath>
     </Reference>
     <Reference Include="VRCCore-Editor, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

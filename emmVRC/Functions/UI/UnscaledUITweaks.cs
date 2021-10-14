@@ -13,6 +13,7 @@ namespace emmVRC.Functions.UI
         private static GameObject micTooltipXbox;
         public override void OnUiManagerInit()
         {
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableMicTooltip", Process));
             Process();
         }
         public static void Process()

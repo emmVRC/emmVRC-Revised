@@ -45,6 +45,7 @@ namespace emmVRC.Libraries
             ToggleState = defaultState;
             type = PageItems.Toggle;
         }
+        public PageItem(string onName, string offName, System.Action<bool> action, string tooltip, bool active = true, bool defaultState = true) : this(onName, () => action.Invoke(true), offName, () => action.Invoke(false), tooltip, active, defaultState) { }
         public static PageItem Space
         {
             get

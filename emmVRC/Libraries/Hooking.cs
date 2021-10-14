@@ -7,31 +7,21 @@ using Harmony;
 using UnityEngine;
 using VRC;
 using VRC.Core;
+using emmVRC.Objects.ModuleBases;
+using emmVRC.Libraries;
 
-namespace emmVRC.Libraries
+namespace emmVRC.Functions.Core
 {
-    public class Hooking
+    public class Hooking : MelonLoaderEvents
     {
-        private static Harmony.HarmonyInstance instanceHarmony;
-        private static Action<Player> event1Action;
-        private static Action<Player> event2Action;
 
         private static Regex methodMatchRegex = new Regex("Method_Public_Void_\\d", RegexOptions.Compiled);
 
-        public unsafe static void Initialize()
+        public override void OnUiManagerInit()
         {
-            instanceHarmony = Harmony.HarmonyInstance.Create("emmVRCHarmony");
             try
             {
-                /*foreach (MethodInfo inf in typeof(VRCPlayer).GetMethods())
-                {
-                    if (inf.Name.Contains("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_PDM_") && !UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(inf).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == "Avatar is Ready, Initializing"))
-                    {
-                        instanceHarmony.Patch(inf, new HarmonyMethod(typeof(Hooking).GetMethod("OnAvatarInstantiated", BindingFlags.NonPublic | BindingFlags.Static)));
-                    }
-                }*/
-                instanceHarmony.Patch(typeof(VRCPlayer).GetMethod("Awake"), new HarmonyMethod(typeof(Hooking).GetMethod("VRCPlayerAwake", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                //instanceHarmony.Patch(typeof(VRCAvatarManager).GetMethods().First(mb => mb.Name.StartsWith("Method_Private_Void_ApiAvatar_GameObject_Action_1_Boolean_")), new HarmonyMethod(typeof(Hooking).GetMethod(nameof(OnAvatarInstantiate), BindingFlags.NonPublic | BindingFlags.Static)));
+                emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(typeof(VRCPlayer).GetMethod("Awake"), new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("VRCPlayerAwake", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
             }
             catch (Exception ex)
             {
@@ -41,7 +31,7 @@ namespace emmVRC.Libraries
             {
                 if (!Functions.Core.ModCompatibility.PortalConfirmation)
                 {
-                    instanceHarmony.Patch(typeof(PortalInternal).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 0 && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == " was at capacity, cannot enter.")), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("OnPortalEntered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                    emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(typeof(PortalInternal).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 0 && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == " was at capacity, cannot enter.")), new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("OnPortalEntered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                 }
             }
             catch (Exception ex)
@@ -50,7 +40,7 @@ namespace emmVRC.Libraries
             }
             try
             {
-                instanceHarmony.Patch(typeof(VRC_StationInternal).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(typeof(VRC_StationInternal).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                 //instanceHarmony.Patch(typeof(VRC_StationInternal2).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                 //instanceHarmony.Patch(typeof(VRC_StationInternal3).GetMethod("Method_Public_Boolean_Player_Boolean_0"), new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PlayerCanUseStation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
             }
@@ -66,14 +56,14 @@ namespace emmVRC.Libraries
                     {
                         if (inf.GetParameters().Length == 1 && inf.GetParameters().First().ParameterType == typeof(string) && inf.ReturnType == typeof(bool) && inf.GetRuntimeBaseDefinition() == inf)
                         {
-                            instanceHarmony.Patch(inf, new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("IsCalibratedForAvatar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                            emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(inf, new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("IsCalibratedForAvatar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                         }
                     }
                     foreach (System.Reflection.MethodInfo inf in System.Reflection.Assembly.GetAssembly(typeof(QuickMenuContextualDisplay)).GetType("VRCTrackingSteam", true, true).GetMethods())
                     {
                         if (inf.GetParameters().Length == 3 && inf.GetParameters().First().ParameterType == typeof(Animator) && inf.ReturnType == typeof(void) && inf.GetRuntimeBaseDefinition() == inf)
                         {
-                            instanceHarmony.Patch(inf, new Harmony.HarmonyMethod(typeof(Hooking).GetMethod("PerformCalibration", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                            emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(inf, new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("PerformCalibration", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
                         }
                     }
                 }
@@ -87,7 +77,7 @@ namespace emmVRC.Libraries
                 foreach (MethodInfo method in typeof(PlayerNameplate).GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => methodMatchRegex.IsMatch(x.Name)))
                 {
                     emmVRCLoader.Logger.LogDebug($"Found target Rebuild method ({method.Name})");
-                    instanceHarmony.Patch(method, null, new HarmonyMethod(typeof(Hooking).GetMethod("OnRebuild", BindingFlags.NonPublic | BindingFlags.Static)));
+                    emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(method, null, new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("OnRebuild", BindingFlags.NonPublic | BindingFlags.Static)));
                 }
             }
             catch (Exception ex) { emmVRCLoader.Logger.LogError("Avatar OnRebuild Failed: " + ex.ToString()); }
@@ -117,13 +107,6 @@ namespace emmVRC.Libraries
 
         private static void OnAvatarInstantiate(VRCAvatarManager __instance, GameObject __0)
         {
-            emmVRCLoader.Logger.LogDebug("Avatar loaded");
-            emmVRCLoader.Logger.LogDebug("Field Descriptor 1 is " + (__instance.field_Private_VRC_AvatarDescriptor_0 == null ? "null" : "not null"));
-            emmVRCLoader.Logger.LogDebug("Field Descriptor 2 is " + (__instance.field_Private_VRC_AvatarDescriptor_1 == null ? "null" : "not null"));
-            emmVRCLoader.Logger.LogDebug("Field AvatarDescriptor is " + (__instance.field_Private_VRCAvatarDescriptor_0 == null ? "null" : "not null"));
-            emmVRCLoader.Logger.LogDebug("Prop Descriptor 1 is " + (__instance.prop_VRC_AvatarDescriptor_0 == null ? "null" : "not null"));
-            emmVRCLoader.Logger.LogDebug("Prop Descriptor 2 is " + (__instance.prop_VRC_AvatarDescriptor_1 == null ? "null" : "not null"));
-            emmVRCLoader.Logger.LogDebug("Prop AvatarDescriptor is " + (__instance.prop_VRCAvatarDescriptor_0 == null ? "null" : "not null"));
             VRC.SDKBase.VRC_AvatarDescriptor descriptor = null;
             if (__instance.field_Private_VRC_AvatarDescriptor_0 != null)
                 descriptor = __instance.field_Private_VRC_AvatarDescriptor_0;
@@ -134,10 +117,6 @@ namespace emmVRC.Libraries
             else
             {
                 Managers.AvatarPermissionManager.ProcessAvatar(__0, descriptor);
-                if (!Functions.Core.ModCompatibility.MultiplayerDynamicBones)
-                {
-                    Hacks.GlobalDynamicBones.ProcessDynamicBones(__0, descriptor);
-                }
             }
             //MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(__1));
         }
@@ -164,8 +143,8 @@ namespace emmVRC.Libraries
             {
                 if (Configuration.JSONConfig.InfoSpoofingEnabled)
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
-                else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());
+                /*else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
+                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());*/
                 if (Configuration.JSONConfig.NameplateColorChangingEnabled && !Functions.Core.ModCompatibility.OGTrustRank)
                 {
                     APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;

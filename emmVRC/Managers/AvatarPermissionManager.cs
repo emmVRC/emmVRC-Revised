@@ -171,7 +171,7 @@ namespace emmVRC.Managers
                 if (UserInteractMenu)
                     QuickMenuUtils.ShowQuickmenuPage("UserInteractMenu");
                 else
-                    QuickMenuUtils.ShowQuickmenuPage(PlayerTweaksMenu.baseMenu.getMenuName());
+                    QuickMenuUtils.ShowQuickmenuPage(PlayerTweaksMenuLegacy.baseMenu.getMenuName());
             }));
 
         }

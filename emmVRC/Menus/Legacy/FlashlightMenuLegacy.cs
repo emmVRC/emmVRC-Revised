@@ -8,10 +8,10 @@ using emmVRC.Utils;
 using emmVRC.Libraries;
 using emmVRC.Objects.ModuleBases;
 
-namespace emmVRC.Functions.UI
+namespace emmVRC.Menus
 {
     [Priority(60)]
-    public class FlashlightMenu : MelonLoaderEvents
+    public class FlashlightMenuLegacy : MelonLoaderEvents
     {
         public static QMNestedButton baseMenu;
 
@@ -25,7 +25,7 @@ namespace emmVRC.Functions.UI
 
         public override void OnUiManagerInit()
         {
-            baseMenu = new QMNestedButton(Menus.WorldTweaksMenu.baseMenu, 3, 1, "Flashlight", "Configure and summon a flashlight you can carry through your current world");
+            baseMenu = new QMNestedButton(Menus.WorldTweaksMenuLegacy.baseMenu, 3, 1, "Flashlight", "Configure and summon a flashlight you can carry through your current world");
             toggleFlashlight = new QMToggleButton(baseMenu, 1, 0, "Flashlight On", () =>
             {
                 Functions.WorldHacks.Flashlight.SetFlashlightActive(true);

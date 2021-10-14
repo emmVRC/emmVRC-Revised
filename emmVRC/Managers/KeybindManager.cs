@@ -21,9 +21,8 @@ namespace emmVRC.Managers
         {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.H))
             {
-                Configuration.JSONConfig.UIVisible = !Configuration.JSONConfig.UIVisible;
-                Configuration.SaveConfig();
-                Functions.UI.UIElementsMenu.ToggleHUD.setToggleState(Configuration.JSONConfig.HUDEnabled);
+                Configuration.WriteConfigOption("UIVisible", !Configuration.JSONConfig.UIVisible);
+                Functions.UI.UIElementsMenuLegacy.ToggleHUD.setToggleState(Configuration.JSONConfig.HUDEnabled);
             }
             if (Configuration.JSONConfig.EnableKeybinds)
             {
@@ -32,19 +31,19 @@ namespace emmVRC.Managers
                     // If the flight keybind is pressed...
                     if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) || (KeyCode)Configuration.JSONConfig.FlightKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !keyFlag)
                     {
-                        Menus.PlayerTweaksMenu.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
+                        Menus.PlayerTweaksMenuLegacy.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
                         keyFlag = true;
                     }
                     // If the noclip keybind is pressed...
                     if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1]) || (KeyCode)Configuration.JSONConfig.NoclipKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !keyFlag)
                     {
-                        Menus.PlayerTweaksMenu.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
+                        Menus.PlayerTweaksMenuLegacy.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
                         keyFlag = true;
                     }
                     // If the Speed keybind is pressed...
                     if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1]) || (KeyCode)Configuration.JSONConfig.SpeedKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !keyFlag)
                     {
-                        Menus.PlayerTweaksMenu.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
+                        Menus.PlayerTweaksMenuLegacy.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
                         keyFlag = true;
                     }
                 }
