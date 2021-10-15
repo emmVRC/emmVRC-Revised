@@ -23,7 +23,10 @@ namespace emmVRC.Objects
             "• UIExpansionKit coloring will no longer affect checkboxes\n" +
             "• Added more exclusions and inclusions to the color module\n" +
             "• Mods can now opt out of emmVRC coloring for buttons by using a \"emmVRCDoNotColor\" GameObject within the button\n" +
-            "• ";
+            "• The original Functions menu button has been removed in preparation for newer UI designs of VRChat\n" +
+            "• Info spoofing has been removed, as it was too hard to maintain and its' purpose is largely provided by Streamer mode\n" +
+            "• Several modules of emmVRC have been rewritten for better performance and expandability\n" +
+            "• Errors in specific modules of emmVRC will no longer cause the rest of the mod to stop loading or working";
         public static bool Debug = false;
         public static string TargetMelonLoaderVersion = "0.4.3";
         public static string TargetemmVRCLoaderVersion = "1.2.0";
