@@ -225,28 +225,22 @@ namespace emmVRC.Functions.UI
                 UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().FirstOrDefault().highlightColor = color;
             try
             {
+                GameObject HudVoiceIndicator = UnityEngine.Resources.FindObjectsOfTypeAll<FadeCycleEffect>().First().transform.parent.gameObject;
                 if (Configuration.JSONConfig.UIMicIconColorChangingEnabled && Configuration.JSONConfig.UIColorChangingEnabled)
                 {
                     emmVRCLoader.Logger.LogDebug("Coloring Push To Talk icons...");
-                    foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
+                    foreach (Image img in HudVoiceIndicator.transform.GetComponentsInChildren<Image>())
                         if (img.gameObject.name != "PushToTalkKeybd" && img.gameObject.name != "PushToTalkXbox")
                             img.color = color;
-                    GameObject.FindObjectOfType<HudVoiceIndicator>().field_Private_Color_0 = new Color(color.r, color.g, color.b, 0.641f);
-                    GameObject.FindObjectOfType<HudVoiceIndicator>().field_Private_Color_1 = new Color(color.r, color.g, color.b, 0.3205f);
                 }
                 else
                 {
                     emmVRCLoader.Logger.LogDebug("Decoloring Push To Talk icons...");
-                    foreach (Image img in GameObject.FindObjectOfType<HudVoiceIndicator>().transform.GetComponentsInChildren<Image>())
+                    foreach (Image img in HudVoiceIndicator.transform.GetComponentsInChildren<Image>())
                         if (img.gameObject.name != "PushToTalkKeybd" && img.gameObject.name != "PushToTalkXbox")
                             img.color = Color.red;
-                    GameObject.FindObjectOfType<HudVoiceIndicator>().field_Private_Color_0 = new Color(1f, 0f, 0.144f, 0.641f);
-                    GameObject.FindObjectOfType<HudVoiceIndicator>().field_Private_Color_1 = new Color(1f, 0f, 0.144f, 0.3205f);
                 }
-                foreach (HudVoiceIndicator indicator in GameObject.FindObjectsOfType<HudVoiceIndicator>())
-                {
-                    indicator.transform.Find("VoiceDotDisabled").GetComponent<FadeCycleEffect>().enabled = Configuration.JSONConfig.UIMicIconPulsingEnabled;
-                }
+                HudVoiceIndicator.transform.Find("VoiceDotDisabled").GetComponent<FadeCycleEffect>().enabled = Configuration.JSONConfig.UIMicIconPulsingEnabled;
             }
             catch (Exception ex)
             {
