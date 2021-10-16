@@ -48,6 +48,7 @@
     <Compile Include="Functions\Other\LaunchOptions.cs" />
     <Compile Include="Functions\Other\PlayerJoinLeaveMessages.cs" />
     <Compile Include="Functions\Other\Programs.cs" />
+    <Compile Include="Functions\Other\UpdateNotice.cs" />
     <Compile Include="Functions\PlayerHacks\PlayerHistory.cs" />
     <Compile Include="Functions\PlayerHacks\Waypoints.cs" />
     <Compile Include="Functions\UI\ActionMenuTweaks.cs" />
@@ -79,7 +80,6 @@
     <Compile Include="Hacks\PedestalTweaks.cs" />
     <Compile Include="Hacks\MirrorTweaks.cs" />
     <Compile Include="Functions\PlayerHacks\Nameplates.cs" />
-    <Compile Include="Hacks\SocialMessenger.cs" />
     <Compile Include="Functions\UI\TabMenu.cs" />
     <Compile Include="Functions\UI\UnscaledUITweaks.cs" />
     <Compile Include="Hacks\UserInfoTweaks.cs" />
@@ -103,7 +103,7 @@
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Libraries\CustomTrigger.cs" />
     <Compile Include="Libraries\emmVRC_Trigger.cs" />
-    <Compile Include="Libraries\EULA.cs" />
+    <Compile Include="Functions\Other\EULA.cs" />
     <Compile Include="Libraries\Extensions.cs" />
     <Compile Include="Libraries\Hooking.cs" />
     <Compile Include="Libraries\InstanceIDUtilities.cs" />

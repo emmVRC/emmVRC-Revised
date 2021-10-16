@@ -1,5 +1,6 @@
 ﻿using emmVRC.Libraries;
 using emmVRC.Menus;
+using emmVRC.Objects.ModuleBases;
 using emmVRC.Network.Objects;
 using Il2CppSystem.IO;
 using System;
@@ -33,13 +34,14 @@ namespace emmVRC.Managers
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserPermissions/" + UserId + ".json"), TinyJSON.Encoder.Encode(this));
         }
     }
-    public class UserPermissionManager
+    [Priority(50)]
+    public class UserPermissionManager : MelonLoaderEvents
     {
         public static PaginatedMenu baseMenu;
         public static PageItem GlobalDynamicBonesEnabledToggle;
 
         public static UserPermissions selectedUserPermissions;
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserPermissions/")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserPermissions/"));

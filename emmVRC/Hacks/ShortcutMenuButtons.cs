@@ -31,22 +31,26 @@ namespace emmVRC.Hacks
         public override void OnUiManagerInit()
         {
             MelonLoader.MelonCoroutines.Start(Process());
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonX", CalcLogoPosition));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonY", CalcLogoPosition));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FunctionsButtonX", CalcFunctionsPosition));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FunctionsButtonY", CalcFunctionsPosition));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("NotificationButtonPositionX", CalcNotificationsPosition));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("NotificationButtonPositionY", CalcNotificationsPosition));
+            if (Functions.Other.BuildNumber.buildNumber < 1134)
+            {
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonX", CalcLogoPosition));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonY", CalcLogoPosition));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FunctionsButtonX", CalcFunctionsPosition));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FunctionsButtonY", CalcFunctionsPosition));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("NotificationButtonPositionX", CalcNotificationsPosition));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("NotificationButtonPositionY", CalcNotificationsPosition));
 
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonEnabled", () => MelonLoader.MelonCoroutines.Start(Process())));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableReportWorldButton", () => MelonLoader.MelonCoroutines.Start(Process())));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableEmojiButton", () => MelonLoader.MelonCoroutines.Start(Process())));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableEmoteButton", () => MelonLoader.MelonCoroutines.Start(Process())));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableRankToggleButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LogoButtonEnabled", () => MelonLoader.MelonCoroutines.Start(Process())));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableReportWorldButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableEmojiButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableEmoteButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableRankToggleButton", () => MelonLoader.MelonCoroutines.Start(Process())));
+
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableVRCPlusAds", () => MelonLoader.MelonCoroutines.Start(Process())));
+                Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableVRCPlusQMButtons", () => MelonLoader.MelonCoroutines.Start(Process())));
+            }
             Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableOldInviteButtons", () => MelonLoader.MelonCoroutines.Start(Process())));
 
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableVRCPlusAds", () => MelonLoader.MelonCoroutines.Start(Process())));
-            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("DisableVRCPlusQMButtons", () => MelonLoader.MelonCoroutines.Start(Process())));
         }
 
         public static void CalcLogoPosition()
@@ -77,38 +81,47 @@ namespace emmVRC.Hacks
         public static IEnumerator Process()
         {
 
-
-            if (logoButton == null)
+            if (Functions.Other.BuildNumber.buildNumber < 1134)
             {
-                logoButton = new QMSingleButton("ShortcutMenu", Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY, "", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
-                while (Functions.Core.Resources.onlineSprite == null) yield return null;
-                logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Functions.Core.Resources.onlineSprite;
+                if (logoButton == null)
+                {
+                    logoButton = new QMSingleButton("ShortcutMenu", Configuration.JSONConfig.LogoButtonX, Configuration.JSONConfig.LogoButtonY, "", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "emmVRC Version v" + Objects.Attributes.Version + " by the emmVRC Team. Click the logo to join our Discord!", Color.white, Color.white);
+                    while (Functions.Core.Resources.onlineSprite == null) yield return null;
+                    logoButton.getGameObject().GetComponentInChildren<Image>().sprite = Functions.Core.Resources.onlineSprite;
+                }
+                logoButton.setActive(Configuration.JSONConfig.LogoButtonEnabled);
+                logoButton.getGameObject().transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.zero : Vector3.one);
+                emojiButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmojiButton").gameObject;
+                emoteButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmoteButton").gameObject;
+                reportWorldButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/ReportWorldButton").gameObject;
+                trustRankButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors").gameObject;
+                vrcPlusThankYouButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusThankYou").gameObject;
+                vrcPlusUserIconButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GalleryButton").gameObject;
+                vrcPlusUserIconCameraButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/UserIconCameraButton").gameObject;
+                vrcPlusMiniBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusMiniBanner").gameObject;
+                vrcPlusMainBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/VRCPlusBanner").gameObject;
+                socialNotifications = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/SocialNotifications").gameObject;
+                emojiButton.SetActive(!Configuration.JSONConfig.DisableEmojiButton);
+                emoteButton.SetActive(!Configuration.JSONConfig.DisableEmoteButton);
+                reportWorldButton.SetActive(!Configuration.JSONConfig.DisableReportWorldButton);
+                trustRankButton.transform.localScale = (Configuration.JSONConfig.DisableRankToggleButton ? Vector3.zero : Vector3.one);
+                socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
+                while (APIUser.CurrentUser == null || Objects.NetworkConfig.Instance == null)
+                    yield return new WaitForEndOfFrame();
+                vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+                vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
+                vrcPlusThankYouButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+                vrcPlusUserIconButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+                vrcPlusUserIconCameraButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
             }
-            logoButton.setActive(Configuration.JSONConfig.LogoButtonEnabled);
-            logoButton.getGameObject().transform.localScale = (Configuration.JSONConfig.TabMode ? Vector3.zero : Vector3.one);
-            emojiButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmojiButton").gameObject;
-            emoteButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/EmoteButton").gameObject;
-            reportWorldButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/ReportWorldButton").gameObject;
-            trustRankButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors").gameObject;
-            socialNotifications = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/SocialNotifications").gameObject;
-            vrcPlusThankYouButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusThankYou").gameObject;
-            vrcPlusUserIconButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GalleryButton").gameObject;
-            vrcPlusUserIconCameraButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/UserIconCameraButton").gameObject;
-            vrcPlusMiniBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/VRCPlusMiniBanner").gameObject;
-            vrcPlusMainBanner = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/HeaderContainer/VRCPlusBanner").gameObject;
+            else
+            {
+                socialNotifications = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMNotificationsArea/NotificationsAndThankYou/SocialNotificationsOverlay").gameObject;
+                socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
+            }
 
-            emojiButton.SetActive(!Configuration.JSONConfig.DisableEmojiButton);
-            emoteButton.SetActive(!Configuration.JSONConfig.DisableEmoteButton);
-            reportWorldButton.SetActive(!Configuration.JSONConfig.DisableReportWorldButton);
-            trustRankButton.transform.localScale = (Configuration.JSONConfig.DisableRankToggleButton ? Vector3.zero : Vector3.one);
-            socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
-            while (APIUser.CurrentUser == null || Objects.NetworkConfig.Instance == null)
-                yield return new WaitForEndOfFrame();
-            vrcPlusMiniBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
-            vrcPlusMainBanner.GetComponent<Canvas>().enabled = !Configuration.JSONConfig.DisableVRCPlusAds;
-            vrcPlusThankYouButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
-            vrcPlusUserIconButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
-            vrcPlusUserIconCameraButton.transform.localScale = (Configuration.JSONConfig.DisableVRCPlusQMButtons ? Vector3.zero : Vector3.one);
+
+            
         }
     }
 }

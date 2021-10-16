@@ -133,27 +133,6 @@ namespace emmVRC
                     }
                 }
 
-                // Applying some quick commands on OnSceneLoaded
-                emmVRCLoader.Logger.LogDebug("Processing OnSceneLoaded events...");
-                UnityEngine.SceneManagement.SceneManager.add_sceneLoaded(new System.Action<UnityEngine.SceneManagement.Scene, UnityEngine.SceneManagement.LoadSceneMode>((asa, asd) =>
-                {
-                    OnSceneLoaded(asa, asd);
-                }));
-
-                // Initialize Avatar Permissions
-                emmVRCLoader.Logger.LogDebug("Initializing Avatar Permissions module...");
-                AvatarPermissionManager.Initialize();
-
-                // Initialize User Permissions
-                emmVRCLoader.Logger.LogDebug("Initializing User Permissions module...");
-                UserPermissionManager.Initialize();
-
-                if (!Configuration.JSONConfig.StealthMode)
-                {
-                    emmVRCLoader.Logger.LogDebug("Initializing User Info tweaks...");
-                    Hacks.UserInfoTweaks.Initialize();
-                }
-
                 // At this point, if no errors have occured, emmVRC is done initializing
                 watch.Stop();
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
@@ -171,31 +150,6 @@ namespace emmVRC
                 //});
 
             }
-        }
-
-        public static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode)
-        {
-            Hacks.MirrorTweaks.FetchMirrors();
-            Hacks.PedestalTweaks.FetchPedestals();
-            MelonLoader.MelonCoroutines.Start(EULA.Initialize());
-
-            //MelonLoader.MelonCoroutines.Start(Hacks.UIElementsMenu.OnSceneLoaded());
-            if (Configuration.JSONConfig.LastVersion != Attributes.Version)
-            {
-                Configuration.WriteConfigOption("LastVersion", Attributes.Version);
-                Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Attributes.Version + "!", "View\nChangelog", () =>
-                { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Functions.Core.Resources.alertSprite, -1);
-            }
-            if (Functions.Core.ModCompatibility.MultiplayerDynamicBones && Configuration.JSONConfig.GlobalDynamicBonesEnabled)
-            {
-                Configuration.WriteConfigOption("GlobalDynamicBonesEnabled", false);
-                Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alertSprite, -1);
-            }
-
-            #region Korty's Addons
-            Hacks.ComponentToggle.OnLevelLoad();
-            Hacks.ComponentToggle.Toggle();
-            #endregion
         }
         public static void OnSceneWasLoaded(int buildIndex, string sceneName)
         {

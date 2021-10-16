@@ -108,6 +108,15 @@ namespace emmVRC.Functions.Core
             if (CameraPlus)
                 emmVRCLoader.Logger.LogDebug("Detected CameraPlus");
         }
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        {
+            if (buildIndex != -1) return;
+            if (Functions.Core.ModCompatibility.MultiplayerDynamicBones && Configuration.JSONConfig.GlobalDynamicBonesEnabled)
+            {
+                Configuration.WriteConfigOption("GlobalDynamicBonesEnabled", false);
+                Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alertSprite, -1);
+            }
+        }
         public static IEnumerator ColorUIExpansionKit()
         {
             yield return null;

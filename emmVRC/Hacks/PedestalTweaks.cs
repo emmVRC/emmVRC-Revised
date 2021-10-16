@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VRC;
 using VRCSDK2;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Hacks
 {
@@ -14,12 +15,11 @@ namespace emmVRC.Hacks
         public GameObject PedestalParent;
         public bool originalActiveStatus;
     }
-    public class PedestalTweaks
+    public class PedestalTweaks : MelonLoaderEvents
     {
         public static List<OriginalPedestal> originalPedestals;
-        public static void FetchPedestals()
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-
             originalPedestals = new List<OriginalPedestal>();
             foreach (VRC.SDKBase.VRC_AvatarPedestal pdst in UnityEngine.Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRC_AvatarPedestal>())
             {

@@ -9,10 +9,11 @@ using VRC.SDKBase;
 using VRCSDK2;
 using RenderHeads.Media.AVProVideo;
 using UnityEngine.Video;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Hacks
 {
-    public class ComponentToggle
+    public class ComponentToggle : MelonLoaderEvents
     {
         internal static VRC_SyncVideoPlayer[] Video_stored_sdk2;
         internal static SyncVideoPlayer[] Video_stored_sdk3; // type 1
@@ -26,7 +27,7 @@ namespace emmVRC.Hacks
 
         internal static VRC.SDKBase.VRC_Trigger[] Trigger_stored; // for TriggerESP
 
-        public static void OnLevelLoad() { Store(); }
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName) { Store(); Toggle(); }
 
         private static void Store()
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Hacks
 {
@@ -12,12 +13,12 @@ namespace emmVRC.Hacks
         public VRC.SDKBase.VRC_MirrorReflection MirrorParent;
         public LayerMask OriginalLayers;
     }
-    public class MirrorTweaks
+    public class MirrorTweaks : MelonLoaderEvents
     {
         public static List<OriginalMirror> originalMirrors = new List<OriginalMirror>();
         private static LayerMask optimizeMask = new LayerMask { value = 263680 };
         private static LayerMask beautifyMask = new LayerMask { value = -1025 };
-        public static void FetchMirrors()
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             originalMirrors = new List<OriginalMirror>();
             foreach (VRC.SDKBase.VRC_MirrorReflection refl in UnityEngine.Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRC_MirrorReflection>())

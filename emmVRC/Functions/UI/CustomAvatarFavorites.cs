@@ -588,6 +588,7 @@ namespace emmVRC.Functions.UI
             else
             {
                 avText.GetComponentInChildren<Text>().text = "Searching. Please wait...";
+                emmVRCLoader.Logger.LogDebug("Clearing current search avatars...");
                 SearchedAvatars.Clear();
                 Network.Objects.Avatar[] avatarArray = null;
 
@@ -597,7 +598,7 @@ namespace emmVRC.Functions.UI
                     var result = await HTTPRequest.post(NetworkClient.baseURL + "/api/avatar/search",
                         new System.Collections.Generic.Dictionary<string, string> { ["query"] = query });
 
-                    if (result.Contains("Bad Request"))
+                    if (result.Contains("Bad Request") || result.Contains("Too Many Requests"))
                     {
                         await emmVRC.AwaitUpdate.Yield();
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
@@ -607,12 +608,8 @@ namespace emmVRC.Functions.UI
                         avatarArray = TinyJSON.Decoder.Decode(result).Make<Network.Objects.Avatar[]>();
                         await emmVRC.AwaitUpdate.Yield();
                         if (avatarArray != null)
-                        {
                             foreach (Network.Objects.Avatar avatar in avatarArray)
-                            {
                                 SearchedAvatars.Add(avatar.apiAvatar());
-                            }
-                        }
                         currentPage = 0;
                         Searching = true;
                         MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));

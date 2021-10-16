@@ -47,13 +47,13 @@ namespace emmVRC.Network.Objects
             {
                 ApiAvatar avtr = new ApiAvatar
                 {
-                    name = Encoding.UTF8.GetString(Convert.FromBase64String(avatar_name)),
+                    name = avatar_name,
                     id = avatar_id,
                     assetUrl = avatar_asset_url,
                     thumbnailImageUrl = avatar_thumbnail_image_url,
                     authorId = avatar_author_id,
-                    authorName = Encoding.UTF8.GetString(Convert.FromBase64String(avatar_author_name)),
-                    description = Encoding.UTF8.GetString(Convert.FromBase64String(avatar_name)),
+                    authorName = avatar_author_name,
+                    description = avatar_name,
                     releaseStatus = (NetworkConfig.Instance.DisableAvatarChecks ? "public" : (avatar_public == 0 ? "private" : (avatar_public == 1 ? "public" : "unavailable"))),
                     unityVersion = "2018.4.20f1",
                     version = 1,
@@ -71,7 +71,7 @@ namespace emmVRC.Network.Objects
                 ApiAvatar avtr = new ApiAvatar
                 {
                     releaseStatus = "unavailable",
-                    name = Encoding.UTF8.GetString(Convert.FromBase64String(avatar_name)),
+                    name = avatar_name,
                     id = "null",
                     assetUrl = "",
                     thumbnailImageUrl = "http://img.thetrueyoshifan.com/AvatarUnavailable.png",

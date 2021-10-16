@@ -1,5 +1,6 @@
 ﻿using emmVRC.Libraries;
 using emmVRC.Menus;
+using emmVRC.Objects.ModuleBases;
 using emmVRC.Network.Objects;
 using Il2CppSystem.IO;
 using System;
@@ -45,7 +46,8 @@ namespace emmVRC.Managers
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarPermissions/" + AvatarId + ".json"), TinyJSON.Encoder.Encode(this));
         }
     }
-    public class AvatarPermissionManager
+    [Priority(50)]
+    public class AvatarPermissionManager : MelonLoaderEvents
     {
         public static PaginatedMenu baseMenu;
         public static PageItem DynamicBonesEnabledToggle;
@@ -66,7 +68,7 @@ namespace emmVRC.Managers
         public static UnityAction originalBackAction;
 
         public static AvatarPermissions selectedAvatarPermissions;
-        public static void Initialize()
+        public override void OnUiManagerInit()
         {
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarPermissions/")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/AvatarPermissions/"));
