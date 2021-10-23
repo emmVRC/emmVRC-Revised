@@ -28,6 +28,8 @@ namespace emmVRC.Utils
         internal static GameObject menuTabBase;
         internal static GameObject sliderBase;
         internal static Sprite onIconSprite;
+        internal static Sprite plusIconSprite;
+        internal static Sprite xIconSprite;
         internal static VRC.UI.Elements.QuickMenu GetQuickMenuInstance()
         {
             return UnityEngine.Resources.FindObjectsOfTypeAll<VRC.UI.Elements.QuickMenu>().FirstOrDefault();
@@ -44,7 +46,6 @@ namespace emmVRC.Utils
         {
             while (GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/") == null)
                 yield return new WaitForEndOfFrame();
-            emmVRCLoader.Logger.LogDebug("Found the stuff!");
             singleButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/Button_Respawn").gameObject;
             textButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Settings/Panel_QM_ScrollRect/Viewport/VerticalLayoutGroup/Buttons_Debug/Button_Build").gameObject;
             toggleButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Settings/Panel_QM_ScrollRect/Viewport/VerticalLayoutGroup/Buttons_UI_Elements_Row_1/Button_ToggleQMInfo").gameObject;
@@ -55,8 +56,8 @@ namespace emmVRC.Utils
             sliderBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_AudioSettings/Content/Audio/VolumeSlider_Master").gameObject;
 
             onIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Notifications/Panel_NoNotifications_Message/Icon").GetComponent<Image>().sprite;
-            emmVRCLoader.Logger.LogDebug("Sprite name: " + onIconSprite.name);
-            GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard/ScrollRect").GetComponent<ScrollRect>().enabled = true;
+            plusIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Here/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_WorldActions/Button_FavoriteWorld/Icon").GetComponent<Image>().sprite;
+            xIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Here/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_WorldActions/Button_FavoriteWorld/Icon_Secondary").GetComponent<Image>().sprite;
         }
     }
     public class SingleButton
@@ -67,7 +68,7 @@ namespace emmVRC.Utils
         private readonly VRC.UI.Elements.Tooltips.UiTooltip buttonTooltip;
         public readonly GameObject gameObject;
         
-        public SingleButton(Transform parent, string text, Action click, string tooltip, Sprite icon = null)
+        public SingleButton(Transform parent, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false)
         {
             gameObject = GameObject.Instantiate(ButtonAPI.singleButtonBase, parent);
             buttonText = gameObject.GetComponentInChildren<TextMeshProUGUI>(true);
@@ -76,19 +77,24 @@ namespace emmVRC.Utils
             buttonButton.onClick = new Button.ButtonClickedEvent();
             buttonButton.onClick.AddListener(click);
             buttonTooltip = gameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
-            buttonTooltip.text = tooltip;
+            buttonTooltip.field_Public_String_0 = tooltip;
             buttonImage = gameObject.transform.Find("Icon").GetComponentInChildren<Image>(true);
             if (icon != null)
             {
                 buttonImage.sprite = icon;
                 buttonImage.overrideSprite = icon;
                 buttonImage.gameObject.SetActive(true);
+                if (preserveColor)
+                {
+                    buttonImage.color = Color.white;
+                    buttonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+                }
             }
             else
                 buttonImage.gameObject.SetActive(false);
         }
-        public SingleButton(MenuPage pge, string text, Action click, string tooltip, Sprite icon = null) : this(pge.menuContents, text, click, tooltip, icon) { }
-        public SingleButton(ButtonGroup grp, string text, Action click, string tooltip, Sprite icon = null) : this(grp.gameObject.transform, text, click, tooltip, icon) { }
+        public SingleButton(MenuPage pge, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false) : this(pge.menuContents, text, click, tooltip, icon, preserveColor) { }
+        public SingleButton(ButtonGroup grp, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false) : this(grp.gameObject.transform, text, click, tooltip, icon, preserveColor) { }
         public void SetAction(Action newAction)
         {
             buttonButton.onClick = new Button.ButtonClickedEvent();
@@ -100,9 +106,9 @@ namespace emmVRC.Utils
         }
         public void SetTooltip(string newTooltip)
         {
-            buttonTooltip.text = newTooltip;
+            buttonTooltip.field_Public_String_0 = newTooltip;
         }
-        public void SetIcon(Sprite newIcon)
+        public void SetIcon(Sprite newIcon, bool preserveColor = false)
         {
             if (newIcon == null)
                 buttonImage.gameObject.SetActive(false);
@@ -111,11 +117,21 @@ namespace emmVRC.Utils
                 buttonImage.sprite = newIcon;
                 buttonImage.overrideSprite = newIcon;
                 buttonImage.gameObject.SetActive(true);
+                if (preserveColor)
+                    buttonImage.color = Color.white;
             }
+        }
+        public void SetIconColor(Color color)
+        {
+            buttonImage.color = color;
         }
         public void SetInteractable(bool val)
         {
             buttonButton.interactable = val;
+        }
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
         }
     }
     public class SimpleSingleButton
@@ -136,7 +152,7 @@ namespace emmVRC.Utils
             buttonButton.onClick = new Button.ButtonClickedEvent();
             buttonButton.onClick.AddListener(click);
             buttonTooltip = gameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
-            buttonTooltip.text = tooltip;
+            buttonTooltip.field_Public_String_0 = tooltip;
             GameObject.Destroy(gameObject.transform.Find("Icon").gameObject);
             GameObject.Destroy(gameObject.transform.Find("Icon_Secondary").gameObject);
             buttonText.color = new Color(.9f, .9f, .9f);
@@ -154,11 +170,15 @@ namespace emmVRC.Utils
         }
         public void SetTooltip(string newTooltip)
         {
-            buttonTooltip.text = newTooltip;
+            buttonTooltip.field_Public_String_0 = newTooltip;
         }
         public void SetInteractable(bool val)
         {
             buttonButton.interactable = val;
+        }
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
         }
     }
     public class TextButton
@@ -180,7 +200,7 @@ namespace emmVRC.Utils
             buttonButton.onClick = new Button.ButtonClickedEvent();
             buttonButton.onClick.AddListener(click);
             buttonTooltip = gameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
-            buttonTooltip.text = tooltip;
+            buttonTooltip.field_Public_String_0 = tooltip;
         }
         public TextButton(MenuPage pge, string text, Action click, string tooltip, string bigText) : this(pge.menuContents, text, click, tooltip, bigText) { }
         public TextButton(ButtonGroup grp, string text, Action click, string tooltip, string bigText) : this(grp.gameObject.transform, text, click, tooltip, bigText) { }
@@ -195,7 +215,7 @@ namespace emmVRC.Utils
         }
         public void SetTooltip(string newTooltip)
         {
-            buttonTooltip.text = newTooltip;
+            buttonTooltip.field_Public_String_0 = newTooltip;
         }
         public void SetBigText(string newText)
         {
@@ -204,6 +224,10 @@ namespace emmVRC.Utils
         public void SetInteractable(bool val)
         {
             buttonButton.interactable = val;
+        }
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
         }
     }
 
@@ -227,9 +251,9 @@ namespace emmVRC.Utils
                 stateChanged.Invoke(val);
             }));
             toggleTooltip = gameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiToggleTooltip>(true);
-            toggleTooltip.text = onTooltip;
-            toggleTooltip.alternateText = offTooltip;
-            toggleTooltip.displayAlternateTooltip = true;
+            toggleTooltip.field_Public_String_0 = onTooltip;
+            toggleTooltip.field_Public_String_1 = offTooltip;
+            toggleTooltip.prop_Boolean_0 = true;
             buttonImage = gameObject.transform.Find("Icon_On").GetComponentInChildren<Image>(true);
             if (icon != null)
             {
@@ -257,8 +281,8 @@ namespace emmVRC.Utils
         }
         public void SetTooltip(string newOffTooltip, string newOnTooltip)
         {
-            toggleTooltip.text = newOnTooltip;
-            toggleTooltip.alternateText = newOffTooltip;
+            toggleTooltip.field_Public_String_0 = newOnTooltip;
+            toggleTooltip.field_Public_String_1 = newOffTooltip;
         }
         public void SetIcon(Sprite newIcon)
         {
@@ -276,15 +300,18 @@ namespace emmVRC.Utils
             Toggle.ToggleEvent evt = buttonToggle.onValueChanged;
             buttonToggle.onValueChanged = new Toggle.ToggleEvent();
             buttonToggle.isOn = newState;
+            buttonToggle.onValueChanged.Invoke(newState);
             buttonToggle.onValueChanged = evt;
-            buttonToggle.GetComponent<ToggleIcon>().OnValueChanged(newState);
-            toggleTooltip.displayAlternateTooltip = !newState;
             if (invoke)
                 buttonToggle.onValueChanged.Invoke(newState);
         }
         public void SetInteractable(bool val)
         {
             buttonToggle.interactable = val;
+        }
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
         }
     }
 
@@ -314,7 +341,7 @@ namespace emmVRC.Utils
                 onSliderAdjust.Invoke(val);
             }));
             sliderTooltip = gameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
-            sliderTooltip.text = tooltip;
+            sliderTooltip.field_Public_String_0 = tooltip;
             _floor = floor;
             _percent = percent;
         }
@@ -334,11 +361,26 @@ namespace emmVRC.Utils
         }
         public void SetTooltip(string newTooltip)
         {
-            sliderTooltip.text = newTooltip;
+            sliderTooltip.field_Public_String_0 = newTooltip;
         }
         public void SetInteractable(bool val)
         {
             sliderSlider.interactable = val;
+        }
+        public void SetActive(bool state)
+        {
+            sliderSlider.gameObject.SetActive(state);
+            sliderTooltip.gameObject.SetActive(state);
+            sliderPercentText.gameObject.SetActive(state);
+        }
+        public void SetValue(float newValue, bool invoke = false)
+        {
+            UnityEngine.UI.Slider.SliderEvent evt = sliderSlider.onValueChanged;
+            sliderSlider.onValueChanged = new UnityEngine.UI.Slider.SliderEvent();
+            sliderSlider.value = newValue;
+            sliderSlider.onValueChanged = evt;
+            if (invoke)
+                sliderSlider.onValueChanged.Invoke(newValue);
         }
     }
     public class ButtonGroup
@@ -346,6 +388,7 @@ namespace emmVRC.Utils
         private readonly TextMeshProUGUI headerText;
         public readonly GameObject gameObject;
         private readonly GameObject headerGameObject;
+        public readonly RectMask2D parentMenuMask;
         public ButtonGroup(Transform parent, string text)
         {
             headerGameObject = GameObject.Instantiate(ButtonAPI.buttonGroupHeaderBase, parent);
@@ -353,6 +396,7 @@ namespace emmVRC.Utils
             headerText.text = text;
             gameObject = GameObject.Instantiate(ButtonAPI.buttonGroupBase, parent);
             gameObject.transform.DestroyChildren();
+            parentMenuMask = parent.parent.GetComponent<RectMask2D>();
         }
         public ButtonGroup(MenuPage pge, string text) : this(pge.menuContents, text) { }
         public void SetText(string newText)
@@ -364,6 +408,32 @@ namespace emmVRC.Utils
             GameObject.Destroy(headerText.gameObject);
             GameObject.Destroy(gameObject);
         }
+        public void SetActive(bool state)
+        {
+            if (headerGameObject != null)
+                headerGameObject.SetActive(state);
+            gameObject.SetActive(state);
+        }
+    }
+    public class SimpleButtonGroup
+    {
+        public readonly GameObject gameObject;
+        public readonly RectMask2D parentMenuMask;
+        public SimpleButtonGroup(Transform parent, string text)
+        {
+            gameObject = GameObject.Instantiate(ButtonAPI.buttonGroupBase, parent);
+            gameObject.transform.DestroyChildren();
+            parentMenuMask = parent.parent.GetComponent<RectMask2D>();
+        }
+        public SimpleButtonGroup(MenuPage pge, string text) : this(pge.menuContents, text) { }
+        public void Destroy()
+        {
+            GameObject.Destroy(gameObject);
+        }
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
+        }
     }
     public class MenuPage
     {
@@ -374,24 +444,27 @@ namespace emmVRC.Utils
         private readonly bool isRoot;
         private readonly GameObject backButtonGameObject;
         private readonly GameObject extButtonGameObject;
-        public MenuPage(string menuName, string pageTitle, bool root = true, bool backButton = true, bool extButton = false, Action extButtonAction = null)
+        private bool preserveColor;
+        public readonly RectMask2D menuMask;
+        public MenuPage(string menuName, string pageTitle, bool root = true, bool backButton = true, bool extButton = false, Action extButtonAction = null, string extButtonTooltip = "", Sprite extButtonSprite = null, bool preserveColor = false)
         {
             gameObject = GameObject.Instantiate(ButtonAPI.menuPageBase, ButtonAPI.menuPageBase.transform.parent);
+            gameObject.name = "Menu_" + menuName;
             gameObject.transform.SetSiblingIndex(5);
             gameObject.SetActive(false);
             GameObject.DestroyImmediate(gameObject.GetComponent<VRC.UI.Elements.Menus.LaunchPadQMMenu>());
             page = gameObject.AddComponent<UIPage>();
-            page.Name = menuName;
-            page._inited = true;
-            page._menuStateController = ButtonAPI.GetMenuStateControllerInstance();
-            page._pageStack = new Il2CppSystem.Collections.Generic.List<UIPage>();
-            page._pageStack.Add(page);
-            ButtonAPI.GetMenuStateControllerInstance()._uiPages.Add(menuName, page);
+            page.field_Public_String_0 = menuName;
+            page.field_Private_Boolean_1 = true;
+            page.field_Private_MenuStateController_0 = ButtonAPI.GetMenuStateControllerInstance();
+            page.field_Private_List_1_UIPage_0 = new Il2CppSystem.Collections.Generic.List<UIPage>();
+            page.field_Private_List_1_UIPage_0.Add(page);
+            ButtonAPI.GetMenuStateControllerInstance().field_Private_Dictionary_2_String_UIPage_0.Add(menuName, page);
             if (root)
             {
-                List<UIPage> menuRootPages = ButtonAPI.GetMenuStateControllerInstance().menuRootPages.ToList();
+                List<UIPage> menuRootPages = ButtonAPI.GetMenuStateControllerInstance().field_Public_ArrayOf_UIPage_0.ToList();
                 menuRootPages.Add(page);
-                ButtonAPI.GetMenuStateControllerInstance().menuRootPages = menuRootPages.ToArray();
+                ButtonAPI.GetMenuStateControllerInstance().field_Public_ArrayOf_UIPage_0 = menuRootPages.ToArray();
             }
             gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").DestroyChildren();
             menuContents = gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup");
@@ -404,22 +477,53 @@ namespace emmVRC.Utils
             backButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
             backButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
                 if (isRoot)
-                    ButtonAPI.GetMenuStateControllerInstance().SwitchToRootPage("QuickMenuDashboard");
+                    ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_Boolean_0("QuickMenuDashboard");
                 else
-                    ButtonAPI.GetMenuStateControllerInstance().PopPage();
+                    this.page.Method_Protected_Virtual_New_Void_0();
             }));
             extButtonGameObject.SetActive(extButton);
-            emmVRCLoader.Logger.LogDebug("GameObject is " + gameObject == null ? "null" : "not null"); emmVRCLoader.Logger.LogDebug("Transform is " + menuContents == null ? "null" : "not null");
-
+            extButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
+            extButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(extButtonAction);
+            extButtonGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>().field_Public_String_0 = extButtonTooltip;
+            if (extButtonSprite != null)
+            {
+                extButtonGameObject.GetComponentInChildren<Image>().sprite = extButtonSprite;
+                extButtonGameObject.GetComponentInChildren<Image>().overrideSprite = extButtonSprite;
+                if (preserveColor)
+                {
+                    extButtonGameObject.GetComponentInChildren<Image>().color = Color.white;
+                    extButtonGameObject.GetComponentInChildren<VRC.UI.Core.Styles.StyleElement>(true).enabled = false;
+                }
+            }
+            this.preserveColor = preserveColor;
+            menuMask = menuContents.parent.gameObject.GetComponent<RectMask2D>();
+            menuMask.enabled = true;
+            gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().enabled = true;
+            gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().verticalScrollbar = gameObject.transform.Find("ScrollRect/Scrollbar").GetComponent<Scrollbar>();
+            gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+        }
+        public void AddExtButton(Action onClick, string tooltip, Sprite icon)
+        {
+            GameObject newExtButton = GameObject.Instantiate(extButtonGameObject, extButtonGameObject.transform.parent);
+            newExtButton.SetActive(true);
+            newExtButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
+            newExtButton.GetComponentInChildren<Button>().onClick.AddListener(onClick);
+            newExtButton.GetComponentInChildren<Image>().sprite = icon;
+            newExtButton.GetComponentInChildren<Image>().overrideSprite = icon;
+            newExtButton.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>().field_Public_String_0 = tooltip;
         }
         public void OpenMenu()
         {
             if (isRoot)
-                ButtonAPI.GetMenuStateControllerInstance().SwitchToRootPage(page.Name);
+                ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
             else
-                ButtonAPI.GetMenuStateControllerInstance().PushPage(page.Name);
+                ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
             //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First().PushPage(pageTitleText.text);
             //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First()._currentRootPage.PushPage(page);
+        }
+        public void CloseMenu()
+        {
+            page.Method_Public_Virtual_New_Void_0();
         }
     }
     public class Tab
@@ -427,22 +531,32 @@ namespace emmVRC.Utils
         private readonly GameObject gameObject;
         private readonly MenuTab menuTab;
         private readonly Image tabIcon;
+        private readonly GameObject badgeGameObject;
+        private readonly TextMeshProUGUI badgeText;
         public Tab(Transform parent, string menuName, string tooltip, Sprite icon = null)
         {
             gameObject = GameObject.Instantiate(ButtonAPI.menuTabBase, parent);
+            gameObject.name = menuName + "Tab";
             menuTab = gameObject.GetComponent<MenuTab>();
-            menuTab._menuStateController = ButtonAPI.GetMenuStateControllerInstance();
-            menuTab.pageName = menuName;
+            menuTab.field_Private_MenuStateController_0 = ButtonAPI.GetMenuStateControllerInstance();
+            menuTab.field_Public_String_0 = menuName;
             tabIcon = gameObject.transform.Find("Icon").GetComponent<Image>();
-            emmVRCLoader.Logger.LogDebug(tabIcon.gameObject.GetPath());
-            emmVRCLoader.Logger.LogDebug("Icon is " + (icon == null ? "null" : "not null"));
             tabIcon.sprite = icon;
             tabIcon.overrideSprite = icon;
 
-            menuTab.GetComponent<VRC.UI.Core.Styles.StyleElement>().selectable = menuTab.GetComponent<Button>();
+            badgeGameObject = gameObject.transform.GetChild(0).gameObject;
+            badgeText = badgeGameObject.GetComponentInChildren<TextMeshProUGUI>();
+
+            menuTab.GetComponent<VRC.UI.Core.Styles.StyleElement>().field_Private_Selectable_0 = menuTab.GetComponent<Button>();
             menuTab.GetComponent<Button>().onClick.AddListener(new System.Action(() => {
-                menuTab.GetComponent<VRC.UI.Core.Styles.StyleElement>().selectable = menuTab.GetComponent<Button>();
+                menuTab.GetComponent<VRC.UI.Core.Styles.StyleElement>().field_Private_Selectable_0 = menuTab.GetComponent<Button>();
             }));
+        }
+        public void SetBadge(bool showing = true, string text = "")
+        {
+            if (badgeGameObject == null || badgeText == null) return;
+            badgeGameObject.SetActive(showing);
+            badgeText.text = text;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using emmVRC.Network.Objects;
 
-namespace emmVRC.Network.Authentication
+namespace emmVRC.Network
 {
     public static class Authentication
     {

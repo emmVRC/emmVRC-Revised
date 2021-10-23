@@ -36,7 +36,6 @@ namespace emmVRC.Functions.UI
 
         public override void OnUiManagerInit()
         {
-            if (Configuration.JSONConfig.StealthMode) return;
             SocialFunctionsButton = GameObject.Instantiate(GameObject.Find("MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightUpperButtonColumn/FavoriteButton"), GameObject.Find("MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightUpperButtonColumn").transform);
             SocialFunctionsButton.GetComponentInChildren<Text>().text = "<color=#FF69B4>emmVRC</color> Functions";
             SocialFunctionsButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
@@ -232,7 +231,6 @@ namespace emmVRC.Functions.UI
         }
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            if (Configuration.JSONConfig.StealthMode) return;
             if (buildIndex == -1)
                 MelonLoader.MelonCoroutines.Start(RoomEnter());
         }

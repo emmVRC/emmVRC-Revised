@@ -1,71 +1,91 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Libraries;
+using emmVRC.Utils;
+using emmVRC.Objects;
+using emmVRC.Objects.ModuleBases;
 using emmVRC.Network;
 using UnityEngine;
-using UnityEngine.Networking;
-using emmVRC.Objects.ModuleBases;
-
+using TMPro;
 
 namespace emmVRC.Menus
 {
     public class Supporter
     {
-        public string Name = "";
-        public string Tooltip = "";
+        public string name;
+        public string color;
     }
+    [Priority(55)]
     public class SupporterMenu : MelonLoaderEvents
     {
-        public static ScrollingTextMenu baseMenu;
-        public override void OnUiManagerInit()
+        private static MenuPage supporterPage;
+        private static SingleButton supporterPageButton;
+        private static TextMeshProUGUI text;
+
+        private static bool _initialized = false;
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            baseMenu = new ScrollingTextMenu(FunctionsMenuLegacy.baseMenu.menuBase, 768, 1024, "Supporters", "", null, "", "");
-            baseMenu.menuEntryButton.DestroyMe();
+            if (buildIndex != -1 || _initialized) return;
+
+            supporterPage = new MenuPage("emmVRC_Supporters", "Supporters", false, true);
+            supporterPageButton = new SingleButton(FunctionsMenu.otherGroup, "Supporters", LoadMenu, "View all of the donators to the emmVRC project", Functions.Core.Resources.SupporterIcon);
+
+            supporterPage.menuContents.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childControlHeight = true;
+            GameObject textBase = new GameObject("SupportersText");
+
+            textBase.transform.SetParent(supporterPage.menuContents);
+            textBase.transform.localPosition = Vector3.zero;
+            textBase.transform.localRotation = new Quaternion(0, 0, 0, 0);
+            textBase.transform.localScale = Vector3.one;
+            TextMeshProUGUI textText = textBase.AddComponent<TextMeshProUGUI>();
+            textText.margin = new Vector4(25, 0, 50, 0);
+            textText.text = "";
+
+            text = textText;
+            _initialized = true;
         }
         public static void LoadMenu()
         {
             try
             {
-                baseMenu.OpenMenu();
-                EnterMenu().NoAwait(nameof(SupporterMenu));
-            } catch (Exception ex)
+                supporterPage.OpenMenu();
+                EnterMenu(text).NoAwait(nameof(SupporterMenu));
+            }
+            catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogError(ex.ToString());
             }
         }
-        public static async Task EnterMenu()
+        public static async Task EnterMenu(TextMeshProUGUI text)
         {
-            baseMenu.OpenMenu();
-            baseMenu.menuTitleText.text = "Fetching, please wait...";
-            baseMenu.baseTextText.text = "";
+            text.text = "Fetching, please wait...";
+            text.text = "";
 
             try
             {
-                var result = await HTTPRequest.get("http://dl.emmvrc.com/supporters.json");
+                var result = await HTTPRequest.get("http://dl.emmvrc.com/supporterList.json");
                 List<Supporter> supporters = TinyJSON.Decoder.Decode(result).Make<List<Supporter>>();
 
                 await emmVRC.AwaitUpdate.Yield();
 
-                baseMenu.menuTitleText.text = "Special thanks to these supporters!";
+                text.text = "<size=50>Special thanks to these supporters!</size>\n\n";
                 foreach (Supporter supp in supporters)
                 {
-                    baseMenu.baseTextText.text += supp.Name.Replace("\n", " ") + "\n";
+                    text.text += "<color="+supp.color+">"+supp.name.Replace("\n", " ") + "</color>\n";
                 }
             }
             catch (Exception ex)
             {
-                baseMenu.menuTitleText.text = "Network error...";
-                baseMenu.baseTextText.text = "<color=#ff0000>" + ex.ToString() + "</color>";
-                
+                text.text = "Network error...";
+                text.text = "<color=#ff0000>" + ex.ToString() + "</color>";
+
                 await emmVRC.AwaitUpdate.Yield();
-                
+
                 throw ex;
             }
         }
-
     }
 }

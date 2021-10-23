@@ -84,7 +84,19 @@ namespace emmVRC.Menus
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             if (buildIndex != -1 || _initialized) return;
-            settingsPage = new MenuPage("emmVRC_Settings", "Settings", false, true);
+            settingsPage = new MenuPage("emmVRC_Settings", "Settings", false, true, true, () =>
+            {
+                ButtonAPI.GetQuickMenuInstance().ShowConfirmDialog("emmVRC", "Would you like to export your emmVRC Favorite Avatars?", new System.Action(() =>
+                {
+                    System.Collections.Generic.List<Objects.ExportedAvatar> exportedAvatars = new List<Objects.ExportedAvatar>();
+                    foreach (VRC.Core.ApiAvatar avtr in Functions.UI.CustomAvatarFavorites.LoadedAvatars)
+                    {
+                        exportedAvatars.Add(new Objects.ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
+                    }
+                    System.IO.File.WriteAllText(System.IO.Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+                    Managers.emmVRCNotificationsManager.AddNotification(new Objects.Notification("Avatar Export", Functions.Core.Resources.alertSprite, "Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", true, false, null, "", "", true, null, "Dismiss"));
+                }), null);
+            }, "Export your emmVRC Avatar Favorites to a file");
             settingsButton = new SingleButton(FunctionsMenu.otherGroup, "Settings", OpenMenu, "", Functions.Core.Resources.SettingsIcon);
 
             featuresGroup = new ButtonGroup(settingsPage, "Features");
@@ -176,8 +188,11 @@ namespace emmVRC.Menus
             }, "Enable coloring the VRChat UI", "Disable coloring the VRChat UI");
             uiColorButton = new SingleButton(colorGroup, "UI\nColor", () =>
             {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add color configuration
-            }, "Choose the color for UI coloring", null); // TODO: Add circle for color representation
+                ColorAdjustmentMenu.ShowMenu(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UIColorHex), (UnityEngine.Color col) => {
+                    Configuration.WriteConfigOption("UIColorHex", Libraries.ColorConversion.ColorToHex(col));
+                    uiColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UIColorHex));
+                });
+            }, "Choose the color for UI coloring", Functions.Core.Resources.TabIcon, true);
             uiActionMenuColorChangingToggle = new ToggleButton(colorGroup, "Action Menu\nColoring", (bool val) =>
             {
                 Configuration.WriteConfigOption("UIActionMenuColorChangingEnabled", val);
@@ -206,28 +221,28 @@ namespace emmVRC.Menus
             ButtonGroup colorChangingGroup = new ButtonGroup(colorChangingPage, "");
             friendNameplateColorButton = new SingleButton(colorChangingGroup, "Friends", () =>
             {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add color configuration
-            }, "Configure the nameplate color for friends");
+                ColorAdjustmentMenu.ShowMenu(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex), (UnityEngine.Color col) => { Configuration.WriteConfigOption("FriendNamePlateColorHex", Libraries.ColorConversion.ColorToHex(col)); friendNameplateColorButton.SetIconColor(col); });
+            }, "Configure the nameplate color for friends", Functions.Core.Resources.TabIcon, true);
             visitorNameplateColorButton = new SingleButton(colorChangingGroup, "Visitor", () =>
             {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add color configuration
-            }, "Configure the nameplate color for visitorss");
+                ColorAdjustmentMenu.ShowMenu(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VisitorNamePlateColorHex), (UnityEngine.Color col) => { Configuration.WriteConfigOption("VisitorNamePlateColorHex", Libraries.ColorConversion.ColorToHex(col)); visitorNameplateColorButton.SetIconColor(col); });
+            }, "Configure the nameplate color for visitors", Functions.Core.Resources.TabIcon, true);
             newUserNameplateColorButton = new SingleButton(colorChangingGroup, "New User", () =>
             {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add color configuration
-            }, "Configure the nameplate color for new users");
+                ColorAdjustmentMenu.ShowMenu(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex), (UnityEngine.Color col) => { Configuration.WriteConfigOption("NewUserNamePlateColorHex", Libraries.ColorConversion.ColorToHex(col)); newUserNameplateColorButton.SetIconColor(col); });
+            }, "Configure the nameplate color for new users", Functions.Core.Resources.TabIcon, true);
             userNameplateColorButton = new SingleButton(colorChangingGroup, "User", () =>
             {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add color configuration
-            }, "Configure the nameplate color for users");
+                ColorAdjustmentMenu.ShowMenu(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex), (UnityEngine.Color col) => { Configuration.WriteConfigOption("UserNamePlateColorHex", Libraries.ColorConversion.ColorToHex(col)); userNameplateColorButton.SetIconColor(col); });
+            }, "Configure the nameplate color for users", Functions.Core.Resources.TabIcon, true);
             knownUserNameplateColorButton = new SingleButton(colorChangingGroup, "Known User", () =>
             {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add color configuration
-            }, "Configure the nameplate color for known users");
+                ColorAdjustmentMenu.ShowMenu(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex), (UnityEngine.Color col) => { Configuration.WriteConfigOption("KnownUserNamePlateColorHex", Libraries.ColorConversion.ColorToHex(col)); knownUserNameplateColorButton.SetIconColor(col); });
+            }, "Configure the nameplate color for known users", Functions.Core.Resources.TabIcon, true);
             trustedUserNameplateColorButton = new SingleButton(colorChangingGroup, "Trusted User", () =>
             {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add color configuration
-            }, "Configure the nameplate color for trusted users");
+                ColorAdjustmentMenu.ShowMenu(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex), (UnityEngine.Color col) => { Configuration.WriteConfigOption("TrustedUserNamePlateColorHex", Libraries.ColorConversion.ColorToHex(col)); trustedUserNameplateColorButton.SetIconColor(col); });
+            }, "Configure the nameplate color for trusted users", Functions.Core.Resources.TabIcon, true);
 
             vrchatUiGroup = new ButtonGroup(settingsPage, "VRChat UI");
             upperInviteButtonsToggle = new ToggleButton(vrchatUiGroup, "Upper Invite\nButtons", (bool val) =>
@@ -309,6 +324,7 @@ namespace emmVRC.Menus
             avatarFavoriteJumpToggle.SetToggleState(Configuration.JSONConfig.AvatarFavoritesJumpToStart);
             submitAvatarPedestalsToggle.SetToggleState(Configuration.JSONConfig.SubmitAvatarPedestals);
 
+            uiColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UIColorHex));
             uiColorChangingToggle.SetToggleState(Configuration.JSONConfig.UIColorChangingEnabled);
             uiActionMenuColorChangingToggle.SetToggleState(Configuration.JSONConfig.UIActionMenuColorChangingEnabled);
             uiMicIconColorChangingToggle.SetToggleState(Configuration.JSONConfig.UIMicIconColorChangingEnabled);
@@ -321,7 +337,13 @@ namespace emmVRC.Menus
             else
                 uiExpansionKitColorChangingToggle.gameObject.SetActive(false);
             nameplateColorChangingToggle.SetToggleState(Configuration.JSONConfig.NameplateColorChangingEnabled);
-            
+            friendNameplateColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex));
+            visitorNameplateColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VisitorNamePlateColorHex));
+            newUserNameplateColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex));
+            userNameplateColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex));
+            knownUserNameplateColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex));
+            trustedUserNameplateColorButton.SetIconColor(Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
+
             upperInviteButtonsToggle.SetToggleState(!Configuration.JSONConfig.DisableOldInviteButtons);
             oneHandMovementToggle.SetToggleState(!Configuration.JSONConfig.DisableOneHandMovement);
             micTooltipToggle.SetToggleState(!Configuration.JSONConfig.DisableMicTooltip);

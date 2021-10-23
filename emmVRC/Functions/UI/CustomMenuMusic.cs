@@ -18,16 +18,14 @@ namespace emmVRC.Functions.UI
         public override void OnUiManagerInit()
         {
             // Start trying to set up the menu music
-            if (!Configuration.JSONConfig.StealthMode)
-            {
-                emmVRCLoader.Logger.LogDebug("Initializing custom menu music...");
-                MelonLoader.MelonCoroutines.Start(Initialize());
-            }
+            emmVRCLoader.Logger.LogDebug("Initializing custom menu music...");
+            MelonLoader.MelonCoroutines.Start(Initialize());
         }
         public static IEnumerator Initialize()
         {
-            if (!Functions.Core.ModCompatibility.BetterLoadingScreen){
-                
+            if (!Functions.Core.ModCompatibility.BetterLoadingScreen)
+            {
+
                 if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/CustomMenuMusic")))
                     Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/CustomMenuMusic"));
                 if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/custommenu.ogg")))
@@ -35,7 +33,8 @@ namespace emmVRC.Functions.UI
                     try
                     {
                         File.Move(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/custommenu.ogg"), Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/CustomMenuMusic/custommenu.ogg"));
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         ex = new Exception();
                         emmVRCLoader.Logger.LogError("A custommenu.ogg was detected, but you already have one in the CustomMenuMusic folder. Please put custom menu music in the Ogg Vorbis format into UserData/emmVRC/CustomMenuMusic instead.");

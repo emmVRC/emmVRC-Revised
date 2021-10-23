@@ -1,21 +1,39 @@
-﻿using emmVRC.Libraries;
-using emmVRC.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
+using emmVRC.Utils;
 using emmVRC.Objects.ModuleBases;
+using TMPro;
 
 namespace emmVRC.Menus
 {
+    [Priority(55)]
     public class ChangelogMenu : MelonLoaderEvents
     {
-        public static ScrollingTextMenu baseMenu;
-        public override void OnUiManagerInit()
+        private static bool _initialized = false;
+        private static MenuPage changelogPage;
+        private static SingleButton changelogPageButton;
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            baseMenu = new ScrollingTextMenu(FunctionsMenuLegacy.baseMenu.menuBase, 1049, 1023, "Changelog", "ree", null, "<color=#FF69B4>emmVRC</color> version " + Attributes.Version + " (" + Attributes.DateUpdated+")", Attributes.Changelog, "See the full Changelog on Discord", () => { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); }, "Click to join the Discord (launches in a browser window)");
-            baseMenu.menuEntryButton.DestroyMe();
+            if (buildIndex != -1 || _initialized) return;
+            changelogPage = new MenuPage("emmVRC_Changelog", "Changelog", false, true, true, () => {
+                Utils.ButtonAPI.GetQuickMenuInstance().AskConfirmOpenURL("https://discord.gg/emmVRC");
+            });
+            changelogPage.menuContents.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childControlHeight = true;
+            changelogPageButton = new SingleButton(FunctionsMenu.otherGroup, "Changelog", changelogPage.OpenMenu, "View what's new with the current version of emmVRC", Functions.Core.Resources.ChangelogIcon);
+            GameObject textBase = new GameObject("ChangelogText");
+            textBase.transform.SetParent(changelogPage.menuContents);
+            textBase.transform.localPosition = Vector3.zero;
+            textBase.transform.localRotation = new Quaternion(0, 0, 0, 0);
+            textBase.transform.localScale = Vector3.one;
+            TextMeshProUGUI textText = textBase.AddComponent<TextMeshProUGUI>();
+            textText.margin = new Vector4(25, 0, 50, 0);
+            textText.text = "<size=50><color=#FF69B4>emmVRC</color> version " + Objects.Attributes.Version + " (" + Objects.Attributes.DateUpdated + ")</size>\n\n"+Objects.Attributes.Changelog;
+
+            _initialized = true;
         }
     }
 }

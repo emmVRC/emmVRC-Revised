@@ -15,8 +15,9 @@ namespace emmVRC.Functions.Other
             if (Configuration.JSONConfig.LastVersion != Objects.Attributes.Version)
             {
                 Configuration.WriteConfigOption("LastVersion", Objects.Attributes.Version);
-                Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Objects.Attributes.Version + "!", "View\nChangelog", () =>
-                { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Functions.Core.Resources.alertSprite, -1);
+                Managers.emmVRCNotificationsManager.AddNotification(new Objects.Notification("Update Applied", null, "emmVRC has updated to version " + Objects.Attributes.Version + "!", true, false, null, "", "", true, null, "Dismiss"));
+                /*Managers.NotificationManager.AddNotification("emmVRC has updated to version " + Objects.Attributes.Version + "!", "View\nChangelog", () =>
+                { Managers.NotificationManager.DismissCurrentNotification(); Menus.ChangelogMenu.baseMenu.OpenMenu(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Functions.Core.Resources.alertSprite, -1);*/
             }
         }
     }

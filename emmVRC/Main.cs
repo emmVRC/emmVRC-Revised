@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using emmVRC.Objects.ModuleBases;
 using System.Reflection;
+using emmVRC.Utils;
 
 #pragma warning disable 4014
 
@@ -80,6 +81,8 @@ namespace emmVRC
         // OnApplicationStart is called when emmVRCLoader passes over control to the emmVRC assembly.
         private static void OnApplicationStart()
         {
+            // Load the config for emmVRC
+            Configuration.Initialize();
             foreach (MelonLoaderEvents listener in eventListeners)
             {
                 try
@@ -92,8 +95,6 @@ namespace emmVRC
                 }
             }
 
-            // Load the config for emmVRC
-            Configuration.Initialize();
 
             MelonLoader.MelonCoroutines.Start(WaitForUiManagerInit());
         }
@@ -148,6 +149,14 @@ namespace emmVRC
                 //        Utils.ButtonAPI.GetQuickMenuInstance().ShowSelectedUserPage(true, user);
                 //    }
                 //});
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        ColorAdjustmentMenu.ShowMenu(Configuration.menuColor(), null);
+                    }
+                });
 
             }
         }
@@ -221,8 +230,7 @@ namespace emmVRC
                 // If the user is new to emmVRC, present the emmVRC Welcome message
                 if (!Configuration.JSONConfig.WelcomeMessageShown)
                 {
-                    Managers.NotificationManager.AddNotification("Welcome to the new emmVRC! For updates regarding the client, teasers for new features, and bug reports and support, join the Discord!", "Open\nDiscord", () =>
-                    { System.Diagnostics.Process.Start("https://discord.gg/SpZSH5Z"); Managers.NotificationManager.DismissCurrentNotification(); }, "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, Functions.Core.Resources.alertSprite);
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("Welcome to emmVRC!", null, "Welcome to emmVRC! For updates regarding the client, teasers for new features, and bug reports and support, join the Discord!", true, true, () => { Utils.ButtonAPI.GetQuickMenuInstance().AskConfirmOpenURL("https://discord.gg/emmVRC"); }, "Open Discord", "Open the invite to our Discord", true, null, "Dismiss", "Dismisses the notification"));
                     Configuration.WriteConfigOption("WelcomeMessageShown", true);
                 }
             }

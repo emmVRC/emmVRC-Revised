@@ -12,7 +12,6 @@ namespace emmVRC.Hacks
         public static Sprite crownSprite;
         public override void OnUiManagerInit()
         {
-            if (Configuration.JSONConfig.StealthMode) return;
             Utils.NetworkEvents.OnPlayerJoined += (Player plr) => {
                 if (plr.prop_APIUser_0 != null && plr.prop_APIUser_0.id != APIUser.CurrentUser.id && plr.prop_VRCPlayerApi_0 != null && plr.prop_VRCPlayerApi_0.isMaster)
                     InstantiateIcon(plr);

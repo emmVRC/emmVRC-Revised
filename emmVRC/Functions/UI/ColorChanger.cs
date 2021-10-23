@@ -1,4 +1,5 @@
 ﻿using emmVRC.Libraries;
+using emmVRC.Utils;
 using emmVRC.Menus;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,12 @@ namespace emmVRC.Functions.UI
         private static GameObject initialLoadingBackground;
         public override void OnUiManagerInit()
         {
-            if (!Configuration.JSONConfig.StealthMode)
-            {
                 Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorChangingEnabled", ApplyIfApplicable));
                 Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorHex", ApplyIfApplicable));
                 Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIActionMenuColorChangingEnabled", ApplyIfApplicable));
                 Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIMicIconColorChangingEnabled", ApplyIfApplicable));
                 Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIMicIconPulsingEnabled", ApplyIfApplicable));
                 ApplyIfApplicable();
-            }
         }
         public static void ApplyIfApplicable()
         {
@@ -81,12 +79,14 @@ namespace emmVRC.Functions.UI
                 foreach (Transform obj in quickMenu.GetComponentsInChildren<Transform>(true).Where(x => x.name.Contains("Panel_Header")))
                 {
                     foreach (Image img in obj.GetComponentsInChildren<Image>())
+                        if (img.gameObject.name != "Checkmark")
                         normalColorImage.Add(img);
                 }
                 foreach (Transform obj in quickMenu.GetComponentsInChildren<Transform>(true).Where(x => x.name.Contains("Handle")))
                 {
                     foreach (Image img in obj.GetComponentsInChildren<Image>())
-                        normalColorImage.Add(img);
+                        if (img.gameObject.name != "Checkmark")
+                            normalColorImage.Add(img);
                 }
                 try
                 {
@@ -115,7 +115,8 @@ namespace emmVRC.Functions.UI
                 foreach (Transform obj in quickMenu.GetComponentsInChildren<Transform>(true).Where(x => x.name.Contains("Fill")))
                 {
                     foreach (Image img in obj.GetComponentsInChildren<Image>())
-                        dimmerColorImage.Add(img);
+                        if (img.gameObject.name != "Checkmark")
+                            dimmerColorImage.Add(img);
                 }
             }
             if (darkerColorImage == null || darkerColorImage.Count == 0)
@@ -146,7 +147,8 @@ namespace emmVRC.Functions.UI
                 foreach (Transform obj in quickMenu.GetComponentsInChildren<Transform>(true).Where(x => x.name.Contains("Background") && x.name != "PanelHeaderBackground" && !x.transform.parent.name.Contains("UserIcon")))
                 {
                     foreach (Image img in obj.GetComponentsInChildren<Image>())
-                        darkerColorImage.Add(img);
+                        if (img.gameObject.name != "Checkmark")
+                            darkerColorImage.Add(img);
                 }
             }
             if (normalColorText == null || normalColorText.Count == 0)
@@ -286,7 +288,7 @@ namespace emmVRC.Functions.UI
                         color.a = .5f;
                         darker.a = 1f;
                         theme.normalColor = darker;
-                        foreach (Slider sldr in quickMenu.GetComponentsInChildren<Slider>(true))
+                        foreach (UnityEngine.UI.Slider sldr in quickMenu.GetComponentsInChildren<UnityEngine.UI.Slider>(true))
                             sldr.colors = theme;
                         darker.a = .5f;
                         theme.normalColor = color;
@@ -297,7 +299,7 @@ namespace emmVRC.Functions.UI
                         quickMenu = GameObject.Find("QuickMenu");
                         foreach (Button btn in quickMenu.GetComponentsInChildren<Button>(true))
                         {
-                            if (btn.name != "rColorButton" && btn.name != "gColorButton" && btn.name != "bColorButton" && btn.name != "ColorPickPreviewButton" && btn.transform.parent.name != "SocialNotifications" && btn.name != Hacks.ShortcutMenuButtons.logoButton.getGameObject().name && (!Configuration.JSONConfig.TabMode || Functions.UI.TabMenu.logoButton == null || btn.name != Functions.UI.TabMenu.logoButton.getGameObject().name) && (btn.name != (VRHUD.ToggleHUDButton == null ? "" : VRHUD.ToggleHUDButton.getGameObject().name)) && btn.transform.parent.parent.name != "EmojiMenu" && !btn.transform.parent.name.Contains("NotificationUiPrefab"))
+                            if (btn.name != "rColorButton" && btn.name != "gColorButton" && btn.name != "bColorButton" && btn.name != "ColorPickPreviewButton")
                                 btn.colors = buttonTheme;
                         };
                         foreach (UiToggleButton tglbtn in quickMenu.GetComponentsInChildren<UiToggleButton>(true))
@@ -307,7 +309,7 @@ namespace emmVRC.Functions.UI
                                 img.color = color;
                             }
                         };
-                        foreach (Slider sldr in quickMenu.GetComponentsInChildren<Slider>(true))
+                        foreach (UnityEngine.UI.Slider sldr in quickMenu.GetComponentsInChildren<UnityEngine.UI.Slider>(true))
                         {
                             sldr.colors = theme;
                             foreach (Image img in sldr.GetComponentsInChildren<Image>(true))
@@ -320,8 +322,8 @@ namespace emmVRC.Functions.UI
                             tgle.colors = theme;
                             foreach (Image img in tgle.GetComponentsInChildren<Image>(true))
                             {
-                                if (img.transform.name != "Checkmark")
-                                img.color = color;
+                                if (img.gameObject.name != "Checkmark")
+                                    img.color = color;
                             }
                         }
                         GameObject NotificationRoot = GameObject.Find("UserInterface/QuickMenu/QuickModeMenus/QuickModeNotificationsMenu/ScrollRect");
@@ -329,6 +331,7 @@ namespace emmVRC.Functions.UI
                         {
                             if (img.transform.name == "Background")
                                 img.color = color;
+
                         };
                         foreach (MonoBehaviourPublicObCoGaCoObCoObCoUnique tab in GameObject.Find("UserInterface/QuickMenu/QuickModeTabs").GetComponentsInChildren<MonoBehaviourPublicObCoGaCoObCoObCoUnique>())
                         {

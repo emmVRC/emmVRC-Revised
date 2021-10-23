@@ -279,7 +279,7 @@ namespace emmVRC.Libraries
         #endregion
 
         #region VRCPlayer GetNameplateBackground
-        public static ImageThreeSlice GetNameplateBackground(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Background").GetComponent<ImageThreeSlice>(); }
+        //public static ImageThreeSlice GetNameplateBackground(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Background").GetComponent<ImageThreeSlice>(); }
         #endregion
 
         #region PlayerNet Framerate

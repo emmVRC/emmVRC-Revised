@@ -19,9 +19,13 @@ namespace emmVRC.Functions.WorldHacks
 
         public override void OnApplicationStart()
         {
-            Menus.FlashlightMenuLegacy.LightColorChanged += new Action<Color>((newValue) => { if (flashlight == null) return; flashlight.color = newValue; headlight.color = newValue; });
-            Menus.FlashlightMenuLegacy.LightStrengthChanged += new Action<float>((newValue) => { if (flashlight == null) return; flashlight.range = newValue; headlight.range = newValue; });
-            }
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FlashlightColorHex", () => { if (flashlight == null) return; flashlight.color = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FlashlightColorHex); headlight.color = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FlashlightColorHex); }));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FlashlightRange", () => { if (flashlight == null) return; flashlight.range = Configuration.JSONConfig.FlashlightRange; headlight.range = Configuration.JSONConfig.FlashlightRange; }));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FlashlightPower", () => { if (flashlight == null) return; flashlight.intensity = Configuration.JSONConfig.FlashlightPower; headlight.intensity = Configuration.JSONConfig.FlashlightPower; }));
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("FlashlightAngle", () => { if (flashlight == null) return; flashlight.spotAngle = Configuration.JSONConfig.FlashlightAngle; headlight.spotAngle = Configuration.JSONConfig.FlashlightAngle; }));
+            //Menus.FlashlightMenuLegacy.LightColorChanged += new Action<Color>((newValue) => { if (flashlight == null) return; flashlight.color = newValue; headlight.color = newValue; });
+            //Menus.FlashlightMenuLegacy.LightStrengthChanged += new Action<float>((newValue) => { if (flashlight == null) return; flashlight.range = newValue; headlight.range = newValue; });
+        }
 
         public override void OnUiManagerInit()
         {
@@ -76,12 +80,20 @@ namespace emmVRC.Functions.WorldHacks
             IsFlashlightEnabled = active;
             flashlightParent.SetActive(active);
             flashlight.enabled = active;
+            flashlight.color = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FlashlightColorHex);
+            flashlight.range = Configuration.JSONConfig.FlashlightRange;
+            flashlight.intensity = Configuration.JSONConfig.FlashlightPower;
+            flashlight.spotAngle = Configuration.JSONConfig.FlashlightAngle;
         }
 
         public static void SetHeadlightActive(bool active)
         {
             IsHeadlightEnabled = active;
             headlight.enabled = active;
+            headlight.color = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FlashlightColorHex);
+            headlight.range = Configuration.JSONConfig.FlashlightRange;
+            headlight.intensity = Configuration.JSONConfig.FlashlightPower;
+            headlight.spotAngle = Configuration.JSONConfig.FlashlightAngle;
         }
     }
 }

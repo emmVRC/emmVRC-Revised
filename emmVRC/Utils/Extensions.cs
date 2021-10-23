@@ -139,5 +139,9 @@ namespace emmVRC.Utils
             else
                 return $"{timeSpan:%s} seconds";
         }
+        public static void ShowAlert(this VRC.UI.Elements.QuickMenu qm, string message) => qm.Method_Public_Virtual_Final_New_Void_String_4(message);
+        public static void ShowOKDialog(this VRC.UI.Elements.QuickMenu qm, string title, string message, Action okButton = null) => qm.Method_Public_Void_String_String_Action_PDM_0(title, message, okButton);
+        public static void ShowConfirmDialog(this VRC.UI.Elements.QuickMenu qm, string title, string message, Action yesButton = null, Action noButton = null) => qm.Method_Public_Void_String_String_Action_Action_PDM_0(title, message, yesButton, noButton);
+        public static void AskConfirmOpenURL(this VRC.UI.Elements.QuickMenu qm, string url) => qm.Method_Public_Virtual_Final_New_Void_String_3(url);
     }
 }

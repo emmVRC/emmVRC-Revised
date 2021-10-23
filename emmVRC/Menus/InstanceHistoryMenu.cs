@@ -31,20 +31,27 @@ namespace emmVRC.Menus
         {
             if (buildIndex != -1 || _initialized) return;
 
-            instanceHistoryPage = new MenuPage("emmVRC_InstanceHistory", "Instance History", false, true);
+            instanceHistoryPage = new MenuPage("emmVRC_InstanceHistory", "Instance History", false, true, true, () => {
+                ButtonAPI.GetQuickMenuInstance().ShowConfirmDialog("Instance History", "Are you sure you want to clear your instance history?", new System.Action(() => {
+                    Functions.WorldHacks.InstanceHistory.ClearInstances();
+                    instanceHistoryPage.CloseMenu();
+                    OpenMenu();
+                    ButtonAPI.GetQuickMenuInstance().ShowAlert("Instance History has been cleared");
+                }), new System.Action(() => { }));
+            }, "Clear your instance history", ButtonAPI.xIconSprite);
             instanceHistoryButton = new SingleButton(FunctionsMenu.featuresGroup, "Instance\nHistory", () =>
             {
                 OpenMenu();
             }, "View all the instances you've been in, and join them if permitted", Functions.Core.Resources.WorldHistoryIcon);
-            optionsGroup = new ButtonGroup(instanceHistoryPage, "Options");
-            clearInstanceHistoryButton = new SimpleSingleButton(optionsGroup, "Clear\nHistory", () => {
-                ButtonAPI.GetQuickMenuInstance().ShowConfirmDialog("Instance History", "Are you sure you want to clear your instance history?", new System.Action(() => {
-                    Functions.WorldHacks.InstanceHistory.ClearInstances();
-                    ButtonAPI.GetMenuStateControllerInstance().PopPage();
-                    OpenMenu();
-                    ButtonAPI.GetQuickMenuInstance().ShowAlert("Instance History has been cleared");
-                }), new System.Action(() => { }));
-            }, "Clears your instance history");
+            //optionsGroup = new ButtonGroup(instanceHistoryPage, "Options");
+            //clearInstanceHistoryButton = new SimpleSingleButton(optionsGroup, "Clear\nHistory", () => {
+            //    ButtonAPI.GetQuickMenuInstance().ShowConfirmDialog("Instance History", "Are you sure you want to clear your instance history?", new System.Action(() => {
+            //        Functions.WorldHacks.InstanceHistory.ClearInstances();
+            //        ButtonAPI.GetMenuStateControllerInstance().PopPage();
+            //        OpenMenu();
+            //        ButtonAPI.GetQuickMenuInstance().ShowAlert("Instance History has been cleared");
+            //    }), new System.Action(() => { }));
+            //}, "Clears your instance history");
 
             mainHistoryGroup = new ButtonGroup(instanceHistoryPage, "History");
 

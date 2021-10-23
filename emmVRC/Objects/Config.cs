@@ -15,6 +15,7 @@ namespace emmVRC.Objects
         public bool GlobalDynamicBonesEnabled = true;
         public bool FriendGlobalDynamicBonesEnabled = false;
         public bool EveryoneGlobalDynamicBonesEnabled = false;
+        public bool AutomaticHandCollidersEnabled = false;
         public bool emmVRCNetworkEnabled = true;
         public bool GlobalChatEnabled = true;
         public bool VRFlightControls = true;
@@ -60,19 +61,11 @@ namespace emmVRC.Objects
         // Last seen startup message
         public int LastSeenStartupMessage = -1;
 
-        // Button positions
-        public bool TabMode = false;
-        public int FunctionsButtonX = 0;
-        public int FunctionsButtonY = 1;
-        public int LogoButtonX = 0;
-        public int LogoButtonY = -1;
-        public int UserInteractButtonX = 4;
-        public int UserInteractButtonY = 2;
-        public int NotificationButtonPositionX = 0;
-        public int NotificationButtonPositionY = 0;
-        public int PlayerActionsButtonX = 1;
-        public int PlayerActionsButtonY = 3;
-        public bool StealthMode = false;
+        // Flashlight Config
+        public string FlashlightColorHex = "#FFFFFF";
+        public float FlashlightRange = 5f;
+        public float FlashlightPower = 1f;
+        public float FlashlightAngle = 50f;
 
         public System.Collections.Generic.List<int> FavouritedEmojis = new System.Collections.Generic.List<int>();
         public bool PersistentAlarm = false;
@@ -84,21 +77,10 @@ namespace emmVRC.Objects
         public bool DisableAvatarPedestals = false;
 
         // Sub section: Shortcut Menu
-        public bool DisableReportWorldButton = false;
-        public bool DisableEmojiButton = false;
-        public bool DisableEmoteButton = false;
-        public bool DisableRankToggleButton = false;
         public bool DisableOldInviteButtons = false;
-        // Sub section: User Interact Menu
-        public bool DisablePlaylistsButton = false;
-        public bool DisableAvatarStatsButton = false;
-        public bool DisableReportUserButton = false;
-        public bool MinimalWarnKickButton = false;
         // Sub section: Action Menu
         public bool DisableOneHandMovement = false;
         // Sub section: VRChat Minus
-        public bool DisableVRCPlusAds = false;
-        public bool DisableVRCPlusQMButtons = false;
         public bool DisableVRCPlusMenuTabs = false;
         public bool DisableVRCPlusUserInfo = false;
 
@@ -128,10 +110,6 @@ namespace emmVRC.Objects
         public string TrustedUserNamePlateColorHex = "#8143E6";
         public string VeteranUserNamePlateColorHex = "#ABCDEE";
         public string LegendaryUserNamePlateColorHex = "#FF69B4";
-
-        // Info spoofing and hiding
-        public bool InfoSpoofingEnabled = false;
-        public string InfoSpoofingName = "";
 
         // Avatar list sorting options
         public int SortingMode = 0;

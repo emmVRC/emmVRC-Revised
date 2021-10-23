@@ -42,7 +42,9 @@ namespace emmVRC.Functions.PlayerHacks
                 if (avatarObject == null || avtr == null || player == null) return;
 
                 // Grab avatar permissions for the loaded avatar
-                AvatarPermissions aperms = AvatarPermissions.GetAvatarPermissions(avtr.id);
+                Objects.AvatarPermissions aperms;
+                if (!AvatarPermissionsManager.TryGetAvatarPermissions(avtr.id, out aperms))
+                    aperms = new Objects.AvatarPermissions();
 
                 // Grab user permissions for the avatar's user
                 UserPermissions uperms = UserPermissions.GetUserPermissions(player._player.prop_APIUser_0.id);
@@ -105,7 +107,7 @@ namespace emmVRC.Functions.PlayerHacks
                     }
 
                     // If global dynamics are allowed for all parts of the avatar, grab the dynamic bones for the whole avatar and add them to cache
-                    if (!aperms.HeadBones && !aperms.ChestBones && !aperms.HipBones)
+                    if (true || (!aperms.HeadBones && !aperms.ChestBones && !aperms.HipBones))
                     {
                         emmVRCLoader.Logger.LogDebug("Global Dynamic Bones are allowed for all parts of the avatar. Processing bones...");
                         foreach (DynamicBone bone in avatarObject.GetComponentsInChildren<DynamicBone>())

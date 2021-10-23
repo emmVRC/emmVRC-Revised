@@ -29,6 +29,7 @@ namespace emmVRC.Network
         public static string baseURL { get { return BaseAddress + ":" + Port; } }
         public const string configURL = "https://dl.emmvrc.com"; // TODO: Integrate this with the API
         private static string LoginKey;
+        private static string LoginToken;
         private static string _webToken;
         private static bool keyFileTried = false;
         private static bool passwordTried = false;
@@ -118,11 +119,7 @@ namespace emmVRC.Network
                 NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
                 await emmVRC.AwaitUpdate.Yield();
                 if (NetworkConfig.Instance.MessageID != -1 && Configuration.JSONConfig.LastSeenStartupMessage != NetworkConfig.Instance.MessageID){
-                    Managers.NotificationManager.AddNotification(NetworkConfig.Instance.StartupMessage, "Dismiss", () =>
-                    {
-                        Configuration.WriteConfigOption("LastSeenStartupMessage", NetworkConfig.Instance.MessageID);
-                        Managers.NotificationManager.DismissCurrentNotification();
-                    }, "", null, Functions.Core.Resources.alertSprite);
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network Notice", null, NetworkConfig.Instance.StartupMessage, true, false, null, "", "", true, null, "Dismiss"));
                 }
             }
             catch (Exception exception)
@@ -133,66 +130,78 @@ namespace emmVRC.Network
         }
         private static async Task sendRequest(string password = "")
         {
-            if (NetworkConfig.Instance.DeleteAndDisableAuthFile)
-                Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
-            if (string.IsNullOrWhiteSpace(password ) && Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
-                LoginKey = Authentication.Authentication.ReadTokenFile(APIUser.CurrentUser.id);
-            else
-                LoginKey = password;
+            var currentUser = APIUser.CurrentUser;
+            var emaExists = Authentication.Exists(currentUser.id);
 
-            string createFile = "0";
-            if (!Authentication.Authentication.Exists(VRC.Core.APIUser.CurrentUser.id))
-                createFile = "1";
-            string response = "undefined";
-            string tagIdentifier = "";
-            System.Random rand = new System.Random();
-            const string availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            int stringLength = rand.Next(5, 7);
-            for (int i = 0; i < stringLength; i++)
+            if (NetworkConfig.Instance.DeleteAndDisableAuthFile)
             {
-                tagIdentifier += availableChars[rand.Next(availableChars.Length)];
+                Authentication.DeleteTokenFile(currentUser.id);
             }
+            else if (string.IsNullOrWhiteSpace(password) && emaExists)
+            {
+                LoginToken = Authentication.ReadTokenFile(currentUser.id);
+
+                if (password == "")
+                    keyFileTried = true;
+            }
+
+            if (LoginToken == null)
+                LoginToken = "";
+
+            LoginKey = password;
+
+            var createFile = emaExists ? "0" : "1";
+            var response = "undefined";
 
             try
             {
-                response = await HTTPRequest.post(NetworkClient.baseURL + "/api/authentication/login", new Dictionary<string, string>() { ["username"] = VRC.Core.APIUser.CurrentUser.id, ["name"] = VRC.Core.APIUser.CurrentUser.GetName(), ["password"] = LoginKey, ["loginKey"] = createFile, ["tagIdentifier"] = tagIdentifier });
-                TinyJSON.Variant result = HTTPResponse.Serialize(response);
+                response = await HTTPRequest.post($"{NetworkClient.baseURL}/api/authentication/login", new Dictionary<string, string>()
+                {
+                    ["username"] = currentUser.id,
+                    ["name"] = currentUser.GetName(),
+                    ["password"] = LoginKey,
+                    ["loginToken"] = string.IsNullOrWhiteSpace(password) ? LoginToken : "",
+                    ["loginKey"] = createFile
+                });
+
+                var result = HTTPResponse.Serialize(response);
                 NetworkClient.webToken = result["token"];
 
                 await emmVRC.AwaitUpdate.Yield();
 
                 if (createFile == "1")
                 {
-                    
                     try
                     {
-                        Authentication.Authentication.CreateTokenFile(VRC.Core.APIUser.CurrentUser.id, result["loginKey"]);
+                        Authentication.CreateTokenFile(currentUser.id, result["loginKey"]);
                     }
                     catch (Exception ex)
                     {
-                        emmVRCLoader.Logger.LogError(ex.ToString());
+                        emmVRCLoader.Logger.Log($"There was an issue saving your emmVRC Network token.\n{ex}");
                     }
-                    LoginKey = result["loginKey"];
                 }
+
                 keyFileTried = false;
                 passwordTried = false;
+
                 onLogin?.DelegateSafeInvoke();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 await emmVRC.AwaitUpdate.Yield();
-                
-                if (response.ToLower().Contains("unauthorized"))
+                response = response.ToLower();
+
+                if (response.Contains("unauthorized"))
                 {
-                    if (response.ToLower().Contains("banned"))
+                    if (response.Contains("banned"))
                     {
-                        Managers.NotificationManager.AddNotification("You cannot connect to the emmVRC Network because you are banned.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.errorSprite, -1);
+                        Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Functions.Core.Resources.errorSprite, "You cannot connect to the emmVRC Network because you are banned.", false, false, null, "", "", true, null, "Dismiss"));
                     }
                     else
                     {
-                        //emmVRCLoader.Logger.LogDebug("Password: " + password);
-                        if (keyFileTried && Authentication.Authentication.Exists(APIUser.CurrentUser.id))
-                            Authentication.Authentication.DeleteTokenFile(APIUser.CurrentUser.id);
+                        if (keyFileTried && emaExists)
+                            Authentication.DeleteTokenFile(currentUser.id);
+
                         if (keyFileTried && password != "" && !passwordTried && !NetworkConfig.Instance.DisableAuthFile && !NetworkConfig.Instance.DeleteAndDisableAuthFile)
                         {
                             passwordTried = true;
@@ -201,31 +210,24 @@ namespace emmVRC.Network
                         else
                         {
                             await emmVRC.AwaitUpdate.Yield();
-                            
-                            Managers.NotificationManager.AddNotification("You need to log in to the emmVRC Network. Please log in or enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.", "Login", () => { Managers.NotificationManager.DismissCurrentNotification(); PromptLogin(); }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Functions.Core.Resources.alertSprite, -1);
+                            Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Functions.Core.Resources.alertSprite, "You need to log in to the emmVRC Network. Please log in or enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.", false, true, PromptLogin, "Login", "", true, null, "Dismiss"));
                         }
                     }
                 }
                 else if (response.ToLower().Contains("forbidden"))
                 {
-                    Managers.NotificationManager.AddNotification("You have tried to log in too many times. Please try again later.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.errorSprite, -1);
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Functions.Core.Resources.errorSprite, "You have tried to log in too many times. Please try again later.", false, false, null, "", "", true, null, "Dismiss"));
                 }
                 else
                 {
-                    if (retries <= NetworkConfig.Instance.NetworkAutoRetries)
+                    if (retries++ <= NetworkConfig.Instance.NetworkAutoRetries)
                     {
-                        retries++;
                         await sendRequest(password);
                     }
                     else
                     {
-                        Managers.NotificationManager.AddNotification("The emmVRC Network is currently unavailable. Please try again later.", "Reconnect", () =>
-                        {
-                            ClearAndLogin();
-                            Managers.NotificationManager.DismissCurrentNotification();
-                        }, "Dismiss", Managers.NotificationManager.DismissCurrentNotification, Functions.Core.Resources.errorSprite, -1);
+                        Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Functions.Core.Resources.errorSprite, "The emmVRC Network is currently unavailable. Please try again later.", false, true, ClearAndLogin, "Reconnect", "", true, null, "Dismiss"));
                     }
-                    //emmVRCLoader.Logger.LogError(response);
                 }
             }
         }

@@ -65,10 +65,10 @@ namespace emmVRC.Managers
             if ((GameObject.Find("eVRCRiskFuncEnable") != null || GameObject.Find("eVRCRiskFuncDisable") != null) && RoomManager.field_Internal_Static_ApiWorld_0.authorId == APIUser.CurrentUser.id && !Configuration.JSONConfig.IgnoreWorldCreatorTips)
             {
                 emmVRCLoader.Logger.Log("[NOTICE] The eVRCRiskFuncDisable/Enable objects are soon to be deprecated. Instead, please use \"UniversalRiskyFuncDisable\" and \"UniversalRiskyFuncEnable\"");
-                NotificationManager.AddNotification("The eVRCRiskFuncDisable/Enable objects are soon to be deprecated. Instead, please use \"UniversalRiskyFuncDisable\" and \"UniversalRiskyFuncEnable\"", "Dismiss", NotificationManager.DismissCurrentNotification, "Never show\nagain", () =>
-                {
-                    Configuration.WriteConfigOption("IgnoreWorldCreatorTips", true);
-                }, Functions.Core.Resources.alertSprite);
+                //NotificationManager.AddNotification("The eVRCRiskFuncDisable/Enable objects are soon to be deprecated. Instead, please use \"UniversalRiskyFuncDisable\" and \"UniversalRiskyFuncEnable\"", "Dismiss", NotificationManager.DismissCurrentNotification, "Never show\nagain", () =>
+                //{
+                //    Configuration.WriteConfigOption("IgnoreWorldCreatorTips", true);
+                //}, Functions.Core.Resources.alertSprite);
             }
 
             foreach (string worldTag in world.tags)

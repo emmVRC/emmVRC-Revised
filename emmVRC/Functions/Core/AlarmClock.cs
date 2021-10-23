@@ -55,23 +55,6 @@ namespace emmVRC.Functions.Other
         private static void PortOldConfig()
         {
             Alarms = new List<Alarm>();
-
-            uint alarmTime = Configuration.JSONConfig.AlarmTime;
-            Alarms.Add(new Alarm(0)
-            {
-                Time = alarmTime * TimeSpan.TicksPerSecond,
-                Volume = 0.5f,
-                IsSystemTime = true
-            });
-
-            uint instanceAlarmTime = Configuration.JSONConfig.InstanceAlarmTime;
-            Alarms.Add(new Alarm(1)
-            {
-                Time = instanceAlarmTime * TimeSpan.TicksPerSecond,
-                Volume = 0.5f,
-                IsSystemTime = false
-            });
-
             SaveConfig();
         }
 

@@ -1,20 +1,39 @@
-﻿using System.Collections.Generic;
+﻿
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace emmVRC.Objects
 {
     public class Notification
     {
-        public string Message;
-        public string Button1Text;
-        public string Button2Text;
-        public string Button3Text;
-        public System.Action Button1Action;
-        public System.Action Button2Action;
-        public System.Action Button3Action;
-        public Sprite Icon;
-        public int Timeout = -1;
-        public List<object> PersistentObjects = new List<object>();
+        public readonly DateTime timeCreated = DateTime.Now;
+        public readonly string name = "";
+        public readonly Sprite icon = null;
+        public readonly string content = "";
+        public readonly bool canIgnore = true;
+        public readonly bool showAcceptButton = true;
+        public readonly Action acceptButton = null;
+        public readonly string acceptButtonText = "";
+        public readonly string acceptButtonTooltip = "";
+        public readonly bool showIgnoreButton = true;
+        public readonly Action ignoreButton = null;
+        public readonly string ignoreButtonText = "";
+        public readonly string ignoreButtonTooltip = "";
+
+        public Notification(string name = "", Sprite icon = null, string content = "", bool canIgnore = true, bool showAcceptButton = true, Action acceptButton = null, string acceptButtonText = "", string acceptButtonTooltip = "", bool showIgnoreButton = true, Action ignoreButton = null, string ignoreButtonText = "", string ignoreButtonTooltip = "")
+        {
+            this.name = name;
+            this.icon = icon;
+            this.content = content;
+            this.canIgnore = canIgnore;
+            this.showAcceptButton = showAcceptButton;
+            this.acceptButton = acceptButton;
+            this.acceptButtonText = acceptButtonText;
+            this.acceptButtonTooltip = acceptButtonTooltip;
+            this.showIgnoreButton = showIgnoreButton;
+            this.ignoreButton = ignoreButton;
+            this.ignoreButtonText = ignoreButtonText;
+            this.ignoreButtonTooltip = ignoreButtonTooltip;
+        }
     }
 }

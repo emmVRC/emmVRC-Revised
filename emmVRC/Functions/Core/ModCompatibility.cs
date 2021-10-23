@@ -23,7 +23,6 @@ namespace emmVRC.Functions.Core
         public static bool IKTweaks = false;
         public static bool BetterLoadingScreen = false;
         public static bool VRCMinus = false;
-        public static bool CameraPlus = false;
 
         public static GameObject FlightButton;
         public static GameObject NoclipButton;
@@ -50,8 +49,6 @@ namespace emmVRC.Functions.Core
                 BetterLoadingScreen = true;
             if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "VRC-Minus"))
                 VRCMinus = true;
-            if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "CameraPlus"))
-                CameraPlus = true;
 
 
             if (MultiplayerDynamicBones)
@@ -79,19 +76,19 @@ namespace emmVRC.Functions.Core
                 }));
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nFlight", new System.Action(() => {
                             if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenuLegacy.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
+                        Functions.PlayerHacks.Flight.SetFlyActive(!Functions.PlayerHacks.Flight.IsFlyEnabled);
                         }), new Action<GameObject>((GameObject obj) => { FlightButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); })});
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nNoclip", new System.Action(() => {
                                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenuLegacy.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
+                        Functions.PlayerHacks.Flight.SetNoClipActive(!Functions.PlayerHacks.Flight.IsNoClipEnabled);
                         }), new Action<GameObject>((GameObject obj) => { NoclipButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nSpeed", new System.Action(() => {
                                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenuLegacy.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
+                        Functions.PlayerHacks.Speed.SetActive(!Functions.PlayerHacks.Speed.IsEnabled);
                         }), new Action<GameObject>((GameObject obj) => { SpeedButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterSimpleMenuButton", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { 0, "Toggle\nESP", new System.Action(() => {
                                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                        PlayerTweaksMenuLegacy.ESPToggle.setToggleState(!Functions.PlayerHacks.ESP.IsEnabled, true);
+                        Functions.PlayerHacks.ESP.SetActive(!Functions.PlayerHacks.ESP.IsEnabled);
                         }), new Action<GameObject>((GameObject obj) => { ESPButton = obj; obj.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); }) });
                 if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
                     MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "UI Expansion Kit").Assembly.GetType("UIExpansionKit.API.ExpansionKitApi").GetMethod("RegisterWaitConditionBeforeDecorating", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { ColorUIExpansionKit() });
@@ -105,8 +102,6 @@ namespace emmVRC.Functions.Core
                 emmVRCLoader.Logger.LogDebug("Detected BetterLoadingScreen");
             if (VRCMinus)
                 emmVRCLoader.Logger.LogDebug("Detected VRCMinus");
-            if (CameraPlus)
-                emmVRCLoader.Logger.LogDebug("Detected CameraPlus");
         }
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
@@ -114,7 +109,7 @@ namespace emmVRC.Functions.Core
             if (Functions.Core.ModCompatibility.MultiplayerDynamicBones && Configuration.JSONConfig.GlobalDynamicBonesEnabled)
             {
                 Configuration.WriteConfigOption("GlobalDynamicBonesEnabled", false);
-                Managers.NotificationManager.AddNotification("You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.alertSprite, -1);
+                Managers.emmVRCNotificationsManager.AddNotification(new Objects.Notification("emmVRC", null, "You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", true, false, null, "", "", true, null, "Dismiss"));
             }
         }
         public static IEnumerator ColorUIExpansionKit()

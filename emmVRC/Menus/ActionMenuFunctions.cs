@@ -59,22 +59,22 @@ namespace emmVRC.Menus
             flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenuLegacy.FlightToggle.setToggleState(!Functions.PlayerHacks.Flight.IsFlyEnabled, true);
+                    Functions.PlayerHacks.Flight.SetFlyActive(!Functions.PlayerHacks.Flight.IsFlyEnabled);
             }, CustomActionMenu.ToggleOffTexture);
             noclipButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Noclip:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenuLegacy.NoclipToggle.setToggleState(!Functions.PlayerHacks.Flight.IsNoClipEnabled, true);
+                    Functions.PlayerHacks.Flight.SetNoClipActive(!Functions.PlayerHacks.Flight.IsNoClipEnabled);
             }, CustomActionMenu.ToggleOffTexture);
             speedButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Speed:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenuLegacy.SpeedToggle.setToggleState(!Functions.PlayerHacks.Speed.IsEnabled, true);
+                    Functions.PlayerHacks.Speed.SetActive(!Functions.PlayerHacks.Speed.IsEnabled);
             }, CustomActionMenu.ToggleOffTexture);
             espButton = new CustomActionMenu.Button(riskyFunctionsMenu, "ESP:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
-                    PlayerTweaksMenuLegacy.ESPToggle.setToggleState(!Functions.PlayerHacks.ESP.IsEnabled, true);
+                    Functions.PlayerHacks.ESP.SetActive(!Functions.PlayerHacks.ESP.IsEnabled);
             }, CustomActionMenu.ToggleOffTexture);
 
             /*avatarParametersMenu = new CustomActionMenu.Page(functionsMenu, "Avatar 3.0\nParameters", Resources.rpSprite.texture);
@@ -121,13 +121,13 @@ namespace emmVRC.Menus
                     espButton.SetEnabled(false);
                 }
             }
-            if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Count != 0)
+            /*if (EmojiFavourites.AvailableEmojis != null && EmojiFavourites.AvailableEmojis.Count != 0)
             {
                 for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
                     favouriteEmojiButtons[i].SetIcon(EmojiFavourites.AvailableEmojis[Configuration.JSONConfig.FavouritedEmojis[i]].GetComponent<ParticleSystemRenderer>().material.mainTexture.Cast<Texture2D>());
                 for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
                     favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetIcon(null);
-            }
+            }*/
             if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
             {
                 for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)

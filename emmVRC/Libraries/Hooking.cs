@@ -21,14 +21,6 @@ namespace emmVRC.Functions.Core
         {
             try
             {
-                emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(typeof(VRCPlayer).GetMethod("Awake"), new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("VRCPlayerAwake", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-            }
-            catch (Exception ex)
-            {
-                emmVRCLoader.Logger.LogError("Avatar patching failed: " + ex.ToString());
-            }
-            try
-            {
                 if (!Functions.Core.ModCompatibility.PortalConfirmation)
                 {
                     emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(typeof(PortalInternal).GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Single(it => it != null && it.ReturnType == typeof(void) && it.GetParameters().Length == 0 && UnhollowerRuntimeLib.XrefScans.XrefScanner.XrefScan(it).Any(jt => jt.Type == UnhollowerRuntimeLib.XrefScans.XrefType.Global && jt.ReadAsObject()?.ToString() == " was at capacity, cannot enter.")), new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("OnPortalEntered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
@@ -93,34 +85,6 @@ namespace emmVRC.Functions.Core
             return true;
         }
 
-        private static bool VRCPlayerAwake(VRCPlayer __instance)
-        {
-            __instance.Method_Public_add_Void_MulticastDelegateNPublicSealedVoUnique_0(new Action(() =>
-            {
-                if (__instance != null && __instance._player != null && __instance._player.prop_APIUser_0 != null && __instance._player._vrcplayer.prop_VRCAvatarManager_0 != null)
-                {
-                    OnAvatarInstantiate(__instance.prop_VRCAvatarManager_0, __instance.prop_VRCAvatarManager_0.prop_GameObject_0);
-                }
-            }));
-            return true;
-        }
-
-        private static void OnAvatarInstantiate(VRCAvatarManager __instance, GameObject __0)
-        {
-            VRC.SDKBase.VRC_AvatarDescriptor descriptor = null;
-            if (__instance.field_Private_VRC_AvatarDescriptor_0 != null)
-                descriptor = __instance.field_Private_VRC_AvatarDescriptor_0;
-            else if (__instance.field_Private_VRC_AvatarDescriptor_1 != null)
-                descriptor = __instance.field_Private_VRC_AvatarDescriptor_1;
-            if (descriptor == null)
-                emmVRCLoader.Logger.LogError("The avatar descriptor could not be obtained from this avatar. Global Dynamic Bones and Avatar Permissions will not function.");
-            else
-            {
-                Managers.AvatarPermissionManager.ProcessAvatar(__0, descriptor);
-            }
-            //MelonLoader.MelonCoroutines.Start(AvatarPropertySaving.OnLoadAvatar(__1));
-        }
-
         /*private static void OnAvatarInstantiated(GameObject __0, VRC.SDKBase.VRC_AvatarDescriptor __1, bool __2)
         {
             if (__2)
@@ -136,31 +100,27 @@ namespace emmVRC.Functions.Core
             return false;
         }
 
-        private static void OnRebuild(PlayerNameplate __instance)
-        {
-            if (Configuration.JSONConfig.StealthMode || __instance.field_Private_VRCPlayer_0 == null) return;
-            if (__instance.field_Private_VRCPlayer_0._player != null && __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0 != null)
-            {
-                if (Configuration.JSONConfig.InfoSpoofingEnabled)
-                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = Configuration.JSONConfig.InfoSpoofingName;
-                /*else if (!Configuration.JSONConfig.InfoSpoofingEnabled && VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Contains(Hacks.NameSpoofGenerator.spoofedName))
-                    VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text = VRCPlayer.field_Internal_Static_VRCPlayer_0.GetNameplateText().text.Replace(Hacks.NameSpoofGenerator.spoofedName, APIUser.CurrentUser.GetName());*/
-                if (Configuration.JSONConfig.NameplateColorChangingEnabled && !Functions.Core.ModCompatibility.OGTrustRank)
-                {
-                    APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;
-                    if (user.isFriend)
-                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex));
-                    else if (user.hasVeteranTrustLevel)
-                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
-                    else if (user.hasTrustedTrustLevel) 
-                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex));
-                    else if (user.hasKnownTrustLevel) 
-                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex));
-                    else if (user.hasBasicTrustLevel)
-                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex));
-                }
-            }
-        }
+        //private static void OnRebuild(PlayerNameplate __instance)
+        //{
+        //    if (__instance.field_Private_VRCPlayer_0 == null) return;
+        //    if (__instance.field_Private_VRCPlayer_0._player != null && __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0 != null)
+        //    {
+        //        if (Configuration.JSONConfig.NameplateColorChangingEnabled && !Functions.Core.ModCompatibility.OGTrustRank)
+        //        {
+        //            APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;
+        //            if (user.isFriend)
+        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex));
+        //            else if (user.hasVeteranTrustLevel)
+        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
+        //            else if (user.hasTrustedTrustLevel) 
+        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex));
+        //            else if (user.hasKnownTrustLevel) 
+        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex));
+        //            else if (user.hasBasicTrustLevel)
+        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex));
+        //        }
+        //    }
+        //}
         private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
         {
             if (__0 != null && Functions.PlayerHacks.FBTSaving.IsPreviouslyCalibrated(__0) && RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.TrackingSaving)

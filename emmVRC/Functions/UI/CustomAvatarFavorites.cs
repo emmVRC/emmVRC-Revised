@@ -126,8 +126,9 @@ namespace emmVRC.Functions.UI
             ShowAuthorButton.GetComponentInChildren<Text>().text = "";
             ShowAuthorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(82f, 82f);
             ShowAuthorButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(250f, -25f);
-            ShowAuthorButton.transform.Find("PlatformIcon").gameObject.SetActive(true);
-            ShowAuthorButton.transform.Find("PlatformIcon").GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            GameObject.Instantiate(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/AvatarDetails Button/PlatformIcon").gameObject, ShowAuthorButton.transform);
+            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").gameObject.SetActive(true);
+            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             MelonLoader.MelonCoroutines.Start(ShowAuthorIconUpdate());
             Button ShowAuthorButtonButton = ShowAuthorButton.GetComponent<Button>();
             ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
@@ -323,7 +324,7 @@ namespace emmVRC.Functions.UI
                 }
                 if (error && !errorWarned)
                 {
-                    Managers.NotificationManager.AddNotification("Your emmVRC avatars could not be loaded. Please ask in the Discord to resolve this.", "Dismiss", () => { Managers.NotificationManager.DismissCurrentNotification(); }, "", null, Functions.Core.Resources.errorSprite, -1);
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network", Functions.Core.Resources.errorSprite, "Your emmVRC avatars could not be loaded. Please ask in the Discord to resolve this.", true, false, null, "", "", true, null, "Dismiss"));
                     errorWarned = true;
                 }
                 MelonLoader.MelonCoroutines.Start(WaitToEnableSearch());
@@ -366,8 +367,8 @@ namespace emmVRC.Functions.UI
         {
             while (Functions.Core.Resources.authorSprite == null)
                 yield return new WaitForEndOfFrame();
-            ShowAuthorButton.transform.Find("PlatformIcon").GetComponent<Image>().sprite = Functions.Core.Resources.authorSprite;
-            ShowAuthorButton.transform.Find("PlatformIcon").GetComponent<RectTransform>().sizeDelta /= new Vector2(1.5f, 1.5f);
+            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<Image>().sprite = Functions.Core.Resources.authorSprite;
+            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<RectTransform>().sizeDelta /= new Vector2(1.5f, 1.5f);
 
         }
         public static async Task FavoriteAvatar(ApiAvatar avtr)
@@ -448,7 +449,7 @@ namespace emmVRC.Functions.UI
             {
                 await emmVRC.AwaitUpdate.Yield();
 
-                Managers.NotificationManager.AddNotification("emmVRC Avatar Favorites list failed to load. Please check your internet connection.", "Dismiss", Managers.NotificationManager.DismissCurrentNotification, "", null, Functions.Core.Resources.errorSprite, -1);
+                Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network", Functions.Core.Resources.errorSprite, "emmVRC Avatar Favorites list failed to load. Please check your internet connection.", true, false, null, "", "", true, null, "Dismiss"));
                 error = true;
                 errorWarned = true;
 

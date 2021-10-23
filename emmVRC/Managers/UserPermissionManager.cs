@@ -37,8 +37,6 @@ namespace emmVRC.Managers
     [Priority(50)]
     public class UserPermissionManager : MelonLoaderEvents
     {
-        public static PaginatedMenu baseMenu;
-        public static PageItem GlobalDynamicBonesEnabledToggle;
 
         public static UserPermissions selectedUserPermissions;
         public override void OnUiManagerInit()
@@ -46,19 +44,6 @@ namespace emmVRC.Managers
             if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserPermissions/")))
                 Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/UserPermissions/"));
 
-            baseMenu = new PaginatedMenu(UserTweaksMenu.UserTweaks, 21304, 142394, "User\nPermissions", "", null);
-            baseMenu.menuEntryButton.DestroyMe();
-            GlobalDynamicBonesEnabledToggle = new PageItem("Global Dynamic\nBones", () => {
-                selectedUserPermissions.GlobalDynamicBonesEnabled = true;
-                selectedUserPermissions.SaveUserPermissions();
-                ReloadUsers();
-            }, "Disabled", () => {
-                selectedUserPermissions.GlobalDynamicBonesEnabled = false;
-                selectedUserPermissions.SaveUserPermissions();
-                ReloadUsers();
-            }, "TOGGLE: Enables Global Dynamic Bones for the selected user", true, true);
-            baseMenu.pageItems.Add(GlobalDynamicBonesEnabledToggle);
-            baseMenu.pageTitles.Add("User Options");
         }
         private static void ReloadUsers()
         {
@@ -67,11 +52,6 @@ namespace emmVRC.Managers
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCUserManager_0.Method_Private_Void_Boolean_1(false);
             //VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCUserManager_0.Method_Private_Void_Boolean_2(false);
         }
-        public static void OpenMenu(string UserId)
-        {
-            selectedUserPermissions = UserPermissions.GetUserPermissions(UserId);
-            GlobalDynamicBonesEnabledToggle.SetToggleState(selectedUserPermissions.GlobalDynamicBonesEnabled);
-            baseMenu.OpenMenu();
-        }
+        
     }
 }
