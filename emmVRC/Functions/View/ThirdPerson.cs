@@ -86,7 +86,7 @@ namespace emmVRC.Functions.View
                     CameraSetup = 2;
                 }, "Switches your perspective to third-person, facing your front. Press CTRL+T or move the joystick to revert", configUtils.buttonColor());
                 setup = true;*/
-                Components.EnableDisableListener menuListener = QuickMenu.prop_QuickMenu_0.transform.Find("QuickMenu_NewElements").gameObject.AddComponent<Components.EnableDisableListener>();
+                Components.EnableDisableListener menuListener = Utils.ButtonAPI.GetQuickMenuInstance().gameObject.AddComponent<Components.EnableDisableListener>();
                 menuListener.OnEnabled += () =>
                 {
                     CameraSetup = 0;

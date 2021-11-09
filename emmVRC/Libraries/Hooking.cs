@@ -100,27 +100,27 @@ namespace emmVRC.Functions.Core
             return false;
         }
 
-        //private static void OnRebuild(PlayerNameplate __instance)
-        //{
-        //    if (__instance.field_Private_VRCPlayer_0 == null) return;
-        //    if (__instance.field_Private_VRCPlayer_0._player != null && __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0 != null)
-        //    {
-        //        if (Configuration.JSONConfig.NameplateColorChangingEnabled && !Functions.Core.ModCompatibility.OGTrustRank)
-        //        {
-        //            APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;
-        //            if (user.isFriend)
-        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex));
-        //            else if (user.hasVeteranTrustLevel)
-        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
-        //            else if (user.hasTrustedTrustLevel) 
-        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex));
-        //            else if (user.hasKnownTrustLevel) 
-        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex));
-        //            else if (user.hasBasicTrustLevel)
-        //                __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex));
-        //        }
-        //    }
-        //}
+        private static void OnRebuild(PlayerNameplate __instance)
+        {
+            if (__instance.field_Private_VRCPlayer_0 == null) return;
+            if (__instance.field_Private_VRCPlayer_0._player != null && __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0 != null)
+            {
+                if (Configuration.JSONConfig.NameplateColorChangingEnabled && !Functions.Core.ModCompatibility.OGTrustRank)
+                {
+                    APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;
+                    if (user.isFriend)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex));
+                    else if (user.hasVeteranTrustLevel)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
+                    else if (user.hasTrustedTrustLevel)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex));
+                    else if (user.hasKnownTrustLevel)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex));
+                    else if (user.hasBasicTrustLevel)
+                        __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex));
+                }
+            }
+        }
         private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
         {
             if (__0 != null && Functions.PlayerHacks.FBTSaving.IsPreviouslyCalibrated(__0) && RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.TrackingSaving)

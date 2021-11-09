@@ -9,7 +9,7 @@ namespace emmVRC.Objects
     public class Attributes
     {
         public const string Version = "3.0.0";
-        public const int LastTestedBuildNumber = 1121;
+        public const int LastTestedBuildNumber = 1149;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
         public const string DateUpdated = "10/08/2021";
@@ -21,13 +21,20 @@ namespace emmVRC.Objects
             "<b>v3.0.0</b>\n" +
             "• Interaction with pickup triggers (e.g. flashlights) now works like the vanilla game\n" +
             "• emmVRC's menus have been completely remade for the new VRChat UI\n" +
-            "• UIExpansionKit coloring will no longer affect checkboxes\n" +
             "• Added more exclusions and inclusions to the color module\n" +
-            "• Mods can now opt out of emmVRC coloring for buttons by using a \"emmVRCDoNotColor\" GameObject within the button\n" +
-            "• The original Functions menu button has been removed in preparation for newer UI designs of VRChat\n" +
-            "• Info spoofing has been removed, as it was too hard to maintain and its' purpose is largely provided by Streamer mode\n" +
             "• Several modules of emmVRC have been rewritten for better performance and expandability\n" +
-            "• Errors in specific modules of emmVRC will no longer cause the rest of the mod to stop loading or working";
+            "• Errors in specific modules of emmVRC will no longer cause the rest of the mod to stop loading or working\n" +
+            "\n" +
+            "<b><color=#FF5555>Notice</color></b>\n" +
+            "The following features are <i>known</i> to be broken or unavailable, and will be available in a later update:\n" +
+            "- Alarm Clocks\n" +
+            "- Keybind configuration via the UI\n" +
+            "- UIExpansionKit coloring\n" +
+            "\n" +
+            "The following features have been removed, and will <i>not</i> be returning to emmVRC:\n" +
+            "- Info spoofing\n" +
+            "- Stealth mode\n" +
+            "";
         public static bool Debug = false;
         public const string TargetMelonLoaderVersion = "0.4.3";
         public const string TargetemmVRCLoaderVersion = "1.2.0";

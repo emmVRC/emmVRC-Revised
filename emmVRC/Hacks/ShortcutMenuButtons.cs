@@ -26,7 +26,7 @@ namespace emmVRC.Hacks
         public static IEnumerator Process()
         {
             yield return null;
-                socialNotifications = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMNotificationsArea/NotificationsAndThankYou/SocialNotificationsOverlay").gameObject;
+                socialNotifications = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMNotificationsArea/Notifications/SocialNotificationsOverlay").gameObject;
                 socialNotifications.transform.localScale = (Configuration.JSONConfig.DisableOldInviteButtons ? Vector3.zero : Vector3.one);
         }
     }

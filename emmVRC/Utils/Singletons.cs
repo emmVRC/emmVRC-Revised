@@ -8,16 +8,6 @@ namespace emmVRC.Utils
 {
     public class Singletons
     {
-        public static QuickMenu quickMenu => QuickMenu.field_Private_Static_QuickMenu_0;
-        public static ShortcutMenu shortcutMenu
-        {
-            get
-            {
-                if (_shortcutMenu == null)
-                    _shortcutMenu = quickMenu.transform.Find("ShortcutMenu").GetComponent<ShortcutMenu>();
-                return _shortcutMenu;
-            }
-        }
         private static ShortcutMenu _shortcutMenu;
         public static VRCUiManager vrcUiManager => VRCUiManager.field_Private_Static_VRCUiManager_0;
         public static VRCUiPopupManager vrcUiPopupManger => VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0;
@@ -32,15 +22,6 @@ namespace emmVRC.Utils
         }
         private static PageWorldInfo _pageWorldInfo;
         public static PlayerManager playerManager => PlayerManager.field_Private_Static_PlayerManager_0;
-        public static UserInteractMenu userInteractMenu
-        {
-            get
-            {
-                if (_userInteractMenu == null)
-                    _userInteractMenu = quickMenu.transform.Find("UserInteractMenu").GetComponent<UserInteractMenu>();
-                return _userInteractMenu;
-            }
-        }
         private static UserInteractMenu _userInteractMenu;
     }
 }

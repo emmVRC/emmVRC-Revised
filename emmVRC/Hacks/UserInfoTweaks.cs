@@ -17,9 +17,7 @@ namespace emmVRC.Hacks
     public class UserInfoTweaks : MelonLoaderEvents
     {
         public static GameObject lastSeenText;
-        public static GameObject platformIcon;
         public static PageUserInfo userInfo;
-        private static UiPlatformIcon icon;
         public static string lastCheckedId;
 
 
@@ -32,13 +30,6 @@ namespace emmVRC.Hacks
             lastSeenText.GetComponent<Text>().fontSize = 30;
             lastSeenText.GetComponent<Text>().text = "";
             userInfo = inst.transform.GetComponent<PageUserInfo>();
-            platformIcon = GameObject.Instantiate(inst.transform.Find("AvatarImage/SupporterIcon").gameObject, inst.transform);
-            platformIcon.GetComponent<RectTransform>().anchoredPosition = new Vector2(390f, -170f);
-            GameObject.DestroyImmediate(platformIcon.GetComponent<Image>());
-            platformIcon.AddComponent<RawImage>();
-            platformIcon.SetActive(true);
-
-            icon = GameObject.Find("UserInterface/QuickMenu/QuickMenu_NewElements/_CONTEXT/QM_Context_User_Hover/AvatarImage/PlatformIcon").GetComponent<UiPlatformIcon>();
             EnableDisableListener listener = inst.AddComponent<EnableDisableListener>();
             listener.OnEnabled += () => MelonLoader.MelonCoroutines.Start(WaitForUserReady());
         }
@@ -67,20 +58,6 @@ namespace emmVRC.Hacks
                         catch (Exception ex)
                         {
                             emmVRCLoader.Logger.LogError("Error parsing last login: " + ex.ToString());
-                        }
-                    }
-                    if (platformIcon != null)
-                    {
-                        try
-                        {
-                            if (userInfo.field_Public_APIUser_0.last_platform == "standalonewindows")
-                                platformIcon.GetComponent<RawImage>().texture = icon.field_Public_GameObject_1.GetComponent<RawImage>().texture;
-                            else
-                                platformIcon.GetComponent<RawImage>().texture = icon.field_Public_GameObject_2.GetComponent<RawImage>().texture;
-                        }
-                        catch (Exception ex)
-                        {
-                            emmVRCLoader.Logger.LogError("Error with platform icon: " + ex.ToString());
                         }
                     }
                 } catch (Exception ex)

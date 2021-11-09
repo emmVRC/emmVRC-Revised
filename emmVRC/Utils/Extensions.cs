@@ -29,18 +29,6 @@ namespace emmVRC.Utils
             return path;
         }
 
-        public static string GetQuickMenuRelativePath(this GameObject gameObject)
-        {
-            string path = gameObject.GetPath();
-            string quickMenuPath = Singletons.quickMenu.gameObject.GetPath();
-
-            string removedPath = path.Remove(0, quickMenuPath.Length).Substring(1);
-
-            if (removedPath.Length == path.Length)
-                throw new ArgumentException("Given GameObject was not relative to the QuickMenu");
-            return removedPath;
-        }
-
         public static void DestroyChildren(this Transform transform, Func<Transform, bool> exclude)
         {
             for (int i = transform.childCount - 1; i >= 0; i--)

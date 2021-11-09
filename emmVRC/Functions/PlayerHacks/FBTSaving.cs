@@ -19,6 +19,7 @@ namespace emmVRC.Functions.PlayerHacks
         public Quaternion HipTrackerRotation;
         public float PlayerHeight;
     }
+    [Priority(55)]
     public class FBTSaving : MelonLoaderEvents
     {
         public static List<FBTAvatarCalibrationInfo> calibratedAvatars;
@@ -26,19 +27,22 @@ namespace emmVRC.Functions.PlayerHacks
         public static System.Reflection.PropertyInfo leftFootInf;
         public static System.Reflection.PropertyInfo rightFootInf;
         public static System.Reflection.PropertyInfo hipInf;
-        public override void OnUiManagerInit()
+
+        private static bool _initialized = false;
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
+            if (buildIndex != -1 || _initialized) return;
             if (Environment.CurrentDirectory.Contains("vrchat-vrchat")) return; // Really awful and crude Oculus check
             calibratedAvatars = new List<FBTAvatarCalibrationInfo>();
-            originalCalibrateButton = QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick;
+            originalCalibrateButton = Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("SitStandCalibrateButton/Button_CalibrateFBT").GetComponentInChildren<UnityEngine.UI.Button>().onClick;
 
             VRCTrackingSteam steam = UnityEngine.Resources.FindObjectsOfTypeAll<VRCTrackingSteam>().First();
             leftFootInf = typeof(VRCTrackingSteam).GetProperties().First(a => a.PropertyType == typeof(Transform) && ((Transform)a.GetValue(steam)).parent.name == "Puck1");
             rightFootInf = typeof(VRCTrackingSteam).GetProperties().First(a => a.PropertyType == typeof(Transform) && ((Transform)a.GetValue(steam)).parent.name == "Puck2");
             hipInf = typeof(VRCTrackingSteam).GetProperties().First(a => a.PropertyType == typeof(Transform) && ((Transform)a.GetValue(steam)).parent.name == "Puck3");
 
-            QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
-            QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/CalibrateButton").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(new System.Action(() =>
+            Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("SitStandCalibrateButton/Button_CalibrateFBT").GetComponentInChildren<UnityEngine.UI.Button>().onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
+            Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("SitStandCalibrateButton/Button_CalibrateFBT").GetComponentInChildren<UnityEngine.UI.Button>().onClick.AddListener(new System.Action(() =>
             {
                 if (Configuration.JSONConfig.TrackingSaving && VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0 != null)
                 {
@@ -63,6 +67,7 @@ namespace emmVRC.Functions.PlayerHacks
                 }
                 originalCalibrateButton.Invoke();
             }));
+            _initialized = true;
         }
         public static IEnumerator SaveCalibrationInfo(VRCTrackingSteam trackingSteam, string avatarID)
         {

@@ -9,6 +9,7 @@ using emmVRC.Objects.ModuleBases;
 using emmVRC.Utils;
 using UnityEngine;
 using VRC.Core;
+using VRC.DataModel;
 
 namespace emmVRC.Menus
 {
@@ -81,9 +82,15 @@ namespace emmVRC.Menus
                 {
                     if (Timeout == 0 && NetworkConfig.Instance.APICallsAllowed)
                     {
-                        APIUser.FetchUser(plr.UserID, new System.Action<APIUser>((VRC.Core.APIUser usr) => { QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0 = usr; QuickMenu.prop_QuickMenu_0.Method_Public_Void_EnumNPublicSealedvaUnWoAvSoSeUsDeSaCuUnique_Boolean_0((QuickMenu.EnumNPublicSealedvaUnWoAvSoSeUsDeSaCuUnique)4, false); }), new System.Action<string>((string str) => {
+                        VRC.DataModel.IUser user = null;
+                        if (RoomManager.field_Private_Static_List_1_IUser_0.ToArray().Any(a => a.prop_String_0 == plr.UserID))
+                            user = RoomManager.field_Private_Static_List_1_IUser_0.ToArray().First(a => a.prop_String_0 == VRC.Core.APIUser.CurrentUser.id);
+                        //else
+                        //    user = VRC.DataModel.Core.DataModelManager.field_Private_Static_DataModelManager_0.field_Private_DataModelCache_0.Method_Public_TYPE_String_TYPE2_Boolean_0<IUser, VRC.Core.APIUser>(plr.UserID, false);
+                        Utils.ButtonAPI.GetQuickMenuInstance().Method_Public_Void_Boolean_IUser_PDM_0(true, user);
+                        /*APIUser.FetchUser(plr.UserID, new System.Action<APIUser>((VRC.Core.APIUser usr) => { QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0 = usr; QuickMenu.prop_QuickMenu_0.Method_Public_Void_EnumNPublicSealedvaUnWoAvSoSeUsDeSaCuUnique_Boolean_0((QuickMenu.EnumNPublicSealedvaUnWoAvSoSeUsDeSaCuUnique)4, false); }), new System.Action<string>((string str) => {
                             emmVRCLoader.Logger.LogError("API returned an error: " + str);
-                        }));
+                        }));*/
                         Timeout = 5;
                         MelonLoader.MelonCoroutines.Start(WaitForTimeout());
                     }

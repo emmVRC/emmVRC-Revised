@@ -70,12 +70,12 @@ namespace emmVRC.Managers
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
                 {
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/GoHomeButton").GetComponent<Button>().onClick.Invoke();
+                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_GoHome").GetComponentInChildren<Button>().onClick.Invoke();
                     keyFlag = true;
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && !keyFlag)
                 {
-                    QuickMenuUtils.GetQuickMenuInstance().transform.Find("ShortcutMenu/RespawnButton").GetComponent<Button>().onClick.Invoke();
+                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_Respawn").GetComponentInChildren<Button>().onClick.Invoke();
                     keyFlag = true;
                 }
                 if (!Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && keyFlag)

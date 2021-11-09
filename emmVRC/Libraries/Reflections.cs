@@ -214,46 +214,6 @@ namespace emmVRC.Libraries
         }
         #endregion
 
-        #region QuickMenu SetQuickMenuContext
-        private static MethodInfo ourSetQuickMenuContextMethod;
-        public static MethodInfo SetQuickMenuContextMethod
-        {
-            get
-            {
-                if (ourSetQuickMenuContextMethod != null) return ourSetQuickMenuContextMethod;
-                var targetMethod = typeof(QuickMenu).GetMethods()
-                    .First(it => it != null && it.Name.Contains("Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_APIUser_String"));
-                ourSetQuickMenuContextMethod = targetMethod;
-                return ourSetQuickMenuContextMethod;
-            }
-        }
-
-        public static void SetQuickMenuContext(this QuickMenu instance, QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique context, APIUser user = null, string text = "")
-        {
-            SetQuickMenuContextMethod.Invoke(instance, new object[] { context, user, text });
-        }
-        #endregion
-
-        #region QuickMenu SelectPlayer
-        private static MethodInfo ourSelectPlayerMethod;
-        public static MethodInfo SelectPlayerMethod
-        {
-            get
-            {
-                if (ourSelectPlayerMethod != null) return ourSelectPlayerMethod;
-                var targetMethod = typeof(QuickMenu).GetMethods()
-                    .First(it => it != null && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(VRC.Player));
-                ourSelectPlayerMethod = targetMethod;
-                return ourSelectPlayerMethod;
-            }
-        }
-
-        public static void SelectPlayer(this QuickMenu instance, VRC.Player player)
-        {
-            SelectPlayerMethod.Invoke(instance, new object[] { player });
-        }
-        #endregion
-
         #region MenuController ViewUserInfo
         private static MethodInfo ourViewUserInfoMethod;
         public static MethodInfo ViewUserInfoMethod
@@ -279,7 +239,7 @@ namespace emmVRC.Libraries
         #endregion
 
         #region VRCPlayer GetNameplateBackground
-        //public static ImageThreeSlice GetNameplateBackground(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Background").GetComponent<ImageThreeSlice>(); }
+        public static ImageThreeSlice GetNameplateBackground(this VRCPlayer player) { return player.field_Public_PlayerNameplate_0.gameObject.transform.Find("Contents/Main/Background").GetComponent<ImageThreeSlice>(); }
         #endregion
 
         #region PlayerNet Framerate

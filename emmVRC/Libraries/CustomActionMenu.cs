@@ -92,7 +92,7 @@ namespace emmVRC.Libraries
             
             public void OpenMenu(Page currentPage)
             {
-                GetActionMenuOpener().field_Public_ActionMenu_0.Method_Public_ObjectNPublicAcTeAcStGaUnique_Action_Action_Texture2D_String_0((new Action(delegate
+                GetActionMenuOpener().field_Public_ActionMenu_0.Method_Public_Page_Action_Action_Texture2D_String_0((new Action(delegate
                 {
                 foreach (Button btn in buttons)
                 {

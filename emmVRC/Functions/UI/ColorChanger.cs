@@ -348,14 +348,6 @@ namespace emmVRC.Functions.UI
                     VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.curso mouseCursor.UiColor = color;
                     VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handRightCursor.UiColor = color;
                     VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handLeftCursor.UiColor = color;*/
-
-
-                    emmVRCLoader.Logger.LogDebug("Coloring Quick Menu header text...");
-                    foreach (Text text in QuickMenuUtils.GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_CONTEXT").GetComponentsInChildren<Text>(true))
-                    {
-                        if (text.transform.name == "Text" && text.transform.parent.name != "AvatarImage")
-                            text.color = new Color(color.r * 1.25f, color.g * 1.25f, color.b * 1.25f);
-                    }
                     if (Configuration.JSONConfig.UIActionMenuColorChangingEnabled)
                         try
                         {

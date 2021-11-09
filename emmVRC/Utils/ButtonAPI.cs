@@ -300,8 +300,11 @@ namespace emmVRC.Utils
             Toggle.ToggleEvent evt = buttonToggle.onValueChanged;
             buttonToggle.onValueChanged = new Toggle.ToggleEvent();
             buttonToggle.isOn = newState;
-            buttonToggle.onValueChanged.Invoke(newState);
             buttonToggle.onValueChanged = evt;
+            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_0(newState);
+            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_1(newState);
+            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_2(newState);
+            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_3(newState);
             if (invoke)
                 buttonToggle.onValueChanged.Invoke(newState);
         }

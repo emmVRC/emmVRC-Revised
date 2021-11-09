@@ -134,7 +134,7 @@ namespace emmVRC.Functions.UI
             ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
             ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
             {
-                QuickMenu.prop_QuickMenu_0.field_Public_MenuController_0.ViewUserInfo(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId);
+                UnityEngine.Resources.FindObjectsOfTypeAll<MenuController>().First().ViewUserInfo(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId);
             }));
 
             GameObject oldPublicAvatarList;
@@ -182,7 +182,7 @@ namespace emmVRC.Functions.UI
             currPageAvatar = pageAvatar.GetComponent<PageAvatar>();
             NewAvatarList = PublicAvatarList.GetComponent<UiAvatarList>();
             NewAvatarList.clearUnseenListOnCollapse = false;
-            NewAvatarList.field_Public_EnumNPublicSealedvaInPuMiFaSpClPuLi11Unique_0 = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi11Unique.SpecificList;
+            NewAvatarList.field_Public_Category_0 = UiAvatarList.Category.SpecificList;
 
             currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Public_Single_0 *= 0.85f;
 
@@ -679,7 +679,7 @@ namespace emmVRC.Functions.UI
             {
                 foreach (AvatarPedestal pedestal in UnityEngine.Resources.FindObjectsOfTypeAll<AvatarPedestal>())
                 {
-                    if (pedestal != null && pedestal.field_Private_ApiAvatar_0.releaseStatus == "public")
+                    if (pedestal != null && pedestal.field_Private_ApiAvatar_0 != null && pedestal.field_Private_ApiAvatar_0.releaseStatus == "public")
                     {
                         await emmVRC.AwaitUpdate.Yield();
                         Network.Objects.Avatar serAvtr = new Network.Objects.Avatar(pedestal.field_Private_ApiAvatar_0);

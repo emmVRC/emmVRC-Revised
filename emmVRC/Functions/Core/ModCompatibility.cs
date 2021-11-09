@@ -115,31 +115,32 @@ namespace emmVRC.Functions.Core
         public static IEnumerator ColorUIExpansionKit()
         {
             yield return null;
-            Color clr = (Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : Configuration.menuColor());
-            ColorBlock theme = new ColorBlock()
-            {
-                colorMultiplier = 1f,
-                disabledColor = Color.grey,
-                highlightedColor = new Color(clr.r*1.5f,clr.g*1.5f, clr.b*1.5f),
-                normalColor = clr,
-                pressedColor = Color.gray,
-                fadeDuration = 0.1f
-            };
-            Transform uiExpansionRoot = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ModUiPreloadedBundleContents");
-            foreach (Image img in uiExpansionRoot.GetComponentsInChildren<Image>(true))
-            {
-                if (img.transform.parent.name != "PinToggle" && img.transform.parent.parent.name != "PinToggle" && img.transform.name != "Checkmark")
-                    img.color = new Color(clr.r*0.5f, clr.g*0.5f, clr.b*0.5f);
-            }
-            foreach (Button btn in uiExpansionRoot.GetComponentsInChildren<Button>(true))
-            {
-                btn.colors = theme;
-            }
-            foreach (Toggle tgl in uiExpansionRoot.GetComponentsInChildren<Toggle>(true))
-            {
-                if (tgl.gameObject.name != "PinToggle")
-                    tgl.colors = theme;
-            }
+            //Color clr = (Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : Configuration.menuColor());
+            //ColorBlock theme = new ColorBlock()
+            //{
+            //    colorMultiplier = 1f,
+            //    disabledColor = Color.grey,
+            //    highlightedColor = new Color(clr.r*1.5f,clr.g*1.5f, clr.b*1.5f),
+            //    normalColor = clr,
+            //    pressedColor = Color.gray,
+            //    fadeDuration = 0.1f
+            //};
+            //Transform uiExpansionRoot = GameObject.Find("UserInterface")
+            ////Transform uiExpansionRoot = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ModUiPreloadedBundleContents");
+            //foreach (Image img in uiExpansionRoot.GetComponentsInChildren<Image>(true))
+            //{
+            //    if (img.transform.parent.name != "PinToggle" && img.transform.parent.parent.name != "PinToggle" && img.transform.name != "Checkmark")
+            //        img.color = new Color(clr.r*0.5f, clr.g*0.5f, clr.b*0.5f);
+            //}
+            //foreach (Button btn in uiExpansionRoot.GetComponentsInChildren<Button>(true))
+            //{
+            //    btn.colors = theme;
+            //}
+            //foreach (Toggle tgl in uiExpansionRoot.GetComponentsInChildren<Toggle>(true))
+            //{
+            //    if (tgl.gameObject.name != "PinToggle")
+            //        tgl.colors = theme;
+            //}
         }
     }
 }

@@ -69,7 +69,7 @@ namespace emmVRC.Utils
 
             try
             {
-                __instance.Method_Public_add_Void_MulticastDelegateNPublicSealedVoUnique_0(new Action(()
+                __instance.Method_Public_add_Void_OnAvatarIsReady_0(new Action(()
                     => OnAvatarInstantiate(__instance, __instance.field_Private_ApiAvatar_0, __instance.field_Internal_GameObject_0)));
             }
             catch (Exception ex)

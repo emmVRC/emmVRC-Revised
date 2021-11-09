@@ -94,7 +94,7 @@ namespace emmVRC.Menus
             if (functionsMenu == null) return;
             if (emojiMenu == null)
             {
-                emojiMenu = QuickMenu.prop_QuickMenu_0.transform.Find("EmojiMenu").GetComponent<EmojiMenu>();
+               // emojiMenu = QuickMenu.prop_QuickMenu_0.transform.Find("EmojiMenu").GetComponent<EmojiMenu>();
             }
             if (flightButton.currentPedalOption != null)
             {

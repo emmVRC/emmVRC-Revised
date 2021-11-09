@@ -111,7 +111,6 @@
     <Compile Include="Menus\FunctionsMenu.cs" />
     <Compile Include="Menus\Legacy\KeybindChangerLegacy.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
-    <Compile Include="Libraries\MainMenuUtils.cs" />
     <Compile Include="Libraries\MediaControl.cs" />
     <Compile Include="Functions\Core\ModCompatibility.cs" />
     <Compile Include="Libraries\Reflections.cs" />

@@ -74,12 +74,12 @@ namespace emmVRC.Functions.PlayerHacks
                                 emmVRCLoader.Logger.LogDebug("This avatar has valid hands, fetching colliders...");
                                 foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftHand).GetComponentsInChildren<DynamicBoneCollider>())
                                 {
-                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                    if (coll.m_Bound != DynamicBoneCollider.DynamicBoneColliderBound.Inside)
                                         currentWorldDynamicBoneColliders.Add(coll);
                                 }
                                 foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand).GetComponentsInChildren<DynamicBoneCollider>())
                                 {
-                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                    if (coll.m_Bound != DynamicBoneCollider.DynamicBoneColliderBound.Inside)
                                         currentWorldDynamicBoneColliders.Add(coll);
                                 }
                                 emmVRCLoader.Logger.LogDebug("There are " + currentWorldDynamicBoneColliders.Count + " processed colliders in this instance.");
@@ -93,12 +93,12 @@ namespace emmVRC.Functions.PlayerHacks
                                 emmVRCLoader.Logger.LogDebug("This avatar has valid feet, fetching colliders...");
                                 foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.LeftFoot).GetComponentsInChildren<DynamicBoneCollider>())
                                 {
-                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                    if (coll.m_Bound != DynamicBoneCollider.DynamicBoneColliderBound.Inside)
                                         currentWorldDynamicBoneColliders.Add(coll);
                                 }
                                 foreach (DynamicBoneCollider coll in avatarObject.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightFoot).GetComponentsInChildren<DynamicBoneCollider>())
                                 {
-                                    if (coll.m_Bound != DynamicBoneCollider.EnumNPublicSealedvaOuIn3vUnique.Inside)
+                                    if (coll.m_Bound != DynamicBoneCollider.DynamicBoneColliderBound.Inside)
                                         currentWorldDynamicBoneColliders.Add(coll);
                                 }
                                 emmVRCLoader.Logger.LogDebug("There are " + currentWorldDynamicBoneColliders.Count + " processed colliders in this instance.");

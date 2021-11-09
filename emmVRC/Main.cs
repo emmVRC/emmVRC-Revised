@@ -149,14 +149,6 @@ namespace emmVRC
                 //        Utils.ButtonAPI.GetQuickMenuInstance().ShowSelectedUserPage(true, user);
                 //    }
                 //});
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () =>
-                    {
-                        ColorAdjustmentMenu.ShowMenu(Configuration.menuColor(), null);
-                    }
-                });
 
             }
         }
