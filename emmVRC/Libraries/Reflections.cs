@@ -10,6 +10,8 @@ using UnityEngine;
 using VRC;
 using VRC.Animation;
 using VRC.Core;
+using VRC.DataModel;
+using VRC.UI.Elements;
 using TMPro;
 
 namespace emmVRC.Libraries
@@ -272,6 +274,28 @@ namespace emmVRC.Libraries
             currentPortalInfo.GetType().GetProperty($"field_Public_{transitionInfoEnum.Name}_0").SetValue(currentPortalInfo, transitionInfoEnum.GetEnumValues().GetValue(3));
             enterWorldMethod.Invoke(VRCFlowManager.prop_VRCFlowManager_0, new object[5] { id, tags, currentPortalInfo, null, false });
         }
+        #region QuickMenu Show User
+        internal static Type _selectedUserManagerType;
+        internal static object _selectedUserManagerObject;
+        private static MethodInfo _selectUserMethod;
+        public static MethodInfo SelectUserMethod
+        {
+            get
+            {
+                if (_selectUserMethod == null)
+                {
+                    // index 0 works because transform doesn't inherit from monobehavior
+                    _selectedUserManagerObject = GameObject.Find("_Application/UIManager/SelectedUserManager").GetComponents<MonoBehaviour>()[0];
+                    _selectedUserManagerType = Utils.XrefUtils.GetTypeFromObfuscatedName(((Il2CppSystem.Object)_selectedUserManagerObject).GetIl2CppType().Name);
+                    _selectUserMethod = _selectedUserManagerType.GetMethods()
+                        .First(method => method.Name.StartsWith("Method_Public_Void_APIUser_") && !method.Name.Contains("_PDM_") && Utils.XrefUtils.CheckUsedBy(method, "Method_Public_Virtual_Final_New_Void_IUser_"));
 
+                }
+                return _selectUserMethod;
+            }
+        }
+        public static void OpenUser(this VRC.UI.Elements.QuickMenu menu, APIUser playerToSelect) => SelectUserMethod.Invoke(UserSelectionManager.prop_UserSelectionManager_0, new object[1] { playerToSelect });
+        #endregion
     }
+
 }

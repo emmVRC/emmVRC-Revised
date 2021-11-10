@@ -42,8 +42,8 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
     <Compile Include="Functions\Core\AlarmClock.cs" />
+    <Compile Include="Functions\ModCompatibility\UIExpansionKitIntegration.cs" />
     <Compile Include="Functions\Other\AnniversaryMode.cs" />
-    <Compile Include="Functions\Other\BuildNumber.cs" />
     <Compile Include="Functions\Other\HashCalculator.cs" />
     <Compile Include="Functions\Other\LaunchOptions.cs" />
     <Compile Include="Functions\Other\PlayerJoinLeaveMessages.cs" />
@@ -109,7 +109,6 @@
     <Compile Include="Libraries\Hooking.cs" />
     <Compile Include="Libraries\InstanceIDUtilities.cs" />
     <Compile Include="Menus\FunctionsMenu.cs" />
-    <Compile Include="Menus\Legacy\KeybindChangerLegacy.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
     <Compile Include="Libraries\MediaControl.cs" />
     <Compile Include="Functions\Core\ModCompatibility.cs" />
@@ -155,14 +154,10 @@
     <Compile Include="Managers\NotificationManager.cs" />
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
     <Compile Include="Menus\ActionMenuFunctions.cs" />
-    <Compile Include="Menus\Legacy\CreditsMenuLegacy.cs" />
     <Compile Include="Menus\DebugMenu.cs" />
     <Compile Include="Functions\WorldHacks\Flashlight.cs" />
     <Compile Include="Functions\UI\HUD.cs" />
-    <Compile Include="Menus\Legacy\FunctionsMenuLegacy.cs" />
     <Compile Include="Functions\UI\LoadingScreen.cs" />
-    <Compile Include="Menus\Legacy\SupporterMenuLegacy.cs" />
-    <Compile Include="Menus\Legacy\UserTweaksMenuLegacy.cs" />
     <Compile Include="Network\Authentication\Authentication.cs" />
     <Compile Include="Network\HTTPResponse.cs" />
     <Compile Include="Network\NetworkClient.cs" />
@@ -278,6 +273,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\Transmtn.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="UIExpansionKit, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\UIExpansionKit.dll</HintPath>
     </Reference>
     <Reference Include="UnhollowerBaseLib, Version=0.4.13.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -465,6 +464,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Code Snippets.txt" />
+    <Content Include="UIExpansionKit.dll" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

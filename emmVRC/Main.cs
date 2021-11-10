@@ -140,15 +140,15 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version);
 
                 Initialized = true;
-                //DebugManager.DebugActions.Add(new DebugAction
-                //{
-                //    ActionKey = KeyCode.Alpha0,
-                //    ActionAction = () =>
-                //    {
-                //        VRC.DataModel.IUser user = RoomManager.field_Private_Static_List_1_IUser_0.ToArray().First(a => a.ID == VRC.Core.APIUser.CurrentUser.id);
-                //        Utils.ButtonAPI.GetQuickMenuInstance().ShowSelectedUserPage(true, user);
-                //    }
-                //});
+                DebugManager.DebugActions.Add(new DebugAction
+                {
+                    ActionKey = KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        ButtonAPI.GetQuickMenuInstance().ShowOKDialog("This is text", "This is also text", () => { });
+                    }
+                });
+                
 
             }
         }

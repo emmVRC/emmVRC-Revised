@@ -8,16 +8,21 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public const string Version = "3.0.0";
+        public const string Version = "3.0.1";
         public const int LastTestedBuildNumber = 1149;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "10/08/2021";
+        public const string DateUpdated = "11/09/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public const string Changelog =
+            "<b>v3.0.1</b>\n" +
+            "• Fixed the \"Grey Square\" bug\n" +
+            "• Fixed selecting users in the Player History menu\n" +
+            "• Fixed all toggles not updating to their proper toggle states\n" +
+            "• Fixed being able to enable NoClip and not Flight, resulting in the player becoming stuck\n\n" +
             "<b>v3.0.0</b>\n" +
             "• Interaction with pickup triggers (e.g. flashlights) now works like the vanilla game\n" +
             "• emmVRC's menus have been completely remade for the new VRChat UI\n" +

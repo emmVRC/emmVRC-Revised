@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using VRC.Core;
 using VRC.UI;
+using emmVRC.Utils;
 using emmVRC.Libraries;
 using emmVRC.Network;
 using System.Linq;
@@ -134,8 +135,12 @@ namespace emmVRC.Functions.UI
             ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
             ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
             {
-                UnityEngine.Resources.FindObjectsOfTypeAll<MenuController>().First().ViewUserInfo(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId);
+                APIUser.FetchUser(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId, new System.Action<APIUser>((VRC.Core.APIUser usr) => { emmVRCLoader.Logger.LogDebug(usr.id); UIManagerImpl.prop_UIManagerImpl_0.Method_Public_Void_IUser_0(usr.ToIUser()); }), new System.Action<string>((string str) => {
+                    emmVRCLoader.Logger.LogError("API returned an error: " + str);
+                }));
             }));
+            if (!NetworkConfig.Instance.APICallsAllowed)
+                ShowAuthorButton.SetActive(false);
 
             GameObject oldPublicAvatarList;
             oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;

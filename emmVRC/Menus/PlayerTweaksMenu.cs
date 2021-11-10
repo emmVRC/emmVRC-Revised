@@ -72,12 +72,20 @@ namespace emmVRC.Menus
             flightToggle = new ToggleButton(riskyFunctionsGroup, "Flight", (bool val) =>
             {
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                {
+                    if (!val && Functions.PlayerHacks.Flight.IsNoClipEnabled)
+                        noclipToggle.SetToggleState(false, true);
                     Functions.PlayerHacks.Flight.SetFlyActive(val);
+                }
             }, "Fly around the world using your controllers or mouse + keyboard", "Stop using flight");
             noclipToggle = new ToggleButton(riskyFunctionsGroup, "Noclip", (bool val) =>
             {
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                {
+                    if (val && !Functions.PlayerHacks.Flight.IsFlyEnabled)
+                        flightToggle.SetToggleState(true, true);
                     Functions.PlayerHacks.Flight.SetNoClipActive(val);
+                }
             }, "Clip through walls to access areas quicker, or find secrets. Requires flight", "Stop using noclip");
             speedToggle = new ToggleButton(riskyFunctionsGroup, "Speed", (bool val) =>
             {

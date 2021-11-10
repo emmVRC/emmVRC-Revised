@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using UnhollowerRuntimeLib.XrefScans;
-
+using UnhollowerBaseLib.Attributes;
 namespace emmVRC.Utils
 {
     public static class XrefUtils
@@ -57,5 +57,9 @@ namespace emmVRC.Utils
             }
             return false;
         }
+
+        public static Type GetTypeFromObfuscatedName(string obfuscatedName) => AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(assembly => assembly.GetTypes())
+            .First(type => type.GetCustomAttribute<ObfuscatedNameAttribute>() != null && type.GetCustomAttribute<ObfuscatedNameAttribute>().ObfuscatedName.Equals(obfuscatedName, StringComparison.InvariantCulture));
     }
 }

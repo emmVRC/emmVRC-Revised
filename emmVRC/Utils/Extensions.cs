@@ -1,6 +1,14 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
+using UnhollowerRuntimeLib;
+using UnhollowerRuntimeLib.XrefScans;
+using VRC;
+using VRC.Core;
+using VRC.DataModel;
+using VRC.DataModel.Core;
 
 namespace emmVRC.Utils
 {
@@ -127,9 +135,106 @@ namespace emmVRC.Utils
             else
                 return $"{timeSpan:%s} seconds";
         }
-        public static void ShowAlert(this VRC.UI.Elements.QuickMenu qm, string message) => qm.Method_Public_Virtual_Final_New_Void_String_4(message);
-        public static void ShowOKDialog(this VRC.UI.Elements.QuickMenu qm, string title, string message, Action okButton = null) => qm.Method_Public_Void_String_String_Action_PDM_0(title, message, okButton);
-        public static void ShowConfirmDialog(this VRC.UI.Elements.QuickMenu qm, string title, string message, Action yesButton = null, Action noButton = null) => qm.Method_Public_Void_String_String_Action_Action_PDM_0(title, message, yesButton, noButton);
-        public static void AskConfirmOpenURL(this VRC.UI.Elements.QuickMenu qm, string url) => qm.Method_Public_Virtual_Final_New_Void_String_3(url);
+        #region QuickMenu ShowAlert
+        private static MethodInfo ourShowAlertMethod;
+        public static MethodInfo ShowAlertMethod
+        {
+            get
+            {
+                if (ourShowAlertMethod != null) return ourShowAlertMethod;
+                var targetMethod = typeof(VRC.UI.Elements.QuickMenu).GetMethods()
+                    .First(it => it != null && it.GetParameters().Length == 1 && it.Name.Contains("_Virtual_Final_New") && it.GetParameters().First().ParameterType == typeof(string) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType != null && jt.TryResolve().ReflectedType.Name == "ModalAlert"));
+                ourShowAlertMethod = targetMethod;
+                return ourShowAlertMethod;
+            }
+        }
+
+        public static void ShowAlert(this VRC.UI.Elements.QuickMenu qm, string message)
+        {
+            ShowAlertMethod.Invoke(qm, new object[] { message });
+        }
+        #endregion
+        #region QuickMenu ShowOKDialog
+        private static MethodInfo ourShowOKDialogMethod;
+        public static MethodInfo ShowOKDialogMethod
+        {
+            get
+            {
+                if (ourShowOKDialogMethod != null) return ourShowOKDialogMethod;
+                var targetMethod = typeof(VRC.UI.Elements.QuickMenu).GetMethods()
+                    .First(it => it != null && it.GetParameters().Length == 3 && it.Name.Contains("_PDM") && it.GetParameters().First().ParameterType == typeof(string) && it.GetParameters().Last().ParameterType == typeof(Il2CppSystem.Action) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject()?.ToString() == "ConfirmDialog"));
+                ourShowOKDialogMethod = targetMethod;
+                return ourShowOKDialogMethod;
+            }
+        }
+
+        public static void ShowOKDialog(this VRC.UI.Elements.QuickMenu qm, string title, string message, Action okButton = null)
+        {
+            ShowOKDialogMethod.Invoke(qm, new object[] { title, message, DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(okButton) });
+        }
+        #endregion
+        #region QuickMenu ShowConfirmDialog
+        private static MethodInfo ourShowConfirmDialogMethod;
+        public static MethodInfo ShowConfirmDialogMethod
+        {
+            get
+            {
+                if (ourShowConfirmDialogMethod != null) return ourShowConfirmDialogMethod;
+                var targetMethod = typeof(VRC.UI.Elements.QuickMenu).GetMethods()
+                    .First(it => it != null && it.GetParameters().Length == 4 && it.Name.Contains("_PDM") && it.GetParameters()[0].ParameterType == typeof(string) && it.GetParameters()[1].ParameterType == typeof(string) && it.GetParameters()[2].ParameterType == typeof(Il2CppSystem.Action) && it.GetParameters()[3].ParameterType == typeof(Il2CppSystem.Action) && XrefScanner.UsedBy(it).ToList().Count > 30);
+                ourShowConfirmDialogMethod = targetMethod;
+                return ourShowConfirmDialogMethod;
+            }
+        }
+
+        public static void ShowConfirmDialog(this VRC.UI.Elements.QuickMenu qm, string title, string message, Action yesButton = null, Action noButton = null)
+        {
+            ShowConfirmDialogMethod.Invoke(qm, new object[] { title, message, DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(yesButton), DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(noButton) });
+        }
+        #endregion
+        #region QuickMenu AskConfirmOpenURL
+        private static MethodInfo ourAskConfirmOpenURLMethod;
+        public static MethodInfo AskConfirmOpenURLMethod
+        {
+            get
+            {
+                if (ourAskConfirmOpenURLMethod != null) return ourAskConfirmOpenURLMethod;
+                var targetMethod = typeof(VRC.UI.Elements.QuickMenu).GetMethods()
+                    .First(it => it != null && it.GetParameters().Length == 1 && it.Name.Contains("_Virtual_Final_New") && it.GetParameters().First().ParameterType == typeof(string) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject() != null && jt.ReadAsObject().ToString().Contains("This link will open in your web browser.")));
+                ourAskConfirmOpenURLMethod = targetMethod;
+                return ourAskConfirmOpenURLMethod;
+            }
+        }
+
+        public static void AskConfirmOpenURL(this VRC.UI.Elements.QuickMenu qm, string url)
+        {
+            AskConfirmOpenURLMethod.Invoke(qm, new object[] { url });
+        }
+        #endregion
+        #region APIUser ToIUser
+        // Thank you Loukylor for this!
+
+
+        private static MethodInfo _apiUserToIUser;
+        public static MethodInfo ToIUserMethod { get
+            {
+                if (_apiUserToIUser == null)
+                {
+                    Type iUserParent = typeof(VRCPlayer).Assembly.GetTypes()
+                .First(type => type.GetMethods()
+                    .FirstOrDefault(method => method.Name.StartsWith("Method_Private_Void_Action_1_ApiWorldInstance_Action_1_String_")) != null && type.GetMethods()
+                    .FirstOrDefault(method => method.Name.StartsWith("Method_Public_Virtual_Final_New_Observable_1_List_1_String_")) == null);
+                    _apiUserToIUser = typeof(DataModelCache).GetMethod("Method_Public_TYPE_String_TYPE2_Boolean_0");
+                    _apiUserToIUser = _apiUserToIUser.MakeGenericMethod(iUserParent, typeof(APIUser));
+                }
+                return _apiUserToIUser;
+            }
+        }
+
+        public static IUser ToIUser(this APIUser value)
+        {
+            return ((Il2CppSystem.Object)_apiUserToIUser.Invoke(DataModelManager.field_Private_Static_DataModelManager_0.field_Private_DataModelCache_0, new object[3] { value.id, value, false })).Cast<IUser>();
+        }
+        #endregion
     }
 }

@@ -8,7 +8,6 @@ namespace emmVRC.Utils
 {
     public class Singletons
     {
-        private static ShortcutMenu _shortcutMenu;
         public static VRCUiManager vrcUiManager => VRCUiManager.field_Private_Static_VRCUiManager_0;
         public static VRCUiPopupManager vrcUiPopupManger => VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0;
         public static PageWorldInfo pageWorldInfo
@@ -22,6 +21,5 @@ namespace emmVRC.Utils
         }
         private static PageWorldInfo _pageWorldInfo;
         public static PlayerManager playerManager => PlayerManager.field_Private_Static_PlayerManager_0;
-        private static UserInteractMenu _userInteractMenu;
     }
 }
