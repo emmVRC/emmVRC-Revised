@@ -14,7 +14,7 @@ namespace emmVRC.Menus
     public class ChangelogMenu : MelonLoaderEvents
     {
         private static bool _initialized = false;
-        private static MenuPage changelogPage;
+        internal static MenuPage changelogPage;
         private static SingleButton changelogPageButton;
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
@@ -31,7 +31,7 @@ namespace emmVRC.Menus
             textBase.transform.localScale = Vector3.one;
             TextMeshProUGUI textText = textBase.AddComponent<TextMeshProUGUI>();
             textText.margin = new Vector4(25, 0, 50, 0);
-            textText.text = "<size=50><color=#FF69B4>emmVRC</color> version " + Objects.Attributes.Version + " (" + Objects.Attributes.DateUpdated + ")</size>\n\n"+Objects.Attributes.Changelog;
+            textText.text = "<size=50><color=#FF69B4>emmVRC</color> version " + Objects.Attributes.Version.ToString(3) + " (" + Objects.Attributes.DateUpdated + ")</size>\n\n"+Objects.Attributes.Changelog;
 
             _initialized = true;
         }

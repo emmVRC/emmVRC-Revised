@@ -31,15 +31,20 @@ namespace emmVRC.Managers
                     // If the flight keybind is pressed...
                     if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1]) || (KeyCode)Configuration.JSONConfig.FlightKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !keyFlag)
                     {
+                        if (Functions.PlayerHacks.Flight.IsNoClipEnabled && Functions.PlayerHacks.Flight.IsFlyEnabled)
+                            Functions.PlayerHacks.Flight.SetNoClipActive(false);
                         Functions.PlayerHacks.Flight.SetFlyActive(!Functions.PlayerHacks.Flight.IsFlyEnabled);
                         keyFlag = true;
                     }
                     // If the noclip keybind is pressed...
                     if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1]) || (KeyCode)Configuration.JSONConfig.NoclipKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !keyFlag)
                     {
+                        if (!Functions.PlayerHacks.Flight.IsFlyEnabled && !Functions.PlayerHacks.Flight.IsNoClipEnabled)
+                            Functions.PlayerHacks.Flight.SetFlyActive(true);
                         Functions.PlayerHacks.Flight.SetNoClipActive(!Functions.PlayerHacks.Flight.IsNoClipEnabled);
                         keyFlag = true;
                     }
+
                     // If the Speed keybind is pressed...
                     if ((Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1]) || (KeyCode)Configuration.JSONConfig.SpeedKeybind[1] == KeyCode.None) && Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !keyFlag)
                     {
@@ -70,12 +75,12 @@ namespace emmVRC.Managers
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
                 {
-                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_GoHome").GetComponentInChildren<Button>().onClick.Invoke();
+                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_GoHome").GetComponentInChildren<Button>().Press();
                     keyFlag = true;
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && !keyFlag)
                 {
-                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_Respawn").GetComponentInChildren<Button>().onClick.Invoke();
+                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_Respawn").GetComponentInChildren<Button>().Press();
                     keyFlag = true;
                 }
                 if (!Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && keyFlag)

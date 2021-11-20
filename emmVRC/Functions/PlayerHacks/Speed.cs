@@ -12,6 +12,16 @@ namespace emmVRC.Functions.PlayerHacks
         public static float OriginalStrafeSpeed { get; private set; }
         public static float OriginalWalkSpeed { get; private set; }
 
+        public override void OnUiManagerInit()
+        {
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, System.Action>("RiskyFunctionsEnabled", () => {
+                if (!Configuration.JSONConfig.RiskyFunctionsEnabled && IsEnabled)
+                {
+                    SetActive(false);
+                }
+            }));
+        }
+
         public static void SetActive(bool active)
         {
             if (active)

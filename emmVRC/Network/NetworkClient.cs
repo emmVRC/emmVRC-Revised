@@ -119,7 +119,7 @@ namespace emmVRC.Network
                 NetworkConfig.Instance = TinyJSON.Decoder.Decode(result).Make<NetworkConfig>();
                 await emmVRC.AwaitUpdate.Yield();
                 if (NetworkConfig.Instance.MessageID != -1 && Configuration.JSONConfig.LastSeenStartupMessage != NetworkConfig.Instance.MessageID){
-                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network Notice", null, NetworkConfig.Instance.StartupMessage, true, false, null, "", "", true, null, "Dismiss"));
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network Notice", Functions.Core.Resources.messageSprite, NetworkConfig.Instance.StartupMessage, true, false, null, "", "", true, null, "Dismiss"));
                 }
             }
             catch (Exception exception)

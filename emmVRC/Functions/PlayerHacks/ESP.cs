@@ -30,6 +30,15 @@ namespace emmVRC.Functions.PlayerHacks
                     highlightFX.field_Protected_HashSet_1_Renderer_0.Remove(player.transform.Find("SelectRegion").GetComponent<Renderer>());
             };
         }
+        public override void OnUiManagerInit()
+        {
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, System.Action>("RiskyFunctionsEnabled", () => {
+                if (!Configuration.JSONConfig.RiskyFunctionsEnabled && IsEnabled)
+                {
+                    SetActive(false);
+                }
+            }));
+        }
 
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
         {

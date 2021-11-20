@@ -48,7 +48,8 @@ namespace emmVRC.Libraries
                     }
                     else if (inst.Type == XrefType.Method)
                     {
-                        if (inst.TryResolve() != null) { 
+                        if (inst.TryResolve() != null)
+                        {
                             emmVRCLoader.Logger.LogDebug("Method name: " + inst.TryResolve().Name);
                             emmVRCLoader.Logger.LogDebug("Parent type: " + inst.TryResolve().ReflectedType.Name);
                         }
@@ -58,7 +59,8 @@ namespace emmVRC.Libraries
                     emmVRCLoader.Logger.LogDebug("FoundAt: " + inst.FoundAt);
                     emmVRCLoader.Logger.LogDebug("Pointer: " + inst.Pointer);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 emmVRCLoader.Logger.LogDebug("Xref scan failed: " + ex.ToString());
             }

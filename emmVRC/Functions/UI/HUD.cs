@@ -101,6 +101,7 @@ namespace emmVRC.Functions.UI
         private static CanvasScaler scaler;
         public override void OnUiManagerInit()
         {
+            if (UnityEngine.XR.XRDevice.isPresent) return;
             MelonLoader.MelonCoroutines.Start(Initialize());
             Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("VRHUDInDesktop", () => enabled = !Configuration.JSONConfig.VRHUDInDesktop));
         }

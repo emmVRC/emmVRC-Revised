@@ -59,12 +59,20 @@ namespace emmVRC.Menus
             flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                {
+                    if (Functions.PlayerHacks.Flight.IsNoClipEnabled && Functions.PlayerHacks.Flight.IsFlyEnabled)
+                        Functions.PlayerHacks.Flight.SetNoClipActive(false);
                     Functions.PlayerHacks.Flight.SetFlyActive(!Functions.PlayerHacks.Flight.IsFlyEnabled);
+                }
             }, CustomActionMenu.ToggleOffTexture);
             noclipButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Noclip:\nOff", () =>
             {
                 if (RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
+                {
+                    if (!Functions.PlayerHacks.Flight.IsFlyEnabled && !Functions.PlayerHacks.Flight.IsNoClipEnabled)
+                        Functions.PlayerHacks.Flight.SetFlyActive(true);
                     Functions.PlayerHacks.Flight.SetNoClipActive(!Functions.PlayerHacks.Flight.IsNoClipEnabled);
+                }
             }, CustomActionMenu.ToggleOffTexture);
             speedButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Speed:\nOff", () =>
             {

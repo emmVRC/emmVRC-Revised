@@ -33,6 +33,11 @@ namespace emmVRC.Functions.PlayerHacks
         {
             if (buildIndex != -1 || _initialized) return;
             if (Environment.CurrentDirectory.Contains("vrchat-vrchat")) return; // Really awful and crude Oculus check
+            SetupFBTSaving();
+            _initialized = true;
+        }
+        private static void SetupFBTSaving()
+        {
             calibratedAvatars = new List<FBTAvatarCalibrationInfo>();
             originalCalibrateButton = Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("SitStandCalibrateButton/Button_CalibrateFBT").GetComponentInChildren<UnityEngine.UI.Button>().onClick;
 
@@ -67,7 +72,6 @@ namespace emmVRC.Functions.PlayerHacks
                 }
                 originalCalibrateButton.Invoke();
             }));
-            _initialized = true;
         }
         public static IEnumerator SaveCalibrationInfo(VRCTrackingSteam trackingSteam, string avatarID)
         {

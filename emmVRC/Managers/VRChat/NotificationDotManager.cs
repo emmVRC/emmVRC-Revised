@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace emmVRC.Managers.VRChat
 {
-    public class NotificationDotManager : MelonLoaderEvents, IWithFixedUpdate
+    public class NotificationDotManager : MelonLoaderEvents
     {
         private static readonly List<GameObject> vanillaIcons = new List<GameObject>();
         private static GameObject emmVRCIcon;
@@ -26,22 +26,27 @@ namespace emmVRC.Managers.VRChat
                 vanillaIcons.Add(icon);
                 EnableDisableListener listener = icon.AddComponent<EnableDisableListener>();
                 listener.OnEnabled += new Action(() => emmVRCIcon.SetActive(false));
-                listener.OnDisabled += new Action(() => emmVRCIcon.SetActive(emmVRCNotificationsManager.HasRecentNotifications));
+                listener.OnDisabled += new Action(() => emmVRCIcon.SetActive(emmVRCNotificationsManager.Notifications.Count > 0));
             }
 
             emmVRCIcon = GameObject.Instantiate(iconParent.transform.GetChild(0).gameObject, iconParent.transform);
             emmVRCIcon.name = "emmVRCIcon";
 
             Image emmVRCIconImage = emmVRCIcon.GetComponent<Image>();
-            emmVRCNotificationsManager.OnNotificationAdded += new Action<Notification>((notification) => { emmVRCIconImage.sprite = notification.icon; emmVRCIconImage.gameObject.SetActive(true); });
-            emmVRCNotificationsManager.OnNotificationRemoved += new Action<Notification>((notification) => { if (Managers.emmVRCNotificationsManager.Notifications.Count > 0) emmVRCIconImage.sprite = emmVRCNotificationsManager.Notifications.LastOrDefault().icon; else emmVRCIconImage.gameObject.SetActive(false); });
+            emmVRCNotificationsManager.OnNotificationAdded += new Action<Notification>((notification) => { 
+                emmVRCIconImage.sprite = notification.icon; 
+                emmVRCIconImage.gameObject.SetActive(true); 
+            });
+            emmVRCNotificationsManager.OnNotificationRemoved += new Action<Notification>((notification) => {
+                emmVRCLoader.Logger.LogDebug("OnNotificationRemoved called");
+                emmVRCLoader.Logger.LogDebug("Boolean logic is " + (emmVRCNotificationsManager.Notifications.Count > 0 && emmVRCNotificationsManager.Notifications.LastOrDefault() != null && emmVRCNotificationsManager.Notifications.LastOrDefault().icon != null));
+                if (emmVRCNotificationsManager.Notifications.Count >0  && emmVRCNotificationsManager.Notifications.LastOrDefault() != null) 
+                    emmVRCIconImage.sprite = (emmVRCNotificationsManager.Notifications.LastOrDefault().icon != null ? emmVRCNotificationsManager.Notifications.LastOrDefault().icon : Functions.Core.Resources.alertSprite); 
+                else 
+                    emmVRCIconImage.gameObject.SetActive(false); 
+            });
 
             _initialized = true;
-        }
-
-        public void OnFixedUpdate()
-        {
-            emmVRCIcon?.SetActive(emmVRCNotificationsManager.HasRecentNotifications);
         }
     }
 }

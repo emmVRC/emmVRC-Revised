@@ -238,6 +238,7 @@ namespace emmVRC.Utils
         private readonly Toggle buttonToggle;
         private readonly VRC.UI.Elements.Tooltips.UiToggleTooltip toggleTooltip;
         public readonly GameObject gameObject;
+        private bool _stateInvoke = true;
 
         public ToggleButton(Transform parent, string text, Action<bool> stateChanged, string offTooltip, string onTooltip, Sprite icon = null)
         {
@@ -248,6 +249,7 @@ namespace emmVRC.Utils
             buttonToggle.onValueChanged = new Toggle.ToggleEvent();
             buttonToggle.isOn = false;
             buttonToggle.onValueChanged.AddListener(new System.Action<bool>((bool val) => {
+                if (_stateInvoke)
                 stateChanged.Invoke(val);
             }));
             toggleTooltip = gameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiToggleTooltip>(true);
@@ -297,20 +299,24 @@ namespace emmVRC.Utils
         }
         public void SetToggleState(bool newState, bool invoke = false)
         {
-            Toggle.ToggleEvent evt = buttonToggle.onValueChanged;
-            buttonToggle.onValueChanged = new Toggle.ToggleEvent();
+            _stateInvoke = false;
             buttonToggle.isOn = newState;
-            buttonToggle.onValueChanged = evt;
+            buttonToggle.onValueChanged.Invoke(newState);
+            _stateInvoke = true;
+            if (invoke)
+                buttonToggle.onValueChanged.Invoke(newState);
+        }
+        private void SetToggleIcon(bool newState)
+        {
             buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_0(newState);
             buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_1(newState);
             buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_2(newState);
             buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_3(newState);
-            if (invoke)
-                buttonToggle.onValueChanged.Invoke(newState);
         }
         public void SetInteractable(bool val)
         {
             buttonToggle.interactable = val;
+            buttonToggle.m_Interactable = val;
         }
         public void SetActive(bool state)
         {
@@ -534,9 +540,10 @@ namespace emmVRC.Utils
         private readonly GameObject gameObject;
         private readonly MenuTab menuTab;
         private readonly Image tabIcon;
+        private readonly VRC.UI.Elements.Tooltips.UiTooltip tabTooltip;
         private readonly GameObject badgeGameObject;
         private readonly TextMeshProUGUI badgeText;
-        public Tab(Transform parent, string menuName, string tooltip, Sprite icon = null)
+        public Tab(Transform parent, string menuName, string tooltip, Sprite icon = null, Action tabAction = null)
         {
             gameObject = GameObject.Instantiate(ButtonAPI.menuTabBase, parent);
             gameObject.name = menuName + "Tab";
@@ -546,12 +553,15 @@ namespace emmVRC.Utils
             tabIcon = gameObject.transform.Find("Icon").GetComponent<Image>();
             tabIcon.sprite = icon;
             tabIcon.overrideSprite = icon;
+            tabTooltip = gameObject.GetComponent<VRC.UI.Elements.Tooltips.UiTooltip>();
+            tabTooltip.field_Public_String_0 = tooltip;
 
             badgeGameObject = gameObject.transform.GetChild(0).gameObject;
             badgeText = badgeGameObject.GetComponentInChildren<TextMeshProUGUI>();
 
             menuTab.GetComponent<VRC.UI.Core.Styles.StyleElement>().field_Private_Selectable_0 = menuTab.GetComponent<Button>();
             menuTab.GetComponent<Button>().onClick.AddListener(new System.Action(() => {
+                tabAction?.DelegateSafeInvoke();
                 menuTab.GetComponent<VRC.UI.Core.Styles.StyleElement>().field_Private_Selectable_0 = menuTab.GetComponent<Button>();
             }));
         }
@@ -560,6 +570,10 @@ namespace emmVRC.Utils
             if (badgeGameObject == null || badgeText == null) return;
             badgeGameObject.SetActive(showing);
             badgeText.text = text;
+        }
+        public void SetTooltip(string newText)
+        {
+            tabTooltip.field_Public_String_0 = newText;
         }
     }
 }

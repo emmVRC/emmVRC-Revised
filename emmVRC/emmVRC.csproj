@@ -52,6 +52,7 @@
     <Compile Include="Functions\PlayerHacks\PlayerHistory.cs" />
     <Compile Include="Functions\PlayerHacks\Waypoints.cs" />
     <Compile Include="Functions\UI\ActionMenuTweaks.cs" />
+    <Compile Include="Functions\UI\ShortcutMenuCloseOptions.cs" />
     <Compile Include="Functions\WorldHacks\InstanceHistory.cs" />
     <Compile Include="Functions\WorldHacks\WorldESP.cs" />
     <Compile Include="Managers\VRChat\AvatarFilteringManager.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Menus\PlayerHistoryMenu.cs" />
     <Compile Include="Menus\PlayerTweaksMenu.cs" />
     <Compile Include="Menus\InstanceHistoryMenu.cs" />
+    <Compile Include="Menus\SelectedUserLocalMenu.cs" />
     <Compile Include="Menus\SettingsMenu.cs" />
     <Compile Include="Menus\SupporterMenu.cs" />
     <Compile Include="Menus\WaypointsMenu.cs" />

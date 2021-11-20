@@ -137,21 +137,31 @@ namespace emmVRC.Utils
         }
         #region QuickMenu ShowAlert
         private static MethodInfo ourShowAlertMethod;
-        public static MethodInfo ShowAlertMethod
-        {
-            get
-            {
-                if (ourShowAlertMethod != null) return ourShowAlertMethod;
-                var targetMethod = typeof(VRC.UI.Elements.QuickMenu).GetMethods()
-                    .First(it => it != null && it.GetParameters().Length == 1 && it.Name.Contains("_Virtual_Final_New") && it.GetParameters().First().ParameterType == typeof(string) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Method && jt.TryResolve() != null && jt.TryResolve().ReflectedType != null && jt.TryResolve().ReflectedType.Name == "ModalAlert"));
-                ourShowAlertMethod = targetMethod;
-                return ourShowAlertMethod;
-            }
-        }
 
         public static void ShowAlert(this VRC.UI.Elements.QuickMenu qm, string message)
         {
-            ShowAlertMethod.Invoke(qm, new object[] { message });
+
+            if (ourShowAlertMethod == null)
+                foreach (MethodInfo inf in typeof(VRC.UI.Elements.Controls.ModalAlert).GetMethods())
+                {
+                    emmVRCLoader.Logger.LogDebug(inf.Name);
+                    if (inf.Name.Contains("Method_Private_Void_") && !inf.Name.Contains("PDM") && inf.GetParameters().Length == 0)
+                    {
+                        qm.field_Private_ModalAlert_0.field_Private_String_0 = message;
+                        inf.Invoke(qm.field_Private_ModalAlert_0, null);
+                        if (qm.transform.Find("Container/Window/QMParent/Modal_Alert/Background_Alert").gameObject.activeSelf)
+                        {
+                            ourShowAlertMethod = inf;
+                            break;
+                        }
+                    }
+                }
+            else
+            {
+                qm.field_Private_ModalAlert_0.field_Private_String_0 = message;
+                ourShowAlertMethod.Invoke(qm.field_Private_ModalAlert_0, null);
+            }
+            //ShowAlertMethod.Invoke(qm, new object[] { message });
         }
         #endregion
         #region QuickMenu ShowOKDialog
@@ -191,6 +201,7 @@ namespace emmVRC.Utils
         {
             ShowConfirmDialogMethod.Invoke(qm, new object[] { title, message, DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(yesButton), DelegateSupport.ConvertDelegate<Il2CppSystem.Action>(noButton) });
         }
+        public static void ShowCustomDialog(this VRC.UI.Elements.QuickMenu qm, string title, string message, string button1Text, string button2Text, string button3Text, Action button1Action = null, Action button2Action = null, Action button3Action = null) => qm.Method_Public_Void_String_String_String_String_String_Action_Action_Action_PDM_0(title, message, button1Text, button2Text, button3Text, button1Action, button2Action, button3Action);
         #endregion
         #region QuickMenu AskConfirmOpenURL
         private static MethodInfo ourAskConfirmOpenURLMethod;
@@ -216,7 +227,9 @@ namespace emmVRC.Utils
 
 
         private static MethodInfo _apiUserToIUser;
-        public static MethodInfo ToIUserMethod { get
+        public static MethodInfo ToIUserMethod
+        {
+            get
             {
                 if (_apiUserToIUser == null)
                 {

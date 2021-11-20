@@ -12,15 +12,30 @@ namespace emmVRC.Functions.ModCompatibility
 {
     public class UIExpansionKitIntegration
     {
+        private static GameObject flightButton;
+        private static GameObject noclipButton;
+        private static GameObject speedButton;
+        private static GameObject espButton;
         public static void Initialize()
         {
-            ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Flight", (bool val) => { 
+            ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Flight", (bool val) => {
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled) {
                     if (!val && Functions.PlayerHacks.Flight.IsNoClipEnabled)
                         Functions.PlayerHacks.Flight.SetNoClipActive(false);
                     Functions.PlayerHacks.Flight.SetFlyActive(val);
-                } 
-            }, GetFlightStatus);
+                }
+            }, GetFlightStatus, (GameObject obj) => { 
+                flightButton = obj; 
+                flightButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration);
+                Components.EnableDisableListener listener = flightButton.AddComponent<Components.EnableDisableListener>();
+                listener.OnEnabled += () =>
+                {
+                    flightButton.GetComponent<Toggle>().isOn = Functions.PlayerHacks.Flight.IsFlyEnabled;
+                    noclipButton.GetComponent<Toggle>().isOn = Functions.PlayerHacks.Flight.IsNoClipEnabled;
+                    speedButton.GetComponent<Toggle>().isOn = Functions.PlayerHacks.Speed.IsEnabled;
+                    espButton.GetComponent<Toggle>().isOn = Functions.PlayerHacks.ESP.IsEnabled;
+                };
+            });
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Noclip", (bool val) => {
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                 {
@@ -28,19 +43,19 @@ namespace emmVRC.Functions.ModCompatibility
                         Functions.PlayerHacks.Flight.SetFlyActive(true);
                     Functions.PlayerHacks.Flight.SetNoClipActive(val);
                 }
-            }, GetNoclipStatus);
+            }, GetNoclipStatus, (GameObject obj) => { noclipButton = obj; noclipButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); });
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("Speed", (bool val) => {
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                 {
                     Functions.PlayerHacks.Speed.SetActive(val);
                 }
-            }, GetSpeedStatus);
+            }, GetSpeedStatus, (GameObject obj) => { speedButton = obj; speedButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); });
             ExpansionKitApi.GetExpandedMenu(ExpandedMenu.QuickMenu).AddToggleButton("ESP", (bool val) => {
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                 {
                     Functions.PlayerHacks.ESP.SetActive(val);
                 }
-            }, GetESPStatus);
+            }, GetESPStatus, (GameObject obj) => { espButton = obj; espButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration); });
             Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorChangingEnabled", () => {
                 if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
                     MelonLoader.MelonCoroutines.Start(ColorUIExpansionKit());
@@ -55,11 +70,18 @@ namespace emmVRC.Functions.ModCompatibility
             }));
             if (Configuration.JSONConfig.UIExpansionKitColorChangingEnabled)
                 ExpansionKitApi.RegisterWaitConditionBeforeDecorating(ColorUIExpansionKit());
+            
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIExpansionKitIntegration", () => {
+                flightButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration);
+                noclipButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration);
+                speedButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration);
+                espButton.SetActive(Configuration.JSONConfig.UIExpansionKitIntegration);
+            }));
         }
         public static IEnumerator ColorUIExpansionKit()
         {
             yield return null;
-            Color clr = (Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : Configuration.menuColor());
+            Color clr = (Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : Configuration.defaultMenuColor());
             ColorBlock theme = new ColorBlock()
             {
                 colorMultiplier = 1f,
@@ -67,7 +89,8 @@ namespace emmVRC.Functions.ModCompatibility
                 highlightedColor = new Color(clr.r * 1.5f, clr.g * 1.5f, clr.b * 1.5f),
                 normalColor = clr,
                 pressedColor = Color.gray,
-                fadeDuration = 0.1f
+                fadeDuration = 0.1f,
+                selectedColor = clr
             };
             Transform uiExpansionRoot = ExpansionKitApi.GetUiExpansionKitBundleContents().StoredThingsParent.transform;
             //Transform uiExpansionRoot = Libraries.QuickMenuUtils.GetQuickMenuInstance().transform.Find("ModUiPreloadedBundleContents");

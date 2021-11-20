@@ -35,7 +35,7 @@ namespace emmVRC.Functions.UI
         private static GameObject FavoriteButtonNew;
         private static Button FavoriteButtonNewButton;
         private static Text FavoriteButtonNewText;
-        private static GameObject ShowAuthorButton;
+        //private static GameObject ShowAuthorButton;
         public static GameObject pageAvatar;
         private static PageAvatar currPageAvatar;
         private static bool error = false;
@@ -43,7 +43,6 @@ namespace emmVRC.Functions.UI
         private static bool Searching = false;
         public static List<ApiAvatar> LoadedAvatars;
         private static List<ApiAvatar> SearchedAvatars;
-        private static bool menuJustActivated = false;
         private static UiInputField searchBox;
         private static UnityAction<string> searchBoxAction;
         private static GameObject refreshButton;
@@ -123,24 +122,24 @@ namespace emmVRC.Functions.UI
             FavoriteButtonNew.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);*/
 
 
-            ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Fallback Hide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
-            ShowAuthorButton.GetComponentInChildren<Text>().text = "";
-            ShowAuthorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(82f, 82f);
-            ShowAuthorButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(250f, -25f);
-            GameObject.Instantiate(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/AvatarDetails Button/PlatformIcon").gameObject, ShowAuthorButton.transform);
-            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").gameObject.SetActive(true);
-            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            MelonLoader.MelonCoroutines.Start(ShowAuthorIconUpdate());
-            Button ShowAuthorButtonButton = ShowAuthorButton.GetComponent<Button>();
-            ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
-            ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
-            {
-                APIUser.FetchUser(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId, new System.Action<APIUser>((VRC.Core.APIUser usr) => { emmVRCLoader.Logger.LogDebug(usr.id); UIManagerImpl.prop_UIManagerImpl_0.Method_Public_Void_IUser_0(usr.ToIUser()); }), new System.Action<string>((string str) => {
-                    emmVRCLoader.Logger.LogError("API returned an error: " + str);
-                }));
-            }));
-            if (!NetworkConfig.Instance.APICallsAllowed)
-                ShowAuthorButton.SetActive(false);
+            //ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Fallback Hide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
+            //ShowAuthorButton.GetComponentInChildren<Text>().text = "";
+            //ShowAuthorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(82f, 82f);
+            //ShowAuthorButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(250f, -25f);
+            //GameObject.Instantiate(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/AvatarDetails Button/PlatformIcon").gameObject, ShowAuthorButton.transform);
+            //ShowAuthorButton.transform.Find("PlatformIcon(Clone)").gameObject.SetActive(true);
+            //ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            //MelonLoader.MelonCoroutines.Start(ShowAuthorIconUpdate());
+            //Button ShowAuthorButtonButton = ShowAuthorButton.GetComponent<Button>();
+            //ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
+            //ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
+            //{
+            //    APIUser.FetchUser(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId, new System.Action<APIUser>((VRC.Core.APIUser usr) => { emmVRCLoader.Logger.LogDebug(usr.id); UIManagerImpl.prop_UIManagerImpl_0.Method_Public_Void_IUser_0(usr.ToIUser()); }), new System.Action<string>((string str) => {
+            //        emmVRCLoader.Logger.LogError("API returned an error: " + str);
+            //    }));
+            //}));
+            //if (!NetworkConfig.Instance.APICallsAllowed)
+            //    ShowAuthorButton.SetActive(false);
 
             GameObject oldPublicAvatarList;
             oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
@@ -361,21 +360,13 @@ namespace emmVRC.Functions.UI
             yield return new WaitForSeconds(0.1f);
             emmVRCLoader.Logger.LogDebug("Searchbox is " + (searchBox == null ? "null" : "not null"));
             emmVRCLoader.Logger.LogDebug("Searchbox button is " + (searchBox.field_Public_Button_0 == null ? "null" : "not null"));
-            if (searchBox != null && searchBox.field_Public_Button_0 != null && !searchBox.field_Public_Button_0.interactable)
+            if (searchBox != null && searchBox.field_Public_Button_0 != null && !searchBox.field_Public_Button_0.interactable && !string.IsNullOrEmpty(NetworkClient.webToken) && Configuration.JSONConfig.AvatarFavoritesEnabled)
             {
                 searchBox.field_Public_Button_0.interactable = true;
                 searchBox.field_Public_UnityAction_1_String_0 = searchBoxAction;
             }
         }
 
-        public static IEnumerator ShowAuthorIconUpdate()
-        {
-            while (Functions.Core.Resources.authorSprite == null)
-                yield return new WaitForEndOfFrame();
-            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<Image>().sprite = Functions.Core.Resources.authorSprite;
-            ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<RectTransform>().sizeDelta /= new Vector2(1.5f, 1.5f);
-
-        }
         public static async Task FavoriteAvatar(ApiAvatar avtr)
         {
             if (LoadedAvatars.ToArray().ToList().FindIndex(a => a.id == avtr.id) == -1)

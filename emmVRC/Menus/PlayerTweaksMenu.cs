@@ -24,7 +24,7 @@ namespace emmVRC.Menus
         private static ButtonGroup riskyFunctionsGroup;
         private static SimpleSingleButton jumpingToggleButton;
         private static SimpleSingleButton waypointsButton;
-        private static ButtonGroup riskyFunctionsGroup2;
+        private static SimpleButtonGroup riskyFunctionsGroup2;
         private static ToggleButton flightToggle;
         private static ToggleButton noclipToggle;
         private static ToggleButton speedToggle;
@@ -34,6 +34,16 @@ namespace emmVRC.Menus
         private static bool _initialized = false;
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
+            if (_initialized)
+            {
+                jumpingToggleButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+                waypointsButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+                flightToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+                noclipToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+                speedToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+                speedSlider.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+                espToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            }
             if (buildIndex != -1 || _initialized) return;
 
             playerTweaksPage = new MenuPage("emmVRC_PlayerTweaks", "Player Tweaks", false, true);
@@ -68,7 +78,8 @@ namespace emmVRC.Menus
             {
                 WaypointsMenu.OpenMenu();
             }, "Configure an unlimited amount of points in the world to teleport to");
-            riskyFunctionsGroup2 = new ButtonGroup(playerTweaksPage.menuContents, "");
+            riskyFunctionsGroup2 = new SimpleButtonGroup(playerTweaksPage.menuContents, "");
+            riskyFunctionsGroup2.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(1160, 220);
             flightToggle = new ToggleButton(riskyFunctionsGroup, "Flight", (bool val) =>
             {
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
@@ -106,7 +117,10 @@ namespace emmVRC.Menus
                     Functions.PlayerHacks.Speed.SetActive(true);
                 }
             }, "Adjust the speed that you move at", Configuration.JSONConfig.MaxSpeedIncrease*10, Configuration.JSONConfig.SpeedModifier*10, true, false);
+            Configuration.onConfigUpdated.Add(new KeyValuePair<string, Action>("RiskyFunctionsEnabled", () => {
 
+
+            }));
             Managers.RiskyFunctionsManager.RiskyFuncsProcessed += (bool val) => {
                 if (!val)
                 {
@@ -123,15 +137,23 @@ namespace emmVRC.Menus
                 espToggle.SetInteractable(val);
             };
 
+
             _initialized = true;
         }
         private static void OpenMenu()
         {
-            playerTweaksPage.OpenMenu();
             flightToggle.SetToggleState(Functions.PlayerHacks.Flight.IsFlyEnabled);
             noclipToggle.SetToggleState(Functions.PlayerHacks.Flight.IsNoClipEnabled);
             speedToggle.SetToggleState(Functions.PlayerHacks.Speed.IsEnabled);
             espToggle.SetToggleState(Functions.PlayerHacks.ESP.IsEnabled);
+            jumpingToggleButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            waypointsButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            flightToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            noclipToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            speedToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            speedSlider.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            espToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            playerTweaksPage.OpenMenu();
         }
     }
 }

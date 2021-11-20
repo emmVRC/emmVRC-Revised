@@ -13,7 +13,7 @@ using System.Threading;
 
 #pragma warning disable 4014
 
-namespace emmVRC
+namespace emmVRC.Functions.Other
 {
     public class DestructiveActions
     {

@@ -13,19 +13,30 @@ namespace emmVRC.Hacks
         public override void OnUiManagerInit()
         {
             Utils.NetworkEvents.OnPlayerJoined += (Player plr) => {
-                if (plr.prop_APIUser_0 != null && plr.prop_APIUser_0.id != APIUser.CurrentUser.id && plr.prop_VRCPlayerApi_0 != null && plr.prop_VRCPlayerApi_0.isMaster)
+                if (plr.prop_APIUser_0 != null && plr.prop_APIUser_0.id != APIUser.CurrentUser.id && plr.prop_VRCPlayerApi_0 != null && plr.prop_VRCPlayerApi_0.isMaster && Configuration.JSONConfig.MasterIconEnabled)
                     InstantiateIcon(plr);
             };
             Utils.NetworkEvents.OnPlayerLeft += (Player plr) =>
             {
                 Libraries.PlayerUtils.GetEachPlayer((Player player) =>
                 {
-                    if (player.prop_VRCPlayerApi_0.isMaster && player.prop_APIUser_0.id != APIUser.CurrentUser.id)
+                    if (player.prop_VRCPlayerApi_0.isMaster && player.prop_APIUser_0.id != APIUser.CurrentUser.id && Configuration.JSONConfig.MasterIconEnabled)
                     {
                         InstantiateIcon(player);
                     }
                 });
             };
+            Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, System.Action>("MasterIconEnabled", () => {
+                Libraries.PlayerUtils.GetEachPlayer((Player player) =>
+                {
+                    if (player.prop_VRCPlayerApi_0.isMaster && player.prop_APIUser_0.id != APIUser.CurrentUser.id && Configuration.JSONConfig.MasterIconEnabled)
+                    {
+                        InstantiateIcon(player);
+                    }
+                });
+                if (!Configuration.JSONConfig.MasterIconEnabled && masterIconObj != null)
+                    GameObject.DestroyImmediate(masterIconObj);
+            }));
         }
         public static void InstantiateIcon(Player plr)
         {

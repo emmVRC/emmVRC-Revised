@@ -108,13 +108,19 @@ namespace emmVRC.Menus
         }
         private static void OpenMenu()
         {
-            worldTweaksPage.OpenMenu();
             chairsToggle.SetToggleState(!Configuration.JSONConfig.ChairBlockingEnable);
             pedestalsToggle.SetToggleState(!Configuration.JSONConfig.DisableAvatarPedestals);
             portalsToggle.SetToggleState(!Configuration.JSONConfig.PortalBlockingEnable);
             pickupsToggle.SetToggleState(Hacks.ComponentToggle.pickupable);
             pickupVisibilityToggle.SetToggleState(Hacks.ComponentToggle.pickup_object);
             videoPlayersToggle.SetToggleState(Hacks.ComponentToggle.videoplayers);
+
+            itemEspToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            triggerEspToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            pickupsToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            pickupVisibilityToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            worldTweaksPage.OpenMenu();
+            
         }
     }
 }

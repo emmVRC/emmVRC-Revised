@@ -24,7 +24,7 @@ namespace emmVRC.Functions.UI
             functionsButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
             functionsButton.GetComponent<Button>().onClick.AddListener(UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction>((System.Action)(() =>
             {
-                DestructiveActions.ForceRestart();
+                Functions.Other.DestructiveActions.ForceRestart();
             })));
         }
     }

@@ -44,6 +44,14 @@ namespace emmVRC.Functions.PlayerHacks
             HorizontalInput = VRCInputManager.field_Private_Static_Dictionary_2_String_VRCInput_0["Horizontal"];
             VerticalLookInput = VRCInputManager.field_Private_Static_Dictionary_2_String_VRCInput_0["LookVertical"];
             RunInput = VRCInputManager.field_Private_Static_Dictionary_2_String_VRCInput_0["Run"];
+            Configuration.onConfigUpdated.Add(new KeyValuePair<string, Action>("RiskyFunctionsEnabled", () => { 
+            if (!Configuration.JSONConfig.RiskyFunctionsEnabled && (IsFlyEnabled || IsNoClipEnabled))
+                {
+                    if (IsNoClipEnabled)
+                        SetNoClipActive(false);
+                    SetFlyActive(false);
+                }
+            }));
         }
 
         public static void SetFlyActive(bool active)
@@ -88,9 +96,9 @@ namespace emmVRC.Functions.PlayerHacks
                 VRCPlayer localPlayer = VRCPlayer.field_Internal_Static_VRCPlayer_0;
 
                 // Get vector containing strafe, run and run speed. scale them to right direction and input amount
-                Vector3 movementVector = (Camera.main.transform.forward * localPlayer.field_Private_VRCPlayerApi_0.GetStrafeSpeed() * VerticalInput.field_Public_Single_0
-                    + Vector3.up * localPlayer.field_Private_VRCPlayerApi_0.GetRunSpeed() * VerticalLookInput.field_Public_Single_0
-                    + Camera.main.transform.right * localPlayer.field_Private_VRCPlayerApi_0.GetRunSpeed() * HorizontalInput.field_Public_Single_0) * Time.deltaTime;
+                Vector3 movementVector = (Camera.main.transform.forward * localPlayer.field_Private_VRCPlayerApi_0.GetRunSpeed() * VerticalInput.field_Public_Single_0
+                    + Vector3.up * localPlayer.field_Private_VRCPlayerApi_0.GetStrafeSpeed() * VerticalLookInput.field_Public_Single_0
+                    + Camera.main.transform.right * localPlayer.field_Private_VRCPlayerApi_0.GetStrafeSpeed() * HorizontalInput.field_Public_Single_0) * Time.deltaTime;
                 // Move the local player transform
                 localPlayer.transform.position += movementVector;
 

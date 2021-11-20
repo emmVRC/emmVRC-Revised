@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Utils;
 using emmVRC.Objects.ModuleBases;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 namespace emmVRC.Menus
 {
@@ -27,6 +30,8 @@ namespace emmVRC.Menus
         private static ToggleButton hudToggle;
         private static ToggleButton forceRestartToggle;
         private static ToggleButton unlimitedFPSToggle;
+
+        private static ButtonGroup modIntegrationsGroup;
         private static ToggleButton uiExpansionKitToggle;
 
         private static ButtonGroup networkGroup;
@@ -99,12 +104,13 @@ namespace emmVRC.Menus
             }, "Export your emmVRC Avatar Favorites to a file");
             settingsButton = new SingleButton(FunctionsMenu.otherGroup, "Settings", OpenMenu, "", Functions.Core.Resources.SettingsIcon);
 
+
             featuresGroup = new ButtonGroup(settingsPage, "Features");
             riskyFunctionsToggle = new ToggleButton(featuresGroup, "Risky Functions", (bool val) =>
             {
                 if (!Configuration.JSONConfig.RiskyFunctionsWarningShown && !Configuration.JSONConfig.RiskyFunctionsEnabled)
                 {
-                    ButtonAPI.GetQuickMenuInstance().ShowConfirmDialog("Risky Functions", "By selecting 'yes', you accept that the use of these functions could be reported to VRChat, and that you will not use them for malicious purposes.", new System.Action(() => {
+                    ButtonAPI.GetQuickMenuInstance().ShowCustomDialog("Risky Functions", "By selecting 'yes', you accept that the use of these functions could be reported to VRChat, and that you will not use them for malicious purposes.", "", "Yes", "No", null, new System.Action(() => {
                         Configuration.WriteConfigOption("RiskyFunctionsEnabled", val);
                         Configuration.WriteConfigOption("RiskyFunctionsWarningShown", true);
                     }), new System.Action(() =>
@@ -163,6 +169,12 @@ namespace emmVRC.Menus
             {
                 Configuration.WriteConfigOption("UnlimitedFPSEnabled", val);
             }, "Removes the FPS limiter, which by default limits your FPS to 90 (Desktop only!)", "Enables the FPS limiter (Desktop only!)");
+
+            modIntegrationsGroup = new ButtonGroup(settingsPage, "Mod Integrations");
+            uiExpansionKitToggle = new ToggleButton(modIntegrationsGroup, "UIExpansionKit\nIntegration", (bool val) => {
+                Configuration.WriteConfigOption("UIExpansionKitIntegration", val);
+            }, "Enables Risky Functions buttons in the UIExpansionKit quick menu", "Disables Risky Functions buttons in the UIExpansionKit quick menu");
+
             networkGroup = new ButtonGroup(settingsPage, "Network");
             emmVRCNetworkToggle = new ToggleButton(networkGroup, "emmVRC\nNetwork", (bool val) =>
             {
@@ -209,7 +221,7 @@ namespace emmVRC.Menus
             
             nameplateColorChangingToggle = new ToggleButton(colorGroup, "Nameplate\nColoring", (bool val) =>
             {
-                Configuration.WriteConfigOption("NameplateColorChangingEnabled ", val);
+                Configuration.WriteConfigOption("NameplateColorChangingEnabled", val);
             }, "Color the nameplates of other users", "Do not color nameplates");
             uiExpansionKitColorChangingToggle = new ToggleButton(colorGroup, "UIExpansionKit\nColoring", (bool val) =>
             {
@@ -259,18 +271,12 @@ namespace emmVRC.Menus
             }, "Disable the microphone keybind tooltip above the microphone icon", "Enable the microphone keybind tooltip above the microphone icon");
             vrcPlusMenuTabsToggle = new ToggleButton(vrchatUiGroup, "VRChat+\nMenu Tabs", (bool val) =>
             {
-                if (Utils.PlayerUtils.DoesUserHaveVRCPlus())
-                    Configuration.WriteConfigOption("DisableVRCPlusMenuTabs", !val);
-                else
-                    ButtonAPI.GetQuickMenuInstance().ShowOKDialog("VRChat+ required", Objects.Attributes.VRCPlusMessage);
+                Configuration.WriteConfigOption("DisableVRCPlusMenuTabs", !val);
             }, "Disable the Gallery and VRC+ tabs in the Main Menu", "Enable the Gallery and VRC+ tabs in the Main Menu");
             new ButtonGroup(settingsPage, "");
             vrcPlusUserInfoToggle = new ToggleButton(vrchatUiGroup, "VRChat+\nUser Info", (bool val) =>
             {
-                if (Utils.PlayerUtils.DoesUserHaveVRCPlus())
-                    Configuration.WriteConfigOption("DisableVRCPlusUserInfo", !val);
-                else
-                    ButtonAPI.GetQuickMenuInstance().ShowOKDialog("VRChat+ required", Objects.Attributes.VRCPlusMessage);
+                Configuration.WriteConfigOption("DisableVRCPlusUserInfo", !val);
             }, "Disable the VRChat Plus information in the User Info page of the Main Menu", "Enable the VRChat Plus information in the User Info page of the Main Menu");
 
             avatarListsGroup = new ButtonGroup(settingsPage, "Avatar Lists");
@@ -318,6 +324,13 @@ namespace emmVRC.Menus
             hudToggle.SetToggleState(Configuration.JSONConfig.HUDEnabled);
             forceRestartToggle.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
             unlimitedFPSToggle.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
+
+                modIntegrationsGroup.SetActive(Functions.Core.ModCompatibility.UIExpansionKit);
+
+            if (Functions.Core.ModCompatibility.UIExpansionKit)
+                uiExpansionKitToggle.SetToggleState(Configuration.JSONConfig.UIExpansionKitIntegration);
+                
+            uiExpansionKitToggle.SetActive(Functions.Core.ModCompatibility.UIExpansionKit);
 
             emmVRCNetworkToggle.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
             avatarFavoriteListToggle.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);

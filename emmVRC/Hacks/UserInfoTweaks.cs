@@ -37,21 +37,21 @@ namespace emmVRC.Hacks
         [UnhollowerBaseLib.Attributes.HideFromIl2Cpp]
         public static IEnumerator WaitForUserReady()
         {
-            while (userInfo.field_Public_APIUser_0 == null || userInfo.field_Public_APIUser_0.id == lastCheckedId)
+            while (userInfo.field_Private_APIUser_0 == null || userInfo.field_Private_APIUser_0.id == lastCheckedId)
                 yield return new WaitForEndOfFrame();
             if (userInfo.gameObject.activeInHierarchy)
             {try
                 {
-                    lastCheckedId = userInfo.field_Public_APIUser_0.id;
+                    lastCheckedId = userInfo.field_Private_APIUser_0.id;
                     if (lastSeenText != null)
                     {
                         try
                         {
-                            if (userInfo.field_Public_APIUser_0.statusValue != VRC.Core.APIUser.UserStatus.Offline || !userInfo.field_Public_APIUser_0.isFriend)
+                            if (userInfo.field_Private_APIUser_0.statusValue != VRC.Core.APIUser.UserStatus.Offline || !userInfo.field_Private_APIUser_0.isFriend)
                                 lastSeenText.GetComponent<Text>().text = "";
                             else
                             {
-                                DateTime lastSeen = DateTime.Parse(userInfo.field_Public_APIUser_0.last_login);
+                                DateTime lastSeen = DateTime.Parse(userInfo.field_Private_APIUser_0.last_login);
                                 lastSeenText.GetComponent<Text>().text = "Last login: " + lastSeen.ToString();
                             }
                         }

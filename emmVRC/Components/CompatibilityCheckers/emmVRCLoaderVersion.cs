@@ -17,7 +17,7 @@ namespace emmVRC.Components.CompatibilityCheckers
         {
             string currentEmmVRCLoaderVersion = (string)typeof(emmVRCLoader.BuildInfo).GetField("Version").GetValue(null);
 
-            if (Attributes.IncompatibleemmVRCLoaderVersions.Contains(currentEmmVRCLoaderVersion))
+            if (new Version(currentEmmVRCLoaderVersion) < Attributes.MinimumemmVRCLoaderVersion)
             {
                 try
                 {
@@ -39,7 +39,7 @@ namespace emmVRC.Components.CompatibilityCheckers
                 {
                     emmVRCLoader.Logger.LogError("Attempt to download the new loader failed. You must download the latest from https://dl.emmvrc.com/downloads/emmVRCLoader.dll manually.");
                     emmVRCLoader.Logger.LogError("Error: " + ex.ToString());
-                    System.Windows.Forms.MessageBox.Show("You are using an incompatible version of emmVRCLoader: v" + currentEmmVRCLoaderVersion + ". Please install v" + Attributes.TargetemmVRCLoaderVersion + " or greater, from the #loader-updates channel in the emmVRC Discord.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    System.Windows.Forms.MessageBox.Show("You are using an incompatible version of emmVRCLoader: v" + currentEmmVRCLoaderVersion + ". Please install v" + Attributes.MinimumemmVRCLoaderVersion.ToString(3) + " or greater, from the #loader-updates channel in the emmVRC Discord.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                     return false;
                 }
             }
