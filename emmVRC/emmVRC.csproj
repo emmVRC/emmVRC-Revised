@@ -193,6 +193,7 @@
     <Compile Include="Functions\Core\Resources.cs" />
     <Compile Include="Utils\ButtonAPI.cs" />
     <Compile Include="Utils\Singletons.cs" />
+    <Compile Include="Utils\TextureHackery.cs" />
     <Compile Include="Utils\UIList.cs" />
     <Compile Include="Utils\UnityWebRequestUtils.cs" />
     <Compile Include="Utils\WorldUtils.cs" />

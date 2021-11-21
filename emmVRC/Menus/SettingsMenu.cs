@@ -117,7 +117,6 @@ namespace emmVRC.Menus
                     {
                         riskyFunctionsToggle.SetToggleState(false);
                     }));
-
                 }
                 else
                 {

@@ -139,30 +139,6 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version.ToString(3));
 
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha0,
-                    ActionAction = () =>
-                    {
-                        Analysis.LogXrefResults(typeof(VRC.UI.Elements.Controls.ModalAlert).GetMethod("Method_Private_Void_0"));
-                    }
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha1,
-                    ActionAction = () =>
-                    {
-                        Analysis.LogXrefResults(typeof(VRC.UI.Elements.Controls.ModalAlert).GetMethod("Method_Private_Void_1"));
-                    }
-                });
-                DebugManager.DebugActions.Add(new DebugAction
-                {
-                    ActionKey = KeyCode.Alpha2,
-                    ActionAction = () =>
-                    {
-                        Analysis.LogXrefResults(typeof(VRC.UI.Elements.Controls.ModalAlert).GetMethod("Method_Private_Void_2"));
-                    }
-                });
                 Initialized = true;
             }
         }

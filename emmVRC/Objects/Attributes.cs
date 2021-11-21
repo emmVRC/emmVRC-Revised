@@ -8,16 +8,20 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 0, 4, 0); 
+        public static readonly Version Version = new Version(3, 0, 5, 0); 
         public const int LastTestedBuildNumber = 1151;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "11/19/2021";
+        public const string DateUpdated = "11/21/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public const string Changelog =
+            "<b>v3.0.5</b>\n" +
+            "• Fixed support for mods such as ReModCE that would cause the menus to misbehave\n" +
+            "• Fixed notification icons being colored slightly blue\n" +
+            "\n" +
             "<b>v3.0.4</b>\n" +
             "• Fixed the Social Menu functions button not working on VRChat build 1151\n" +
             "• Fixed Oculus support\n" +

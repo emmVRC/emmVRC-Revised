@@ -124,6 +124,7 @@ namespace emmVRC.Utils
         public void SetIconColor(Color color)
         {
             buttonImage.color = color;
+            buttonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
         }
         public void SetInteractable(bool val)
         {
@@ -477,6 +478,7 @@ namespace emmVRC.Utils
             }
             gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").DestroyChildren();
             menuContents = gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup");
+            menuContents.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childControlHeight = false; // Overriding this in case other mods change this value, like ReMod
             pageTitleText = gameObject.GetComponentInChildren<TextMeshProUGUI>(true);
             pageTitleText.text = pageTitle;
             isRoot = root;

@@ -69,6 +69,7 @@ namespace emmVRC.Menus
                     Objects.Notification notif = Managers.emmVRCNotificationsManager.Notifications[i];
                     notificationButtons[i].gameObject.SetActive(true);
                     notificationButtons[i].SetText(Managers.emmVRCNotificationsManager.Notifications[i].name);
+                    notificationButtons[i].SetIconColor(Color.white);
                     notificationButtons[i].SetIcon(Managers.emmVRCNotificationsManager.Notifications[i].icon);
                     notificationButtons[i].SetAction(() =>
                    {
