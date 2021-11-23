@@ -1,5 +1,4 @@
 ﻿using emmVRC.Hacks;
-using emmVRC.Network;
 using Il2CppSystem.Diagnostics;
 using Il2CppSystem.IO;
 using System;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using emmVRC.Network;
 using emmVRC.Objects.ModuleBases;
 using emmVRC.Utils;
 using UnityEngine;
@@ -51,17 +47,17 @@ namespace emmVRC.Menus
             textText.text = "Version " + Objects.Attributes.Version.ToString(3);
             textText.alignment = TextAlignmentOptions.Left;
 
-            Network.NetworkClient.onLogin += () => {
-                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (!string.IsNullOrEmpty(Network.NetworkClient.webToken) ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
+            NetworkClient.onLogin += () => {
+                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
             };
-            Network.NetworkClient.onLogout += () =>
+            NetworkClient.onLogout += () =>
             {
-                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (!string.IsNullOrEmpty(Network.NetworkClient.webToken) ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
+                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
             };
             Components.EnableDisableListener textListener = textBase.AddComponent<Components.EnableDisableListener>();
             textListener.OnEnabled += () =>
             {
-                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (!string.IsNullOrEmpty(Network.NetworkClient.webToken) ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
+                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
             };
 
             notificationsGroup = new ButtonGroup(basePage, "Notifications");

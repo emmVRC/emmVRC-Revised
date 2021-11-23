@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using emmVRC.Hacks;
 using emmVRC.Libraries;
 using emmVRC.Managers;
-using emmVRC.Network.Objects;
 using emmVRC.Objects.ModuleBases;
 using UnityEngine;
 

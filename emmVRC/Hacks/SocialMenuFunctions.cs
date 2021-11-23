@@ -6,13 +6,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using VRC;
-using VRC.Core;
 using VRC.UI;
 using System.Collections;
+using System.Net.Http;
 using emmVRC.Managers;
 using emmVRC.Libraries;
 using emmVRC.Network;
-using emmVRC.Objects;
 using emmVRC.Objects.ModuleBases;
 
 namespace emmVRC.Functions.UI
@@ -82,7 +81,7 @@ namespace emmVRC.Functions.UI
                     TeleportButton.SetActive(!TeleportButton.activeSelf);
                 else
                     TeleportButton.SetActive(false);
-                if (NetworkClient.webToken != null && Configuration.JSONConfig.AvatarFavoritesEnabled)
+                if (NetworkClient.HasJwtToken && Configuration.JSONConfig.AvatarFavoritesEnabled)
                     AvatarSearchButton.SetActive(!AvatarSearchButton.activeSelf);
                 try
                 {
@@ -187,12 +186,10 @@ namespace emmVRC.Functions.UI
 
             ToggleBlockButton.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                if (NetworkClient.webToken != null)
-                {
-                    HTTPRequest.post(NetworkClient.baseURL + "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Private_APIUser_0.id, null).NoAwait("emmVRC block");
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "The block state for this user has been toggled.", 5f);
-                    //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
-                }
+                if (!NetworkClient.HasJwtToken) return;
+                Request.AttemptRequest(HttpMethod.Post, "/api/blocked/" + QuickMenuUtils.GetVRCUiMInstance().menuContent().GetComponentInChildren<PageUserInfo>().field_Private_APIUser_0.id).NoAwait("emmVRC block");
+                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowAlert("emmVRC", "The block state for this user has been toggled.", 5f);
+                //VRCUiManager.prop_VRCUiManager_0.QueueHUDMessage("Block state toggled");
             }));
             Components.EnableDisableListener listener = SocialFunctionsButton.transform.parent.gameObject.AddComponent<Components.EnableDisableListener>();
             listener.OnEnabled += () =>

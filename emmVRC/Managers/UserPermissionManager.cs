@@ -1,7 +1,6 @@
 ﻿using emmVRC.Libraries;
 using emmVRC.Menus;
 using emmVRC.Objects.ModuleBases;
-using emmVRC.Network.Objects;
 using Il2CppSystem.IO;
 using System;
 using System.Collections.Generic;

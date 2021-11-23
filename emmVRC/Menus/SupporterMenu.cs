@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
-using emmVRC.Libraries;
 using emmVRC.Utils;
 using emmVRC.Objects;
 using emmVRC.Objects.ModuleBases;
-using emmVRC.Network;
 using UnityEngine;
 using TMPro;
+using UnityEngine.XR;
 
 namespace emmVRC.Menus
 {
@@ -66,7 +64,11 @@ namespace emmVRC.Menus
 
             try
             {
-                var result = await HTTPRequest.get("http://dl.emmvrc.com/supporterList.json");
+                var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
+                    $"emmVRC/1.0 (Client; emmVRCClient/{Attributes.Version}, Headset; {(XRDevice.isPresent ? XRDevice.model : "None")})");
+
+                var result = await httpClient.GetStringAsync("http://dl.emmvrc.com/supporterList.json");
                 List<Supporter> supporters = TinyJSON.Decoder.Decode(result).Make<List<Supporter>>();
 
                 await emmVRC.AwaitUpdate.Yield();

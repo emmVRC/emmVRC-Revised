@@ -125,6 +125,11 @@
     <Compile Include="Menus\SupporterMenu.cs" />
     <Compile Include="Menus\WaypointsMenu.cs" />
     <Compile Include="Menus\WorldTweaksMenu.cs" />
+    <Compile Include="Network\Authentication.cs" />
+    <Compile Include="Network\NetworkClient.cs" />
+    <Compile Include="Network\Object\Avatar.cs" />
+    <Compile Include="Network\Object\NetworkConfiguration.cs" />
+    <Compile Include="Network\Request.cs" />
     <Compile Include="Objects\Alarm.cs" />
     <Compile Include="Objects\AvatarPermissions.cs" />
     <Compile Include="Objects\CachedValue.cs" />
@@ -160,17 +165,6 @@
     <Compile Include="Functions\WorldHacks\Flashlight.cs" />
     <Compile Include="Functions\UI\HUD.cs" />
     <Compile Include="Functions\UI\LoadingScreen.cs" />
-    <Compile Include="Network\Authentication\Authentication.cs" />
-    <Compile Include="Network\HTTPResponse.cs" />
-    <Compile Include="Network\NetworkClient.cs" />
-    <Compile Include="Network\HTTPRequest.cs" />
-    <Compile Include="Network\Objects\Avatar.cs" />
-    <Compile Include="Network\Objects\Blocked.cs" />
-    <Compile Include="Network\Objects\Donor.cs" />
-    <Compile Include="Network\Objects\Message.cs" />
-    <Compile Include="Network\Objects\SerializedObject.cs" />
-    <Compile Include="Network\Objects\SerializedObjectExtensions.cs" />
-    <Compile Include="Network\Objects\User.cs" />
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
     <Compile Include="Components\emmVRCPanel.cs" />
@@ -182,7 +176,6 @@
     <Compile Include="Objects\ModuleBases\IWithUpdate.cs" />
     <Compile Include="Objects\ModuleBases\MelonLoaderEvents.cs" />
     <Compile Include="Objects\ModuleBases\PriorityAttribute.cs" />
-    <Compile Include="Objects\NetworkConfig.cs" />
     <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Program.cs" />
     <Compile Include="Objects\SerializableAvatarParameter.cs" />
