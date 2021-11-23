@@ -1,4 +1,5 @@
-﻿using Il2CppSystem.Collections.Generic;
+﻿using System;
+using Il2CppSystem.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -6,14 +7,17 @@ using VRC.Core;
 using VRC.UI;
 using emmVRC.Utils;
 using emmVRC.Libraries;
-using emmVRC.Network;
 using System.Linq;
-using emmVRC.Utils;
 using emmVRC.Objects;
 using System.Reflection;
 using System.Collections;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using emmVRC.Network;
 using emmVRC.Objects.ModuleBases;
+using Avatar = emmVRC.Network.Object.Avatar;
+using Logger = emmVRCLoader.Logger;
 
 namespace emmVRC.Functions.UI
 {
@@ -54,9 +58,39 @@ namespace emmVRC.Functions.UI
         public static int currentPage = 0;
         private static SortingMode currentSortingMode = SortingMode.DateAdded;
         private static bool sortingInverse = false; // False = First-to-Last, True = Last-to-First
+        
+        private delegate void SimpleAvatarPedestalRefreshDelegate(IntPtr thisPtr, IntPtr apiAvatarPtr, IntPtr nativeMethodInfo);
+        private static SimpleAvatarPedestalRefreshDelegate _ourSimpleAvatarPedestalRefreshDelegate;
 
         public override void OnUiManagerInit()
         {
+            /*try
+            {
+                var refreshMethod = typeof(SimpleAvatarPedestal)
+                    .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(m => m.Name.StartsWith("Method_Public_Void_ApiAvatar_"))
+                    .Single(m => XrefScanner.XrefScan(m)
+                        .Any(z => z.Type == XrefType.Global && z.ReadAsObject() != null &&
+                                  z.ReadAsObject().ToString() == "Refreshing with : "));
+                
+                Logger.Log(refreshMethod.Name);
+                unsafe
+                {
+                    var originalMethodPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
+                        .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(refreshMethod).GetValue(null);
+                    MelonUtils.NativeHookAttach((IntPtr)(&originalMethodPointer), 
+                        typeof(CustomAvatarFavorites).GetMethod(
+                                nameof(SimpleAvatarPedestalRefreshPatch),
+                                BindingFlags.NonPublic | BindingFlags.Static).MethodHandle.GetFunctionPointer());
+                    _ourSimpleAvatarPedestalRefreshDelegate = 
+                        Marshal.GetDelegateForFunctionPointer<SimpleAvatarPedestalRefreshDelegate>(originalMethodPointer);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+            }*/
+            
             if (Configuration.JSONConfig.SortingMode <= 2)
                 currentSortingMode = (SortingMode)Configuration.JSONConfig.SortingMode;
             else
@@ -315,12 +349,12 @@ namespace emmVRC.Functions.UI
             Components.EnableDisableListener pageAvatarListener = pageAvatar.AddComponent<Components.EnableDisableListener>();
             pageAvatarListener.OnEnabled += () =>
             {
-                if ((!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null) && (PublicAvatarList.activeSelf || FavoriteButtonNew.activeSelf))
+                if ((!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || !NetworkClient.HasJwtToken) && (PublicAvatarList.activeSelf || FavoriteButtonNew.activeSelf))
                 {
                     PublicAvatarList.SetActive(false);
                     FavoriteButtonNew.SetActive(false);
                 }
-                else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
+                else if ((!PublicAvatarList.activeSelf || !FavoriteButtonNew.activeSelf) && Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.HasJwtToken)
                 {
                     PublicAvatarList.SetActive(true);
                     FavoriteButtonNew.SetActive(true);
@@ -354,13 +388,25 @@ namespace emmVRC.Functions.UI
             };
 
         }
+        
+        private static void SimpleAvatarPedestalRefreshPatch(IntPtr thisPtr, IntPtr apiAvatarPtr, IntPtr nativeMethodInfo)
+        {
+            Logger.Log("Switch?");
+            DecodeApiAvatar(thisPtr, apiAvatarPtr, nativeMethodInfo).NoAwait("ApiAvatar Decode");
+        }
+
+        private static async Task DecodeApiAvatar(IntPtr thisPtr, IntPtr apiAvatarPtr, IntPtr nativeMethodInfo)
+        {
+            await emmVRC.AwaitUpdate.Yield();
+            _ourSimpleAvatarPedestalRefreshDelegate(thisPtr, apiAvatarPtr, nativeMethodInfo);
+        }
 
         public static IEnumerator WaitToEnableSearch()
         {
             yield return new WaitForSeconds(0.1f);
             emmVRCLoader.Logger.LogDebug("Searchbox is " + (searchBox == null ? "null" : "not null"));
             emmVRCLoader.Logger.LogDebug("Searchbox button is " + (searchBox.field_Public_Button_0 == null ? "null" : "not null"));
-            if (searchBox != null && searchBox.field_Public_Button_0 != null && !searchBox.field_Public_Button_0.interactable && !string.IsNullOrEmpty(NetworkClient.webToken) && Configuration.JSONConfig.AvatarFavoritesEnabled)
+            if (searchBox != null && searchBox.field_Public_Button_0 != null && !searchBox.field_Public_Button_0.interactable && NetworkClient.HasJwtToken && Configuration.JSONConfig.AvatarFavoritesEnabled)
             {
                 searchBox.field_Public_Button_0.interactable = true;
                 searchBox.field_Public_UnityAction_1_String_0 = searchBoxAction;
@@ -372,11 +418,11 @@ namespace emmVRC.Functions.UI
             if (LoadedAvatars.ToArray().ToList().FindIndex(a => a.id == avtr.id) == -1)
             {
                 LoadedAvatars.Insert(0, avtr);
-                Network.Objects.Avatar serAvtr = new Network.Objects.Avatar(avtr);
+                Avatar serAvtr = new Avatar(avtr);
 
                 try
                 {
-                    await HTTPRequest.post(NetworkClient.baseURL + "/api/avatar", serAvtr);
+                    await Request.AttemptRequest(HttpMethod.Post, "/api/avatar", serAvtr);
 
                     if (!Searching)
                     {
@@ -404,7 +450,7 @@ namespace emmVRC.Functions.UI
 
             try
             {
-                await HTTPRequest.delete(NetworkClient.baseURL + "/api/avatar", new Network.Objects.Avatar(avtr));
+                await Request.AttemptRequest(HttpMethod.Delete, "/api/avatar", new Avatar(avtr));
                 if (!Searching)
                 {
                     await emmVRC.AwaitUpdate.Yield();
@@ -424,19 +470,19 @@ namespace emmVRC.Functions.UI
         public static async Task PopulateList()
         {
             LoadedAvatars = new List<ApiAvatar>();
-            Network.Objects.Avatar[] avatarArray = null;
+            Avatar[] avatarArray = null;
 
             try
             {
-                var result = await HTTPRequest.get(NetworkClient.baseURL + "/api/avatar");
-                avatarArray = TinyJSON.Decoder.Decode(result).Make<Network.Objects.Avatar[]>();
+                var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Get, "/api/avatar");
+                avatarArray = TinyJSON.Decoder.Decode(response).Make<Avatar[]>();
                 await emmVRC.AwaitUpdate.Yield();
 
                 if (avatarArray != null)
                 {
-                    foreach (Network.Objects.Avatar avtr in avatarArray)
+                    foreach (Avatar avtr in avatarArray)
                     {
-                        LoadedAvatars.Add(avtr.apiAvatar());
+                        LoadedAvatars.Add(avtr.ToApiAvatar());
                     }
                     MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
                 }
@@ -576,7 +622,7 @@ namespace emmVRC.Functions.UI
         }
         public static async Task SearchAvatars(string query)
         {
-            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || NetworkClient.webToken == null)
+            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || !NetworkClient.HasJwtToken)
             {
                 await emmVRC.AwaitUpdate.Yield();
             }
@@ -587,26 +633,26 @@ namespace emmVRC.Functions.UI
                 avText.GetComponentInChildren<Text>().text = "Searching. Please wait...";
                 emmVRCLoader.Logger.LogDebug("Clearing current search avatars...");
                 SearchedAvatars.Clear();
-                Network.Objects.Avatar[] avatarArray = null;
+                Avatar[] avatarArray = null;
 
                 waitingForSearch = true;
                 try
                 {
-                    var result = await HTTPRequest.post(NetworkClient.baseURL + "/api/avatar/search",
+                    var (httpStatus, result) = await Request.AttemptRequest(HttpMethod.Post, "/api/avatar/search",
                         new System.Collections.Generic.Dictionary<string, string> { ["query"] = query });
 
-                    if (result.Contains("Bad Request") || result.Contains("Too Many Requests"))
+                    if (httpStatus != HttpStatusCode.OK)
                     {
                         await emmVRC.AwaitUpdate.Yield();
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     }
                     else
                     {
-                        avatarArray = TinyJSON.Decoder.Decode(result).Make<Network.Objects.Avatar[]>();
+                        avatarArray = TinyJSON.Decoder.Decode(result).Make<Avatar[]>();
                         await emmVRC.AwaitUpdate.Yield();
                         if (avatarArray != null)
-                            foreach (Network.Objects.Avatar avatar in avatarArray)
-                                SearchedAvatars.Add(avatar.apiAvatar());
+                            foreach (Avatar avatar in avatarArray)
+                                SearchedAvatars.Add(avatar.ToApiAvatar());
                         currentPage = 0;
                         Searching = true;
                         MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
@@ -636,7 +682,7 @@ namespace emmVRC.Functions.UI
 
             if (PublicAvatarList == null || !PublicAvatarList.activeInHierarchy) return;
 
-            if (Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.webToken != null)
+            if (Configuration.JSONConfig.AvatarFavoritesEnabled && Configuration.JSONConfig.emmVRCNetworkEnabled && NetworkClient.HasJwtToken)
             {
                 NewAvatarList.collapsedCount = Configuration.JSONConfig.FavoriteRenderLimit + Configuration.JSONConfig.SearchRenderLimit;
                 NewAvatarList.expandedCount = Configuration.JSONConfig.FavoriteRenderLimit + Configuration.JSONConfig.SearchRenderLimit;
@@ -665,7 +711,7 @@ namespace emmVRC.Functions.UI
 
         public static async Task CheckForAvatarPedestals()
         {
-            if (NetworkClient.webToken == null || APIUser.CurrentUser == null || !Configuration.JSONConfig.SubmitAvatarPedestals || !NetworkConfig.Instance.AvatarPedestalScansAllowed) return;
+            if (!NetworkClient.HasJwtToken || APIUser.CurrentUser == null || !Configuration.JSONConfig.SubmitAvatarPedestals || !NetworkClient.networkConfiguration.AvatarPedestalScansAllowed) return;
             while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
             {
                 await emmVRC.AwaitUpdate.Yield();
@@ -678,11 +724,11 @@ namespace emmVRC.Functions.UI
                     if (pedestal != null && pedestal.field_Private_ApiAvatar_0 != null && pedestal.field_Private_ApiAvatar_0.releaseStatus == "public")
                     {
                         await emmVRC.AwaitUpdate.Yield();
-                        Network.Objects.Avatar serAvtr = new Network.Objects.Avatar(pedestal.field_Private_ApiAvatar_0);
+                        Avatar serAvtr = new Avatar(pedestal.field_Private_ApiAvatar_0);
                         emmVRCLoader.Logger.LogDebug("Found pedestal " + pedestal.field_Private_ApiAvatar_0.name + ", putting...");
                         try
                         {
-                            await HTTPRequest.put(NetworkClient.baseURL + "/api/avatar", serAvtr);
+                            await Request.AttemptRequest(HttpMethod.Put, "/api/avatar", serAvtr);
                         }
                         catch
                         {

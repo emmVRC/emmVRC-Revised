@@ -9,10 +9,8 @@ namespace emmVRC.Functions.UI
     {
         public override void OnUiManagerInit()
         {
-            QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/Footer/Logout").GetComponent<Button>().onClick.AddListener(new System.Action(() =>
-            {
-                NetworkClient.Logout();
-            }));
+            QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/Footer/Logout")
+                .GetComponent<Button>().onClick.AddListener(new System.Action(NetworkClient.DestroySession));
         }
     }
 }

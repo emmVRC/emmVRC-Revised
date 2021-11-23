@@ -1,9 +1,4 @@
 ﻿using System;
-using UnityEngine;
-using emmVRC.Managers;
-using emmVRC.Hacks;
-using emmVRC.Network;
-using emmVRC.Menus;
 using emmVRC.Objects;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using emmVRC.Objects.ModuleBases;
 using System.Reflection;
+using emmVRC.Network;
 using emmVRC.Utils;
 
 #pragma warning disable 4014
@@ -263,7 +259,7 @@ namespace emmVRC
         }
         public static void OnApplicationQuit()
         {
-            NetworkClient.Logout();
+            NetworkClient.DestroySession();
         }
     }
 }

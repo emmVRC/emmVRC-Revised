@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using emmVRC.Network.Objects;
+using System.Text;
 
 namespace emmVRC.Network
 {
-    public static class Authentication
+    public class Authentication
     {
         private static string path = Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/");
         private static string extension = ".ema";
@@ -22,7 +18,7 @@ namespace emmVRC.Network
         {
             if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension)))
                 return "";
-            return System.IO.File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension));
+            return File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/" + userID + extension));
         }
         public static void DeleteTokenFile(string userID)
         {
@@ -32,7 +28,7 @@ namespace emmVRC.Network
 
         public static void CreateTokenFile(string userID, string data)
         {
-            string fileName = userID + extension;
+            var fileName = userID + extension;
             File.WriteAllBytes(Path.Combine(path, fileName), Encoding.UTF8.GetBytes(data));
         }
     }

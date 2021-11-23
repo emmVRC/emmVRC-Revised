@@ -1,19 +1,11 @@
-﻿using emmVRC.Hacks;
-using emmVRC.Libraries;
-using emmVRC.Network;
+﻿using emmVRC.Libraries;
 using emmVRC.Objects.ModuleBases;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+using emmVRC.Network;
 using UnityEngine;
 using UnityEngine.UI;
 using VRC;
-using VRC.Core;
 
 namespace emmVRC.Functions.UI
 {
@@ -200,7 +192,7 @@ namespace emmVRC.Functions.UI
                     "\nPosition in world:\n" + CommonHUD.RenderWorldInfo() +
                     "\n" +
                     "\n" +
-                    (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.webToken != null ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
+                    (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
                     "\n" +
                     "\n" +
                     (Objects.Attributes.Debug ? (

@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using emmVRC.Network;
-using emmVRC.Managers;
-using emmVRC.Objects;
 using UnityEngine;
-using System.Collections;
 using System.Threading;
+using emmVRC.Network;
 
 #pragma warning disable 4014
 
@@ -19,7 +12,7 @@ namespace emmVRC.Functions.Other
     {
         public static void ForceQuit()
         {
-            NetworkClient.Logout();
+            NetworkClient.DestroySession();
             Thread quitThread = new Thread(QuitAfterQuit)
             {
                 IsBackground = true,
@@ -29,8 +22,7 @@ namespace emmVRC.Functions.Other
         }
         public static void ForceRestart()
         {
-            if (NetworkClient.webToken != null)
-                HTTPRequest.get(NetworkClient.baseURL + "/api/authentication/logout").NoAwait("Logout");
+            NetworkClient.DestroySession();
             Thread restartThread = new Thread(RestartAfterQuit)
             {
                 IsBackground = true,

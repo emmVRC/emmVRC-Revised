@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using emmVRC.Objects;
 using emmVRC.Objects.ModuleBases;
 using emmVRC.Libraries;
+using emmVRC.Network;
 using emmVRC.Utils;
 using UnityEngine;
 using VRC.Core;
@@ -81,7 +82,7 @@ namespace emmVRC.Menus
                     indexCount++;
                 SimpleSingleButton playerButton = new SimpleSingleButton(mainHistoryGroup, plr.Name, () =>
                 {
-                    if (Timeout == 0 && NetworkConfig.Instance.APICallsAllowed)
+                    if (Timeout == 0 && NetworkClient.networkConfiguration.APICallsAllowed)
                     {
                         //else
                         //    user = VRC.DataModel.Core.DataModelManager.field_Private_Static_DataModelManager_0.field_Private_DataModelCache_0.Method_Public_TYPE_String_TYPE2_Boolean_0<IUser, VRC.Core.APIUser>(plr.UserID, false);
