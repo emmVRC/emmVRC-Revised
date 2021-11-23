@@ -75,12 +75,14 @@ namespace emmVRC.Managers
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !keyFlag)
                 {
-                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_GoHome").GetComponentInChildren<Button>().Press();
+                    VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowStandardPopup("Go Home", "Are you sure you want to return to your home world?", "Yes", () => { VRCFlowManager.prop_VRCFlowManager_0.Method_Public_Void_1(); }, "No", VRCUiPopupManager.prop_VRCUiPopupManager_0.HideCurrentPopup);
+                    //Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_GoHome").GetComponentInChildren<Button>().Press();
                     keyFlag = true;
                 }
                 if ((Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[1]) || (UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && !keyFlag)
                 {
-                    Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_Respawn").GetComponentInChildren<Button>().Press();
+                    SpawnManager.field_Private_Static_SpawnManager_0.Method_Public_Void_VRCPlayer_0(VRCPlayer.field_Internal_Static_VRCPlayer_0);
+                    //Utils.ButtonAPI.menuPageBase.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").Find("Button_Respawn").GetComponentInChildren<Button>().Press();
                     keyFlag = true;
                 }
                 if (!Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]) && !Input.GetKey((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]) && !Input.GetKey((KeyCode)Configuration.JSONConfig.RespawnKeybind[0]) && keyFlag)
