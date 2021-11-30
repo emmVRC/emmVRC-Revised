@@ -40,6 +40,7 @@ namespace emmVRC.Objects
         public bool ActionMenuIntegration = true;
         public bool MigrationButtonVisible = true;
         public bool DisableMicTooltip = false;
+        public bool ActionMenuAPIIntegration = false;
 
         public bool CameraPlus = true;
 

@@ -54,6 +54,7 @@ namespace emmVRC.Libraries
             {
                 foreach (Button btn in mainMenuButtons)
                 {
+                    if (!btn.IsVisible) return;
                     var newButton = activeActionMenu.Method_Private_PedalOption_0();
                     newButton.prop_String_0 = btn.ButtonText;
                     btn.ButtonAction += () => {
@@ -96,6 +97,7 @@ namespace emmVRC.Libraries
                 {
                 foreach (Button btn in buttons)
                 {
+                    if (!btn.IsVisible) return;
                     var newButton = GetActionMenuOpener().field_Public_ActionMenu_0.Method_Private_PedalOption_0();
                     newButton.prop_String_0 = btn.ButtonText; // Button Text
                         newButton.field_Public_Func_1_Boolean_0 = new Func<bool>(delegate{ btn.ButtonAction.Invoke(); return true; });
@@ -112,9 +114,11 @@ namespace emmVRC.Libraries
         {
             public string ButtonText;
             public bool IsEnabled;
+            public bool IsVisible = true;
             public Action ButtonAction;
             public Texture2D ButtonIcon;
             public PedalOption currentPedalOption;
+
             public Button(BaseMenu baseMenu, string buttonText, System.Action buttonAction, Texture2D buttonIcon = null)
             {
                 this.ButtonText = buttonText;
@@ -149,6 +153,10 @@ namespace emmVRC.Libraries
                 IsEnabled = enabled;
                 if (currentPedalOption != null)
                     currentPedalOption.prop_Boolean_0 = !enabled;
+            }
+            public void SetVisible(bool visible)
+            {
+                IsVisible = visible;
             }
         }
     }

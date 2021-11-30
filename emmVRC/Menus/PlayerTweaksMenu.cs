@@ -61,18 +61,12 @@ namespace emmVRC.Menus
             {
                 Utils.PlayerUtils.ReloadAllAvatars();
             }, "Reloads every avatar in the current instance, including the current one");
-            avatarPermissions = new SimpleSingleButton(avatarsGroup, "Avatar\nPermissions", () =>
-            {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add thing
-            }, "Turn off components on a per-avatar basis");
-            dynamicBoneOptions = new SimpleSingleButton(avatarsGroup, "Global\nDynamic\nBones", () =>
-            {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add thing
-            }, "Configure the Global Dynamic Bones system of emmVRC");
 
             riskyFunctionsGroup = new ButtonGroup(playerTweaksPage, "Risky Functions");
             jumpingToggleButton = new SimpleSingleButton(riskyFunctionsGroup, "Enable\nJumping", () => {
-                ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); // TODO: Add thing
+                Functions.PlayerHacks.Jump.SetActive(!Functions.PlayerHacks.Jump.IsEnabled);
+                jumpingToggleButton.SetText(Functions.PlayerHacks.Jump.IsEnabled ? "Disable\nJump" : "Enable\nJump");
+
             }, "Enable jumping in the current world, if it isn't available already");
             waypointsButton = new SimpleSingleButton(riskyFunctionsGroup, "Waypoints", () =>
             {
@@ -146,6 +140,7 @@ namespace emmVRC.Menus
             noclipToggle.SetToggleState(Functions.PlayerHacks.Flight.IsNoClipEnabled);
             speedToggle.SetToggleState(Functions.PlayerHacks.Speed.IsEnabled);
             espToggle.SetToggleState(Functions.PlayerHacks.ESP.IsEnabled);
+            jumpingToggleButton.SetText(Functions.PlayerHacks.Jump.IsEnabled ? "Disable\nJump" : "Enable\nJump");
             jumpingToggleButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
             waypointsButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
             flightToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);

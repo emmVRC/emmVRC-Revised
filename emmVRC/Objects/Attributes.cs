@@ -8,16 +8,24 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 0, 5, 0); 
+        public static readonly Version Version = new Version(3, 0, 6, 0); 
         public const int LastTestedBuildNumber = 1151;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "11/21/2021";
+        public const string DateUpdated = "11/23/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
-        public const string Changelog =
+        public const string Changelog = 
+            "<b>v3.0.6</b>\n" +
+            "• Implemented Avatar Options! This is where per-avatar settings such as shader and dynamic bone toggling will be from now on, as well as Global Dynamic Bone configuration\n" +
+            "• Added light toggles to Avatar Options! This allows you to easily toggle off lights on individual avatars\n" +
+            "• Implemented Jump toggling once again! This also allows you to disable jumping after having enabled it in a world\n"+
+            "• Keyboard shortcuts for respawning and going home now work without having the Quick Menu open\n" +
+            "• Fixed bans from the emmVRC Network not showing up correctly\n" +
+            "• Fixed Desktop and VR flight not working in SDK3 worlds\n" +
+            "\n" +
             "<b>v3.0.5</b>\n" +
             "• Fixed support for mods such as ReModCE that would cause the menus to misbehave\n" +
             "• Fixed notification icons being colored slightly blue\n" +
@@ -64,6 +72,7 @@ namespace emmVRC.Objects
             "<b><color=#FF5555>Notice</color></b>\n" +
             "The following features are <i>known</i> to be broken or unavailable, and will be available in a later update:\n" +
             "- Alarm Clocks\n" +
+            "- Emoji Favorites\n" +
             "- Keybind configuration via the UI\n" +
             "\n" +
             "The following features have been removed, and will <i>not</i> be returning to emmVRC:\n" +

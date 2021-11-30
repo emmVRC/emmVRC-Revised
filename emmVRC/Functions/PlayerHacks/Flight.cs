@@ -134,7 +134,7 @@ namespace emmVRC.Functions.PlayerHacks
                 }
 
                 localPlayer.transform.position += movementVector;
-
+                localPlayer.prop_VRCPlayerApi_0.SetVelocity(Vector3.zero);
                 yield return null;
             }
         }

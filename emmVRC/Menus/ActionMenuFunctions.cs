@@ -39,6 +39,8 @@ namespace emmVRC.Menus
             while (Functions.Core.Resources.onlineSprite == null || Functions.Core.Resources.onlineSprite.texture == null)
                 yield return new WaitForEndOfFrame();
             functionsMenu = new CustomActionMenu.Page(CustomActionMenu.BaseMenu.MainMenu, "emmVRC\nFunctions", Functions.Core.Resources.onlineSprite.texture);
+            //if (Configuration.JSONConfig.ActionMenuAPIIntegration)
+            //    functionsMenu.menuEntryButton.SetVisible(false);
             riskyFunctionsMenu = new CustomActionMenu.Page(functionsMenu, "Risky\nFunctions", Functions.Core.Resources.flyTexture);
             favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Functions.Core.Resources.rpSprite.texture);
             favouriteEmojiButtons = new List<CustomActionMenu.Button>();

@@ -19,7 +19,7 @@ namespace emmVRC.Functions.View
         internal static float offsetX = 0f;
         internal static float offsetY = 0f;
         public static int CameraSetup = 0;
-
+        private static bool _initialized;
         // 0 = Vanilla
         // 1 = Back
         // 2 = Front
@@ -86,13 +86,18 @@ namespace emmVRC.Functions.View
                     CameraSetup = 2;
                 }, "Switches your perspective to third-person, facing your front. Press CTRL+T or move the joystick to revert", configUtils.buttonColor());
                 setup = true;*/
-                Components.EnableDisableListener menuListener = Utils.ButtonAPI.GetQuickMenuInstance().gameObject.AddComponent<Components.EnableDisableListener>();
-                menuListener.OnEnabled += () =>
-                {
-                    CameraSetup = 0;
-                    ChangeCameraView();
-                };
             }
+        }
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        {
+            if (buildIndex != -1 || _initialized) return;
+            Components.EnableDisableListener menuListener = Utils.ButtonAPI.GetQuickMenuInstance().gameObject.AddComponent<Components.EnableDisableListener>();
+            menuListener.OnEnabled += () =>
+            {
+                CameraSetup = 0;
+                ChangeCameraView();
+            };
+            _initialized = true;
         }
         public static void ChangeCameraView()
         {

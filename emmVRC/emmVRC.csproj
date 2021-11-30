@@ -42,6 +42,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
     <Compile Include="Functions\Core\AlarmClock.cs" />
+    <Compile Include="Functions\ModCompatibility\ActionMenuAPIIntegration.cs" />
     <Compile Include="Functions\ModCompatibility\UIExpansionKitIntegration.cs" />
     <Compile Include="Functions\Other\AnniversaryMode.cs" />
     <Compile Include="Functions\Other\HashCalculator.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Functions\Other\PlayerJoinLeaveMessages.cs" />
     <Compile Include="Functions\Other\Programs.cs" />
     <Compile Include="Functions\Other\UpdateNotice.cs" />
+    <Compile Include="Functions\PlayerHacks\Jump.cs" />
     <Compile Include="Functions\PlayerHacks\PlayerHistory.cs" />
     <Compile Include="Functions\PlayerHacks\Waypoints.cs" />
     <Compile Include="Functions\UI\ActionMenuTweaks.cs" />
@@ -57,6 +59,7 @@
     <Compile Include="Functions\WorldHacks\WorldESP.cs" />
     <Compile Include="Managers\VRChat\AvatarFilteringManager.cs" />
     <Compile Include="Managers\VRChat\NotificationDotManager.cs" />
+    <Compile Include="Menus\AvatarOptionsMenu.cs" />
     <Compile Include="Menus\ChangelogMenu.cs" />
     <Compile Include="Menus\ColorAdjustmentMenu.cs" />
     <Compile Include="Menus\CreditsMenu.cs" />
@@ -202,6 +205,10 @@
     <None Include="Libraries\TinyJSON\TinyJSON.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ActionMenuApi, Version=0.3.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ActionMenuApi.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\Assembly-CSharp.dll</HintPath>
@@ -459,6 +466,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ActionMenuApi.dll" />
     <Content Include="Code Snippets.txt" />
     <Content Include="UIExpansionKit.dll" />
   </ItemGroup>

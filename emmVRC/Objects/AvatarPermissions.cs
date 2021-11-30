@@ -18,5 +18,6 @@ namespace emmVRC.Objects
         public bool ClothEnabled = true;
         public bool ShadersEnabled = true;
         public bool AudioSourcesEnabled = true;
+        public bool LightsEnabled = true;
     }
 }

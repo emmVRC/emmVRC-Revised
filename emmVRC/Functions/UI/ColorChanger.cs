@@ -363,6 +363,7 @@ namespace emmVRC.Functions.UI
                             }
                             foreach (ActionMenu menu in UnityEngine.Resources.FindObjectsOfTypeAll<ActionMenu>())
                             {
+                                menu.transform.Find("Main/Cursor").GetComponentInChildren<Image>().color = transparent;
                                 //menu.cursor.GetComponentInChildren<Image>().color = transparent;
                             }
                         }

@@ -33,6 +33,7 @@ namespace emmVRC.Menus
 
         private static ButtonGroup modIntegrationsGroup;
         private static ToggleButton uiExpansionKitToggle;
+        private static ToggleButton actionMenuApiToggle;
 
         private static ButtonGroup networkGroup;
         private static ToggleButton emmVRCNetworkToggle;
@@ -173,6 +174,11 @@ namespace emmVRC.Menus
             uiExpansionKitToggle = new ToggleButton(modIntegrationsGroup, "UIExpansionKit\nIntegration", (bool val) => {
                 Configuration.WriteConfigOption("UIExpansionKitIntegration", val);
             }, "Enables Risky Functions buttons in the UIExpansionKit quick menu", "Disables Risky Functions buttons in the UIExpansionKit quick menu");
+            actionMenuApiToggle = new ToggleButton(modIntegrationsGroup, "ActionMenuAPI\nIntegration", (bool val) =>
+            {
+                Configuration.WriteConfigOption("ActionMenuAPIIntegration", val);
+                ButtonAPI.GetQuickMenuInstance().ShowOKDialog("emmVRC", "You must restart VRChat to remove or add the menu to ActionMenuAPI");
+            }, "Enables ActionMenuAPI integration, which places the emmVRC Functions into the Mods pedal", "Disables the ActionMenuAPI mod compatibility");
 
             networkGroup = new ButtonGroup(settingsPage, "Network");
             emmVRCNetworkToggle = new ToggleButton(networkGroup, "emmVRC\nNetwork", (bool val) =>
@@ -324,12 +330,15 @@ namespace emmVRC.Menus
             forceRestartToggle.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
             unlimitedFPSToggle.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
 
-                modIntegrationsGroup.SetActive(Functions.Core.ModCompatibility.UIExpansionKit);
+                modIntegrationsGroup.SetActive(Functions.Core.ModCompatibility.UIExpansionKit || Functions.Core.ModCompatibility.ActionMenuAPI);
 
             if (Functions.Core.ModCompatibility.UIExpansionKit)
                 uiExpansionKitToggle.SetToggleState(Configuration.JSONConfig.UIExpansionKitIntegration);
+            if (Functions.Core.ModCompatibility.ActionMenuAPI)
+                actionMenuApiToggle.SetToggleState(Configuration.JSONConfig.ActionMenuAPIIntegration);
                 
             uiExpansionKitToggle.SetActive(Functions.Core.ModCompatibility.UIExpansionKit);
+            actionMenuApiToggle.SetActive(Functions.Core.ModCompatibility.ActionMenuAPI);
 
             emmVRCNetworkToggle.SetToggleState(Configuration.JSONConfig.emmVRCNetworkEnabled);
             avatarFavoriteListToggle.SetToggleState(Configuration.JSONConfig.AvatarFavoritesEnabled);

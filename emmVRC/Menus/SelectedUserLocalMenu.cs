@@ -30,9 +30,18 @@ namespace emmVRC.Menus
             if (buildIndex != -1 || _initialized) return;
             Transform baseMenuTransform = ButtonAPI.menuPageBase.transform.parent.Find("Menu_SelectedUser_Local/ScrollRect/Viewport/VerticalLayoutGroup");
             selectedUserGroup = new ButtonGroup(baseMenuTransform, "emmVRC Actions");
-            avatarOptionsButton = new SimpleSingleButton(selectedUserGroup, "Avatar\nOptions", () => { ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"); }, "Shows various options for the selected avatar, including toggling components and global dynamic bones");
+            avatarOptionsButton = new SimpleSingleButton(selectedUserGroup, "Avatar\nOptions", () => {
+                APIUser selectedAPIUser = UserSelectionManager.field_Private_Static_UserSelectionManager_0.field_Private_APIUser_1;
+                if (selectedAPIUser == null)
+                    selectedAPIUser = UserSelectionManager.field_Private_Static_UserSelectionManager_0.field_Private_APIUser_0;
+                if (selectedAPIUser == null)
+                    selectedAPIUser = APIUser.CurrentUser;
+                if (selectedAPIUser == null) return;
+                VRCPlayer selectedVRCPlayer = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray().FirstOrDefault(a => a.field_Private_APIUser_0 != null && a.field_Private_APIUser_0.id == selectedAPIUser.id)?._vrcplayer;
+                AvatarOptionsMenu.OpenMenu(selectedVRCPlayer != null ? selectedVRCPlayer : VRCPlayer.field_Internal_Static_VRCPlayer_0);
+            }, "Shows various options for the selected avatar, including toggling components and global dynamic bones");
             playerNotesButton = new SimpleSingleButton(selectedUserGroup, "Player\nNotes", () => {
-                APIUser selectedUser = UserSelectionManager.field_Private_Static_UserSelectionManager_0.field_Private_APIUser_1;
+                APIUser selectedUser = (UserSelectionManager.field_Private_Static_UserSelectionManager_0.field_Private_APIUser_1 == null ? APIUser.CurrentUser : UserSelectionManager.field_Private_Static_UserSelectionManager_0.field_Private_APIUser_1);
                 Functions.UI.PlayerNotes.LoadNoteQM(selectedUser.id, selectedUser.GetName());
                 }, "View the notes for the selected player");
             teleportButton = new SimpleSingleButton(selectedUserGroup, "Teleport", () => {

@@ -23,6 +23,7 @@ namespace emmVRC.Functions.Core
         public static bool IKTweaks = false;
         public static bool BetterLoadingScreen = false;
         public static bool VRCMinus = false;
+        public static bool ActionMenuAPI = false;
 
         public static GameObject FlightButton;
         public static GameObject NoclipButton;
@@ -47,9 +48,8 @@ namespace emmVRC.Functions.Core
                 IKTweaks = true;
             if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "BetterLoadingScreen"))
                 BetterLoadingScreen = true;
-            if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "VRC-Minus"))
-                VRCMinus = true;
-
+            if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "ActionMenuApi"))
+                ActionMenuAPI = true;
 
             if (MultiplayerDynamicBones)
                 emmVRCLoader.Logger.LogDebug("Detected MultiplayerDynamicBones");
@@ -70,8 +70,9 @@ namespace emmVRC.Functions.Core
                 emmVRCLoader.Logger.LogDebug("Detected IKTweaks");
             if (BetterLoadingScreen)
                 emmVRCLoader.Logger.LogDebug("Detected BetterLoadingScreen");
-            if (VRCMinus)
-                emmVRCLoader.Logger.LogDebug("Detected VRCMinus");
+
+            if (ActionMenuAPI)
+                emmVRCLoader.Logger.LogDebug("Detected ActionMenuApi");
         }
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
@@ -81,6 +82,8 @@ namespace emmVRC.Functions.Core
                 Configuration.WriteConfigOption("GlobalDynamicBonesEnabled", false);
                 Managers.emmVRCNotificationsManager.AddNotification(new Objects.Notification("emmVRC", null, "You are currently using MultiplayerDynamicBones. emmVRC's Global Dynamic Bones have been disabled, as only one can be used at a time.", true, false, null, "", "", true, null, "Dismiss"));
             }
+            //if (ActionMenuAPI)
+            //    Functions.ModCompatibility.ActionMenuAPIIntegration.Initialize();
         }
        
     }

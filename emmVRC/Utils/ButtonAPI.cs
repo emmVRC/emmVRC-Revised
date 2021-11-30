@@ -27,6 +27,8 @@ namespace emmVRC.Utils
         internal static GameObject menuPageBase;
         internal static GameObject menuTabBase;
         internal static GameObject sliderBase;
+        internal static GameObject wingPageBase;
+        internal static GameObject wingSingleButtonBase;
         internal static Sprite onIconSprite;
         internal static Sprite plusIconSprite;
         internal static Sprite xIconSprite;
@@ -54,6 +56,8 @@ namespace emmVRC.Utils
             menuPageBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard").gameObject;
             menuTabBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Page_Buttons_QM/HorizontalLayoutGroup/Page_Settings").gameObject;
             sliderBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_AudioSettings/Content/Audio/VolumeSlider_Master").gameObject;
+            wingPageBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/").gameObject;
+            wingSingleButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Profile/").gameObject;
 
             onIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Notifications/Panel_NoNotifications_Message/Icon").GetComponent<Image>().sprite;
             plusIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Here/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_WorldActions/Button_FavoriteWorld/Icon").GetComponent<Image>().sprite;
@@ -578,4 +582,96 @@ namespace emmVRC.Utils
             tabTooltip.field_Public_String_0 = newText;
         }
     }
+    //public class WingMenuPage
+    //{
+    //    private readonly UIPage page;
+    //    private readonly GameObject gameObject;
+    //    public readonly Transform menuContents;
+    //    private readonly TextMeshProUGUI pageTitleText;
+    //    private readonly bool isRoot;
+    //    private readonly GameObject backButtonGameObject;
+    //    private readonly GameObject extButtonGameObject;
+    //    private bool preserveColor;
+    //    public readonly RectMask2D menuMask;
+    //    public WingMenuPage(string menuName, string pageTitle, bool root = true, bool backButton = true, bool extButton = false, Action extButtonAction = null, string extButtonTooltip = "", Sprite extButtonSprite = null, bool preserveColor = false)
+    //    {
+    //        gameObject = GameObject.Instantiate(ButtonAPI.menuPageBase, ButtonAPI.menuPageBase.transform.parent);
+    //        gameObject.name = "Menu_" + menuName;
+    //        gameObject.transform.SetSiblingIndex(5);
+    //        gameObject.SetActive(false);
+    //        GameObject.DestroyImmediate(gameObject.GetComponent<VRC.UI.Elements.Menus.LaunchPadQMMenu>());
+    //        page = gameObject.AddComponent<UIPage>();
+    //        page.field_Public_String_0 = menuName;
+    //        page.field_Private_Boolean_1 = true;
+    //        page.field_Private_MenuStateController_0 = ButtonAPI.GetMenuStateControllerInstance();
+    //        page.field_Private_List_1_UIPage_0 = new Il2CppSystem.Collections.Generic.List<UIPage>();
+    //        page.field_Private_List_1_UIPage_0.Add(page);
+    //        ButtonAPI.GetMenuStateControllerInstance().field_Private_Dictionary_2_String_UIPage_0.Add(menuName, page);
+    //        if (root)
+    //        {
+    //            List<UIPage> menuRootPages = ButtonAPI.GetMenuStateControllerInstance().field_Public_ArrayOf_UIPage_0.ToList();
+    //            menuRootPages.Add(page);
+    //            ButtonAPI.GetMenuStateControllerInstance().field_Public_ArrayOf_UIPage_0 = menuRootPages.ToArray();
+    //        }
+    //        gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").DestroyChildren();
+    //        menuContents = gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup");
+    //        menuContents.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childControlHeight = false; // Overriding this in case other mods change this value, like ReMod
+    //        pageTitleText = gameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+    //        pageTitleText.text = pageTitle;
+    //        isRoot = root;
+    //        backButtonGameObject = gameObject.transform.GetChild(0).Find("LeftItemContainer/Button_Back").gameObject;
+    //        extButtonGameObject = gameObject.transform.GetChild(0).Find("RightItemContainer/Button_QM_Expand").gameObject;
+    //        backButtonGameObject.SetActive(backButton);
+    //        backButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
+    //        backButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
+    //            if (isRoot)
+    //                ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_Boolean_0("QuickMenuDashboard");
+    //            else
+    //                this.page.Method_Protected_Virtual_New_Void_0();
+    //        }));
+    //        extButtonGameObject.SetActive(extButton);
+    //        extButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
+    //        extButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(extButtonAction);
+    //        extButtonGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>().field_Public_String_0 = extButtonTooltip;
+    //        if (extButtonSprite != null)
+    //        {
+    //            extButtonGameObject.GetComponentInChildren<Image>().sprite = extButtonSprite;
+    //            extButtonGameObject.GetComponentInChildren<Image>().overrideSprite = extButtonSprite;
+    //            if (preserveColor)
+    //            {
+    //                extButtonGameObject.GetComponentInChildren<Image>().color = Color.white;
+    //                extButtonGameObject.GetComponentInChildren<VRC.UI.Core.Styles.StyleElement>(true).enabled = false;
+    //            }
+    //        }
+    //        this.preserveColor = preserveColor;
+    //        menuMask = menuContents.parent.gameObject.GetComponent<RectMask2D>();
+    //        menuMask.enabled = true;
+    //        gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().enabled = true;
+    //        gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().verticalScrollbar = gameObject.transform.Find("ScrollRect/Scrollbar").GetComponent<Scrollbar>();
+    //        gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+    //    }
+    //    public void AddExtButton(Action onClick, string tooltip, Sprite icon)
+    //    {
+    //        GameObject newExtButton = GameObject.Instantiate(extButtonGameObject, extButtonGameObject.transform.parent);
+    //        newExtButton.SetActive(true);
+    //        newExtButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
+    //        newExtButton.GetComponentInChildren<Button>().onClick.AddListener(onClick);
+    //        newExtButton.GetComponentInChildren<Image>().sprite = icon;
+    //        newExtButton.GetComponentInChildren<Image>().overrideSprite = icon;
+    //        newExtButton.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>().field_Public_String_0 = tooltip;
+    //    }
+    //    public void OpenMenu()
+    //    {
+    //        if (isRoot)
+    //            ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
+    //        else
+    //            ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
+    //        //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First().PushPage(pageTitleText.text);
+    //        //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First()._currentRootPage.PushPage(page);
+    //    }
+    //    public void CloseMenu()
+    //    {
+    //        page.Method_Public_Virtual_New_Void_0();
+    //    }
+    //}
 }
