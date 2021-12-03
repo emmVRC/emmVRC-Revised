@@ -23,6 +23,7 @@ namespace emmVRC.Network.Object
             {
                 List<string> list = new List<string>();
                 list.Add("avatar");
+                list.Add("avatar_needs_decrypt");
                 return list;
             }
         }
