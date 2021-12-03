@@ -11,11 +11,13 @@ using System.Linq;
 using emmVRC.Objects;
 using System.Reflection;
 using System.Collections;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using emmVRC.Network;
+using emmVRC.Network.Object;
 using emmVRC.Objects.ModuleBases;
 using MelonLoader;
 using UnhollowerBaseLib;
@@ -792,6 +794,10 @@ namespace emmVRC.Functions.UI
                     {
                         await emmVRC.AwaitUpdate.Yield();
                         Avatar serAvtr = new Avatar(pedestal.field_Private_ApiAvatar_0);
+                        
+                        if (string.IsNullOrWhiteSpace(serAvtr.avatar_asset_url))
+                            continue;
+
                         emmVRCLoader.Logger.LogDebug("Found pedestal " + pedestal.field_Private_ApiAvatar_0.name + ", putting...");
                         try
                         {
@@ -808,14 +814,34 @@ namespace emmVRC.Functions.UI
                 }
             }
         }
-        public static void ExportAvatars()
+        
+        public static async Task ExportAvatars()
         {
-            System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
+            if (!NetworkClient.HasJwtToken)
+                return;
+            
+            try
+            {
+                var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Get, "/api/avatar/export");
+
+                if (httpStatus == HttpStatusCode.OK)
+                {
+                    var decodedExport = TinyJSON.Decoder.Decode(response).Make<ExportedAvatar[]>();
+                    File.WriteAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"),
+                        TinyJSON.Encoder.Encode(decodedExport, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"There was an issue exporting your avatars.\n{ex}");
+            }
+            
+            /*System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
             foreach (ApiAvatar avtr in LoadedAvatars)
             {
                 exportedAvatars.Add(new ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
             }
-            System.IO.File.WriteAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+            System.IO.File.WriteAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));*/
         }
     }
 }
