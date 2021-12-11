@@ -8,22 +8,24 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 0, 6, 0); 
-        public const int LastTestedBuildNumber = 1151;
+        public static readonly Version Version = new Version(3, 1, 0, 0); 
+        public const int LastTestedBuildNumber = 1160;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "11/23/2021";
+        public const string DateUpdated = "12/11/2021";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public const string Changelog = 
-            "<b>v3.0.6</b>\n" +
+            "<b>v3.1.0</b>\n" +
             "• Implemented Avatar Options! This is where per-avatar settings such as shader and dynamic bone toggling will be from now on, as well as Global Dynamic Bone configuration\n" +
             "• Added light toggles to Avatar Options! This allows you to easily toggle off lights on individual avatars\n" +
             "• Implemented Jump toggling once again! This also allows you to disable jumping after having enabled it in a world\n"+
             "• Keyboard shortcuts for respawning and going home now work without having the Quick Menu open\n" +
             "• Fixed bans from the emmVRC Network not showing up correctly\n" +
+            "• Fixed World Volume mute not saving\n" +
+            "• Updated for VRChat build 1160, now with more reflection to prevent breaking\n" +
             "• Fixed Desktop and VR flight not working in SDK3 worlds\n" +
             "\n" +
             "<b>v3.0.5</b>\n" +

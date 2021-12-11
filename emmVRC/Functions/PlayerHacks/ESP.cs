@@ -52,10 +52,10 @@ namespace emmVRC.Functions.PlayerHacks
             }
 
             highlightFX.enabled = false;
-            highlightFX.field_Protected_HashSet_1_Renderer_0?.Clear();
-            friendHighlightFX.highlightColor = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex);
+            //highlightFX.field_Protected_HashSet_1_Renderer_0?.Clear();
+            friendHighlightFX.highlightColor = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex) + new Color(0f, 0f, 0f, 1f);
             friendHighlightFX.enabled = false;
-            friendHighlightFX.field_Protected_HashSet_1_Renderer_0?.Clear();
+            //friendHighlightFX.field_Protected_HashSet_1_Renderer_0?.Clear();
         }
 
         public static void SetActive(bool active)

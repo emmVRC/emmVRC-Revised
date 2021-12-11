@@ -97,7 +97,7 @@ namespace emmVRC.Functions.UI
                 }
                 else
                 {
-                    Configuration.WriteConfigOption("WorldVolumeSlider", false);
+                    Configuration.WriteConfigOption("WorldVolumeMute", false);
                     WorldVolumeSlider.value = Configuration.JSONConfig.WorldVolume;
                     WorldVolumeMuteButton.GetComponentInChildren<Text>().text = "M";
                 }
