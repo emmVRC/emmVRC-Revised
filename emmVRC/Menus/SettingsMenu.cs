@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using emmVRC.Functions.UI;
+using emmVRC.Network.Object;
 using emmVRC.Utils;
 using emmVRC.Objects.ModuleBases;
 using UnityEngine;
@@ -94,12 +96,7 @@ namespace emmVRC.Menus
             {
                 ButtonAPI.GetQuickMenuInstance().ShowConfirmDialog("emmVRC", "Would you like to export your emmVRC Favorite Avatars?", new System.Action(() =>
                 {
-                    System.Collections.Generic.List<Objects.ExportedAvatar> exportedAvatars = new List<Objects.ExportedAvatar>();
-                    foreach (VRC.Core.ApiAvatar avtr in Functions.UI.CustomAvatarFavorites.LoadedAvatars)
-                    {
-                        exportedAvatars.Add(new Objects.ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
-                    }
-                    System.IO.File.WriteAllText(System.IO.Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+                    Task.Run(CustomAvatarFavorites.ExportAvatars).NoAwait("Export Avatars");
                     Managers.emmVRCNotificationsManager.AddNotification(new Objects.Notification("Avatar Export", Functions.Core.Resources.alertSprite, "Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", true, false, null, "", "", true, null, "Dismiss"));
                 }), null);
             }, "Export your emmVRC Avatar Favorites to a file");

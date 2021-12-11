@@ -11,11 +11,18 @@ using System.Linq;
 using emmVRC.Objects;
 using System.Reflection;
 using System.Collections;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using emmVRC.Network;
+using emmVRC.Network.Object;
 using emmVRC.Objects.ModuleBases;
+using MelonLoader;
+using UnhollowerBaseLib;
+using UnhollowerRuntimeLib.XrefScans;
+using VRC;
 using Avatar = emmVRC.Network.Object.Avatar;
 using Logger = emmVRCLoader.Logger;
 
@@ -58,38 +65,112 @@ namespace emmVRC.Functions.UI
         public static int currentPage = 0;
         private static SortingMode currentSortingMode = SortingMode.DateAdded;
         private static bool sortingInverse = false; // False = First-to-Last, True = Last-to-First
+
+        private static int _apiAvatarOffset;
         
-        private delegate void SimpleAvatarPedestalRefreshDelegate(IntPtr thisPtr, IntPtr apiAvatarPtr, IntPtr nativeMethodInfo);
-        private static SimpleAvatarPedestalRefreshDelegate _ourSimpleAvatarPedestalRefreshDelegate;
+        private delegate void SetPickerContentFromApiModelDelegate(IntPtr thisPtr, IntPtr nativeMethodInfo);
+        private static SetPickerContentFromApiModelDelegate _ourSetPickerContentFromApiModelDelegate;
+        
+        private static void SetPickerContentFromApiModelPatch(IntPtr thisPtr, IntPtr nativeMethodInfo)
+        {
+            DecodeApiAvatar(thisPtr, nativeMethodInfo).NoAwait("ApiAvatar Decode");
+        }
+
+        private static async Task DecodeApiAvatar(IntPtr thisPtr, IntPtr nativeMethodInfo)
+        {
+            ApiAvatar apiAvatar = null;
+            
+            unsafe
+            {
+                var apiAvatarPtr = *(IntPtr*)(thisPtr + _apiAvatarOffset);
+                if (apiAvatarPtr != IntPtr.Zero)
+                    apiAvatar = new ApiAvatar(apiAvatarPtr);
+            }
+
+            if (apiAvatar == null)
+            {
+                await emmVRC.AwaitUpdate.Yield();
+                _ourSetPickerContentFromApiModelDelegate(thisPtr, nativeMethodInfo);
+                
+                return;
+            }
+            
+            if (apiAvatar.tags != null && apiAvatar.tags.Contains("avatar_needs_decrypt"))
+            {
+                apiAvatar.tags.Remove("avatar_needs_decrypt");
+                
+                try
+                {
+                    var (httpStatus, response) =
+                        await Request.AttemptRequest(HttpMethod.Get, $"/api/avatar/info/{apiAvatar.id}");
+
+                    if (httpStatus == HttpStatusCode.OK)
+                    {
+                        var decodedAvatar = TinyJSON.Decoder.Decode(response).Make<Avatar>();
+
+                        if (decodedAvatar != null)
+                        {
+                            if (!string.IsNullOrWhiteSpace(decodedAvatar.avatar_id) &&
+                                !string.IsNullOrWhiteSpace(decodedAvatar.avatar_asset_url))
+                            {
+                                apiAvatar.id = decodedAvatar.avatar_id;
+                                apiAvatar.assetUrl = decodedAvatar.avatar_asset_url;
+                            }
+                            else
+                            {
+                                apiAvatar.id = "avtr_c38a1615-5bf5-42b4-84eb-a8b6c37cbd11";
+                                apiAvatar.assetUrl = "";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        apiAvatar.id = "avtr_c38a1615-5bf5-42b4-84eb-a8b6c37cbd11";
+                        apiAvatar.assetUrl = "";
+                    }
+                }
+                catch (Exception e)
+                {
+                    apiAvatar.id = "avtr_c38a1615-5bf5-42b4-84eb-a8b6c37cbd11";
+                    apiAvatar.assetUrl = "";
+                }
+            }
+            
+            await emmVRC.AwaitUpdate.Yield();
+            _ourSetPickerContentFromApiModelDelegate(thisPtr, nativeMethodInfo);
+        }
 
         public override void OnUiManagerInit()
         {
-            /*try
+            try
             {
-                var refreshMethod = typeof(SimpleAvatarPedestal)
-                    .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(m => m.Name.StartsWith("Method_Public_Void_ApiAvatar_"))
-                    .Single(m => XrefScanner.XrefScan(m)
-                        .Any(z => z.Type == XrefType.Global && z.ReadAsObject() != null &&
-                                  z.ReadAsObject().ToString() == "Refreshing with : "));
-                
-                Logger.Log(refreshMethod.Name);
                 unsafe
                 {
+                    var setPickerFromContentFromApiModel =
+                        typeof(UiAvatarList.__c__DisplayClass28_1)
+                            .GetMethod(nameof(UiAvatarList.__c__DisplayClass28_1._SetPickerContentFromApiModel_b__1));
+
+                    var apiAvatarField = typeof(UiAvatarList.__c__DisplayClass28_1).GetProperty(nameof(
+                        UiAvatarList.__c__DisplayClass28_1.field_Public_ApiAvatar_1));
+                    _apiAvatarOffset = (int)IL2CPP.il2cpp_field_get_offset((IntPtr)UnhollowerUtils
+                        .GetIl2CppFieldInfoPointerFieldForGeneratedFieldAccessor(apiAvatarField.GetMethod)
+                        .GetValue(null));
+
                     var originalMethodPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
-                        .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(refreshMethod).GetValue(null);
+                        .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(setPickerFromContentFromApiModel)
+                        .GetValue(null);
+                    
                     MelonUtils.NativeHookAttach((IntPtr)(&originalMethodPointer), 
-                        typeof(CustomAvatarFavorites).GetMethod(
-                                nameof(SimpleAvatarPedestalRefreshPatch),
-                                BindingFlags.NonPublic | BindingFlags.Static).MethodHandle.GetFunctionPointer());
-                    _ourSimpleAvatarPedestalRefreshDelegate = 
-                        Marshal.GetDelegateForFunctionPointer<SimpleAvatarPedestalRefreshDelegate>(originalMethodPointer);
+                        Marshal.GetFunctionPointerForDelegate<SetPickerContentFromApiModelDelegate>(SetPickerContentFromApiModelPatch));
+                    _ourSetPickerContentFromApiModelDelegate =
+                        Marshal.GetDelegateForFunctionPointer<SetPickerContentFromApiModelDelegate>(
+                            originalMethodPointer);
                 }
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex);
-            }*/
+            }
             
             if (Configuration.JSONConfig.SortingMode <= 2)
                 currentSortingMode = (SortingMode)Configuration.JSONConfig.SortingMode;
@@ -387,18 +468,6 @@ namespace emmVRC.Functions.UI
                 SearchedAvatars = new List<ApiAvatar>();
             };
 
-        }
-        
-        private static void SimpleAvatarPedestalRefreshPatch(IntPtr thisPtr, IntPtr apiAvatarPtr, IntPtr nativeMethodInfo)
-        {
-            Logger.Log("Switch?");
-            DecodeApiAvatar(thisPtr, apiAvatarPtr, nativeMethodInfo).NoAwait("ApiAvatar Decode");
-        }
-
-        private static async Task DecodeApiAvatar(IntPtr thisPtr, IntPtr apiAvatarPtr, IntPtr nativeMethodInfo)
-        {
-            await emmVRC.AwaitUpdate.Yield();
-            _ourSimpleAvatarPedestalRefreshDelegate(thisPtr, apiAvatarPtr, nativeMethodInfo);
         }
 
         public static IEnumerator WaitToEnableSearch()
@@ -725,6 +794,10 @@ namespace emmVRC.Functions.UI
                     {
                         await emmVRC.AwaitUpdate.Yield();
                         Avatar serAvtr = new Avatar(pedestal.field_Private_ApiAvatar_0);
+                        
+                        if (string.IsNullOrWhiteSpace(serAvtr.avatar_asset_url))
+                            continue;
+
                         emmVRCLoader.Logger.LogDebug("Found pedestal " + pedestal.field_Private_ApiAvatar_0.name + ", putting...");
                         try
                         {
@@ -741,14 +814,34 @@ namespace emmVRC.Functions.UI
                 }
             }
         }
-        public static void ExportAvatars()
+        
+        public static async Task ExportAvatars()
         {
-            System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
+            if (!NetworkClient.HasJwtToken)
+                return;
+            
+            try
+            {
+                var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Get, "/api/avatar/export");
+
+                if (httpStatus == HttpStatusCode.OK)
+                {
+                    var decodedExport = TinyJSON.Decoder.Decode(response).Make<ExportedAvatar[]>();
+                    File.WriteAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"),
+                        TinyJSON.Encoder.Encode(decodedExport, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"There was an issue exporting your avatars.\n{ex}");
+            }
+            
+            /*System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
             foreach (ApiAvatar avtr in LoadedAvatars)
             {
                 exportedAvatars.Add(new ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
             }
-            System.IO.File.WriteAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+            System.IO.File.WriteAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));*/
         }
     }
 }

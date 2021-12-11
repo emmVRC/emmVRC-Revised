@@ -179,7 +179,7 @@ namespace emmVRC.Network
                         ? new Notification("emmVRC", Resources.alertSprite,
                             "You need to log in to the emmVRC Network. Please log in or enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.",
                             false, true, OpenPasswordPrompt, "Login", "", true, null, "Dismiss")
-                        : new Notification("emmVRC", Functions.Core.Resources.errorSprite,
+                        : new Notification("emmVRC", Resources.errorSprite,
                             "You cannot connect to the emmVRC Network because you are banned.", false, false, null, "",
                             "", true, null, "Dismiss"));
                     break;
