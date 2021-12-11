@@ -131,6 +131,7 @@
     <Compile Include="Network\Authentication.cs" />
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\Object\Avatar.cs" />
+    <Compile Include="Network\Object\ExportedAvatar.cs" />
     <Compile Include="Network\Object\NetworkConfiguration.cs" />
     <Compile Include="Network\Request.cs" />
     <Compile Include="Objects\Alarm.cs" />
@@ -171,7 +172,6 @@
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
     <Compile Include="Components\emmVRCPanel.cs" />
-    <Compile Include="Objects\ExportedAvatar.cs" />
     <Compile Include="Objects\ModuleBases\CompatibilityCheck.cs" />
     <Compile Include="Objects\ModuleBases\IWithFixedUpdate.cs" />
     <Compile Include="Objects\ModuleBases\IWithGUI.cs" />
