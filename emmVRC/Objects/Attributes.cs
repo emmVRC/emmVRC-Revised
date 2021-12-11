@@ -8,7 +8,7 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 1, 0, 0); 
+        public static readonly Version Version = new Version(3, 1, 1, 0); 
         public const int LastTestedBuildNumber = 1160;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
@@ -17,7 +17,9 @@ namespace emmVRC.Objects
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
-        public const string Changelog = 
+        public const string Changelog =
+            "<b>v3.1.1</b>\n" +
+            "• Fixed avatar favorites showing error avatars and not allowing use\n" +
             "<b>v3.1.0</b>\n" +
             "• Implemented Avatar Options! This is where per-avatar settings such as shader and dynamic bone toggling will be from now on, as well as Global Dynamic Bone configuration\n" +
             "• Added light toggles to Avatar Options! This allows you to easily toggle off lights on individual avatars\n" +
