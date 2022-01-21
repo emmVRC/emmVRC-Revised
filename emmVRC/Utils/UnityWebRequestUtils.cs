@@ -1,10 +1,13 @@
 ﻿using MelonLoader;
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
+using UnhollowerBaseLib;
 using UnityEngine.Networking;
 
 namespace emmVRC.Utils
 {
+    
     public static class UnityWebRequestUtils
     {
         public static void Get(string url, Action<string> onFinish)
@@ -15,9 +18,17 @@ namespace emmVRC.Utils
         private static IEnumerator GetCoroutine(string url, Action<string> onFinish)
         {
             UnityWebRequest request = UnityWebRequest.Get(url);
+
             request.Send();
             while (!request.isDone)
                 yield return null;
+            
+            // err no?
+            if (request.uri.ToString() != url)
+            {
+                onFinish?.Invoke("denied");
+                yield break;
+            }
 
             try
             {

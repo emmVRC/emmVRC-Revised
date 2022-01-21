@@ -8,16 +8,18 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 1, 1, 0); 
+        public static readonly Version Version = new Version(3, 1, 1, 1); 
         public const int LastTestedBuildNumber = 1160;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "12/11/2021";
+        public const string DateUpdated = "1/21/2022";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public const string Changelog =
+            "<b>v3.1.1.1</b>\n" +
+            "• Cleaned up and removed unused features.\n" +
             "<b>v3.1.1</b>\n" +
             "• Fixed avatar favorites showing error avatars and not allowing use\n" +
             "<b>v3.1.0</b>\n" +

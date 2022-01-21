@@ -30,6 +30,7 @@ namespace emmVRC.Functions.WorldHacks
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             if (buildIndex != -1) return;
+            return;
             GameObject[] allObjects = UnityEngine.Resources.FindObjectsOfTypeAll<GameObject>();
             foreach (GameObject obj in allObjects)
             {
