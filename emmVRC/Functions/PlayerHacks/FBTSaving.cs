@@ -31,7 +31,7 @@ namespace emmVRC.Functions.PlayerHacks
         private static bool _initialized = false;
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            if (buildIndex != -1 || _initialized) return;
+            if (buildIndex != -1 || _initialized || Functions.Core.ModCompatibility.FBTSaver || Functions.Core.ModCompatibility.IKTweaks) return;
             if (Environment.CurrentDirectory.Contains("vrchat-vrchat")) return; // Really awful and crude Oculus check
             SetupFBTSaving();
             _initialized = true;

@@ -470,9 +470,6 @@
     <Content Include="Code Snippets.txt" />
     <Content Include="UIExpansionKit.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
