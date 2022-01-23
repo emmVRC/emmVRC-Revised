@@ -8,14 +8,14 @@ using Harmony;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("emmVRC")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Main class and modules for the emmVRC Mod")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("emmVRC Team")]
 [assembly: AssemblyProduct("emmVRC")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright emmVRC Team 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: HarmonyShield]
+[assembly: MelonLoader.PatchShield]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

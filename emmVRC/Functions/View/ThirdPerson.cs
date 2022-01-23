@@ -20,6 +20,7 @@ namespace emmVRC.Functions.View
         internal static float offsetY = 0f;
         public static int CameraSetup = 0;
         private static bool _initialized;
+        internal static GameObject DesktopReticle = null;
         // 0 = Vanilla
         // 1 = Back
         // 2 = Front
@@ -86,6 +87,7 @@ namespace emmVRC.Functions.View
                     CameraSetup = 2;
                 }, "Switches your perspective to third-person, facing your front. Press CTRL+T or move the joystick to revert", configUtils.buttonColor());
                 setup = true;*/
+                DesktopReticle = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud/ReticleParent");
             }
         }
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -108,18 +110,21 @@ namespace emmVRC.Functions.View
                     //GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = true;
                     TPCameraBack.GetComponent<Camera>().enabled = false;
                     TPCameraFront.GetComponent<Camera>().enabled = false;
+                    DesktopReticle?.SetActive(true);
                 }
                 else if (CameraSetup == 1)
                 {
                     //GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = false;
                     TPCameraBack.GetComponent<Camera>().enabled = true;
                     TPCameraFront.GetComponent<Camera>().enabled = false;
+                    DesktopReticle?.SetActive(false);
                 }
                 else if (CameraSetup == 2)
                 {
                     //GameObject.Find("Camera (eye)").GetComponent<Camera>().enabled = false;
                     TPCameraBack.GetComponent<Camera>().enabled = false;
                     TPCameraFront.GetComponent<Camera>().enabled = true;
+                    DesktopReticle?.SetActive(false);
                 }
 
             }

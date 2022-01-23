@@ -22,7 +22,7 @@ namespace emmVRC.Functions.Other
                     programPath = "C:\\Windows\\notepad.exe",
                     toolTip = "Example program: Launch Notepad. See programs.json for usage"
                 };
-                File.WriteAllText(ProgramsFilePath, Encoder.Encode(example));
+                File.WriteAllText(ProgramsFilePath, Encoder.Encode(new List<Program>() { example }));
                 return new List<Program>() { example };
             }
 

@@ -62,6 +62,12 @@ namespace emmVRC.Managers
                 RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
                 return;
             }
+            else if (RoomManager.field_Internal_Static_ApiWorld_0.authorId == APIUser.CurrentUser.id)
+            {
+                AreRiskyFunctionsAllowed = true;
+                RiskyFuncsProcessed?.DelegateSafeInvoke(AreRiskyFunctionsAllowed);
+                return;
+            }
             if ((GameObject.Find("eVRCRiskFuncEnable") != null || GameObject.Find("eVRCRiskFuncDisable") != null) && RoomManager.field_Internal_Static_ApiWorld_0.authorId == APIUser.CurrentUser.id && !Configuration.JSONConfig.IgnoreWorldCreatorTips)
             {
                 emmVRCLoader.Logger.Log("[NOTICE] The eVRCRiskFuncDisable/Enable objects are soon to be deprecated. Instead, please use \"UniversalRiskyFuncDisable\" and \"UniversalRiskyFuncEnable\"");

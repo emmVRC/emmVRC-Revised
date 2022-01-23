@@ -8,20 +8,26 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 1, 1, 1); 
+        public static readonly Version Version = new Version(3, 1, 2, 0); 
         public const int LastTestedBuildNumber = 1160;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "1/21/2022";
+        public const string DateUpdated = "1/23/2022";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public const string Changelog =
-            "<b>v3.1.1.1</b>\n" +
-            "• Cleaned up and removed unused features.\n" +
+            "<b>v3.1.2</b>\n" +
+            "• Removed Emoji Favorites from the action menu temporarily\n" +
+            "• Cleaned up and removed unused features\n" +
+            "• Fixed a bug where the Programs module would generate an invalid configuration\n" +
+            "• Risky Functions are now allowed for world creators, to assist in development. Note that this will <b>not</b> override the existence of the off/on objects\n" +
+            "• Desktop reticle now disappears when in third person\n" +
+            "\n" +
             "<b>v3.1.1</b>\n" +
             "• Fixed avatar favorites showing error avatars and not allowing use\n" +
+            "\n" +
             "<b>v3.1.0</b>\n" +
             "• Implemented Avatar Options! This is where per-avatar settings such as shader and dynamic bone toggling will be from now on, as well as Global Dynamic Bone configuration\n" +
             "• Added light toggles to Avatar Options! This allows you to easily toggle off lights on individual avatars\n" +
@@ -86,7 +92,7 @@ namespace emmVRC.Objects
             "- Stealth mode\n" +
             "";
         public static bool Debug = false;
-        public static readonly Version MinimumMelonLoaderVersion = new Version(0, 4, 3);
+        public static readonly Version MinimumMelonLoaderVersion = new Version(0, 5, 2);
         public static readonly Version MinimumemmVRCLoaderVersion = new Version(1, 2, 0);
         //public static readonly string[] FlavourTextList = {
         //            "Did you know that Tab is also a drink?",

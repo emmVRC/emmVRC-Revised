@@ -15,9 +15,9 @@ namespace emmVRC.Menus
     public class ActionMenuFunctions : MelonLoaderEvents, IWithLateUpdate
     {
         public static CustomActionMenu.Page functionsMenu;
-        public static CustomActionMenu.Page favouriteEmojisMenu;
+        //public static CustomActionMenu.Page favouriteEmojisMenu;
         public static CustomActionMenu.Page riskyFunctionsMenu;
-        public static List<CustomActionMenu.Button> favouriteEmojiButtons;
+        //public static List<CustomActionMenu.Button> favouriteEmojiButtons;
         public static CustomActionMenu.Button flightButton;
         public static CustomActionMenu.Button noclipButton;
         public static CustomActionMenu.Button speedButton;
@@ -42,20 +42,20 @@ namespace emmVRC.Menus
             //if (Configuration.JSONConfig.ActionMenuAPIIntegration)
             //    functionsMenu.menuEntryButton.SetVisible(false);
             riskyFunctionsMenu = new CustomActionMenu.Page(functionsMenu, "Risky\nFunctions", Functions.Core.Resources.flyTexture);
-            favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Functions.Core.Resources.rpSprite.texture);
-            favouriteEmojiButtons = new List<CustomActionMenu.Button>();
-            for (int i = 0; i < 8; i++)
-            {
-                int currentEmojiButtonOption = i;
-                favouriteEmojiButtons.Add(new CustomActionMenu.Button(favouriteEmojisMenu, "", () =>
-                {
-                    emmVRCLoader.Logger.LogDebug("Trying to spawn Emoji " + Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
-                    emojiMenu.TriggerEmoji(Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
-                    playingEmoji = true;
-                    currentEmojiPlaying = Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption];
-                    MelonLoader.MelonCoroutines.Start(EmojiTimeout());
-                }));
-            };
+            //favouriteEmojisMenu = new CustomActionMenu.Page(functionsMenu, "Favorite\nEmojis", Functions.Core.Resources.rpSprite.texture);
+            //favouriteEmojiButtons = new List<CustomActionMenu.Button>();
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    int currentEmojiButtonOption = i;
+            //    favouriteEmojiButtons.Add(new CustomActionMenu.Button(favouriteEmojisMenu, "", () =>
+            //    {
+            //        emmVRCLoader.Logger.LogDebug("Trying to spawn Emoji " + Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
+            //        emojiMenu.TriggerEmoji(Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption]);
+            //        playingEmoji = true;
+            //        currentEmojiPlaying = Configuration.JSONConfig.FavouritedEmojis[currentEmojiButtonOption];
+            //        MelonLoader.MelonCoroutines.Start(EmojiTimeout());
+            //    }));
+            //};
 
             flightButton = new CustomActionMenu.Button(riskyFunctionsMenu, "Flight:\nOff", () =>
             {
@@ -137,21 +137,21 @@ namespace emmVRC.Menus
                 for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
                     favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetIcon(null);
             }*/
-            if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
-            {
-                for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                    if (favouriteEmojiButtons[i].currentPedalOption != null)
-                        favouriteEmojiButtons[i].SetEnabled(!playingEmoji);
-                for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
-                    if (favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].currentPedalOption != null)
-                        favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetEnabled(false);
-            }
+            //if (favouriteEmojiButtons.All(a => a.currentPedalOption != null))
+            //{
+            //    for (int i = 0; i < Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+            //        if (favouriteEmojiButtons[i].currentPedalOption != null)
+            //            favouriteEmojiButtons[i].SetEnabled(!playingEmoji);
+            //    for (int i = 0; i < 8 - Configuration.JSONConfig.FavouritedEmojis.Count; i++)
+            //        if (favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].currentPedalOption != null)
+            //            favouriteEmojiButtons[Configuration.JSONConfig.FavouritedEmojis.Count + i].SetEnabled(false);
+            //}
         }
-        private static IEnumerator EmojiTimeout()
-        {
-            yield return new WaitForSeconds(2f);
-            playingEmoji = false;
-            currentEmojiPlaying = -1;
-        }
+        //private static IEnumerator EmojiTimeout()
+        //{
+        //    yield return new WaitForSeconds(2f);
+        //    playingEmoji = false;
+        //    currentEmojiPlaying = -1;
+        //}
     }
 }
