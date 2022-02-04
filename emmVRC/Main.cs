@@ -136,6 +136,18 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version.ToString(3));
 
                 Initialized = true;
+
+                Managers.DebugManager.DebugActions.Add(new Managers.DebugAction
+                {
+                    ActionKey = UnityEngine.KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        if (Type.GetType("VRCTrackingSteam, Assembly-CSharp") != null)
+                            emmVRCLoader.Logger.LogDebug("Steam build");
+                        else
+                            emmVRCLoader.Logger.LogDebug("Oculus build");
+                    }
+                });
             }
         }
         public static void OnSceneWasLoaded(int buildIndex, string sceneName)

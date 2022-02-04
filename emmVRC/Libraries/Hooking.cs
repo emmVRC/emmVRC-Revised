@@ -40,7 +40,7 @@ namespace emmVRC.Functions.Core
             {
                 emmVRCLoader.Logger.LogError("Station patching failed: " + ex.ToString());
             }
-            if (!Functions.Core.ModCompatibility.FBTSaver && !Functions.Core.ModCompatibility.IKTweaks && !Environment.CurrentDirectory.Contains("vrchat-vrchat")) // Yet another of yet another crusty Oculus check
+            if (!Functions.Core.ModCompatibility.FBTSaver && !Functions.Core.ModCompatibility.IKTweaks && Type.GetType("VRCTrackingSteam") != null/* !Environment.CurrentDirectory.Contains("vrchat-vrchat")*/) // Yet another of yet another crusty Oculus check
             {
                 try
                 {

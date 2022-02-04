@@ -133,7 +133,7 @@ namespace emmVRC.Functions.Core
                 else if (Environment.CommandLine.Contains("--emmvrc.beemode"))
                     assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Bee.emm");
                 else
-                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/emmVRCResources.emm");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/resources.php");
 
                 assetBundleRequest.SendWebRequest();
                 while (!assetBundleRequest.isDone && !assetBundleRequest.isHttpError)
