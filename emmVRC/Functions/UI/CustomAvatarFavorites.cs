@@ -146,9 +146,19 @@ namespace emmVRC.Functions.UI
             {
                 unsafe
                 {
-                    var setPickerFromContentFromApiModel =
+                    //var setPickerFromContentFromApiModel =
+                    //    typeof(UiAvatarList.__c__DisplayClass28_1)
+                    //        .GetMethod(nameof(UiAvatarList.__c__DisplayClass28_1._SetPickerContentFromApiModel_b__1));
+                    var setPickerContentFromApiModel =
                         typeof(UiAvatarList.__c__DisplayClass28_1)
-                            .GetMethod(nameof(UiAvatarList.__c__DisplayClass28_1._SetPickerContentFromApiModel_b__1));
+                            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                            .First(m => XrefScanner.XrefScan(m)
+                                .Any(xi =>
+                                    xi.Type == XrefType.Global
+                                    && xi.ReadAsObject() != null &&
+                                    xi.ReadAsObject().ToString()
+                                        .Equals(
+                                            "You cannot use this avatar as it has not been published for this platform.")));
 
                     var apiAvatarField = typeof(UiAvatarList.__c__DisplayClass28_1).GetProperty(nameof(
                         UiAvatarList.__c__DisplayClass28_1.field_Public_ApiAvatar_1));
@@ -157,7 +167,7 @@ namespace emmVRC.Functions.UI
                         .GetValue(null));
 
                     var originalMethodPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
-                        .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(setPickerFromContentFromApiModel)
+                        .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(setPickerContentFromApiModel)
                         .GetValue(null);
                     
                     MelonUtils.NativeHookAttach((IntPtr)(&originalMethodPointer), 

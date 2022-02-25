@@ -8,16 +8,18 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 1, 2, 0); 
-        public const int LastTestedBuildNumber = 1160;
+        public static readonly Version Version = new Version(3, 1, 3, 0); 
+        public const int LastTestedBuildNumber = 1169;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "1/23/2022";
+        public const string DateUpdated = "2/24/2022";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public const string Changelog =
+            "<b>v3.1.3</b>\n" +
+            "• Compatibility with VRChat build 1169\n" +
             "<b>v3.1.2</b>\n" +
             "• Removed Emoji Favorites from the action menu temporarily\n" +
             "• Cleaned up and removed unused features\n" +
