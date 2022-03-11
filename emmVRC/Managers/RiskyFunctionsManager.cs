@@ -1,4 +1,4 @@
-﻿using emmVRC.Objects.ModuleBases;
+using emmVRC.Objects.ModuleBases;
 using emmVRC.Utils;
 using System;
 using UnityEngine;
@@ -24,12 +24,15 @@ namespace emmVRC.Managers
         public override void OnApplicationStart()
         {
             NetworkEvents.OnInstanceChanged += OnInstanceChange;
+            NetworkEvents.OnLocalPlayerJoined += (VRC.Player player) => { 
+                if (player.field_Private_APIUser_0 != null && player.field_Private_APIUser_0.id == APIUser.CurrentUser.id)
+                    UnityWebRequestUtils.Get($"https://dl.emmvrc.com/riskyfuncs.php?worldid={RoomManager.field_Internal_Static_ApiWorld_0.id}", new Action<string>((result) => OnFinish(result, RoomManager.field_Internal_Static_ApiWorld_0)));
+            };
         }
 
         private static void OnInstanceChange(ApiWorld world, ApiWorldInstance instance)
         {
             AreRiskyFunctionsAllowed = false;
-            UnityWebRequestUtils.Get($"https://dl.emmvrc.com/riskyfuncs.php?worldid={world.id}", new Action<string>((result) => OnFinish(result, world)));
         }
 
         private static void OnFinish(string result, ApiWorld world)
