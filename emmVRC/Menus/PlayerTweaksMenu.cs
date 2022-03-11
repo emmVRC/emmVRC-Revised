@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,16 +34,6 @@ namespace emmVRC.Menus
         private static bool _initialized = false;
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            if (_initialized)
-            {
-                jumpingToggleButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
-                waypointsButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
-                flightToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
-                noclipToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
-                speedToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
-                speedSlider.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
-                espToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
-            }
             if (buildIndex != -1 || _initialized) return;
 
             playerTweaksPage = new MenuPage("emmVRC_PlayerTweaks", "Player Tweaks", false, true);
@@ -129,8 +119,18 @@ namespace emmVRC.Menus
                 speedToggle.SetInteractable(val);
                 speedSlider.SetInteractable(val);
                 espToggle.SetInteractable(val);
+                emmVRCLoader.Logger.LogDebug("Risky Functions in this world are " + (val ? "Allowed" : "Disallowed"));
             };
-
+            //Utils.NetworkEvents.OnLocalPlayerJoined += (VRC.Player player) => {
+            //    emmVRCLoader.Logger.LogDebug("Risky Functions in this world are " + ((Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed) ? "Allowed" : "Disallowed"));
+            //    jumpingToggleButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            //    waypointsButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            //    flightToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            //    noclipToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            //    speedToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            //    speedSlider.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            //    espToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            //};
 
             _initialized = true;
         }
