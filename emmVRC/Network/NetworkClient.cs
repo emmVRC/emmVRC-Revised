@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -177,7 +177,7 @@ namespace emmVRC.Network
 
                     Managers.emmVRCNotificationsManager.AddNotification(!response.Contains("banned")
                         ? new Notification("emmVRC", Resources.alertSprite,
-                            "You need to log in to the emmVRC Network. Please log in or enter a pin to create one. If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.",
+                            "You need to log in to the emmVRC Network. If you have a pin, enter it. If you do not have a pin, enter your new pin.\n\nYour pin is the equivelent of your password to connect to the emmVRC Network.Do not just enter a random number; make it something memorable!\n\nIf you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.",
                             false, true, OpenPasswordPrompt, "Login", "", true, null, "Dismiss")
                         : new Notification("emmVRC", Resources.errorSprite,
                             "You cannot connect to the emmVRC Network because you are banned.", false, false, null, "",
