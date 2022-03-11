@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
@@ -470,7 +470,7 @@ namespace emmVRC.Utils
             page = gameObject.AddComponent<UIPage>();
             page.field_Public_String_0 = menuName;
             page.field_Private_Boolean_1 = true;
-            page.field_Private_MenuStateController_0 = ButtonAPI.GetMenuStateControllerInstance();
+            page.field_Protected_MenuStateController_0 = ButtonAPI.GetMenuStateControllerInstance();
             page.field_Private_List_1_UIPage_0 = new Il2CppSystem.Collections.Generic.List<UIPage>();
             page.field_Private_List_1_UIPage_0.Add(page);
             ButtonAPI.GetMenuStateControllerInstance().field_Private_Dictionary_2_String_UIPage_0.Add(menuName, page);
@@ -538,7 +538,8 @@ namespace emmVRC.Utils
         }
         public void CloseMenu()
         {
-            page.Method_Public_Virtual_New_Void_0();
+            typeof(UIPage).GetMethods().First(a => XrefUtils.CheckUsing(a, "Method_Public_Void_UIPage_0")).Invoke(page, null);
+            //page.Method_Public_Virtual_New_Void_0();
         }
     }
     public class Tab
