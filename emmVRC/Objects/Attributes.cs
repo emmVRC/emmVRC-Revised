@@ -8,16 +8,19 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 1, 4, 0); 
-        public const int LastTestedBuildNumber = 1169;
+        public static readonly Version Version = new Version(3, 1, 5, 0); 
+        public const int LastTestedBuildNumber = 1189;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "3/10/2022";
+        public const string DateUpdated = "4/21/2022";
         //  "This is a reference for about how long the"
         //  "text can be in the Changelog before it rolls"
         //  "off the page."
         //  "This is an pre-release build! Do not distribute to others."
         public const string Changelog =
+            "<b>v3.1.5</b>\n" +
+            "• Favorites & search will no longer always show an error bot.\n" +
+            "• Menu recoloring should no longer throw an error on startup. (Some things may look wrong! let us know!)\n" +
             "<b>v3.1.4</b>\n" +
             "• Attempted to make login text more clear about how to make a pin and set up the emmVRC Network\n" +
             "• Fixed issues with Oculus, including network login and Risky Functions\n" +

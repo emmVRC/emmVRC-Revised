@@ -150,7 +150,7 @@ namespace emmVRC.Functions.UI
                     //    typeof(UiAvatarList.__c__DisplayClass28_1)
                     //        .GetMethod(nameof(UiAvatarList.__c__DisplayClass28_1._SetPickerContentFromApiModel_b__1));
                     var setPickerContentFromApiModel =
-                        typeof(UiAvatarList.__c__DisplayClass28_1)
+                        typeof(UiAvatarList.ObjectNPrivateSealedApObApUnique)
                             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
                             .First(m => XrefScanner.XrefScan(m)
                                 .Any(xi =>
@@ -160,8 +160,8 @@ namespace emmVRC.Functions.UI
                                         .Equals(
                                             "You cannot use this avatar as it has not been published for this platform.")));
 
-                    var apiAvatarField = typeof(UiAvatarList.__c__DisplayClass28_1).GetProperty(nameof(
-                        UiAvatarList.__c__DisplayClass28_1.field_Public_ApiAvatar_1));
+                    var apiAvatarField = typeof(UiAvatarList.ObjectNPrivateSealedApObApUnique).GetProperty(nameof(
+                        UiAvatarList.ObjectNPrivateSealedApObApUnique.field_Public_ApiAvatar_1));
                     _apiAvatarOffset = (int)IL2CPP.il2cpp_field_get_offset((IntPtr)UnhollowerUtils
                         .GetIl2CppFieldInfoPointerFieldForGeneratedFieldAccessor(apiAvatarField.GetMethod)
                         .GetValue(null));
