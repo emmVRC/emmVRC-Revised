@@ -111,6 +111,14 @@ namespace emmVRC.Functions.View
                     TPCameraBack.GetComponent<Camera>().enabled = false;
                     TPCameraFront.GetComponent<Camera>().enabled = false;
                     DesktopReticle?.SetActive(true);
+                    try
+                    {
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_VRC_AvatarDescriptor_0.VisemeSkinnedMesh.forceRenderingOff = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogDebug("Error: " + ex.ToString());
+                    };
                 }
                 else if (CameraSetup == 1)
                 {
@@ -118,6 +126,14 @@ namespace emmVRC.Functions.View
                     TPCameraBack.GetComponent<Camera>().enabled = true;
                     TPCameraFront.GetComponent<Camera>().enabled = false;
                     DesktopReticle?.SetActive(false);
+                    try
+                    {
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_VRC_AvatarDescriptor_0.VisemeSkinnedMesh.forceRenderingOff = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        emmVRCLoader.Logger.LogDebug("Error: " + ex.ToString());
+                    };
                 }
                 else if (CameraSetup == 2)
                 {
@@ -125,6 +141,13 @@ namespace emmVRC.Functions.View
                     TPCameraBack.GetComponent<Camera>().enabled = false;
                     TPCameraFront.GetComponent<Camera>().enabled = true;
                     DesktopReticle?.SetActive(false);
+                    try
+                    {
+                        VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_VRC_AvatarDescriptor_0.VisemeSkinnedMesh.forceRenderingOff = true;
+                    }
+                    catch (Exception ex) {
+                        emmVRCLoader.Logger.LogDebug("Error: " + ex.ToString());
+                    };
                 }
 
             }

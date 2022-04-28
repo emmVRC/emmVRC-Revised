@@ -223,7 +223,7 @@ namespace emmVRC.Functions.UI
                 UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().FirstOrDefault().highlightColor = color;
             try
             {
-                GameObject HudVoiceIndicator = UnityEngine.Resources.FindObjectsOfTypeAll<FadeCycleEffect>().First().transform.parent.gameObject;
+                GameObject HudVoiceIndicator = UnityEngine.Resources.FindObjectsOfTypeAll<FadeCycleEffect>().First(a => a.gameObject.name == "VoiceDotDisabled").transform.parent.gameObject;
                 if (Configuration.JSONConfig.UIMicIconColorChangingEnabled && Configuration.JSONConfig.UIColorChangingEnabled)
                 {
                     emmVRCLoader.Logger.LogDebug("Coloring Push To Talk icons...");

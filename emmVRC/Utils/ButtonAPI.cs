@@ -311,13 +311,7 @@ namespace emmVRC.Utils
             if (invoke)
                 buttonToggle.onValueChanged.Invoke(newState);
         }
-        private void SetToggleIcon(bool newState)
-        {
-            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_0(newState);
-            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_1(newState);
-            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_2(newState);
-            buttonToggle.GetComponent<ToggleIcon>().Method_Private_Void_Boolean_PDM_3(newState);
-        }
+
         public void SetInteractable(bool val)
         {
             buttonToggle.interactable = val;

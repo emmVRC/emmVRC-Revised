@@ -72,7 +72,6 @@
     <Compile Include="Hacks\ComponentToggle.cs" />
     <Compile Include="Functions\UI\CustomAvatarFavorites.cs" />
     <Compile Include="Functions\UI\CustomMenuMusic.cs" />
-    <Compile Include="Functions\WorldHacks\CustomWorldObjects.cs" />
     <Compile Include="Hacks\EmojiFavourites.cs" />
     <Compile Include="Functions\PlayerHacks\ESP.cs" />
     <Compile Include="Functions\PlayerHacks\FBTSaving.cs" />
@@ -105,7 +104,6 @@
     <Compile Include="Libraries\AwaitProvider.cs" />
     <Compile Include="Libraries\CustomActionMenu.cs" />
     <Compile Include="Libraries\Analysis.cs" />
-    <Compile Include="Libraries\AvatarUtilities.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
     <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Functions\Other\EULA.cs" />
@@ -205,6 +203,9 @@
     <None Include="Libraries\TinyJSON\TinyJSON.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="ActionMenuApi, Version=0.3.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\ActionMenuApi.dll</HintPath>
