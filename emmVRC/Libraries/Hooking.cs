@@ -105,7 +105,7 @@ namespace emmVRC.Functions.Core
             if (__instance.field_Private_VRCPlayer_0 == null) return;
             if (__instance.field_Private_VRCPlayer_0._player != null && __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0 != null)
             {
-                if (Configuration.JSONConfig.NameplateColorChangingEnabled && !Functions.Core.ModCompatibility.OGTrustRank)
+                if (Configuration.JSONConfig.NameplateColorChangingEnabled)
                 {
                     APIUser user = __instance.field_Private_VRCPlayer_0._player.prop_APIUser_0;
                     if (user.isFriend)

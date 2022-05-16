@@ -31,7 +31,6 @@ namespace emmVRC.Menus
         private static ToggleButton masterIconToggle;
         private static ToggleButton hudToggle;
         private static ToggleButton forceRestartToggle;
-        private static ToggleButton unlimitedFPSToggle;
 
         private static ButtonGroup modIntegrationsGroup;
         private static ToggleButton uiExpansionKitToggle;
@@ -60,8 +59,6 @@ namespace emmVRC.Menus
         private static SingleButton userNameplateColorButton;
         private static SingleButton knownUserNameplateColorButton;
         private static SingleButton trustedUserNameplateColorButton;
-        private static SingleButton veteranUserNameplateColorButton;
-        private static SingleButton legendaryUserNameplateColorButton;
 
         private static ButtonGroup vrchatUiGroup;
         private static ToggleButton upperInviteButtonsToggle;
@@ -162,10 +159,6 @@ namespace emmVRC.Menus
             {
                 Configuration.WriteConfigOption("ForceRestartButtonEnabled", val);
             }, "Enables the Force Restart button in loading screens", "Disables the Force Restart button in loading screens");
-            unlimitedFPSToggle = new ToggleButton(featuresGroup, "Unlimited\nFPS", (bool val) =>
-            {
-                Configuration.WriteConfigOption("UnlimitedFPSEnabled", val);
-            }, "Removes the FPS limiter, which by default limits your FPS to 90 (Desktop only!)", "Enables the FPS limiter (Desktop only!)");
 
             modIntegrationsGroup = new ButtonGroup(settingsPage, "Mod Integrations");
             uiExpansionKitToggle = new ToggleButton(modIntegrationsGroup, "UIExpansionKit\nIntegration", (bool val) => {
@@ -325,7 +318,6 @@ namespace emmVRC.Menus
             masterIconToggle.SetToggleState(Configuration.JSONConfig.MasterIconEnabled);
             hudToggle.SetToggleState(Configuration.JSONConfig.HUDEnabled);
             forceRestartToggle.SetToggleState(Configuration.JSONConfig.ForceRestartButtonEnabled);
-            unlimitedFPSToggle.SetToggleState(Configuration.JSONConfig.UnlimitedFPSEnabled);
 
                 modIntegrationsGroup.SetActive(Functions.Core.ModCompatibility.UIExpansionKit || Functions.Core.ModCompatibility.ActionMenuAPI);
 

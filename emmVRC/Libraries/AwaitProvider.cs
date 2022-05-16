@@ -41,7 +41,7 @@ namespace emmVRC.Libraries
             return new YieldAwaitable(myToMainThreadQueue);
         }
 
-        public readonly struct YieldAwaitable : INotifyCompletion
+        public struct YieldAwaitable : INotifyCompletion
         {
             private readonly Queue<Action> myToMainThreadQueue;
 

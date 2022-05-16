@@ -20,7 +20,6 @@ namespace emmVRC.Objects
         public bool GlobalChatEnabled = true;
         public bool VRFlightControls = true;
         public bool UIExpansionKitIntegration = false;
-        public bool UnlimitedFPSEnabled = false;
         public bool InfoBarDisplayEnabled = true;
         public bool ClockEnabled = true;
         public bool AvatarFavoritesEnabled = true;
@@ -69,10 +68,7 @@ namespace emmVRC.Objects
         public float FlashlightAngle = 50f;
 
         public System.Collections.Generic.List<int> FavouritedEmojis = new System.Collections.Generic.List<int>();
-        public bool PersistentAlarm = false;
-        public uint AlarmTime = 0;
-        public bool PersistentInstanceAlarm = false;
-        public uint InstanceAlarmTime = 0;
+        public bool AlarmsEnabled = true;
 
         // Hack options
         public bool DisableAvatarPedestals = false;
@@ -141,12 +137,19 @@ namespace emmVRC.Objects
         public float MaxSpeedIncrease = 5f;
 
         public bool EnableKeybinds = true;
-        public int[] FlightKeybind = new int[2] {  102, 306 };
-        public int[] NoclipKeybind = new int[2] {  109, 306 };
-        public int[] SpeedKeybind = new int[2] {  103, 306 };
-        public int[] ThirdPersonKeybind = new int[2] {  116, 306 };
-        public int[] ToggleHUDEnabledKeybind = new int[2] {  106, 306 };
+        public bool FlightKeybindEnabled = true;
+        public int[] FlightKeybind = new int[2] { 102, 306 };
+        public bool NoclipKeybindEnabled = true;
+        public int[] NoclipKeybind = new int[2] { 109, 306 };
+        public bool SpeedKeybindEnabled = true;
+        public int[] SpeedKeybind = new int[2] { 103, 306 };
+        public bool ThirdPersonKeybindEnabled = true;
+        public int[] ThirdPersonKeybind = new int[2] { 116, 306 };
+        public bool ToggleHUDKeybindEnabled = true;
+        public int[] ToggleHUDEnabledKeybind = new int[2] { 106, 306 };
+        public bool RespawnKeybindEnabled = true;
         public int[] RespawnKeybind = new int[2] { 121, 306 };
+        public bool GoHomeKeybindEnabled = true;
         public int[] GoHomeKeybind = new int[2] { 117, 306 };
     }
 }

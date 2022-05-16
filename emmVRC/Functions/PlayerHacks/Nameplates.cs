@@ -27,31 +27,7 @@ namespace emmVRC.Functions.PlayerHacks
             Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("LegendaryUserNamePlateColorHex", Utils.PlayerUtils.ReloadAllAvatars));
             Utils.NetworkEvents.OnPlayerJoined += (plr) =>
             {
-                if (Functions.Core.ModCompatibility.OGTrustRank)
-                {
-                    if (Configuration.JSONConfig.NameplateColorChangingEnabled)
-                    {
-
-                        VRCPlayer.field_Internal_Static_Color_1 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.FriendNamePlateColorHex);
-                        VRCPlayer.field_Internal_Static_Color_2 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VisitorNamePlateColorHex);
-                        VRCPlayer.field_Internal_Static_Color_3 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex);
-                        VRCPlayer.field_Internal_Static_Color_4 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.UserNamePlateColorHex);
-                        VRCPlayer.field_Internal_Static_Color_5 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.KnownUserNamePlateColorHex);
-                        VRCPlayer.field_Internal_Static_Color_6 = Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex);
-
-                        try
-                        {
-                            MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "OGTrustRanks").Assembly.GetType("OGTrustRanks.OGTrustRanks").GetField("TrustedUserColor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.TrustedUserNamePlateColorHex));
-                            MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "OGTrustRanks").Assembly.GetType("OGTrustRanks.OGTrustRanks").GetField("VeteranUserColor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.VeteranUserNamePlateColorHex));
-                            MelonLoader.MelonHandler.Mods.First(i => i.Info.Name == "OGTrustRanks").Assembly.GetType("OGTrustRanks.OGTrustRanks").GetField("LegendaryUserColor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, Libraries.ColorConversion.HexToColor(Configuration.JSONConfig.LegendaryUserNamePlateColorHex));
-                        }
-                        catch (Exception ex)
-                        {
-                            emmVRCLoader.Logger.LogError(ex.ToString());
-                        }
-                    }
-                }
-                else if (!Configuration.JSONConfig.NameplateColorChangingEnabled)
+                if (!Configuration.JSONConfig.NameplateColorChangingEnabled)
                 {
                     VRCPlayer.field_Internal_Static_Color_1 = Libraries.ColorConversion.HexToColor("#FFFF00");
                     VRCPlayer.field_Internal_Static_Color_2 = Libraries.ColorConversion.HexToColor("#CCCCCC");

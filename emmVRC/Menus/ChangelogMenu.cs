@@ -31,7 +31,7 @@ namespace emmVRC.Menus
             textBase.transform.localScale = Vector3.one;
             TextMeshProUGUI textText = textBase.AddComponent<TextMeshProUGUI>();
             textText.margin = new Vector4(25, 0, 50, 0);
-            textText.text = "<size=50><color=#FF69B4>emmVRC</color> version " + Objects.Attributes.Version.ToString(3) + " (" + Objects.Attributes.DateUpdated + ")</size>\n\n"+Objects.Attributes.Changelog;
+            textText.text = "<size=50><color=#FF69B4>emmVRC</color> version " + Objects.Attributes.Version.ToString(3) + (Objects.Attributes.Beta ? ("b"+Objects.Attributes.Version.Revision) : "") + " (" + Objects.Attributes.DateUpdated + ")</size>\n\n"+Objects.Attributes.Changelog;
 
             _initialized = true;
         }

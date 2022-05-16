@@ -17,7 +17,6 @@ namespace emmVRC.Functions.Core
         public static bool MultiplayerDynamicBones = false;
         public static bool PortalConfirmation = false;
         public static bool MControl = false;
-        public static bool OGTrustRank = false;
         public static bool UIExpansionKit = false;
         public static bool FBTSaver = false;
         public static bool IKTweaks = false;
@@ -38,8 +37,6 @@ namespace emmVRC.Functions.Core
                 PortalConfirmation = true;
             if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "MControl"))
                 MControl = true;
-            if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "OGTrustRanks"))
-                OGTrustRank = true;
             if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "UI Expansion Kit"))
                 UIExpansionKit = true;
             if (MelonLoader.MelonHandler.Mods.Any(i => i.Info.Name == "FBT Saver"))
@@ -55,10 +52,6 @@ namespace emmVRC.Functions.Core
                 emmVRCLoader.Logger.LogDebug("Detected MultiplayerDynamicBones");
             if (PortalConfirmation)
                 emmVRCLoader.Logger.LogDebug("Detected PortalConfirmation");
-            if (MControl)
-                emmVRCLoader.Logger.LogDebug("Detected MControl");
-            if (OGTrustRank)
-                emmVRCLoader.Logger.LogDebug("Detected OGTrustRank");
             if (UIExpansionKit)
             {
                 emmVRCLoader.Logger.LogDebug("Detected UIExpansionKit");

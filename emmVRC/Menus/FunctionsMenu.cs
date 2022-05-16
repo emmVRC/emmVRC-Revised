@@ -48,22 +48,21 @@ namespace emmVRC.Menus
             textText.alignment = TextAlignmentOptions.Left;
 
             NetworkClient.onLogin += () => {
-                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
+                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + (Objects.Attributes.Beta ? ("b"+Objects.Attributes.Version.Revision) : "") + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
             };
             NetworkClient.onLogout += () =>
             {
-                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
+                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + (Objects.Attributes.Beta ? ("b"+Objects.Attributes.Version.Revision) : "") + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
             };
             Components.EnableDisableListener textListener = textBase.AddComponent<Components.EnableDisableListener>();
             textListener.OnEnabled += () =>
             {
-                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
+                textText.text = "<align=\"left\">  Version " + Objects.Attributes.Version.ToString(3) + (Objects.Attributes.Beta ? ("b"+Objects.Attributes.Version.Revision) : "") + "<line-height=0>\n" + (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<align=\"right\"><color=#00FF00>Connected to the emmVRC Network  </color>" : "<align=\"right\"><color=#FF0000>Not connected to the emmVRC Network  </color>") : "");
             };
 
             notificationsGroup = new ButtonGroup(basePage, "Notifications");
             tweaksGroup = new Utils.ButtonGroup(basePage.menuContents, "Tweaks");
             featuresGroup = new Utils.ButtonGroup(basePage.menuContents, "Features");
-            Utils.SingleButton testBtn6 = new Utils.SingleButton(featuresGroup.gameObject.transform, "Alarm\nClocks", () => ButtonAPI.GetQuickMenuInstance().ShowAlert("Not yet implemented"), "Nothing here", Functions.Core.Resources.AlarmClockIcon);
             otherGroup = new Utils.ButtonGroup(basePage.menuContents, "Other");
             basePage.menuContents.parent.parent.parent.GetChild(0).Find("RightItemContainer/Button_QM_Expand/Icon").GetComponent<UnityEngine.RectTransform>().sizeDelta = new UnityEngine.Vector2(72, 72);
             basePage.menuContents.parent.parent.parent.GetChild(0).Find("RightItemContainer/Button_QM_Expand/Icon").GetComponent<UnityEngine.RectTransform>().localPosition = new UnityEngine.Vector3(0f, 8f, 0f);
@@ -77,6 +76,7 @@ namespace emmVRC.Menus
             {
                 mainTab.SetBadge(Managers.emmVRCNotificationsManager.Notifications.Count == 0 ? false : true, Managers.emmVRCNotificationsManager.Notifications.Count + " NEW");
             };
+            mainTab.SetBadge(Managers.emmVRCNotificationsManager.Notifications.Count == 0 ? false : true, Managers.emmVRCNotificationsManager.Notifications.Count + " NEW");
         }
     }
 }

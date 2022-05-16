@@ -54,6 +54,7 @@
     <Compile Include="Functions\PlayerHacks\PlayerHistory.cs" />
     <Compile Include="Functions\PlayerHacks\Waypoints.cs" />
     <Compile Include="Functions\UI\ActionMenuTweaks.cs" />
+    <Compile Include="Functions\UI\DashboardBar.cs" />
     <Compile Include="Functions\UI\ShortcutMenuCloseOptions.cs" />
     <Compile Include="Functions\WorldHacks\InstanceHistory.cs" />
     <Compile Include="Functions\WorldHacks\WorldESP.cs" />
@@ -65,8 +66,8 @@
     <Compile Include="Menus\CreditsMenu.cs" />
     <Compile Include="Menus\NotificationMenu.cs" />
     <Compile Include="Menus\FlashlightMenu.cs" />
+    <Compile Include="Menus\AlarmMenu.cs" />
     <Compile Include="Menus\ProgramsMenu.cs" />
-    <Compile Include="Hacks\AlarmClock.cs" />
     <Compile Include="Functions\UI\AvatarMenu.cs" />
     <Compile Include="Functions\UI\ColorChanger.cs" />
     <Compile Include="Hacks\ComponentToggle.cs" />
@@ -77,10 +78,8 @@
     <Compile Include="Functions\PlayerHacks\FBTSaving.cs" />
     <Compile Include="Functions\PlayerHacks\Flight.cs" />
     <Compile Include="Functions\View\FOV.cs" />
-    <Compile Include="Functions\View\FPS.cs" />
     <Compile Include="Functions\Debug\FrameTimeCalculator.cs" />
     <Compile Include="Hacks\GlobalDynamicBones.cs" />
-    <Compile Include="Hacks\InfoSpoofing.cs" />
     <Compile Include="Functions\UI\InfoBarClock.cs" />
     <Compile Include="Functions\UI\InfoBarStatus.cs" />
     <Compile Include="Functions\UI\LogoutPatch.cs" />
@@ -163,7 +162,6 @@
     <Compile Include="Managers\NotificationManager.cs" />
     <Compile Include="Managers\RiskyFunctionsManager.cs" />
     <Compile Include="Menus\ActionMenuFunctions.cs" />
-    <Compile Include="Menus\DebugMenu.cs" />
     <Compile Include="Functions\WorldHacks\Flashlight.cs" />
     <Compile Include="Functions\UI\HUD.cs" />
     <Compile Include="Functions\UI\LoadingScreen.cs" />

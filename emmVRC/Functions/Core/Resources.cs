@@ -30,9 +30,9 @@ namespace emmVRC.Functions.Core
         public static Sprite alarmSprite;
         public static Sprite rpSprite;
         public static Sprite crownSprite;
-        public static Sprite Media_Nav;
-        public static Sprite Media_PlayPause;
-        public static Sprite Media_Stop;
+        //public static Sprite Media_Nav;
+        //public static Sprite Media_PlayPause;
+        //public static Sprite Media_Stop;
         public static Sprite HUD_Base;
         public static Sprite HUD_Minimized;
         public static Sprite emmHUDLogo;
@@ -178,9 +178,9 @@ namespace emmVRC.Functions.Core
             crownSprite = LoadSprite("Crown.png");
             authorSprite = LoadSprite("Author.png");
 
-            Media_Nav = LoadSprite("Media_NAV.png");
-            Media_PlayPause = LoadSprite("Media_PLAY_PAUSE.png");
-            Media_Stop = LoadSprite("Media_STOP.png");
+            //Media_Nav = LoadSprite("Media_NAV.png");
+            //Media_PlayPause = LoadSprite("Media_PLAY_PAUSE.png");
+            //Media_Stop = LoadSprite("Media_STOP.png");
 
             HUD_Base = LoadSprite("UIMaximized.png");
             HUD_Minimized = LoadSprite("UIMinimized.png");
