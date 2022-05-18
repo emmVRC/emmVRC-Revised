@@ -26,7 +26,7 @@ namespace emmVRC.Menus
         private static ToggleButton vrFlightControlsToggle;
         private static ToggleButton trackingSavingToggle;
         private static ToggleButton actionMenuIntegrationToggle;
-        private static ToggleButton emojiFavoriteMenuToggle;
+        private static SimpleSingleButton emojiFavoriteMenuButton;
         private static ToggleButton clockToggle;
         private static ToggleButton masterIconToggle;
         private static ToggleButton hudToggle;
@@ -142,6 +142,7 @@ namespace emmVRC.Menus
             {
                 Configuration.WriteConfigOption("ActionMenuIntegration", val);
             }, "Enables emmVRC Action Menu Integration", "Disables emmVRC Action Menu Integration");
+            emojiFavoriteMenuButton = new SimpleSingleButton(featuresGroup, "Emoji\nFavorites", () => { Functions.UI.EmojiFavourites.OpenMenu(); }, "Choose up to 8 emojis to be displayed in a dedicated wheel in the emmVRC Action Menu");
             clockToggle = new ToggleButton(featuresGroup, "Clock", (bool val) =>
             {
                 Configuration.WriteConfigOption("ClockEnabled", val);

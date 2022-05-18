@@ -32,6 +32,7 @@ namespace emmVRC.Utils
         internal static Sprite onIconSprite;
         internal static Sprite plusIconSprite;
         internal static Sprite xIconSprite;
+        
         internal static VRC.UI.Elements.QuickMenu GetQuickMenuInstance()
         {
             return UnityEngine.Resources.FindObjectsOfTypeAll<VRC.UI.Elements.QuickMenu>().FirstOrDefault();
@@ -69,6 +70,7 @@ namespace emmVRC.Utils
         private readonly TextMeshProUGUI buttonText;
         private readonly Image buttonImage;
         private readonly Button buttonButton; // lol
+        private readonly Image buttonBadge;
         private readonly VRC.UI.Elements.Tooltips.UiTooltip buttonTooltip;
         public readonly GameObject gameObject;
         
@@ -83,6 +85,7 @@ namespace emmVRC.Utils
             buttonTooltip = gameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
             buttonTooltip.field_Public_String_0 = tooltip;
             buttonImage = gameObject.transform.Find("Icon").GetComponentInChildren<Image>(true);
+            buttonBadge = gameObject.transform.Find("Badge_Close").GetComponentInChildren<Image>(true);
             if (icon != null)
             {
                 buttonImage.sprite = icon;
@@ -122,8 +125,21 @@ namespace emmVRC.Utils
                 buttonImage.overrideSprite = newIcon;
                 buttonImage.gameObject.SetActive(true);
                 if (preserveColor)
+                {
                     buttonImage.color = Color.white;
+                    buttonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+                }
             }
+            
+        }
+        public void SetBadgeIcon(Sprite newBadge)
+        {
+            buttonBadge.sprite = newBadge;
+            buttonBadge.overrideSprite = newBadge;
+        }
+        public void SetBadgeEnabled(bool enabled)
+        {
+            buttonBadge.gameObject.SetActive(enabled);
         }
         public void SetIconColor(Color color)
         {
@@ -414,6 +430,7 @@ namespace emmVRC.Utils
         public void Destroy()
         {
             GameObject.Destroy(headerText.gameObject);
+            GameObject.Destroy(headerGameObject);
             GameObject.Destroy(gameObject);
         }
         public void SetActive(bool state)

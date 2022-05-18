@@ -54,6 +54,7 @@
     <Compile Include="Functions\PlayerHacks\PlayerHistory.cs" />
     <Compile Include="Functions\PlayerHacks\Waypoints.cs" />
     <Compile Include="Functions\UI\ActionMenuTweaks.cs" />
+    <Compile Include="Functions\UI\EmojiFavourites.cs" />
     <Compile Include="Functions\UI\DashboardBar.cs" />
     <Compile Include="Functions\UI\ShortcutMenuCloseOptions.cs" />
     <Compile Include="Functions\WorldHacks\InstanceHistory.cs" />

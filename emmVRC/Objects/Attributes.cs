@@ -8,17 +8,18 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 2, 0, 1); 
+        public static readonly Version Version = new Version(3, 2, 0, 2); 
         public const int LastTestedBuildNumber = 1194;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = true;
-        public const string DateUpdated = "5/16/2022";
+        public const string DateUpdated = "5/18/2022";
         //  "This is an pre-release build! Do not distribute to others."
         //  When writing the changelog, please only include changes for the current minor version, unless a new minor version just came out
         public const string Changelog =
             "<b>v3.2.0</b>\n" +
             "• Added back the Alarm Clock, complete with an infinite number of alarms, and a total rework for UI 2.0\n" +
             "• Added back the Clock, now available in the bottom of the Launch Pad of the Quick Menu\n" +
+            "• Added back Emoji Favorites, and enhanced it with categories built into the settings menu\n" +
             "• Minor reworks to the versioning and changelog system\n" +
             "• Removed Unlimited FPS, as the majority of its' function is now in VRChat itself\n" +
             "• Removed pointless code regarding ranks that are no longer in the game\n\n" +
@@ -35,10 +36,9 @@ namespace emmVRC.Objects
             "• Fixed issues with Oculus, including network login and Risky Functions\n\n" +
             "<b><color=#FF5555>Notice</color></b>\n" +
             "The following features are <i>known</i> to be broken or unavailable, and will be available in a later update:\n" +
-            "- Emoji Favorites\n" +
             "- Keybind configuration via the UI\n";
         public static bool Debug = false;
-        public static readonly Version MinimumMelonLoaderVersion = new Version(0, 5, 2);
+        public static readonly Version MinimumMelonLoaderVersion = new Version(0, 5, 4);
         public static readonly Version MinimumemmVRCLoaderVersion = new Version(1, 2, 0);
         //public static readonly string[] FlavourTextList = {
         //            "Did you know that Tab is also a drink?",

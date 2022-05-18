@@ -359,7 +359,10 @@ namespace emmVRC.Functions.UI
                             }
                             foreach (ActionMenu menu in UnityEngine.Resources.FindObjectsOfTypeAll<ActionMenu>())
                             {
-                                menu.transform.Find("Main/Cursor").GetComponentInChildren<Image>().color = transparent;
+                                Image baseImage = menu.transform.Find("Main/Cursor").GetComponentInChildren<Image>();
+                                if (baseImage == null) return;
+                                //baseImage.sprite = baseImage.sprite.ReplaceTexture(baseImage.sprite.texture.Desaturate());
+                                baseImage.color = transparent;
                                 //menu.cursor.GetComponentInChildren<Image>().color = transparent;
                             }
                         }

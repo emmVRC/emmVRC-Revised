@@ -48,7 +48,7 @@
 //        {
 //            var vrcPlayerFields = Il2CppType.Of<VRCPlayer>().GetFields(Il2CppSystem.Reflection.BindingFlags.Instance | Il2CppSystem.Reflection.BindingFlags.Public | Il2CppSystem.Reflection.BindingFlags.NonPublic);
 //            if (emojiGenField == null || emojisField == null)
-//            { 
+//            {
 //                foreach (var f in vrcPlayerFields)
 //                {
 //                    var il2CppFields = f.FieldType.GetFields(Il2CppSystem.Reflection.BindingFlags.Instance | Il2CppSystem.Reflection.BindingFlags.Public | Il2CppSystem.Reflection.BindingFlags.NonPublic);
@@ -64,7 +64,8 @@
 //                            break;
 //                        }
 //                    }
-//                } }
+//                }
+//            }
 //            var emojiGen = emojiGenField.GetValue(VRCPlayer.field_Internal_Static_VRCPlayer_0);
 //            return emojisField.GetValue(emojiGen).Cast<Il2CppReferenceArray<GameObject>>().ToList();
 //        }
@@ -131,5 +132,5 @@
 //            CurrentEmojiMenu.OpenMenu();
 //        }
 //    }
-    
+
 //}

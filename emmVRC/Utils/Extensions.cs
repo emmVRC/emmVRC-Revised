@@ -270,5 +270,24 @@ namespace emmVRC.Utils
             return ((Il2CppSystem.Object)_apiUserToIUser.Invoke(DataModelManager.field_Private_Static_DataModelManager_0.field_Private_DataModelCache_0, new object[3] { value.id, value, false })).Cast<IUser>();
         }
         #endregion
+        #region VRCPlayer SpawnEmoji
+        private static MethodInfo ourSpawnEmojiMethod;
+        public static MethodInfo SpawnEmojiMethod
+        {
+            get
+            {
+                if (ourSpawnEmojiMethod != null) return ourSpawnEmojiMethod;
+                var targetMethod = typeof(VRCPlayer).GetMethods()
+                    .FirstOrDefault(it => it != null && it.GetParameters().Length == 1 && it.GetParameters().First().ParameterType == typeof(int) && XrefScanner.XrefScan(it).Any(jt => jt.Type == XrefType.Global && jt.ReadAsObject() != null && jt.ReadAsObject().ToString().Contains("SpawnEmojiRPC")));
+                ourSpawnEmojiMethod = targetMethod;
+                return ourSpawnEmojiMethod;
+            }
+        }
+
+        public static void SpawnEmoji(this VRCPlayer player, int emojiId)
+        {
+            SpawnEmojiMethod.Invoke(player, new object[] { emojiId });
+        }
+        #endregion
     }
 }
