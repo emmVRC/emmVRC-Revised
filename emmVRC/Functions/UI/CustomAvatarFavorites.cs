@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using emmVRC.Network;
 using emmVRC.Network.Object;
 using emmVRC.Objects.ModuleBases;
+using emmVRC.TinyJSON;
 using MelonLoader;
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib.XrefScans;
@@ -102,7 +103,7 @@ namespace emmVRC.Functions.UI
                 try
                 {
                     var (httpStatus, response) =
-                        await Request.AttemptRequest(HttpMethod.Get, $"/api/avatar/info/{apiAvatar.id}");
+                        await Request.AttemptRequest(HttpMethod.Get, $"/avatar/info/{apiAvatar.id}");
 
                     if (httpStatus == HttpStatusCode.OK)
                     {
@@ -224,10 +225,10 @@ namespace emmVRC.Functions.UI
                     {
                         UnfavoriteAvatar(apiAvatar).NoAwait(nameof(UnfavoriteAvatar));
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    }), "No", new System.Action(() =>
+                    }), "No", () =>
                     {
                         VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup();
-                    }));
+                    });
                 }
             }));
 
@@ -240,34 +241,8 @@ namespace emmVRC.Functions.UI
                 if (a.name != "FavoriteActionText" && a.name != "Horizontal")
                     a.gameObject.SetActive(false);
             });
-            /*
-            FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountSpacingText").gameObject.SetActive(false);
-            FavoriteButtonNew.transform.Find("Horizontal/FavoritesCurrentCountText").gameObject.SetActive(false);
-            FavoriteButtonNew.transform.Find("Horizontal/FavoritesCountDividerText").gameObject.SetActive(false);
-            FavoriteButtonNew.transform.Find("Horizontal/FavoritesMaxAvailableText").gameObject.SetActive(false);*/
 
-
-            //ShowAuthorButton = UnityEngine.Object.Instantiate<GameObject>(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Fallback Hide Button").gameObject, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
-            //ShowAuthorButton.GetComponentInChildren<Text>().text = "";
-            //ShowAuthorButton.GetComponent<RectTransform>().sizeDelta = new Vector2(82f, 82f);
-            //ShowAuthorButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(250f, -25f);
-            //GameObject.Instantiate(Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/AvatarDetails Button/PlatformIcon").gameObject, ShowAuthorButton.transform);
-            //ShowAuthorButton.transform.Find("PlatformIcon(Clone)").gameObject.SetActive(true);
-            //ShowAuthorButton.transform.Find("PlatformIcon(Clone)").GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            //MelonLoader.MelonCoroutines.Start(ShowAuthorIconUpdate());
-            //Button ShowAuthorButtonButton = ShowAuthorButton.GetComponent<Button>();
-            //ShowAuthorButtonButton.onClick = new Button.ButtonClickedEvent();
-            //ShowAuthorButtonButton.onClick.AddListener(new System.Action(() =>
-            //{
-            //    APIUser.FetchUser(pageAvatar.GetComponent<PageAvatar>().field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.authorId, new System.Action<APIUser>((VRC.Core.APIUser usr) => { emmVRCLoader.Logger.LogDebug(usr.id); UIManagerImpl.prop_UIManagerImpl_0.Method_Public_Void_IUser_0(usr.ToIUser()); }), new System.Action<string>((string str) => {
-            //        emmVRCLoader.Logger.LogError("API returned an error: " + str);
-            //    }));
-            //}));
-            //if (!NetworkConfig.Instance.APICallsAllowed)
-            //    ShowAuthorButton.SetActive(false);
-
-            GameObject oldPublicAvatarList;
-            oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
+            var oldPublicAvatarList = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
             PublicAvatarList.transform.SetAsFirstSibling();
 
@@ -423,18 +398,8 @@ namespace emmVRC.Functions.UI
                 Vector3 position = ((Vector3)inf.GetValue(currPageAvatar));
                 inf.SetValue(currPageAvatar, new Vector3(position.x, position.y + 80f, position.z));
             }
-            /*pageAvatar.transform.Find("XplatHide Button").GetComponent<Button>().onClick.AddListener(new System.Action(() => {
-                pageAvatar.transform.Find("Select Button").GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 80f);
-                pageAvatar.transform.Find("AvatarPreviewBase/FallbackRoot").transform.localPosition += new Vector3(0f, 80f, 0f);
-            }));
-            pageAvatar.transform.Find("Select Button").GetComponent<Button>().onClick.AddListener(new System.Action(() => {
-                pageAvatar.transform.Find("Select Button").GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 80f);
-                pageAvatar.transform.Find("AvatarPreviewBase/FallbackRoot").transform.localPosition += new Vector3(0f, 80f, 0f);
-            }));*/
-
 
             LoadedAvatars = new List<ApiAvatar>();
-
             SearchedAvatars = new List<ApiAvatar>();
 
             Components.EnableDisableListener pageAvatarListener = pageAvatar.AddComponent<Components.EnableDisableListener>();
@@ -492,92 +457,135 @@ namespace emmVRC.Functions.UI
             }
         }
 
-        public static async Task FavoriteAvatar(ApiAvatar avtr)
+        public static async Task FavoriteAvatar(ApiAvatar apiAvatar)
         {
-            if (LoadedAvatars.ToArray().ToList().FindIndex(a => a.id == avtr.id) == -1)
+            var loadedCopy = LoadedAvatars.ToArray().ToList();
+
+            if (loadedCopy.All(a => a.id != apiAvatar.id))
             {
-                LoadedAvatars.Insert(0, avtr);
-                Avatar serAvtr = new Avatar(avtr);
+                var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Post, "/avatar", new Avatar(apiAvatar));
 
-                try
+                switch (httpStatus)
                 {
-                    await Request.AttemptRequest(HttpMethod.Post, "/api/avatar", serAvtr);
+                    case HttpStatusCode.OK:
+                    {
+                        LoadedAvatars.Insert(0, apiAvatar);
+                        
+                        if (!Searching)
+                        {
+                            currentPage = 0;
+                            MelonCoroutines.Start(JumpToStart());
+                            MelonCoroutines.Start(RefreshMenu(0.5f));
+                        }
+                        break;
+                    }
+                    case HttpStatusCode.InternalServerError:
+                    {
+                        await emmVRC.AwaitUpdate.Yield();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.",
+                            "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                        break;
+                    }
+                    default:
+                    {
+                        try
+                        {
+                            var errorResponse = Decoder.Decode(response).Make<Error>();
+                        
+                            await emmVRC.AwaitUpdate.Yield();
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", errorResponse.error, 
+                                "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                        }
+                        catch (Exception)
+                        {
+                            await emmVRC.AwaitUpdate.Yield();
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", 
+                                "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        public static async Task UnfavoriteAvatar(ApiAvatar apiAvatar)
+        {
+            
 
+            var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Post, "/avatar", new Avatar(apiAvatar));
+
+            switch (httpStatus)
+            {
+                case HttpStatusCode.OK:
+                {
+                    if (LoadedAvatars.Contains(apiAvatar))
+                        LoadedAvatars.Remove(apiAvatar);
+                    
                     if (!Searching)
                     {
                         currentPage = 0;
-                        MelonLoader.MelonCoroutines.Start(JumpToStart());
-                        MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+                        MelonCoroutines.Start(JumpToStart());
+                        MelonCoroutines.Start(RefreshMenu(0.5f));
                     }
+                    break;
                 }
-                catch
+                case HttpStatusCode.InternalServerError:
                 {
                     await emmVRC.AwaitUpdate.Yield();
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                    throw;
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.",
+                        "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    break;
                 }
-            }
-            else
-            {
-                emmVRCLoader.Logger.LogDebug("Tried to add an avatar that already exists...");
-            }
-        }
-        public static async Task UnfavoriteAvatar(ApiAvatar avtr)
-        {
-            if (LoadedAvatars.Contains(avtr))
-                LoadedAvatars.Remove(avtr);
-
-            try
-            {
-                await Request.AttemptRequest(HttpMethod.Delete, "/api/avatar", new Avatar(avtr));
-                if (!Searching)
+                default:
                 {
-                    await emmVRC.AwaitUpdate.Yield();
-
-                    MelonLoader.MelonCoroutines.Start(JumpToStart());
-                    MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+                    try
+                    {
+                        var errorResponse = Decoder.Decode(response).Make<Error>();
+                    
+                        await emmVRC.AwaitUpdate.Yield();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", errorResponse.error, 
+                            "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    }
+                    catch (Exception)
+                    {
+                        await emmVRC.AwaitUpdate.Yield();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", 
+                            "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    }
+                    break;
                 }
-            }
-            catch
-            {
-                await emmVRC.AwaitUpdate.Yield();
-
-                VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                throw;
             }
         }
         public static async Task PopulateList()
         {
             LoadedAvatars = new List<ApiAvatar>();
-            Avatar[] avatarArray = null;
+            
+            var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Get, "/avatar");
 
-            try
+            switch (httpStatus)
             {
-                var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Get, "/api/avatar");
-                avatarArray = TinyJSON.Decoder.Decode(response).Make<Avatar[]>();
-                await emmVRC.AwaitUpdate.Yield();
-
-                if (avatarArray != null)
+                case HttpStatusCode.OK:
                 {
-                    foreach (Avatar avtr in avatarArray)
+                    var responseData = Decoder.Decode(response).Make<Avatar[]>();
+
+                    await emmVRC.AwaitUpdate.Yield();
+                    foreach (var avatar in responseData)
                     {
-                        LoadedAvatars.Add(avtr.ToApiAvatar());
+                        LoadedAvatars.Add(avatar.ToApiAvatar());
                     }
-                    MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
+
+                    break;
+                }
+                default:
+                {
+                    await emmVRC.AwaitUpdate.Yield();
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network", Core.Resources.errorSprite, 
+                        "emmVRC Avatar Favorites list failed to load. Please check your internet connection.", true, 
+                        false, null, "", "", true, null, "Dismiss"));
+                    break;
                 }
             }
-            catch
-            {
-                await emmVRC.AwaitUpdate.Yield();
-
-                Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network", Functions.Core.Resources.errorSprite, "emmVRC Avatar Favorites list failed to load. Please check your internet connection.", true, false, null, "", "", true, null, "Dismiss"));
-                error = true;
-                errorWarned = true;
-
-                throw;
-            }
         }
-        public static System.Collections.IEnumerator RefreshMenu(float delay)
+        public static IEnumerator RefreshMenu(float delay)
         {
             if (NewAvatarList.scrollRect != null)
             {
@@ -675,7 +683,7 @@ namespace emmVRC.Functions.UI
                 }
             }
         }
-        public static System.Collections.IEnumerator JumpToStart()
+        public static IEnumerator JumpToStart()
         {
             if (Configuration.JSONConfig.AvatarFavoritesJumpToStart)
             {
@@ -686,7 +694,7 @@ namespace emmVRC.Functions.UI
                 }
             }
         }
-        public static System.Collections.IEnumerator SearchAvatarsAfterDelay(string query)
+        public static IEnumerator SearchAvatarsAfterDelay(string query)
         {
             yield return new WaitForSecondsRealtime(1f);
             if (Configuration.JSONConfig.AvatarFavoritesJumpToStart)
@@ -701,61 +709,82 @@ namespace emmVRC.Functions.UI
         }
         public static async Task SearchAvatars(string query)
         {
-            if (!Configuration.JSONConfig.AvatarFavoritesEnabled || !Configuration.JSONConfig.emmVRCNetworkEnabled || !NetworkClient.HasJwtToken)
+            if (!Configuration.JSONConfig.emmVRCNetworkEnabled)
+                return;
+
+            if (!Configuration.JSONConfig.AvatarFavoritesEnabled)
+                return;
+
+            if (!NetworkClient.HasJwtToken)
+                return;
+
+            if (waitingForSearch)
             {
                 await emmVRC.AwaitUpdate.Yield();
+                VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowStandardPopup("emmVRC",
+                    "Please wait for your current search\nto finish before starting a new one.", 
+                    "Okay", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
             }
-            if (waitingForSearch)
-                VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Please wait for your current search\nto finish before starting a new one.", "Okay", () => { VRCUiPopupManager.prop_VRCUiPopupManager_0.HideCurrentPopup(); });
-            else
+
+            await emmVRC.AwaitUpdate.Yield();
+            avText.GetComponentInChildren<Text>().text = "Searching. Please wait...";
+            SearchedAvatars = new List<ApiAvatar>();
+
+            waitingForSearch = true;
+
+            var (httpStatus, result) =
+                await Request.AttemptRequest(HttpMethod.Get, $"/avatar/search?q={WebUtility.UrlEncode(query)}");
+
+            waitingForSearch = false;
+
+            switch (httpStatus)
             {
-                avText.GetComponentInChildren<Text>().text = "Searching. Please wait...";
-                emmVRCLoader.Logger.LogDebug("Clearing current search avatars...");
-                SearchedAvatars.Clear();
-                Avatar[] avatarArray = null;
-
-                waitingForSearch = true;
-                try
+                case HttpStatusCode.OK:
                 {
-                    var (httpStatus, result) = await Request.AttemptRequest(HttpMethod.Post, "/api/avatar/search",
-                        new System.Collections.Generic.Dictionary<string, string> { ["query"] = query });
+                    var searchResponse = Decoder.Decode(result).Make<Avatar[]>();
+                    
+                    await emmVRC.AwaitUpdate.Yield();
+                    foreach (var avatar in searchResponse)
+                    {
+                        SearchedAvatars.Add(avatar.ToApiAvatar());
+                    }
 
-                    if (httpStatus != HttpStatusCode.OK)
-                    {
-                        await emmVRC.AwaitUpdate.Yield();
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                    }
-                    else
-                    {
-                        avatarArray = TinyJSON.Decoder.Decode(result).Make<Avatar[]>();
-                        await emmVRC.AwaitUpdate.Yield();
-                        if (avatarArray != null)
-                            foreach (Avatar avatar in avatarArray)
-                                SearchedAvatars.Add(avatar.ToApiAvatar());
-                        currentPage = 0;
-                        Searching = true;
-                        MelonLoader.MelonCoroutines.Start(RefreshMenu(0.1f));
-                    }
+                    currentPage = 0;
+                    Searching = true;
+                    break;
                 }
-                catch
+                case HttpStatusCode.InternalServerError:
                 {
                     await emmVRC.AwaitUpdate.Yield();
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
-                    throw;
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", 
+                        "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    break;
                 }
-                finally
+                default:
                 {
-                    waitingForSearch = false;
-
-                    await emmVRC.AwaitUpdate.Yield();
-
-                    if (NewAvatarList.expandButton.gameObject.transform.Find("ToggleIcon").GetComponentInChildren<Image>().sprite == NewAvatarList.expandSprite)
-                        NewAvatarList.ToggleExtend();
+                    try
+                    {
+                        var errorResponse = Decoder.Decode(result).Make<Error>();
+                        
+                        await emmVRC.AwaitUpdate.Yield();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", errorResponse.error, 
+                            "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    }
+                    catch (Exception)
+                    {
+                        await emmVRC.AwaitUpdate.Yield();
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", 
+                        "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
+                    }
+                    
+                    break;
                 }
-
-
             }
+            
+            await emmVRC.AwaitUpdate.Yield();
+            MelonCoroutines.Start(RefreshMenu(0.1f));
         }
+        
         public void OnUpdate()
         {
 
@@ -790,38 +819,55 @@ namespace emmVRC.Functions.UI
 
         public static async Task CheckForAvatarPedestals()
         {
-            if (!NetworkClient.HasJwtToken || APIUser.CurrentUser == null || !Configuration.JSONConfig.SubmitAvatarPedestals || !NetworkClient.networkConfiguration.AvatarPedestalScansAllowed) return;
-            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
-            {
-                await emmVRC.AwaitUpdate.Yield();
-            }
-            ApiWorld currentWorld = RoomManager.field_Internal_Static_ApiWorld_0;
-            if (currentWorld.IsPublicPublishedWorld)
-            {
-                foreach (AvatarPedestal pedestal in UnityEngine.Resources.FindObjectsOfTypeAll<AvatarPedestal>())
-                {
-                    if (pedestal != null && pedestal.field_Private_ApiAvatar_0 != null && pedestal.field_Private_ApiAvatar_0.releaseStatus == "public")
-                    {
-                        await emmVRC.AwaitUpdate.Yield();
-                        Avatar serAvtr = new Avatar(pedestal.field_Private_ApiAvatar_0);
-                        
-                        if (string.IsNullOrWhiteSpace(serAvtr.avatar_asset_url))
-                            continue;
+            if (!NetworkClient.networkConfiguration.AvatarPedestalScansAllowed)
+                return;
+            
+            if (!Configuration.JSONConfig.emmVRCNetworkEnabled)
+                return;
+            
+            if (!NetworkClient.HasJwtToken)
+                return;
 
-                        emmVRCLoader.Logger.LogDebug("Found pedestal " + pedestal.field_Private_ApiAvatar_0.name + ", putting...");
-                        try
-                        {
-                            await Request.AttemptRequest(HttpMethod.Put, "/api/avatar", serAvtr);
-                        }
-                        catch
-                        {
-                            await emmVRC.AwaitUpdate.Yield();
-                            emmVRCLoader.Logger.LogDebug("Could not put avatar");
-                            throw;
-                        }
-                        await Task.Delay(500);
-                    }
+            if (!Configuration.JSONConfig.SubmitAvatarPedestals)
+                return;
+            
+            while (RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                await emmVRC.AwaitUpdate.Yield();
+            
+            var currentWorld = RoomManager.field_Internal_Static_ApiWorld_0;
+            if (!currentWorld.IsPublicPublishedWorld)
+                return;
+
+            foreach (var pedestal in Resources.FindObjectsOfTypeAll<AvatarPedestal>())
+            {
+                if (pedestal == null)
+                    continue;
+                
+                await emmVRC.AwaitUpdate.Yield();
+                var apiAvatar = pedestal.field_Private_ApiAvatar_0;
+                if (apiAvatar == null)
+                    continue;
+
+                if (apiAvatar.releaseStatus != "public")
+                    continue;
+
+                if (string.IsNullOrEmpty(apiAvatar.assetUrl))
+                    continue;
+                
+                Logger.LogDebug($"Found pedestal {apiAvatar.name}, putting...");
+                
+                var (httpStatus, result) = await Request.AttemptRequest(HttpMethod.Put, $"/avatar", new Avatar(apiAvatar));
+
+                switch (httpStatus)
+                {
+                    case HttpStatusCode.OK:
+                        break;
+                    default:
+                        Logger.LogDebug("Failed to submit avatar.");
+                        break;
                 }
+
+                await Task.Delay(500);
             }
         }
         
@@ -832,26 +878,19 @@ namespace emmVRC.Functions.UI
             
             try
             {
-                var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Get, "/api/avatar/export");
+                var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Get, "/avatar/export");
 
                 if (httpStatus == HttpStatusCode.OK)
                 {
-                    var decodedExport = TinyJSON.Decoder.Decode(response).Make<ExportedAvatar[]>();
-                    File.WriteAllText(Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"),
-                        TinyJSON.Encoder.Encode(decodedExport, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));
+                    var decodedExport = Decoder.Decode(response).Make<ExportedAvatar[]>();
+                    File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"),
+                        Encoder.Encode(decodedExport, EncodeOptions.PrettyPrint | EncodeOptions.NoTypeHints));
                 }
             }
             catch (Exception ex)
             {
                 Logger.LogError($"There was an issue exporting your avatars.\n{ex}");
             }
-            
-            /*System.Collections.Generic.List<ExportedAvatar> exportedAvatars = new System.Collections.Generic.List<ExportedAvatar>();
-            foreach (ApiAvatar avtr in LoadedAvatars)
-            {
-                exportedAvatars.Add(new ExportedAvatar { avatar_id = avtr.id, avatar_name = avtr.name });
-            }
-            System.IO.File.WriteAllText(System.IO.Path.Combine(System.Environment.CurrentDirectory, "UserData/emmVRC/ExportedList.json"), TinyJSON.Encoder.Encode(exportedAvatars, TinyJSON.EncodeOptions.PrettyPrint | TinyJSON.EncodeOptions.NoTypeHints));*/
         }
     }
 }

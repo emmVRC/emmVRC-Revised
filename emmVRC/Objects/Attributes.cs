@@ -8,15 +8,19 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 2, 0, 2); 
+        public static readonly Version Version = new Version(3, 2, 0, 3); 
         public const int LastTestedBuildNumber = 1194;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = true;
-        public const string DateUpdated = "5/18/2022";
+        public const string DateUpdated = "5/21/2022";
         //  "This is an pre-release build! Do not distribute to others."
         //  When writing the changelog, please only include changes for the current minor version, unless a new minor version just came out
         public const string Changelog =
+            
             "<b>v3.2.0</b>\n" +
+            "• Completely new network backend\n" +
+            "• Implemented in game menu to reset pin code\n" +
+            "• Avatar favorites menu will no longer silently discard errors\n" +
             "• Added back the Alarm Clock, complete with an infinite number of alarms, and a total rework for UI 2.0\n" +
             "• Added back the Clock, now available in the bottom of the Launch Pad of the Quick Menu\n" +
             "• Added back Emoji Favorites, and enhanced it with categories built into the settings menu\n" +

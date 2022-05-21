@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using emmVRC.Objects.ModuleBases;
+using emmVRCLoader;
 
 namespace emmVRC.Functions.Other
 {
@@ -10,10 +11,7 @@ namespace emmVRC.Functions.Other
     {
         public override void OnApplicationStart()
         {
-            MD5 md5 = MD5.Create();
-            System.IO.FileStream libStream = System.IO.File.OpenRead(Path.Combine(Environment.CurrentDirectory, "Dependencies/emmVRC.dll"));
-            string md5hash = BitConverter.ToString(md5.ComputeHash(libStream)).Replace("-", "").ToLower();
-            emmVRCLoader.Logger.Log("emmVRC module: " + md5hash);
+            emmVRCLoader.Logger.Log("emmVRC module: " + HashUtil.GetSHA256("Dependencies/emmVRC.dll"));
         }
     }
 }
