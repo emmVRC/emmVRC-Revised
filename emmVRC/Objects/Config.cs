@@ -10,6 +10,9 @@ namespace emmVRC.Objects
         // emmVRC Version log
         public string LastVersion = "0.0.0";
 
+        // emmVRC Language
+        public int LanguageOverride = -1;
+
         // Feature options
         public bool RiskyFunctionsEnabled = false;
         public bool GlobalDynamicBonesEnabled = true;

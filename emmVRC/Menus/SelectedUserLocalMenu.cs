@@ -57,7 +57,7 @@ namespace emmVRC.Menus
             };
             favouriteAvatarButton = new SimpleSingleButton(selectedUserGroup, "Favorite\nAvatar", () => {
                 if (!Utils.PlayerUtils.DoesUserHaveVRCPlus())
-                    ButtonAPI.GetQuickMenuInstance().ShowOKDialog("VRChat Plus Required", Objects.Attributes.VRCPlusMessage);
+                    ButtonAPI.GetQuickMenuInstance().ShowOKDialog("VRChat Plus Required", Functions.Core.Localization.currentLanguage.VRCPlusMessage);
                 else
                 {
                     bool flag = false;

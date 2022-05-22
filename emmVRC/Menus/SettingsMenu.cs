@@ -77,13 +77,13 @@ namespace emmVRC.Menus
 
         private static ButtonGroup keybindsGroup;
         private static ToggleButton keybindsToggle;
-        private static TextButton flightKeybindButton;
-        private static TextButton noclipKeybindButton;
-        private static TextButton speedKeybindButton;
-        private static TextButton thirdPersonKeybindButton;
-        private static TextButton hudEnabledKeybindButton;
-        private static TextButton respawnKeybindButton;
-        private static TextButton goHomeKeybindButton;
+        private static SimpleSingleButton flightKeybindButton;
+        private static SimpleSingleButton noclipKeybindButton;
+        private static SimpleSingleButton speedKeybindButton;
+        private static SimpleSingleButton thirdPersonKeybindButton;
+        private static SimpleSingleButton hudEnabledKeybindButton;
+        private static SimpleSingleButton respawnKeybindButton;
+        private static SimpleSingleButton goHomeKeybindButton;
 
         private static bool _initialized = false;
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -302,8 +302,34 @@ namespace emmVRC.Menus
                 Configuration.WriteConfigOption("DisableAvatarOther", !val);
             }, "Disable the \"Other\" list in the Avatar Menu", "Enable the \"Other\" list in the Avatar Menu");
 
+            keybindsGroup = new ButtonGroup(settingsPage, "Keybinds");
+            keybindsToggle = new ToggleButton(keybindsGroup, "Keybinds", (bool val) => {
+                Configuration.WriteConfigOption("EnableKeybinds", val);
+            }, "Enable emmVRC keybinds for features", "Disable emmVRC keybinds for features");
+            flightKeybindButton = new SimpleSingleButton(keybindsGroup, "Flight\n", () => {
+                KeybindAdjustmentMenu.ShowMenu(Configuration.JSONConfig.FlightKeybind, (int[] newKeybind) => { Configuration.WriteConfigOption("FlightKeybind", newKeybind); OpenMenu(); });
+            }, "Configure the keybind for toggling flight");
+            noclipKeybindButton = new SimpleSingleButton(keybindsGroup, "Noclip\n", () => {
+                KeybindAdjustmentMenu.ShowMenu(Configuration.JSONConfig.NoclipKeybind, (int[] newKeybind) => { Configuration.WriteConfigOption("NoclipKeybind", newKeybind); OpenMenu(); });
+            }, "Configure the keybind for toggling noclip");
+            speedKeybindButton = new SimpleSingleButton(keybindsGroup, "Speed\n", () => {
+                KeybindAdjustmentMenu.ShowMenu(Configuration.JSONConfig.SpeedKeybind, (int[] newKeybind) => { Configuration.WriteConfigOption("SpeedKeybind", newKeybind); OpenMenu(); });
+            }, "Configure the keybind for toggling speed");
+            new ButtonGroup(settingsPage, "");
+            thirdPersonKeybindButton = new SimpleSingleButton(keybindsGroup, "Third Person\n", () => {
+                KeybindAdjustmentMenu.ShowMenu(Configuration.JSONConfig.ThirdPersonKeybind, (int[] newKeybind) => { Configuration.WriteConfigOption("ThirdPersonKeybind", newKeybind); OpenMenu(); });
+            }, "Configure the keybind for toggling third person");
+            hudEnabledKeybindButton = new SimpleSingleButton(keybindsGroup, "HUD Toggle\n", () => {
+                KeybindAdjustmentMenu.ShowMenu(Configuration.JSONConfig.ToggleHUDEnabledKeybind, (int[] newKeybind) => { Configuration.WriteConfigOption("ToggleHUDEnabledKeybind", newKeybind); OpenMenu(); });
+            }, "Configure the keybind for toggling the emmVRC HUD");
+            respawnKeybindButton = new SimpleSingleButton(keybindsGroup, "Respawn\n", () => {
+                KeybindAdjustmentMenu.ShowMenu(Configuration.JSONConfig.RespawnKeybind, (int[] newKeybind) => { Configuration.WriteConfigOption("RespawnKeybind", newKeybind); OpenMenu(); });
+            }, "Configure the keybind for respawning");
+            goHomeKeybindButton = new SimpleSingleButton(keybindsGroup, "Go Home\n", () => {
+                KeybindAdjustmentMenu.ShowMenu(Configuration.JSONConfig.GoHomeKeybind, (int[] newKeybind) => { Configuration.WriteConfigOption("GoHomeKeybind", newKeybind); OpenMenu(); });
+            }, "Configure the keybind for going back to your home world");
 
-            _initialized = true;
+        _initialized = true;
         }
         private static void OpenMenu()
         {
@@ -367,6 +393,16 @@ namespace emmVRC.Menus
             avatarLegacyListToggle.SetToggleState(!Configuration.JSONConfig.DisableAvatarLegacy);
             avatarPublicListToggle.SetToggleState(!Configuration.JSONConfig.DisableAvatarPublic);
             avatarOtherListToggle.SetToggleState(!Configuration.JSONConfig.DisableAvatarOther);
+
+            keybindsToggle.SetToggleState(Configuration.JSONConfig.EnableKeybinds);
+            flightKeybindButton.SetText("Flight\n<color=white>"+ ((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1] != UnityEngine.KeyCode.None ? (Libraries.KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[1])) + "+" : "") + ((UnityEngine.KeyCode)Configuration.JSONConfig.FlightKeybind[0]).ToString() + "</color>");
+            noclipKeybindButton.SetText("Noclip\n<color=white>" + ((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1] != UnityEngine.KeyCode.None ? (Libraries.KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[1])) + "+" : "") + ((UnityEngine.KeyCode)Configuration.JSONConfig.NoclipKeybind[0]).ToString() + "</color>");
+            speedKeybindButton.SetText("Speed\n<color=white>" + ((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1] != UnityEngine.KeyCode.None ? (Libraries.KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[1])) + "+" : "") + ((UnityEngine.KeyCode)Configuration.JSONConfig.SpeedKeybind[0]).ToString() + "</color>");
+            thirdPersonKeybindButton.SetText("Third Person\n<color=white>" + ((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1] != UnityEngine.KeyCode.None ? (Libraries.KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[1])) + "+" : "") + ((UnityEngine.KeyCode)Configuration.JSONConfig.ThirdPersonKeybind[0]).ToString() + "</color>");
+            hudEnabledKeybindButton.SetText("HUD Toggle\n<color=white>" + ((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] != UnityEngine.KeyCode.None ? (Libraries.KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1])) + "+" : "") + ((UnityEngine.KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]).ToString() + "</color>");
+            respawnKeybindButton.SetText("Respawn\n<color=white>" + ((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1] != UnityEngine.KeyCode.None ? (Libraries.KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[1])) + "+" : "") + ((UnityEngine.KeyCode)Configuration.JSONConfig.RespawnKeybind[0]).ToString() + "</color>");
+            goHomeKeybindButton.SetText("Go Home\n<color=white>" + ((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1] != UnityEngine.KeyCode.None ? (Libraries.KeyCodeConversion.Stringify((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[1])) + "+" : "") + ((UnityEngine.KeyCode)Configuration.JSONConfig.GoHomeKeybind[0]).ToString() + "</color>");
+            
         }
     }
 }

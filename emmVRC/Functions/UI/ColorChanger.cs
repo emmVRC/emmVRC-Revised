@@ -22,6 +22,9 @@ namespace emmVRC.Functions.UI
         private static bool setupSkybox = false;
         private static GameObject loadingBackground;
         private static GameObject initialLoadingBackground;
+        private static Dictionary<UnityEngine.Object, Color> originalColours;
+        private static bool collectingColours = false;
+
         public override void OnUiManagerInit()
         {
                 Configuration.onConfigUpdated.Add(new System.Collections.Generic.KeyValuePair<string, Action>("UIColorChangingEnabled", ApplyIfApplicable));
@@ -33,6 +36,11 @@ namespace emmVRC.Functions.UI
         }
         public static void ApplyIfApplicable()
         {
+            if (originalColours == null)
+            {
+                originalColours = new Dictionary<UnityEngine.Object, Color>();
+                collectingColours = true;
+            }
             Color color = Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : Configuration.defaultMenuColor();
             Color colorT = new Color(color.r, color.g, color.b, 0.7f);
             Color dimmer = new Color(color.r / 0.75f, color.g / 0.75f, color.b / 0.75f);
@@ -166,18 +174,44 @@ namespace emmVRC.Functions.UI
                 normalColorText.Add(quickMenu.transform.Find("Popups/LoadingPopup/MirroredElements/ProgressPanel (1)/Parent_Loading_Progress/Loading Elements/txt_LOADING_Size").GetComponentInChildren<Text>(true));
             }
 
-            emmVRCLoader.Logger.LogDebug("Coloring normal elements...");
-            foreach (Image img in normalColorImage)
-                img.color = colorT;
-            emmVRCLoader.Logger.LogDebug("Coloring lighter elements...");
-            foreach (Image img in dimmerColorImage)
-                img.color = dimmerT;
-            emmVRCLoader.Logger.LogDebug("Coloring darker elements...");
-            foreach (Image img in darkerColorImage)
-                img.color = darkerT;
-            emmVRCLoader.Logger.LogDebug("Coloring text elements...");
-            foreach (Text txt in normalColorText)
-                txt.color = color;
+            if (collectingColours)
+            {
+                foreach (Image img in normalColorImage)
+                    originalColours.Add(img, img.color);
+                foreach (Image img in dimmerColorImage)
+                    originalColours.Add(img, img.color);
+                foreach (Image img in darkerColorImage)
+                    originalColours.Add(img, img.color);
+                foreach (Text txt in normalColorText)
+                    originalColours.Add(txt, txt.color);
+            }
+
+            if (Configuration.JSONConfig.UIColorChangingEnabled)
+            {
+                emmVRCLoader.Logger.LogDebug("Coloring normal elements...");
+                foreach (Image img in normalColorImage)
+                    img.color = colorT;
+                emmVRCLoader.Logger.LogDebug("Coloring lighter elements...");
+                foreach (Image img in dimmerColorImage)
+                    img.color = dimmerT;
+                emmVRCLoader.Logger.LogDebug("Coloring darker elements...");
+                foreach (Image img in darkerColorImage)
+                    img.color = darkerT;
+                emmVRCLoader.Logger.LogDebug("Coloring text elements...");
+                foreach (Text txt in normalColorText)
+                    txt.color = color;
+            }
+            else if (!Configuration.JSONConfig.UIColorChangingEnabled && originalColours != null)
+            {
+                foreach (Image img in normalColorImage)
+                    img.color = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(Image) && (Image)a.Key == img).Value;
+                foreach (Image img in dimmerColorImage)
+                    img.color = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(Image) && (Image)a.Key == img).Value;
+                foreach (Image img in darkerColorImage)
+                    img.color = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(Image) && (Image)a.Key == img).Value;
+                foreach (Text txt in normalColorText)
+                    txt.color = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(Text) && (Text)a.Key == txt).Value;
+            }
 
             if (!setupSkybox && !Functions.Core.ModCompatibility.BetterLoadingScreen)
             {
@@ -219,8 +253,18 @@ namespace emmVRC.Functions.UI
                 selectedColor = color / 1.5f
             };
             color.a = 0.9f;
-            if (UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().Count != 0)
-                UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().FirstOrDefault().highlightColor = color;
+            HighlightsFXStandalone highlights = UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>()?.FirstOrDefault();
+            if (highlights != null && collectingColours) { 
+                originalColours.Add(highlights, highlights.highlightColor);
+            }
+            if (Configuration.JSONConfig.UIColorChangingEnabled)
+            {
+                highlights.highlightColor = color;
+            }
+            else if (!Configuration.JSONConfig.UIColorChangingEnabled && originalColours != null)
+            {
+                highlights.highlightColor = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(HighlightsFXStandalone)).Value;
+            }
             try
             {
                 GameObject HudVoiceIndicator = UnityEngine.Resources.FindObjectsOfTypeAll<FadeCycleEffect>().First(a => a.gameObject.name == "VoiceDotDisabled").transform.parent.gameObject;
@@ -279,7 +323,7 @@ namespace emmVRC.Functions.UI
                             pressedColor = Color.gray,
                             fadeDuration = 0.1f
                         };
-                        quickMenu.GetComponentsInChildren<Transform>(true).FirstOrDefault(x => x.name == "Row:4 Column:0").GetComponent<Button>().colors = buttonTheme;
+                        //quickMenu.GetComponentsInChildren<Transform>(true).FirstOrDefault(x => x.name == "Row:4 Column:0").GetComponent<Button>().colors = buttonTheme;
 
                         color.a = .5f;
                         darker.a = 1f;
@@ -292,48 +336,48 @@ namespace emmVRC.Functions.UI
                             if (btn.gameObject.GetComponentsInChildren<Transform>(true).Any(a => a.name == "emmVRCDoNotColor") || btn.name != "SubscribeToAddPhotosButton" && btn.name != "SupporterButton" && btn.name != "ModerateButton" && btn.transform.parent.name != "VRC+PageTab" && (btn.name != "ReportButton" || btn.transform.parent.name.Contains("WorldInfo")))
                                 btn.colors = buttonTheme;
 
-                        quickMenu = GameObject.Find("QuickMenu");
-                        foreach (Button btn in quickMenu.GetComponentsInChildren<Button>(true))
-                        {
-                            if (btn.name != "rColorButton" && btn.name != "gColorButton" && btn.name != "bColorButton" && btn.name != "ColorPickPreviewButton")
-                                btn.colors = buttonTheme;
-                        };
-                        foreach (UiToggleButton tglbtn in quickMenu.GetComponentsInChildren<UiToggleButton>(true))
-                        {
-                            foreach (Image img in tglbtn.GetComponentsInChildren<Image>(true))
-                            {
-                                img.color = color;
-                            }
-                        };
-                        foreach (UnityEngine.UI.Slider sldr in quickMenu.GetComponentsInChildren<UnityEngine.UI.Slider>(true))
-                        {
-                            sldr.colors = theme;
-                            foreach (Image img in sldr.GetComponentsInChildren<Image>(true))
-                            {
-                                img.color = color;
-                            }
-                        }
-                        foreach (Toggle tgle in quickMenu.GetComponentsInChildren<Toggle>(true))
-                        {
-                            tgle.colors = theme;
-                            foreach (Image img in tgle.GetComponentsInChildren<Image>(true))
-                            {
-                                if (img.gameObject.name != "Checkmark")
-                                    img.color = color;
-                            }
-                        }
-                        GameObject NotificationRoot = GameObject.Find("UserInterface/QuickMenu/QuickModeMenus/QuickModeNotificationsMenu/ScrollRect");
-                        foreach (Image img in NotificationRoot.GetComponentsInChildren<Image>(true))
-                        {
-                            if (img.transform.name == "Background")
-                                img.color = color;
+                        //quickMenu = GameObject.Find("QuickMenu");
+                        //foreach (Button btn in quickMenu.GetComponentsInChildren<Button>(true))
+                        //{
+                        //    if (btn.name != "rColorButton" && btn.name != "gColorButton" && btn.name != "bColorButton" && btn.name != "ColorPickPreviewButton")
+                        //        btn.colors = buttonTheme;
+                        //};
+                        //foreach (UiToggleButton tglbtn in quickMenu.GetComponentsInChildren<UiToggleButton>(true))
+                        //{
+                        //    foreach (Image img in tglbtn.GetComponentsInChildren<Image>(true))
+                        //    {
+                        //        img.color = color;
+                        //    }
+                        //};
+                        //foreach (UnityEngine.UI.Slider sldr in quickMenu.GetComponentsInChildren<UnityEngine.UI.Slider>(true))
+                        //{
+                        //    sldr.colors = theme;
+                        //    foreach (Image img in sldr.GetComponentsInChildren<Image>(true))
+                        //    {
+                        //        img.color = color;
+                        //    }
+                        //}
+                        //foreach (Toggle tgle in quickMenu.GetComponentsInChildren<Toggle>(true))
+                        //{
+                        //    tgle.colors = theme;
+                        //    foreach (Image img in tgle.GetComponentsInChildren<Image>(true))
+                        //    {
+                        //        if (img.gameObject.name != "Checkmark")
+                        //            img.color = color;
+                        //    }
+                        //}
+                        //GameObject NotificationRoot = GameObject.Find("UserInterface/QuickMenu/QuickModeMenus/QuickModeNotificationsMenu/ScrollRect");
+                        //foreach (Image img in NotificationRoot.GetComponentsInChildren<Image>(true))
+                        //{
+                        //    if (img.transform.name == "Background")
+                        //        img.color = color;
 
-                        };
-                        foreach (MonoBehaviourPublicObCoGaCoObCoObCoUnique tab in GameObject.Find("UserInterface/QuickMenu/QuickModeTabs").GetComponentsInChildren<MonoBehaviourPublicObCoGaCoObCoObCoUnique>())
-                        {
-                            Color lightlydarker = new Color(color.r / 2.25f, color.g / 2.25f, color.b / 2.25f);
-                            tab.field_Public_Color32_0 = lightlydarker;
-                        }
+                        //};
+                        //foreach (MonoBehaviourPublicObCoGaCoObCoObCoUnique tab in GameObject.Find("UserInterface/QuickMenu/QuickModeTabs").GetComponentsInChildren<MonoBehaviourPublicObCoGaCoObCoObCoUnique>())
+                        //{
+                        //    Color lightlydarker = new Color(color.r / 2.25f, color.g / 2.25f, color.b / 2.25f);
+                        //    tab.field_Public_Color32_0 = lightlydarker;
+                        //}
                     }
                     catch (Exception ex)
                     {
@@ -370,7 +414,7 @@ namespace emmVRC.Functions.UI
                         {
                             emmVRCLoader.Logger.LogError(ex.ToString());
                         }
-
+                    collectingColours = false;
                 }
             }
 

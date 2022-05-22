@@ -240,10 +240,7 @@ namespace emmVRC.Network
                 
                 await emmVRC.AwaitUpdate.Yield();
                 Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Resources.alertSprite,
-                    "You need to log in to the emmVRC Network. If you have a pin, enter it. If you do not have a pin, enter your new pin.\n\n" +
-                    "Your pin is the equivalent of your password to connect to the emmVRC Network." +
-                    " Do not just enter a random number; make it something memorable!\n\n" +
-                    "If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.",
+                    Localization.currentLanguage.NetworkLoginMessage,
                     false, true, OpenPasswordPrompt, "Login", "", true, null, "Dismiss"));
                 return;
             }
@@ -293,7 +290,7 @@ namespace emmVRC.Network
                     
                     await emmVRC.AwaitUpdate.Yield();
                     Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Resources.alertSprite,
-                        "Your pin is required to be reset to access the emmVRC Network.",
+                        Localization.currentLanguage.PinResetMessage,
                         false, true, () => OpenResetPrompt(pinCode), "Reset", "", true, null, "Dismiss"));
                     
                     break;
@@ -307,10 +304,7 @@ namespace emmVRC.Network
                     
                     await emmVRC.AwaitUpdate.Yield();
                     Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Resources.alertSprite,
-                            "You need to log in to the emmVRC Network. If you have a pin, enter it. If you do not have a pin, enter your new pin.\n\n" +
-                            "Your pin is the equivalent of your password to connect to the emmVRC Network." +
-                            " Do not just enter a random number; make it something memorable!\n\n" +
-                            "If you have forgotten your pin, or are experiencing issues, please contact us in the emmVRC Discord.",
+                            Localization.currentLanguage.NetworkLoginMessage,
                             false, true, OpenPasswordPrompt, "Login", "", true, null, "Dismiss"));
                     
                     break;
@@ -326,7 +320,7 @@ namespace emmVRC.Network
                     
                     await emmVRC.AwaitUpdate.Yield();
                     Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Resources.errorSprite,
-                        $"You cannot connect to the emmVRC Network because you are banned.\n\n" +
+                        Localization.currentLanguage.BannedMessage +
                         $"Ban ID: {banId}\n" +
                         $"Reason: {banReason}\n" +
                         $"Expires: {banDateText}",
@@ -337,7 +331,7 @@ namespace emmVRC.Network
                 default:
                 {
                     await emmVRC.AwaitUpdate.Yield();
-                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Functions.Core.Resources.errorSprite, "The emmVRC Network is currently unavailable. Please try again later.", false, true,
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC", Functions.Core.Resources.errorSprite, Localization.currentLanguage.NetworkUnavailableMessage, false, true,
                         () => AttemptLogin(pinCode, true).NoAwait("Login"), "Reconnect", "", true, null, "Dismiss"));
                     break;
                 }

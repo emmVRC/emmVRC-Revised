@@ -42,6 +42,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="DestructiveActions.cs" />
     <Compile Include="Functions\Core\AlarmClock.cs" />
+    <Compile Include="Functions\Core\Localization.cs" />
     <Compile Include="Functions\ModCompatibility\ActionMenuAPIIntegration.cs" />
     <Compile Include="Functions\ModCompatibility\UIExpansionKitIntegration.cs" />
     <Compile Include="Functions\Other\AnniversaryMode.cs" />
@@ -57,12 +58,14 @@
     <Compile Include="Functions\UI\EmojiFavourites.cs" />
     <Compile Include="Functions\UI\DashboardBar.cs" />
     <Compile Include="Functions\UI\ShortcutMenuCloseOptions.cs" />
+    <Compile Include="Functions\View\Zoom.cs" />
     <Compile Include="Functions\WorldHacks\InstanceHistory.cs" />
     <Compile Include="Functions\WorldHacks\WorldESP.cs" />
     <Compile Include="Managers\VRChat\AvatarFilteringManager.cs" />
     <Compile Include="Managers\VRChat\NotificationDotManager.cs" />
     <Compile Include="Menus\AvatarOptionsMenu.cs" />
     <Compile Include="Menus\ChangelogMenu.cs" />
+    <Compile Include="Menus\KeybindAdjustmentMenu.cs" />
     <Compile Include="Menus\ColorAdjustmentMenu.cs" />
     <Compile Include="Menus\CreditsMenu.cs" />
     <Compile Include="Menus\NotificationMenu.cs" />
@@ -105,14 +108,12 @@
     <Compile Include="Libraries\CustomActionMenu.cs" />
     <Compile Include="Libraries\Analysis.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
-    <Compile Include="Libraries\ColorPicker.cs" />
     <Compile Include="Functions\Other\EULA.cs" />
     <Compile Include="Libraries\Extensions.cs" />
     <Compile Include="Libraries\Hooking.cs" />
     <Compile Include="Libraries\InstanceIDUtilities.cs" />
     <Compile Include="Menus\FunctionsMenu.cs" />
     <Compile Include="Libraries\KeyCodeConversion.cs" />
-    <Compile Include="Libraries\MediaControl.cs" />
     <Compile Include="Functions\Core\ModCompatibility.cs" />
     <Compile Include="Libraries\Reflections.cs" />
     <Compile Include="Libraries\PlayerUtils.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Network\Authentication.cs" />
     <Compile Include="Network\NetworkClient.cs" />
     <Compile Include="Network\Object\Avatar.cs" />
+    <Compile Include="Network\Object\Error.cs" />
     <Compile Include="Network\Object\ExportedAvatar.cs" />
     <Compile Include="Network\Object\NetworkConfiguration.cs" />
     <Compile Include="Network\Request.cs" />
@@ -136,6 +138,8 @@
     <Compile Include="Objects\AvatarPermissions.cs" />
     <Compile Include="Objects\CachedValue.cs" />
     <Compile Include="Objects\InstancePlayer.cs" />
+    <Compile Include="Objects\Localization\Language.cs" />
+    <Compile Include="Objects\Localization\English.cs" />
     <Compile Include="Objects\UnityObjectWrapper.cs" />
     <Compile Include="Objects\Waypoint.cs" />
     <Compile Include="Utils\Extensions.cs" />
@@ -233,10 +237,6 @@
     </Reference>
     <Reference Include="DataModel">
       <HintPath>D:\Steam Library\steamapps\common\VRChat\MelonLoader\Managed\DataModel.dll</HintPath>
-    </Reference>
-    <Reference Include="emmVRCLoader, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Steam Library\steamapps\common\VRChat\Mods\emmVRCLoader.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -470,6 +470,11 @@
     <Content Include="Code Snippets.txt" />
     <Content Include="UIExpansionKit.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\emmVRC-Revised\emmVRCLoader.csproj">
+      <Project>{76f297c1-576d-45bb-8a1c-f50c13b7a3c9}</Project>
+      <Name>emmVRCLoader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -159,7 +159,7 @@ namespace emmVRC.Functions.UI
                                     && xi.ReadAsObject() != null &&
                                     xi.ReadAsObject().ToString()
                                         .Equals(
-                                            "You cannot use this avatar as it has not been published for this platform.")));
+                                            Core.Localization.currentLanguage.AvatarPlatformErrorMessage)));
 
                     var apiAvatarField = typeof(UiAvatarList.ObjectNPrivateSealedApObApUnique).GetProperty(nameof(
                         UiAvatarList.ObjectNPrivateSealedApObApUnique.field_Public_ApiAvatar_1));
@@ -206,7 +206,7 @@ namespace emmVRC.Functions.UI
                 {
 
                     if (!Utils.PlayerUtils.DoesUserHaveVRCPlus())
-                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
+                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Core.Localization.currentLanguage.VRCPlusMessage, 0f);
                     else
                     {
                         if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))
@@ -215,7 +215,7 @@ namespace emmVRC.Functions.UI
                         }
                         else
                         {
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot favorite this avatar (it is private!)", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.FavouriteFailedPrivateMessage, "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         }
                     }
                 }
@@ -258,16 +258,16 @@ namespace emmVRC.Functions.UI
                     if (selectedAvatar.releaseStatus == "private" && selectedAvatar.authorId != APIUser.CurrentUser.id)
                     {
                         if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.AvatarSwitchPrivateUnfavouriteMessage, "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         else
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (it is private).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.AvatarSwitchPrivateMessage, "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     }
                     else if (selectedAvatar.releaseStatus == "unavailable")
                     {
                         if (LoadedAvatars.ToArray().Any(a => a.id == selectedAvatar.id))
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).\nDo you want to unfavorite it?", "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.AvatarSwitchDeletedUnfavouriteMessage, "Yes", new System.Action(() => { UnfavoriteAvatar(selectedAvatar).NoAwait(nameof(UnfavoriteAvatar)); VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }), "No", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                         else
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Cannot switch into this avatar (no longer available).", "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.AvatarSwitchDeletedMessage, "Dismiss", new System.Action(() => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); }));
                     }
                     else
                         baseChooseEvent.Invoke();
@@ -418,7 +418,7 @@ namespace emmVRC.Functions.UI
                 }
                 if (error && !errorWarned)
                 {
-                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network", Functions.Core.Resources.errorSprite, "Your emmVRC avatars could not be loaded. Please ask in the Discord to resolve this.", true, false, null, "", "", true, null, "Dismiss"));
+                    Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network", Functions.Core.Resources.errorSprite, Core.Localization.currentLanguage.FavouriteListLoadErrorMessage, true, false, null, "", "", true, null, "Dismiss"));
                     errorWarned = true;
                 }
                 MelonLoader.MelonCoroutines.Start(WaitToEnableSearch());
@@ -482,7 +482,7 @@ namespace emmVRC.Functions.UI
                     case HttpStatusCode.InternalServerError:
                     {
                         await emmVRC.AwaitUpdate.Yield();
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.",
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.FavouriteListUpdateErrorMessage,
                             "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                         break;
                     }
@@ -499,7 +499,7 @@ namespace emmVRC.Functions.UI
                         catch (Exception)
                         {
                             await emmVRC.AwaitUpdate.Yield();
-                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", 
+                            VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.FavouriteListUpdateErrorMessage, 
                                 "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                         }
                         break;
@@ -531,7 +531,7 @@ namespace emmVRC.Functions.UI
                 case HttpStatusCode.InternalServerError:
                 {
                     await emmVRC.AwaitUpdate.Yield();
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.",
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.FavouriteListUpdateErrorMessage,
                         "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                     break;
                 }
@@ -548,7 +548,7 @@ namespace emmVRC.Functions.UI
                     catch (Exception)
                     {
                         await emmVRC.AwaitUpdate.Yield();
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Error occured while updating avatar list.", 
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.FavouriteListUpdateErrorMessage, 
                             "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                     }
                     break;
@@ -579,7 +579,7 @@ namespace emmVRC.Functions.UI
                 {
                     await emmVRC.AwaitUpdate.Yield();
                     Managers.emmVRCNotificationsManager.AddNotification(new Notification("emmVRC Network", Core.Resources.errorSprite, 
-                        "emmVRC Avatar Favorites list failed to load. Please check your internet connection.", true, 
+                        Core.Localization.currentLanguage.FavouriteListLoadErrorMessage, true, 
                         false, null, "", "", true, null, "Dismiss"));
                     break;
                 }
@@ -722,7 +722,7 @@ namespace emmVRC.Functions.UI
             {
                 await emmVRC.AwaitUpdate.Yield();
                 VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowStandardPopup("emmVRC",
-                    "Please wait for your current search\nto finish before starting a new one.", 
+                    Core.Localization.currentLanguage.SearchRateLimitErrorMessage, 
                     "Okay", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
             }
 
@@ -756,7 +756,7 @@ namespace emmVRC.Functions.UI
                 case HttpStatusCode.InternalServerError:
                 {
                     await emmVRC.AwaitUpdate.Yield();
-                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", 
+                    VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.SearchFailedErrorMessage, 
                         "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                     break;
                 }
@@ -773,7 +773,7 @@ namespace emmVRC.Functions.UI
                     catch (Exception)
                     {
                         await emmVRC.AwaitUpdate.Yield();
-                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", "Your search could not be processed.", 
+                        VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.ShowStandardPopup("emmVRC", Core.Localization.currentLanguage.SearchFailedErrorMessage, 
                         "Dismiss", () => { VRCUiPopupManager.field_Private_Static_VRCUiPopupManager_0.HideCurrentPopup(); });
                     }
                     

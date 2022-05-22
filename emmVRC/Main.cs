@@ -135,6 +135,15 @@ namespace emmVRC
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version.ToString(3));
 
+                Managers.DebugManager.DebugActions.Add(new Managers.DebugAction
+                {
+                    ActionKey = UnityEngine.KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        Analysis.LogXrefResults(typeof(VRC.Udon.Wrapper.Modules.ExternVRCSDKBaseVRCPlayerApi).GetMethod("__Immobilize__SystemBoolean__SystemVoid"));
+                    }
+                });
+
                 Initialized = true;
             }
         }
