@@ -45,6 +45,11 @@ namespace emmVRC.Managers.VRChat
                 else 
                     emmVRCIconImage.gameObject.SetActive(false); 
             });
+            if (emmVRCNotificationsManager.Notifications.Count > 0)
+            {
+                emmVRCIconImage.sprite = emmVRCNotificationsManager.Notifications.FirstOrDefault().icon;
+                emmVRCIconImage.gameObject.SetActive(true);
+            }
 
             _initialized = true;
         }

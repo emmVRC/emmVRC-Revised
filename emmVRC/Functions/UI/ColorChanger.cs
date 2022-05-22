@@ -253,17 +253,20 @@ namespace emmVRC.Functions.UI
                 selectedColor = color / 1.5f
             };
             color.a = 0.9f;
-            HighlightsFXStandalone highlights = UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>()?.FirstOrDefault();
-            if (highlights != null && collectingColours) { 
-                originalColours.Add(highlights, highlights.highlightColor);
-            }
-            if (Configuration.JSONConfig.UIColorChangingEnabled)
+            foreach (HighlightsFXStandalone highlights in UnityEngine.Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>())
             {
-                highlights.highlightColor = color;
-            }
-            else if (!Configuration.JSONConfig.UIColorChangingEnabled && originalColours != null)
-            {
-                highlights.highlightColor = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(HighlightsFXStandalone)).Value;
+                if (highlights != null && collectingColours)
+                {
+                    originalColours.Add(highlights, highlights.highlightColor);
+                }
+                if (Configuration.JSONConfig.UIColorChangingEnabled)
+                {
+                    highlights.highlightColor = color;
+                }
+                else if (!Configuration.JSONConfig.UIColorChangingEnabled && originalColours != null)
+                {
+                    highlights.highlightColor = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(HighlightsFXStandalone)).Value;
+                }
             }
             try
             {
