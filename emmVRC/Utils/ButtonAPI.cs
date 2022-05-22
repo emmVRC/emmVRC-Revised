@@ -29,6 +29,8 @@ namespace emmVRC.Utils
         internal static GameObject sliderBase;
         internal static GameObject wingPageBase;
         internal static GameObject wingSingleButtonBase;
+        internal static GameObject wingPageBaseL;
+        internal static GameObject wingPageBaseR;
         internal static Sprite onIconSprite;
         internal static Sprite plusIconSprite;
         internal static Sprite xIconSprite;
@@ -40,6 +42,14 @@ namespace emmVRC.Utils
         internal static MenuStateController GetMenuStateControllerInstance()
         {
             return UnityEngine.Resources.FindObjectsOfTypeAll<VRC.UI.Elements.QuickMenu>().FirstOrDefault().gameObject.GetComponent<MenuStateController>();
+        }
+        internal static MenuStateController GetLeftWingControllerInstance()
+        {
+            return UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().FirstOrDefault(a => a.gameObject.name == "Wing_Left");
+        }
+        internal static MenuStateController GetRightWingControllerInstance()
+        {
+            return UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().FirstOrDefault(a => a.gameObject.name == "Wing_Right");
         }
         public override void OnUiManagerInit()
         {
@@ -57,8 +67,11 @@ namespace emmVRC.Utils
             menuPageBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard").gameObject;
             menuTabBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Page_Buttons_QM/HorizontalLayoutGroup/Page_Settings").gameObject;
             sliderBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_AudioSettings/Content/Audio/VolumeSlider_Master").gameObject;
-            wingPageBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/").gameObject;
-            wingSingleButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Profile/").gameObject;
+            wingPageBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Left/Container/InnerContainer/Explore").gameObject;
+            wingSingleButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup/Button_Profile").gameObject;
+            
+            wingPageBaseL = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Left/Container/InnerContainer").gameObject;
+            wingPageBaseR = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/Wing_Right/Container/InnerContainer").gameObject;
 
             onIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Notifications/Panel_NoNotifications_Message/Icon").GetComponent<Image>().sprite;
             plusIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Here/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_WorldActions/Button_FavoriteWorld/Icon").GetComponent<Image>().sprite;
@@ -594,96 +607,305 @@ namespace emmVRC.Utils
             tabTooltip.field_Public_String_0 = newText;
         }
     }
-    //public class WingMenuPage
-    //{
-    //    private readonly UIPage page;
-    //    private readonly GameObject gameObject;
-    //    public readonly Transform menuContents;
-    //    private readonly TextMeshProUGUI pageTitleText;
-    //    private readonly bool isRoot;
-    //    private readonly GameObject backButtonGameObject;
-    //    private readonly GameObject extButtonGameObject;
-    //    private bool preserveColor;
-    //    public readonly RectMask2D menuMask;
-    //    public WingMenuPage(string menuName, string pageTitle, bool root = true, bool backButton = true, bool extButton = false, Action extButtonAction = null, string extButtonTooltip = "", Sprite extButtonSprite = null, bool preserveColor = false)
-    //    {
-    //        gameObject = GameObject.Instantiate(ButtonAPI.menuPageBase, ButtonAPI.menuPageBase.transform.parent);
-    //        gameObject.name = "Menu_" + menuName;
-    //        gameObject.transform.SetSiblingIndex(5);
-    //        gameObject.SetActive(false);
-    //        GameObject.DestroyImmediate(gameObject.GetComponent<VRC.UI.Elements.Menus.LaunchPadQMMenu>());
-    //        page = gameObject.AddComponent<UIPage>();
-    //        page.field_Public_String_0 = menuName;
-    //        page.field_Private_Boolean_1 = true;
-    //        page.field_Private_MenuStateController_0 = ButtonAPI.GetMenuStateControllerInstance();
-    //        page.field_Private_List_1_UIPage_0 = new Il2CppSystem.Collections.Generic.List<UIPage>();
-    //        page.field_Private_List_1_UIPage_0.Add(page);
-    //        ButtonAPI.GetMenuStateControllerInstance().field_Private_Dictionary_2_String_UIPage_0.Add(menuName, page);
-    //        if (root)
-    //        {
-    //            List<UIPage> menuRootPages = ButtonAPI.GetMenuStateControllerInstance().field_Public_ArrayOf_UIPage_0.ToList();
-    //            menuRootPages.Add(page);
-    //            ButtonAPI.GetMenuStateControllerInstance().field_Public_ArrayOf_UIPage_0 = menuRootPages.ToArray();
-    //        }
-    //        gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").DestroyChildren();
-    //        menuContents = gameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup");
-    //        menuContents.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childControlHeight = false; // Overriding this in case other mods change this value, like ReMod
-    //        pageTitleText = gameObject.GetComponentInChildren<TextMeshProUGUI>(true);
-    //        pageTitleText.text = pageTitle;
-    //        isRoot = root;
-    //        backButtonGameObject = gameObject.transform.GetChild(0).Find("LeftItemContainer/Button_Back").gameObject;
-    //        extButtonGameObject = gameObject.transform.GetChild(0).Find("RightItemContainer/Button_QM_Expand").gameObject;
-    //        backButtonGameObject.SetActive(backButton);
-    //        backButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-    //        backButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
-    //            if (isRoot)
-    //                ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_Boolean_0("QuickMenuDashboard");
-    //            else
-    //                this.page.Method_Protected_Virtual_New_Void_0();
-    //        }));
-    //        extButtonGameObject.SetActive(extButton);
-    //        extButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-    //        extButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(extButtonAction);
-    //        extButtonGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>().field_Public_String_0 = extButtonTooltip;
-    //        if (extButtonSprite != null)
-    //        {
-    //            extButtonGameObject.GetComponentInChildren<Image>().sprite = extButtonSprite;
-    //            extButtonGameObject.GetComponentInChildren<Image>().overrideSprite = extButtonSprite;
-    //            if (preserveColor)
-    //            {
-    //                extButtonGameObject.GetComponentInChildren<Image>().color = Color.white;
-    //                extButtonGameObject.GetComponentInChildren<VRC.UI.Core.Styles.StyleElement>(true).enabled = false;
-    //            }
-    //        }
-    //        this.preserveColor = preserveColor;
-    //        menuMask = menuContents.parent.gameObject.GetComponent<RectMask2D>();
-    //        menuMask.enabled = true;
-    //        gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().enabled = true;
-    //        gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().verticalScrollbar = gameObject.transform.Find("ScrollRect/Scrollbar").GetComponent<Scrollbar>();
-    //        gameObject.transform.Find("ScrollRect").GetComponent<ScrollRect>().verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-    //    }
-    //    public void AddExtButton(Action onClick, string tooltip, Sprite icon)
-    //    {
-    //        GameObject newExtButton = GameObject.Instantiate(extButtonGameObject, extButtonGameObject.transform.parent);
-    //        newExtButton.SetActive(true);
-    //        newExtButton.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-    //        newExtButton.GetComponentInChildren<Button>().onClick.AddListener(onClick);
-    //        newExtButton.GetComponentInChildren<Image>().sprite = icon;
-    //        newExtButton.GetComponentInChildren<Image>().overrideSprite = icon;
-    //        newExtButton.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>().field_Public_String_0 = tooltip;
-    //    }
-    //    public void OpenMenu()
-    //    {
-    //        if (isRoot)
-    //            ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
-    //        else
-    //            ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
-    //        //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First().PushPage(pageTitleText.text);
-    //        //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First()._currentRootPage.PushPage(page);
-    //    }
-    //    public void CloseMenu()
-    //    {
-    //        page.Method_Public_Virtual_New_Void_0();
-    //    }
-    //}
+
+    public class WingButton {
+        public readonly GameObject leftGameObject;
+        public readonly GameObject rightGameObject;
+
+        private readonly Image leftButtonImage;
+        private readonly Image rightButtonImage;
+
+        private readonly TextMeshProUGUI leftButtonText;
+        private readonly TextMeshProUGUI rightButtonText;
+
+        private readonly Button leftButtonButton;
+        private readonly Button rightButtonButton;
+
+        private readonly VRC.UI.Elements.Tooltips.UiTooltip leftButtonTooltip;
+        private readonly VRC.UI.Elements.Tooltips.UiTooltip rightButtonTooltip;
+
+        public WingButton(Transform parentLeft, Transform parentRight, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false)
+        {
+            leftGameObject = GameObject.Instantiate(ButtonAPI.wingSingleButtonBase, parentLeft);
+            leftButtonText = leftGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+            leftButtonText.text = text;
+            leftButtonButton = leftGameObject.GetComponentInChildren<Button>(true);
+            leftButtonButton.onClick = new Button.ButtonClickedEvent();
+            leftButtonButton.onClick.AddListener(click);
+            leftButtonTooltip = leftGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
+            leftButtonTooltip.field_Public_String_0 = tooltip;
+            leftButtonImage = leftGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+            if (icon != null)
+            {
+                leftButtonImage.sprite = icon;
+                leftButtonImage.overrideSprite = icon;
+                leftButtonImage.gameObject.SetActive(true);
+                if (preserveColor)
+                {
+                    leftButtonImage.color = Color.white;
+                    leftButtonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+                }
+            }
+            else
+                leftButtonImage.gameObject.SetActive(false);
+            rightGameObject = GameObject.Instantiate(leftGameObject, parentRight);
+            rightButtonText = rightGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+            rightButtonButton = rightGameObject.GetComponentInChildren<Button>(true);
+            rightButtonTooltip = rightGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
+            rightButtonImage = rightGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+        }
+        public WingButton(WingPage basePage, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false)
+        {
+            leftGameObject = GameObject.Instantiate(ButtonAPI.wingSingleButtonBase, basePage.leftMenuContents);
+            leftButtonText = leftGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+            leftButtonText.text = text;
+            leftButtonButton = leftGameObject.GetComponentInChildren<Button>(true);
+            leftButtonButton.onClick = new Button.ButtonClickedEvent();
+            leftButtonButton.onClick.AddListener(click);
+            leftButtonTooltip = leftGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
+            leftButtonTooltip.field_Public_String_0 = tooltip;
+            leftButtonImage = leftGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+            if (icon != null)
+            {
+                leftButtonImage.sprite = icon;
+                leftButtonImage.overrideSprite = icon;
+                leftButtonImage.gameObject.SetActive(true);
+                if (preserveColor)
+                {
+                    leftButtonImage.color = Color.white;
+                    leftButtonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+                }
+            }
+            else
+                leftButtonImage.gameObject.SetActive(false);
+            rightGameObject = GameObject.Instantiate(leftGameObject, basePage.rightMenuContents);
+            rightButtonText = rightGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+            rightButtonButton = rightGameObject.GetComponentInChildren<Button>(true);
+            rightButtonTooltip = rightGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
+            rightButtonImage = rightGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+        }
+        public WingButton(string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false) : this(ButtonAPI.wingPageBaseL.transform.Find("WingMenu/ScrollRect/Viewport/VerticalLayoutGroup"), ButtonAPI.wingPageBaseR.transform.Find("WingMenu/ScrollRect/Viewport/VerticalLayoutGroup"), text, click, tooltip, icon, preserveColor) { }
+        //public SingleButton(MenuPage pge, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false) : this(pge.menuContents, text, click, tooltip, icon, preserveColor) { }
+        //public SingleButton(ButtonGroup grp, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false) : this(grp.gameObject.transform, text, click, tooltip, icon, preserveColor) { }
+        public void SetAction(Action newAction)
+        {
+            leftButtonButton.onClick = new Button.ButtonClickedEvent();
+            leftButtonButton.onClick.AddListener(newAction);
+            rightButtonButton.onClick = new Button.ButtonClickedEvent();
+            rightButtonButton.onClick.AddListener(newAction);
+        }
+        public void SetAction(Action newAction, bool right)
+        {
+            if (!right)
+            {
+                leftButtonButton.onClick = new Button.ButtonClickedEvent();
+                leftButtonButton.onClick.AddListener(newAction);
+            }
+            else
+            {
+                rightButtonButton.onClick = new Button.ButtonClickedEvent();
+                rightButtonButton.onClick.AddListener(newAction);
+            }
+        }
+        public void SetText(string newText)
+        {
+            leftButtonText.text = newText;
+            rightButtonText.text = newText;
+        }
+        public void SetTooltip(string newTooltip)
+        {
+            leftButtonTooltip.field_Public_String_0 = newTooltip;
+            rightButtonTooltip.field_Public_String_0 = newTooltip;
+        }
+        public void SetIcon(Sprite newIcon, bool preserveColor = false)
+        {
+            if (newIcon == null)
+            {
+                leftButtonImage.gameObject.SetActive(false);
+                rightButtonImage.gameObject.SetActive(false);
+            }
+            else
+            {
+                leftButtonImage.sprite = newIcon;
+                leftButtonImage.overrideSprite = newIcon;
+                leftButtonImage.gameObject.SetActive(true);
+                if (preserveColor)
+                {
+                    leftButtonImage.color = Color.white;
+                    leftButtonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+                }
+                rightButtonImage.sprite = newIcon;
+                rightButtonImage.overrideSprite = newIcon;
+                rightButtonImage.gameObject.SetActive(true);
+                if (preserveColor)
+                {
+                    rightButtonImage.color = Color.white;
+                    rightButtonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+                }
+            }
+
+        }
+        public void SetIconColor(Color color)
+        {
+            leftButtonImage.color = color;
+            leftButtonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+            rightButtonImage.color = color;
+            rightButtonImage.GetComponent<VRC.UI.Core.Styles.StyleElement>().enabled = false;
+        }
+        public void SetInteractable(bool val)
+        {
+            leftButtonButton.interactable = val;
+            rightButtonButton.interactable = val;
+        }
+        public void SetActive(bool state)
+        {
+            leftGameObject.SetActive(state);
+            rightGameObject.SetActive(state);
+        }
+
+    }
+    public class WingToggle
+    {
+        private readonly WingButton baseButton;
+        private bool value;
+        private readonly Sprite offSprite;
+        private readonly Sprite onSprite;
+        private Action<bool> onClick;
+        private string offTooltip;
+        private string onTooltip;
+
+        public WingToggle(Transform leftTransform, Transform rightTransform, string text, Action<bool> click,string offTooltip, string onTooltip, Sprite icon = null, bool preserveColor = false, bool defaultValue = false)
+        {
+            if (icon == null) icon = ButtonAPI.onIconSprite;
+            baseButton = new WingButton(leftTransform, rightTransform, text, () => { ToggleClicked(); }, defaultValue ? onTooltip : offTooltip, icon, preserveColor);
+            onClick = click;
+            value = defaultValue;
+            offSprite = ButtonAPI.xIconSprite;
+            onSprite = icon;
+            this.offTooltip = offTooltip;
+            this.onTooltip = onTooltip;
+        }
+        public WingToggle(WingPage basePage, string text, Action<bool> click, string offTooltip, string onTooltip, Sprite icon = null, bool preserveColor = false, bool defaultValue = false)
+        {
+            if (icon == null) icon = ButtonAPI.onIconSprite;
+            baseButton = new WingButton(basePage, text, () => { ToggleClicked(); }, defaultValue ? onTooltip : offTooltip, icon, preserveColor);
+            onClick = click;
+            value = defaultValue;
+            offSprite = ButtonAPI.xIconSprite;
+            onSprite = icon;
+            this.offTooltip = offTooltip;
+            this.onTooltip = onTooltip;
+        }
+        private void ToggleClicked()
+        {
+            value = !value;
+            baseButton.SetIcon(value ? onSprite : offSprite);
+            baseButton.SetTooltip(value ? onTooltip : offTooltip);
+            onClick?.Invoke(value);
+        }
+        public void SetToggleState(bool newValue, bool invoke = false)
+        {
+            value = newValue;
+            baseButton.SetIcon(value ? onSprite : offSprite);
+            if (invoke)
+                onClick?.Invoke(value);
+        }
+        public void SetInteractable(bool value) => baseButton.SetInteractable(value);
+    }
+    public class WingPage
+    {
+        private readonly UIPage leftPage;
+        private readonly UIPage rightPage;
+        private readonly GameObject leftGameObject;
+        private readonly GameObject rightGameObject;
+        public readonly Transform leftMenuContents;
+        public readonly Transform rightMenuContents;
+        private readonly TextMeshProUGUI leftPageTitleText;
+        private readonly TextMeshProUGUI rightPageTitleText;
+        private readonly bool isRoot;
+        private readonly GameObject leftBackButtonGameObject;
+        private readonly GameObject rightBackButtonGameObject;
+        private bool preserveColor;
+        public readonly RectMask2D leftMenuMask;
+        public readonly RectMask2D rightMenuMask;
+        public WingPage(string menuName, string pageTitle, bool root = true, bool backButton = true, bool preserveColor = false)
+        {
+            leftGameObject = GameObject.Instantiate(ButtonAPI.wingPageBase, ButtonAPI.wingPageBaseL.transform);
+            leftGameObject.name = "WingMenu_" + menuName+"_L";
+            leftGameObject.SetActive(false);
+            GameObject.DestroyImmediate(leftGameObject.GetComponent<UIPage>());
+            leftPage = leftGameObject.AddComponent<UIPage>();
+            leftPage.field_Public_String_0 = menuName+"_L";
+            leftPage.field_Private_Boolean_1 = true;
+            leftPage.field_Protected_MenuStateController_0 = ButtonAPI.GetLeftWingControllerInstance();
+            leftPage.field_Private_List_1_UIPage_0 = new Il2CppSystem.Collections.Generic.List<UIPage>();
+            leftPage.field_Private_List_1_UIPage_0.Add(leftPage);
+            ButtonAPI.GetLeftWingControllerInstance().field_Private_Dictionary_2_String_UIPage_0.Add(menuName+"_L", leftPage);
+            if (root)
+            {
+                List<UIPage> menuRootPages = ButtonAPI.GetLeftWingControllerInstance().field_Public_ArrayOf_UIPage_0.ToList();
+                menuRootPages.Add(leftPage);
+                ButtonAPI.GetLeftWingControllerInstance().field_Public_ArrayOf_UIPage_0 = menuRootPages.ToArray();
+            }
+            leftGameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").DestroyChildren();
+            leftMenuContents = leftGameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup");
+            leftPageTitleText = leftGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+            leftPageTitleText.text = pageTitle;
+            isRoot = root;
+            leftBackButtonGameObject = leftGameObject.transform.Find("WngHeader_H1/LeftItemContainer/Button_Back").gameObject;
+            leftBackButtonGameObject.SetActive(backButton);
+            leftBackButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
+            leftBackButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
+                if (isRoot)
+                    ButtonAPI.GetLeftWingControllerInstance().Method_Public_Void_String_Boolean_0("WingMenu");
+                else
+                    this.leftPage.Method_Protected_Virtual_New_Void_0();
+            }));
+            this.preserveColor = preserveColor;
+
+            rightGameObject = GameObject.Instantiate(leftGameObject, ButtonAPI.wingPageBaseR.transform);
+            rightGameObject.name = "WingMenu_" + menuName+"_R";
+            rightGameObject.SetActive(false);
+            rightPage = rightGameObject.GetComponentInChildren<UIPage>(true);
+            rightPage.field_Public_String_0 = menuName + "_R";
+            rightPage.field_Protected_MenuStateController_0 = ButtonAPI.GetRightWingControllerInstance();
+            rightPage.field_Private_List_1_UIPage_0 = new Il2CppSystem.Collections.Generic.List<UIPage>();
+            rightPage.field_Private_List_1_UIPage_0.Add(rightPage);
+            ButtonAPI.GetRightWingControllerInstance().field_Private_Dictionary_2_String_UIPage_0.Add(menuName + "_R", rightPage);
+            if (root)
+            {
+                List<UIPage> menuRootPages = ButtonAPI.GetRightWingControllerInstance().field_Public_ArrayOf_UIPage_0.ToList();
+                menuRootPages.Add(rightPage);
+                ButtonAPI.GetRightWingControllerInstance().field_Public_ArrayOf_UIPage_0 = menuRootPages.ToArray();
+            }
+            rightMenuContents = rightGameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup");
+            rightPageTitleText = rightGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
+            rightBackButtonGameObject = rightGameObject.transform.Find("WngHeader_H1/LeftItemContainer/Button_Back").gameObject;
+            rightBackButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                if (isRoot)
+                    ButtonAPI.GetRightWingControllerInstance().Method_Public_Void_String_Boolean_0("WingMenu");
+                else
+                    this.rightPage.Method_Protected_Virtual_New_Void_0();
+            }));
+        }
+        public void OpenLeftMenu()
+        {
+            ButtonAPI.GetLeftWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(leftPage.field_Public_String_0);
+            ButtonAPI.GetLeftWingControllerInstance().field_Private_ArrayOf_Wing_0.First().field_Private_String_0 = leftPage.field_Public_String_0;
+        }
+        public void OpenRightMenu()
+        {
+            ButtonAPI.GetRightWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(rightPage.field_Public_String_0);
+            ButtonAPI.GetRightWingControllerInstance().field_Private_ArrayOf_Wing_0.First().field_Private_String_0 = rightPage.field_Public_String_0;
+        }
+        public void CloseLeftMenu()
+        {
+            typeof(UIPage).GetMethods().First(a => XrefUtils.CheckUsing(a, "Method_Public_Void_UIPage_0")).Invoke(leftPage, null);
+        }
+        public void CloseRightMenu()
+        {
+            typeof(UIPage).GetMethods().First(a => XrefUtils.CheckUsing(a, "Method_Public_Void_UIPage_0")).Invoke(rightPage, null);
+        }
+    }
 }

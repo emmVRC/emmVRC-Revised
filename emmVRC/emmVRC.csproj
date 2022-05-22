@@ -65,6 +65,7 @@
     <Compile Include="Managers\VRChat\NotificationDotManager.cs" />
     <Compile Include="Menus\AvatarOptionsMenu.cs" />
     <Compile Include="Menus\ChangelogMenu.cs" />
+    <Compile Include="Menus\PlayerTweaksWingMenu.cs" />
     <Compile Include="Menus\KeybindAdjustmentMenu.cs" />
     <Compile Include="Menus\ColorAdjustmentMenu.cs" />
     <Compile Include="Menus\CreditsMenu.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Objects\AvatarPermissions.cs" />
     <Compile Include="Objects\CachedValue.cs" />
     <Compile Include="Objects\InstancePlayer.cs" />
+    <Compile Include="Objects\Localization\German.cs" />
     <Compile Include="Objects\Localization\Language.cs" />
     <Compile Include="Objects\Localization\English.cs" />
     <Compile Include="Objects\UnityObjectWrapper.cs" />

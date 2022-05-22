@@ -134,8 +134,24 @@ namespace emmVRC
                 watch.Stop();
                 emmVRCLoader.Logger.Log("Initialization is successful in " + watch.Elapsed.ToString(@"ss\.f", null) + "s. Welcome to emmVRC!");
                 emmVRCLoader.Logger.Log("You are running version " + Objects.Attributes.Version.ToString(3));
-#if (DEBUG == true)
+#if DEBUG
                 // Debug actions go here
+                Managers.DebugManager.DebugActions.Add(new Managers.DebugAction
+                {
+                    ActionKey = UnityEngine.KeyCode.Alpha0,
+                    ActionAction = () =>
+                    {
+                        WingPage page = new WingPage("Test", "Test");
+                        emmVRCLoader.Logger.LogDebug("Building a button");
+                        WingButton btn = new WingButton(ButtonAPI.GetQuickMenuInstance().transform.Find("Container/Window/Wing_Left/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup"), ButtonAPI.GetQuickMenuInstance().transform.Find("Container/Window/Wing_Right/Container/InnerContainer/WingMenu/ScrollRect/Viewport/VerticalLayoutGroup"), "emmVRC", () => { page.OpenLeftMenu(); }, "We built this city", Functions.Core.Resources.TabIcon);
+                        btn.SetAction(() => { page.OpenRightMenu(); }, true);
+                        WingButton testButton1 = new WingButton(page, "Test1", null, "Test 1");
+                        WingButton testButton2 = new WingButton(page, "Test2", null, "Test 2");
+                        WingButton testButton3 = new WingButton(page, "Test3", null, "Test 3");
+                        WingButton testButton4 = new WingButton(page, "Test4", null, "Test 4");
+                        WingButton testButton5 = new WingButton(page, "Test5", null, "Test 5");
+                    }
+                });
 #endif
                 Initialized = true;
             }

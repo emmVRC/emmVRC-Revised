@@ -24,6 +24,7 @@ namespace emmVRC.Functions.Core
                 language = (SystemLanguage)Configuration.JSONConfig.LanguageOverride;
             else
                 language = Application.systemLanguage;
+            emmVRCLoader.Logger.LogDebug("System language as reported by Unity is " + Application.systemLanguage.ToString());
             switch (language)
             {
                 default:
