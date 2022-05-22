@@ -77,15 +77,12 @@
     <Compile Include="Hacks\ComponentToggle.cs" />
     <Compile Include="Functions\UI\CustomAvatarFavorites.cs" />
     <Compile Include="Functions\UI\CustomMenuMusic.cs" />
-    <Compile Include="Hacks\EmojiFavourites.cs" />
     <Compile Include="Functions\PlayerHacks\ESP.cs" />
     <Compile Include="Functions\PlayerHacks\FBTSaving.cs" />
     <Compile Include="Functions\PlayerHacks\Flight.cs" />
     <Compile Include="Functions\View\FOV.cs" />
     <Compile Include="Functions\Debug\FrameTimeCalculator.cs" />
     <Compile Include="Hacks\GlobalDynamicBones.cs" />
-    <Compile Include="Functions\UI\InfoBarClock.cs" />
-    <Compile Include="Functions\UI\InfoBarStatus.cs" />
     <Compile Include="Functions\UI\LogoutPatch.cs" />
     <Compile Include="Functions\UI\MainMenu.cs" />
     <Compile Include="Functions\PlayerHacks\MasterCrown.cs" />
@@ -102,13 +99,11 @@
     <Compile Include="Hacks\SocialMenuFunctions.cs" />
     <Compile Include="Functions\PlayerHacks\Speed.cs" />
     <Compile Include="Functions\View\ThirdPerson.cs" />
-    <Compile Include="Functions\UI\UIElementsMenu.cs" />
     <Compile Include="Functions\UI\WorldFunctions.cs" />
     <Compile Include="Libraries\AwaitProvider.cs" />
     <Compile Include="Libraries\CustomActionMenu.cs" />
     <Compile Include="Libraries\Analysis.cs" />
     <Compile Include="Libraries\ColorConversion.cs" />
-    <Compile Include="Functions\Other\EULA.cs" />
     <Compile Include="Libraries\Extensions.cs" />
     <Compile Include="Libraries\Hooking.cs" />
     <Compile Include="Libraries\InstanceIDUtilities.cs" />
@@ -172,7 +167,6 @@
     <Compile Include="Functions\UI\LoadingScreen.cs" />
     <Compile Include="Objects\Attributes.cs" />
     <Compile Include="Objects\Config.cs" />
-    <Compile Include="Components\emmVRCPanel.cs" />
     <Compile Include="Objects\ModuleBases\CompatibilityCheck.cs" />
     <Compile Include="Objects\ModuleBases\IWithFixedUpdate.cs" />
     <Compile Include="Objects\ModuleBases\IWithGUI.cs" />

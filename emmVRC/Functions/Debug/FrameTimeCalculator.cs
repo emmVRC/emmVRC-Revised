@@ -1,3 +1,4 @@
+#if (DEBUG == true)
 using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
@@ -19,13 +20,13 @@ namespace emmVRC.Functions.Debug
         {
             yield return new WaitForEndOfFrame();
             frameTimes[iterator] = (int)watch.ElapsedMilliseconds;
-            if (iterator < frameTimes.Length-1)
+            if (iterator < frameTimes.Length - 1)
                 iterator++;
             else
                 iterator = 0;
             watch.Reset();
             int sum = 0;
-            foreach(int frm in frameTimes)
+            foreach (int frm in frameTimes)
             {
                 sum += frm;
             }
@@ -33,3 +34,4 @@ namespace emmVRC.Functions.Debug
         }
     }
 }
+#endif

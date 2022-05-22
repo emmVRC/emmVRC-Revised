@@ -170,11 +170,13 @@ namespace emmVRC.Functions.UI
                     "\n" +
                     (Configuration.JSONConfig.emmVRCNetworkEnabled ? (NetworkClient.HasJwtToken ? "<color=lime>Connected to the\nemmVRC Network</color>" : "<color=red>Not connected to the\nemmVRC Network</color>") : "") +
                     "\n" +
-                    "\n" +
-                    (Objects.Attributes.Debug ? (
+                    "\n"
+#if (DEBUG == true)
+      +
                         "Current frame time: " + (Functions.Debug.FrameTimeCalculator.frameTimes[Functions.Debug.FrameTimeCalculator.iterator == 0 ? Functions.Debug.FrameTimeCalculator.frameTimes.Length - 1 : (Functions.Debug.FrameTimeCalculator.iterator - 1)]) + "ms\n" +
                         "Average frame time: " + Functions.Debug.FrameTimeCalculator.frameTimeAvg + "ms\n"
-                    ) : "")) : "");
+#endif
+                    ) : "");
                 /*if (APIUser.CurrentUser != null && (Configuration.JSONConfig.InfoSpoofingEnabled))
                     TextText.text = TextText.text.Replace(APIUser.CurrentUser.GetName(), (NameSpoofGenerator.spoofedName));*/
             }

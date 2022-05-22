@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if (DEBUG == true)
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -67,3 +68,4 @@ namespace emmVRC.Libraries
         }
     }
 }
+#endif
