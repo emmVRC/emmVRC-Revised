@@ -17,6 +17,9 @@ namespace emmVRC.Menus
         private static WingToggle noclipToggle;
         private static WingToggle speedToggle;
         private static WingToggle espToggle;
+        private static WingButton waypointsButton;
+
+        public static WingPage waypointsPage;
 
         private static bool _initialized = false;
 
@@ -55,6 +58,13 @@ namespace emmVRC.Menus
                 if (Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed && Configuration.JSONConfig.RiskyFunctionsEnabled)
                     Functions.PlayerHacks.ESP.SetActive(val);
             }, "Emit a glow around players in the current instance", "Remove glow around surrounding players");
+            flightToggle.SetArrowEnabled(false);
+            noclipToggle.SetArrowEnabled(false);
+            speedToggle.SetArrowEnabled(false);
+            espToggle.SetArrowEnabled(false);
+            waypointsButton = new WingButton(basePage, "Waypoints", () => { OpenWaypointsMenu(false); }, "Select from your waypoints to teleport to them", Functions.Core.Resources.WorldHistoryIcon);
+            waypointsButton.SetAction(() => { OpenWaypointsMenu(true); }, true);
+            waypointsPage = new WingPage("emmVRC_WaypointsWing", "Waypoints");
 
             Managers.RiskyFunctionsManager.RiskyFuncsProcessed += (bool val) => {
                 if (!val)
@@ -67,6 +77,7 @@ namespace emmVRC.Menus
                 noclipToggle.SetInteractable(val);
                 speedToggle.SetInteractable(val);
                 espToggle.SetInteractable(val);
+                waypointsButton.SetInteractable(val);
             };
             _initialized = true;
         }
@@ -80,10 +91,32 @@ namespace emmVRC.Menus
             noclipToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
             speedToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
             espToggle.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
+            waypointsButton.SetInteractable(Configuration.JSONConfig.RiskyFunctionsEnabled && Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed);
             if (right)
                 basePage.OpenRightMenu();
             else
                 basePage.OpenLeftMenu();
+        }
+        public static void OpenWaypointsMenu(bool right)
+        {
+            if (!_initialized || !Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled) return;
+            waypointsPage.leftMenuContents.gameObject.transform.DestroyChildren();
+            waypointsPage.rightMenuContents.gameObject.transform.DestroyChildren();
+            foreach (Objects.Waypoint waypoint in Functions.PlayerHacks.Waypoints.CurrentWaypoints)
+            {
+                if (waypoint != null)
+                {
+                    new WingButton(waypointsPage, waypoint.Name == null ? "" : waypoint.Name, () =>
+                    {
+                        if (!Managers.RiskyFunctionsManager.AreRiskyFunctionsAllowed || !Configuration.JSONConfig.RiskyFunctionsEnabled) return;
+                        waypoint.Goto();
+                    }, "Teleport to this waypoint");
+                }
+            }
+            if (right)
+                waypointsPage.OpenRightMenu();
+            else
+                waypointsPage.OpenLeftMenu();
         }
     }
 }

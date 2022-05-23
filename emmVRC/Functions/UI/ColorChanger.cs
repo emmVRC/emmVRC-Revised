@@ -23,6 +23,9 @@ namespace emmVRC.Functions.UI
         private static GameObject loadingBackground;
         private static GameObject initialLoadingBackground;
         private static Dictionary<UnityEngine.Object, Color> originalColours;
+        private static Dictionary<UnityEngine.Object, Texture2D> originalTextures;
+        private static Dictionary<UnityEngine.Object, Sprite> originalSprites;
+        private static Dictionary<UnityEngine.Object, ColorBlock> originalColourBlocks;
         private static bool collectingColours = false;
 
         public override void OnUiManagerInit()
@@ -36,9 +39,12 @@ namespace emmVRC.Functions.UI
         }
         public static void ApplyIfApplicable()
         {
-            if (originalColours == null)
+            if (originalColours == null || originalTextures == null || originalSprites == null)
             {
                 originalColours = new Dictionary<UnityEngine.Object, Color>();
+                originalTextures = new Dictionary<UnityEngine.Object, Texture2D>();
+                originalSprites = new Dictionary<UnityEngine.Object, Sprite>();
+                originalColourBlocks = new Dictionary<UnityEngine.Object, ColorBlock>();
                 collectingColours = true;
             }
             Color color = Configuration.JSONConfig.UIColorChangingEnabled ? Configuration.menuColor() : Configuration.defaultMenuColor();
@@ -81,6 +87,8 @@ namespace emmVRC.Functions.UI
                 normalColorImage.Add(quickMenu.transform.Find("Popups/ChangeProfilePicPopup/Popup/PanelBackground").GetComponent<Image>());
                 normalColorImage.Add(quickMenu.transform.Find("Popups/ChangeProfilePicPopup/Popup/TitlePanel").GetComponent<Image>());
                 normalColorImage.Add(quickMenu.transform.Find("Screens/UserInfo/User Panel/PanelHeaderBackground").GetComponent<Image>());
+                normalColorImage.Add(quickMenu.transform.Find("Popups/StandardPopup/ArrowLeft").GetComponent<Image>());
+                normalColorImage.Add(quickMenu.transform.Find("Popups/StandardPopup/ArrowRight").GetComponent<Image>());
                 //normalColorImage.Add(quickMenu.transform.Find("Screens/UserInfo/User Panel/Panel (1)").GetComponent<Image>());
                 foreach (Transform obj in quickMenu.GetComponentsInChildren<Transform>(true).Where(x => x.name.Contains("Panel_Header")))
                 {
@@ -96,6 +104,7 @@ namespace emmVRC.Functions.UI
                 }
                 try
                 {
+
                     normalColorImage.Add(quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Panel_Backdrop").GetComponent<Image>());
                     normalColorImage.Add(quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Decoration_Left").GetComponent<Image>());
                     normalColorImage.Add(quickMenu.transform.Find("Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/Decoration_Right").GetComponent<Image>());
@@ -148,7 +157,7 @@ namespace emmVRC.Functions.UI
                 darkerColorImage.Add(quickMenu.transform.Find("Popups/RequestInvitePopup/RequestInviteMenu/BorderImage").GetComponent<Image>());
                 darkerColorImage.Add(quickMenu.transform.Find("Popups/ControllerBindingsPopup/Popup/BorderImage").GetComponent<Image>());
                 darkerColorImage.Add(quickMenu.transform.Find("Screens/UserInfo/ModerateDialog/Panel/BorderImage").GetComponent<Image>());
-                foreach (Transform obj in quickMenu.GetComponentsInChildren<Transform>(true).Where(x => x.name.Contains("Background") && x.name != "PanelHeaderBackground" && !x.transform.parent.name.Contains("UserIcon")))
+                foreach (Transform obj in quickMenu.GetComponentsInChildren<Transform>(true).Where(x => (x.name.Contains("Background") || x.name.Contains("TitlePanel")) && x.name != "PanelHeaderBackground" && !x.transform.parent.name.Contains("UserIcon") && x.transform.name != "Button_PerformanceOptions"))
                 {
                     foreach (Image img in obj.GetComponentsInChildren<Image>())
                         if (img.gameObject.name != "Checkmark")
@@ -177,11 +186,29 @@ namespace emmVRC.Functions.UI
             if (collectingColours)
             {
                 foreach (Image img in normalColorImage)
+                {
                     originalColours.Add(img, img.color);
+                    if (img.sprite != null && img.sprite.texture != null)
+                    {
+                        originalSprites.Add(img, img.sprite);
+                    }
+                }
                 foreach (Image img in dimmerColorImage)
+                {
                     originalColours.Add(img, img.color);
+                    if (img.sprite != null && img.sprite.texture != null)
+                    {
+                        originalSprites.Add(img, img.sprite);
+                    }
+                }
                 foreach (Image img in darkerColorImage)
+                {
                     originalColours.Add(img, img.color);
+                    if (img.sprite != null && img.sprite.texture != null)
+                    {
+                        originalSprites.Add(img, img.sprite);
+                    }
+                }
                 foreach (Text txt in normalColorText)
                     originalColours.Add(txt, txt.color);
             }
@@ -190,13 +217,25 @@ namespace emmVRC.Functions.UI
             {
                 emmVRCLoader.Logger.LogDebug("Coloring normal elements...");
                 foreach (Image img in normalColorImage)
+                {
+                    if (img.sprite != null && img.sprite.texture != null)
+                        img.sprite = originalSprites[img].ReplaceTexture(img.sprite.UnpackTexture().Desaturate());
                     img.color = colorT;
+                }
                 emmVRCLoader.Logger.LogDebug("Coloring lighter elements...");
                 foreach (Image img in dimmerColorImage)
+                {
+                    if (img.sprite != null && img.sprite.texture != null)
+                        img.sprite = originalSprites[img].ReplaceTexture(img.sprite.UnpackTexture().Desaturate());
                     img.color = dimmerT;
+                }
                 emmVRCLoader.Logger.LogDebug("Coloring darker elements...");
                 foreach (Image img in darkerColorImage)
+                {
+                    if (img.sprite != null && img.sprite.texture != null)
+                        img.sprite = originalSprites[img].ReplaceTexture(img.sprite.UnpackTexture().Desaturate());
                     img.color = darkerT;
+                }
                 emmVRCLoader.Logger.LogDebug("Coloring text elements...");
                 foreach (Text txt in normalColorText)
                     txt.color = color;
@@ -213,6 +252,14 @@ namespace emmVRC.Functions.UI
                     txt.color = originalColours.FirstOrDefault(a => a.Key.GetType() == typeof(Text) && (Text)a.Key == txt).Value;
             }
 
+            if (!Configuration.JSONConfig.UIColorChangingEnabled && !collectingColours)
+            {
+                foreach (KeyValuePair<UnityEngine.Object, Sprite> kvp in originalSprites)
+                {
+                    if (kvp.Key != null && kvp.Key.GetType() == typeof(Image))
+                        ((Image)kvp.Key).sprite = kvp.Value;
+                }
+            }
             if (!setupSkybox && !Functions.Core.ModCompatibility.BetterLoadingScreen)
             {
                 try
@@ -314,6 +361,14 @@ namespace emmVRC.Functions.UI
                     {
                         emmVRCLoader.Logger.LogError(ex.ToString());
                     }
+                    //SpriteRenderer cursorRenderer = UnityEngine.Resources.FindObjectsOfTypeAll<VRC.UI.CursorIcon>().FirstOrDefault().field_Public_SpriteRenderer_0;
+                    //if (collectingColours)
+                    //    originalColours.Add(cursorRenderer, cursorRenderer.color);
+                    //if (Configuration.JSONConfig.UIColorChangingEnabled)
+                    //    cursorRenderer.color = color;
+                    //else if (!Configuration.JSONConfig.UIColorChangingEnabled && !collectingColours)
+                    //    cursorRenderer.color = originalColours[cursorRenderer];
+
                     emmVRCLoader.Logger.LogDebug("Coloring QM buttons...");
                     try
                     {
@@ -326,71 +381,41 @@ namespace emmVRC.Functions.UI
                             pressedColor = Color.gray,
                             fadeDuration = 0.1f
                         };
-                        //quickMenu.GetComponentsInChildren<Transform>(true).FirstOrDefault(x => x.name == "Row:4 Column:0").GetComponent<Button>().colors = buttonTheme;
 
                         color.a = .5f;
                         darker.a = 1f;
                         theme.normalColor = darker;
                         foreach (UnityEngine.UI.Slider sldr in quickMenu.GetComponentsInChildren<UnityEngine.UI.Slider>(true))
-                            sldr.colors = theme;
+                        {
+                            if (collectingColours)
+                                originalColourBlocks.Add(sldr, sldr.colors);
+                            if (Configuration.JSONConfig.UIColorChangingEnabled)
+                                sldr.colors = theme;
+                            else if (!Configuration.JSONConfig.UIColorChangingEnabled && !collectingColours)
+                                sldr.colors = originalColourBlocks.FirstOrDefault(a => a.Key != null && a.Key == sldr).Value;
+                        }
                         darker.a = .5f;
                         theme.normalColor = color;
                         foreach (Button btn in quickMenu.GetComponentsInChildren<Button>(true))
+                        {
                             if (btn.gameObject.GetComponentsInChildren<Transform>(true).Any(a => a.name == "emmVRCDoNotColor") || btn.name != "SubscribeToAddPhotosButton" && btn.name != "SupporterButton" && btn.name != "ModerateButton" && btn.transform.parent.name != "VRC+PageTab" && (btn.name != "ReportButton" || btn.transform.parent.name.Contains("WorldInfo")))
-                                btn.colors = buttonTheme;
+                            {
+                                if (collectingColours)
+                                    originalColourBlocks.Add(btn, btn.colors);
+                                if (Configuration.JSONConfig.UIColorChangingEnabled)
+                                    btn.colors = buttonTheme;
+                                else if (!Configuration.JSONConfig.UIColorChangingEnabled && !collectingColours)
+                                    btn.colors = originalColourBlocks.FirstOrDefault(a => a.Key != null && a.Key == btn).Value;
+                            }
+                        }
 
-                        //quickMenu = GameObject.Find("QuickMenu");
-                        //foreach (Button btn in quickMenu.GetComponentsInChildren<Button>(true))
-                        //{
-                        //    if (btn.name != "rColorButton" && btn.name != "gColorButton" && btn.name != "bColorButton" && btn.name != "ColorPickPreviewButton")
-                        //        btn.colors = buttonTheme;
-                        //};
-                        //foreach (UiToggleButton tglbtn in quickMenu.GetComponentsInChildren<UiToggleButton>(true))
-                        //{
-                        //    foreach (Image img in tglbtn.GetComponentsInChildren<Image>(true))
-                        //    {
-                        //        img.color = color;
-                        //    }
-                        //};
-                        //foreach (UnityEngine.UI.Slider sldr in quickMenu.GetComponentsInChildren<UnityEngine.UI.Slider>(true))
-                        //{
-                        //    sldr.colors = theme;
-                        //    foreach (Image img in sldr.GetComponentsInChildren<Image>(true))
-                        //    {
-                        //        img.color = color;
-                        //    }
-                        //}
-                        //foreach (Toggle tgle in quickMenu.GetComponentsInChildren<Toggle>(true))
-                        //{
-                        //    tgle.colors = theme;
-                        //    foreach (Image img in tgle.GetComponentsInChildren<Image>(true))
-                        //    {
-                        //        if (img.gameObject.name != "Checkmark")
-                        //            img.color = color;
-                        //    }
-                        //}
-                        //GameObject NotificationRoot = GameObject.Find("UserInterface/QuickMenu/QuickModeMenus/QuickModeNotificationsMenu/ScrollRect");
-                        //foreach (Image img in NotificationRoot.GetComponentsInChildren<Image>(true))
-                        //{
-                        //    if (img.transform.name == "Background")
-                        //        img.color = color;
-
-                        //};
-                        //foreach (MonoBehaviourPublicObCoGaCoObCoObCoUnique tab in GameObject.Find("UserInterface/QuickMenu/QuickModeTabs").GetComponentsInChildren<MonoBehaviourPublicObCoGaCoObCoObCoUnique>())
-                        //{
-                        //    Color lightlydarker = new Color(color.r / 2.25f, color.g / 2.25f, color.b / 2.25f);
-                        //    tab.field_Public_Color32_0 = lightlydarker;
-                        //}
+                        
                     }
                     catch (Exception ex)
                     {
                         ex = new Exception();
-                        //emmVRCLoader.Logger.LogError(ex.ToString());
                     }
-                    /*emmVRCLoader.Logger.LogDebug("Coloring cursor...");
-                    VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.curso mouseCursor.UiColor = color;
-                    VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handRightCursor.UiColor = color;
-                    VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0.handLeftCursor.UiColor = color;*/
+
                     if (Configuration.JSONConfig.UIActionMenuColorChangingEnabled)
                         try
                         {
@@ -399,8 +424,13 @@ namespace emmVRC.Functions.UI
                             Color transparent = new Color(referenceColor.r, referenceColor.g, referenceColor.b, referenceColor.a / 1.25f);
                             foreach (PedalGraphic grph in UnityEngine.Resources.FindObjectsOfTypeAll<PedalGraphic>())
                             {
-                                //grph.material.SetColor("_Color", Color.white);
-                                grph.color = referenceColor;
+                                if (grph.gameObject.name != "Center")
+                                {
+                                    //grph.material.SetColor("_Color", Color.white);
+                                    if (grph._texture != null)
+                                    grph._texture = (grph._texture.ToTexture2D().Desaturate().ToTexture());
+                                    grph.color = referenceColor;
+                                }
                                 //grph.CrossFadeColor(Color.white, 0f, false, false);
 
                             }
@@ -408,7 +438,7 @@ namespace emmVRC.Functions.UI
                             {
                                 Image baseImage = menu.transform.Find("Main/Cursor").GetComponentInChildren<Image>();
                                 if (baseImage == null) return;
-                                //baseImage.sprite = baseImage.sprite.ReplaceTexture(baseImage.sprite.texture.Desaturate());
+                                baseImage.sprite = baseImage.sprite.ReplaceTexture(baseImage.sprite.UnpackTexture().Desaturate());
                                 baseImage.color = transparent;
                                 //menu.cursor.GetComponentInChildren<Image>().color = transparent;
                             }
@@ -417,7 +447,21 @@ namespace emmVRC.Functions.UI
                         {
                             emmVRCLoader.Logger.LogError(ex.ToString());
                         }
+
+                        
                     collectingColours = false;
+                    //try
+                    //{
+                    //    foreach (Image img in ButtonAPI.GetQuickMenuInstance().GetComponentsInChildren<Image>(true))
+                    //    {
+                    //        if (img == null || img.sprite == null || img.sprite.texture == null) return;
+                    //        img.sprite = img.sprite.ReplaceTexture(img.sprite.UnpackTexture().Desaturate());
+                    //        img.color = color;
+                    //    }
+                    //} catch (Exception ex)
+                    //{
+                    //    emmVRCLoader.Logger.LogError(ex.ToString());
+                    //}
                 }
             }
 

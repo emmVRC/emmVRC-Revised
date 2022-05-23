@@ -147,11 +147,7 @@ namespace emmVRC.Functions.UI
                     BackgroundImage.sprite = Functions.Core.Resources.HUD_Minimized;
                 keyFlag = true;
             }
-            if ((Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1]) || (KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[1] == KeyCode.None) && Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && !keyFlag && Configuration.JSONConfig.EnableKeybinds)
-            {
-                Configuration.WriteConfigOption("HUDEnabled", !Configuration.JSONConfig.HUDEnabled);
-                keyFlag = true;
-            }
+
             if (!Input.GetKey(KeyCode.E) && !Input.GetKey((KeyCode)Configuration.JSONConfig.ToggleHUDEnabledKeybind[0]) && keyFlag)
                 keyFlag = false;
             if (TextText)

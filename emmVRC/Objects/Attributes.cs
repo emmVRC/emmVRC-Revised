@@ -8,11 +8,11 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 2, 0, 4); 
+        public static readonly Version Version = new Version(3, 2, 0, 5); 
         public const int LastTestedBuildNumber = 1194;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = true;
-        public const string DateUpdated = "5/21/2022";
+        public const string DateUpdated = "5/23/2022";
         //  "This is an pre-release build! Do not distribute to others."
         //  When writing the changelog, please only include changes for the current minor version, unless a new minor version just came out
         public const string Changelog =
@@ -26,6 +26,7 @@ namespace emmVRC.Objects
             "• Added back Emoji Favorites, and enhanced it with categories built into the settings menu\n" +
             "• Added back keybind reconfiguration in-game\n" +
             "• Added desktop zoom that functions similar to Source games. Use middle mouse to zoom in and out\n" +
+            "• Added Wing menu for quick access to Player Tweaks\n" +
             "• Started work on localization for various strings of emmVRC, to aid in easier understanding of important messages\n" +
             "• Minor reworks to the versioning and changelog system\n" +
             "• Minor reworks to UI color changing\n" +

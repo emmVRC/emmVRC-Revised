@@ -621,6 +621,12 @@ namespace emmVRC.Utils
         private readonly Button leftButtonButton;
         private readonly Button rightButtonButton;
 
+        private readonly Image leftButtonArrow;
+        private readonly Image rightButtonArrow;
+
+        private readonly GameObject leftSeparator;
+        private readonly GameObject rightSeparator;
+
         private readonly VRC.UI.Elements.Tooltips.UiTooltip leftButtonTooltip;
         private readonly VRC.UI.Elements.Tooltips.UiTooltip rightButtonTooltip;
 
@@ -635,6 +641,8 @@ namespace emmVRC.Utils
             leftButtonTooltip = leftGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
             leftButtonTooltip.field_Public_String_0 = tooltip;
             leftButtonImage = leftGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+            leftButtonArrow = leftGameObject.transform.Find("Container/Icon_Arrow").GetComponentInChildren<Image>(true);
+            leftSeparator = leftGameObject.transform.Find("Separator").gameObject;
             if (icon != null)
             {
                 leftButtonImage.sprite = icon;
@@ -653,6 +661,8 @@ namespace emmVRC.Utils
             rightButtonButton = rightGameObject.GetComponentInChildren<Button>(true);
             rightButtonTooltip = rightGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
             rightButtonImage = rightGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+            rightButtonArrow = rightGameObject.transform.Find("Container/Icon_Arrow").GetComponentInChildren<Image>(true);
+            rightSeparator = rightGameObject.transform.Find("Separator").gameObject;
         }
         public WingButton(WingPage basePage, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false)
         {
@@ -665,6 +675,8 @@ namespace emmVRC.Utils
             leftButtonTooltip = leftGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
             leftButtonTooltip.field_Public_String_0 = tooltip;
             leftButtonImage = leftGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+            leftButtonArrow = leftGameObject.transform.Find("Container/Icon_Arrow").GetComponentInChildren<Image>(true);
+            leftSeparator = leftGameObject.transform.Find("Separator").gameObject;
             if (icon != null)
             {
                 leftButtonImage.sprite = icon;
@@ -683,6 +695,8 @@ namespace emmVRC.Utils
             rightButtonButton = rightGameObject.GetComponentInChildren<Button>(true);
             rightButtonTooltip = rightGameObject.GetComponentInChildren<VRC.UI.Elements.Tooltips.UiTooltip>(true);
             rightButtonImage = rightGameObject.transform.Find("Container/Icon").GetComponentInChildren<Image>(true);
+            rightButtonArrow = rightGameObject.transform.Find("Container/Icon_Arrow").GetComponentInChildren<Image>(true);
+            rightSeparator = rightGameObject.transform.Find("Separator").gameObject;
         }
         public WingButton(string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false) : this(ButtonAPI.wingPageBaseL.transform.Find("WingMenu/ScrollRect/Viewport/VerticalLayoutGroup"), ButtonAPI.wingPageBaseR.transform.Find("WingMenu/ScrollRect/Viewport/VerticalLayoutGroup"), text, click, tooltip, icon, preserveColor) { }
         //public SingleButton(MenuPage pge, string text, Action click, string tooltip, Sprite icon = null, bool preserveColor = false) : this(pge.menuContents, text, click, tooltip, icon, preserveColor) { }
@@ -762,6 +776,22 @@ namespace emmVRC.Utils
             leftGameObject.SetActive(state);
             rightGameObject.SetActive(state);
         }
+        public void SetArrowEnabled(bool state)
+        {
+            leftButtonArrow.gameObject.SetActive(state);
+            rightButtonArrow.gameObject.SetActive(state);
+        }
+        public void SetSeparatorEnabled(bool state)
+        {
+            leftSeparator.SetActive(state);
+            rightSeparator.SetActive(state);
+        }
+        public Image[] GetBackground()
+        {
+            Image backgroundL = leftGameObject.transform.Find("Container/Background").GetComponentInChildren<Image>(true);
+            Image backgroundR = rightGameObject.transform.Find("Container/Background").GetComponentInChildren<Image>(true);
+            return new Image[] { backgroundL, backgroundR };
+        }
 
     }
     public class WingToggle
@@ -777,7 +807,8 @@ namespace emmVRC.Utils
         public WingToggle(Transform leftTransform, Transform rightTransform, string text, Action<bool> click,string offTooltip, string onTooltip, Sprite icon = null, bool preserveColor = false, bool defaultValue = false)
         {
             if (icon == null) icon = ButtonAPI.onIconSprite;
-            baseButton = new WingButton(leftTransform, rightTransform, text, () => { ToggleClicked(); }, defaultValue ? onTooltip : offTooltip, icon, preserveColor);
+            baseButton = new WingButton(leftTransform, rightTransform, text, ToggleClicked, defaultValue ? onTooltip : offTooltip, icon, preserveColor);
+            baseButton.SetAction(ToggleClicked, true);
             onClick = click;
             value = defaultValue;
             offSprite = ButtonAPI.xIconSprite;
@@ -789,6 +820,7 @@ namespace emmVRC.Utils
         {
             if (icon == null) icon = ButtonAPI.onIconSprite;
             baseButton = new WingButton(basePage, text, () => { ToggleClicked(); }, defaultValue ? onTooltip : offTooltip, icon, preserveColor);
+            baseButton.SetAction(ToggleClicked, true);
             onClick = click;
             value = defaultValue;
             offSprite = ButtonAPI.xIconSprite;
@@ -811,6 +843,9 @@ namespace emmVRC.Utils
                 onClick?.Invoke(value);
         }
         public void SetInteractable(bool value) => baseButton.SetInteractable(value);
+        public void SetArrowEnabled(bool value) => baseButton.SetArrowEnabled(value);
+        public void SetSeparatorEnabled(bool value) => baseButton.SetSeparatorEnabled(value);
+
     }
     public class WingPage
     {
