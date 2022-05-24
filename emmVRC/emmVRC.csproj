@@ -10,9 +10,6 @@
 
   <!-- THIS SHOULD BE REMOVED SOON -->
   <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
     <None Include="Libraries\TinyJSON\TinyJSON.csproj" />
   </ItemGroup>
 
@@ -177,9 +174,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Code Snippets.txt" />
+    <ProjectReference Include="..\emmVRC.Loader\emmVRC.Loader.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\emmVRC.Loader\emmVRC.Loader.csproj" />
   </ItemGroup>
 </Project>
