@@ -30,6 +30,12 @@ namespace emmVRC.Functions.Core
                 default:
                     currentLanguage = new English();
                     break;
+                case (SystemLanguage.English):
+                    currentLanguage = new English();
+                    break;
+                case (SystemLanguage.German):
+                    currentLanguage = new German();
+                    break;
             }
 
         }       
