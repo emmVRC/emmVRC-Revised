@@ -1,39 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VRCPath Condition="Exists('D:/SteamGames/steamapps/common/VRChat')">D:/SteamGames/steamapps/common/VRChat</VRCPath>
-    <VRCPath Condition="Exists('D:/Steam Library/steamapps/common/VRChat')">D:/Steam Library/steamapps/common/VRChat</VRCPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <MlPath>$(SolutionDir)\3rdparty\ml</MlPath>
-    <MlPath Condition="!Exists('$(MlPath)') And Exists('$(VRCPath)/MelonLoader')">$(VRCPath)/MelonLoader</MlPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <ProjectGuid>{202AE309-F205-40CA-9562-A9DB4529FCE0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>emmVRC</RootNamespace>
     <AssemblyName>emmVRC</AssemblyName>
-
-    <TargetFrameworks>net472;net6</TargetFrameworks>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <PlatformTarget>x64</PlatformTarget>
-
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\tmp\$(Configuration) ($(PlatformTarget))\$(ProjectName)\</IntermediateOutputPath>
-    <OutputPath>..\.build\$(Configuration) ($(PlatformTarget))\Modules\$(ProjectName)\</OutputPath>
-    
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	
-    <DebugSymbols Condition="'$(Configuration)'=='Release'">false</DebugSymbols>
-      <DebugType Condition="'$(Configuration)'=='Release'">None</DebugType>
-    <Optimize Condition="'$(Configuration)'=='Release'">true</Optimize>
-
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <!-- THIS SHOULD BE REMOVED SOON -->
@@ -81,8 +53,8 @@
       <HintPath>$(MlPath)\MelonLoader.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Net"  Condition="'$(TargetFramework)' == 'net472'" />
-    <Reference Include="System.Net.Http"  Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.Net" Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net472'" />
     <Reference Include="UIExpansionKit">
       <HintPath>$(VRCPath)\Mods\UIExpansionKit.dll</HintPath>
       <Private>False</Private>
