@@ -16,10 +16,9 @@
       <HintPath>$(MlPath)\MelonLoader.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.Net.Http.WebRequest" Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.Security" Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.Windows.Forms" Condition="'$(TargetFramework)' == 'net472'" />
   </ItemGroup>
 </Project>
