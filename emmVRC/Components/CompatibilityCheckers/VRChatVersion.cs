@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Objects.ModuleBases;
+using emmVRC.Utils;
 using UnityEngine;
 using VRC.Core;
 
@@ -38,7 +39,7 @@ namespace emmVRC.Components.CompatibilityCheckers
             if (VRCBuildNumber < Objects.Attributes.LastTestedBuildNumber)
             {
                 emmVRCLoader.Logger.LogError("You are using an older version of VRChat than supported by emmVRC: " + VRCBuildNumber + ". Please update VRChat through Steam or Oculus to build " + Objects.Attributes.LastTestedBuildNumber + ".");
-                System.Windows.Forms.MessageBox.Show("You are using an older version of VRChat than supported by emmVRC: " + VRCBuildNumber + ". Please update VRChat through Steam or Oculus to build " + Objects.Attributes.LastTestedBuildNumber + ".", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                MessageBox.Show(IntPtr.Zero, "You are using an older version of VRChat than supported by emmVRC: " + VRCBuildNumber + ". Please update VRChat through Steam or Oculus to build " + Objects.Attributes.LastTestedBuildNumber + ".", "emmVRC", 0x00000010u);
                 return false;
             }
             return true;

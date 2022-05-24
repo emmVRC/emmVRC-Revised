@@ -1,13 +1,11 @@
 ﻿using System;
 using emmVRC.Objects;
 using System.Linq;
-using System.Windows.Forms;
 using emmVRC.Libraries;
 using System.Collections;
 using System.Collections.Generic;
 using emmVRC.Objects.ModuleBases;
 using System.Reflection;
-using emmVRC.Network;
 using emmVRC.Utils;
 
 #pragma warning disable 4014
@@ -111,7 +109,7 @@ namespace emmVRC
             if (compatCheckers.Any(a => a.RunCheck() == false))
             {
                 emmVRCLoader.Logger.LogError("One or more compatibility issues were detected. See above for details. emmVRC cannot start.");
-                MessageBox.Show("One or more compatibility issues were detected. See the console for more details. emmVRC cannot start.", "emmVRC", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(IntPtr.Zero, "One or more compatibility issues were detected. See the console for more details. emmVRC cannot start.", "emmVRC", 0x00000010u);
             }
             else
             {

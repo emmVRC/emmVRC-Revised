@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using emmVRC.Objects;
 using emmVRC.Objects.ModuleBases;
+using emmVRC.Utils;
 
 namespace emmVRC.Components.CompatibilityCheckers
 {
@@ -16,7 +17,7 @@ namespace emmVRC.Components.CompatibilityCheckers
             if (new Version(currentVersion) < Attributes.MinimumMelonLoaderVersion)
             {
                 emmVRCLoader.Logger.LogError("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.MinimumMelonLoaderVersion.ToString(3) + " or newer, via the instructions in our Discord under the #how-to channel. emmVRC will not start.");
-                System.Windows.Forms.MessageBox.Show("You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.MinimumMelonLoaderVersion.ToString(3) + " or newer, via the instructions in our Discord under the #how-to channel. emmVRC will not start.", "emmVRC", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                MessageBox.Show(IntPtr.Zero, "You are using an incompatible version of MelonLoader: v" + currentVersion + ". Please install v" + Attributes.MinimumMelonLoaderVersion.ToString(3) + " or newer, via the instructions in our Discord under the #how-to channel. emmVRC will not start.", "emmVRC", 0x00000010u);
                 return false;
             }
             return true;

@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <VRCPath Condition="Exists('D:/SteamGames/steamapps/common/VRChat')">D:/SteamGames/steamapps/common/VRChat</VRCPath>
+    <VRCPath Condition="Exists('D:/Steam Library/steamapps/common/VRChat')">D:/Steam Library/steamapps/common/VRChat</VRCPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <MlPath>$(SolutionDir)\3rdparty\ml</MlPath>
+    <MlPath Condition="!Exists('$(MlPath)') And Exists('$(VRCPath)/MelonLoader')">$(VRCPath)/MelonLoader</MlPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectGuid>{3A25F309-F002-4B35-A6F0-6B31F9A9C362}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>emmVRCLoader</RootNamespace>
+    <AssemblyName>emmVRCLoader</AssemblyName>
+
+    <TargetFrameworks>net472;net6</TargetFrameworks>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <PlatformTarget>x64</PlatformTarget>
+
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\tmp\$(Configuration) ($(PlatformTarget))\$(ProjectName)\</IntermediateOutputPath>
+    <OutputPath>..\.build\$(Configuration) ($(PlatformTarget))\Modules\$(ProjectName)\</OutputPath>
+    
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	
+    <DebugSymbols Condition="'$(Configuration)'=='Release'">false</DebugSymbols>
+      <DebugType Condition="'$(Configuration)'=='Release'">None</DebugType>
+    <Optimize Condition="'$(Configuration)'=='Release'">true</Optimize>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>$(MlPath)\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MelonLoader">
+      <HintPath>$(MlPath)\MelonLoader.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+</Project>
