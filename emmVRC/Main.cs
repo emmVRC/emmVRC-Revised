@@ -275,7 +275,7 @@ namespace emmVRC
         }
         public static void OnApplicationQuit()
         {
-            
+            NetworkClient.DestroySession();
         }
     }
 }

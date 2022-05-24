@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 using System.IO;
 using UnhollowerRuntimeLib;
 using emmVRC.Objects.ModuleBases;
-using emmVRCLoader;
 
 namespace emmVRC.Functions.Core
 {
@@ -121,24 +120,20 @@ namespace emmVRC.Functions.Core
             else
             {
                 UnityWebRequest assetBundleRequest;
-                string assetType = "default";
-                
                 if (Environment.CommandLine.Contains("--emmvrc.anniversarymode"))
-                    assetType = "anniversary";
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Anniversary.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.pridemode"))
-                    assetType = "pride";
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Pride.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.normalmode"))
-                    assetType = "normal";
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Normal.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.halloweenmode"))
-                    assetType = "halloween";
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Halloween.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.xmasmode"))
-                    assetType = "xmas";
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Xmas.emm");
                 else if (Environment.CommandLine.Contains("--emmvrc.beemode"))
-                    assetType = "bee";
-
-                var filePath = Path.Combine(dependenciesPath, "Resources.emm");
-                var fileHash = HashUtil.GetSHA256(filePath);
-                assetBundleRequest = UnityWebRequest.Get($"https://prod-dl.emmvrc.com/resources/{assetType}/{fileHash}");
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/Seasonals/Bee.emm");
+                else
+                    assetBundleRequest = UnityWebRequest.Get("https://dl.emmvrc.com/downloads/emmvrcresources/resources.php");
 
                 assetBundleRequest.SendWebRequest();
                 while (!assetBundleRequest.isDone && !assetBundleRequest.isHttpError)
@@ -157,23 +152,11 @@ namespace emmVRC.Functions.Core
                 }
                 else
                 {
-                    if (assetBundleRequest.responseCode == 200)
-                    {
-                        File.WriteAllBytes(Path.Combine(dependenciesPath, "Resources.emm"), assetBundleRequest.downloadHandler.data);
-                        AssetBundleCreateRequest dlBundle = AssetBundle.LoadFromMemoryAsync(assetBundleRequest.downloadHandler.data);
-                        while (!dlBundle.isDone)
-                            yield return new WaitForSeconds(0.1f);
-                        emmVRCBundle = dlBundle.assetBundle;
-                    }
-                    
-                    try
-                    {
-                        emmVRCBundle = AssetBundle.LoadFromFile(Path.Combine(dependenciesPath, "Resources.emm"));
-                    }
-                    catch (Exception ex)
-                    {
-                        emmVRCLoader.Logger.LogError("emmVRC could not load resources. Many UI elements and features will be broken.");
-                    }
+                    File.WriteAllBytes(Path.Combine(dependenciesPath, "Resources.emm"), assetBundleRequest.downloadHandler.data);
+                    AssetBundleCreateRequest dlBundle = AssetBundle.LoadFromMemoryAsync(assetBundleRequest.downloadHandler.data);
+                    while (!dlBundle.isDone)
+                        yield return new WaitForSeconds(0.1f);
+                    emmVRCBundle = dlBundle.assetBundle;
                 }
             }
             // Made loading much simpler. If issues are found add yield return before each sprite.

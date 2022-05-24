@@ -12,6 +12,7 @@ namespace emmVRC.Functions.Other
     {
         public static void ForceQuit()
         {
+            NetworkClient.DestroySession();
             Thread quitThread = new Thread(QuitAfterQuit)
             {
                 IsBackground = true,
@@ -21,6 +22,7 @@ namespace emmVRC.Functions.Other
         }
         public static void ForceRestart()
         {
+            NetworkClient.DestroySession();
             Thread restartThread = new Thread(RestartAfterQuit)
             {
                 IsBackground = true,
