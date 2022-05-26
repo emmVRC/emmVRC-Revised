@@ -23,7 +23,8 @@ namespace emmVRC.Functions.UI
         private static GameObject AvatarVolumeMuteButton;
         public override void OnUiManagerInit()
         {
-            UIVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeUi").GetComponent<Slider>();
+            GameObject baseObject = UnityEngine.Resources.FindObjectsOfTypeAll<VRCUiPageSettings>().FirstOrDefault().gameObject;
+            UIVolumeSlider = baseObject.transform.Find("VolumePanel/VolumeUi").GetComponent<Slider>();
             UIVolumeSlider.onValueChanged.AddListener(new System.Action<float>((float flt) =>
             {
                 if (Configuration.JSONConfig.UIVolumeMute && flt != 0)
@@ -32,7 +33,7 @@ namespace emmVRC.Functions.UI
                     UIVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.UIVolumeMute ? "U" : "M");
                 }
             }));
-            WorldVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeGameWorld").GetComponent<Slider>();
+            WorldVolumeSlider = baseObject.transform.Find("VolumePanel/VolumeGameWorld").GetComponent<Slider>();
             WorldVolumeSlider.onValueChanged.AddListener(new System.Action<float>((float flt) =>
             {
                 if (Configuration.JSONConfig.WorldVolumeMute && flt != 0)
@@ -41,7 +42,7 @@ namespace emmVRC.Functions.UI
                     WorldVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.WorldVolumeMute ? "U" : "M");
                 }
             }));
-            VoicesVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeGameVoice").GetComponent<Slider>();
+            VoicesVolumeSlider = baseObject.transform.Find("VolumePanel/VolumeGameVoice").GetComponent<Slider>();
             VoicesVolumeSlider.onValueChanged.AddListener(new System.Action<float>((float flt) =>
             {
                 if (Configuration.JSONConfig.VoiceVolumeMute && flt != 0)
@@ -50,7 +51,7 @@ namespace emmVRC.Functions.UI
                     VoiceVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.VoiceVolumeMute ? "U" : "M");
                 }
             }));
-            AvatarVolumeSlider = QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel/VolumeGameAvatars").GetComponent<Slider>();
+            AvatarVolumeSlider = baseObject.transform.Find("VolumePanel/VolumeGameAvatars").GetComponent<Slider>();
             AvatarVolumeSlider.onValueChanged.AddListener(new System.Action<float>((float flt) =>
             {
                 if (Configuration.JSONConfig.AvatarVolumeMute && flt != 0)
@@ -59,7 +60,7 @@ namespace emmVRC.Functions.UI
                     AvatarVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.AvatarVolumeMute ? "U" : "M");
                 }
             }));
-            UIVolumeMuteButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/Footer/Exit").gameObject, QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Settings/VolumePanel").transform);
+            UIVolumeMuteButton = GameObject.Instantiate(baseObject.transform.Find("Footer/Exit").gameObject, baseObject.transform.Find("VolumePanel").transform);
             UIVolumeMuteButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(5.25f, 1.75f);
             UIVolumeMuteButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(180f, 468.5f);
             UIVolumeMuteButton.GetComponentInChildren<Text>().fontSize = (int)(UIVolumeMuteButton.GetComponentInChildren<Text>().fontSize / 1.75);
@@ -133,7 +134,7 @@ namespace emmVRC.Functions.UI
                     AvatarVolumeSlider.value = Configuration.JSONConfig.AvatarVolume;
                     AvatarVolumeMuteButton.GetComponentInChildren<Text>().text = "M";
                 }
-            }));
+            })); 
             UIVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.UIVolumeMute ? "U" : "M");
             WorldVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.WorldVolumeMute ? "U" : "M");
             VoiceVolumeMuteButton.GetComponentInChildren<Text>().text = (Configuration.JSONConfig.VoiceVolumeMute ? "U" : "M");

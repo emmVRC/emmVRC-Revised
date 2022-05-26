@@ -55,7 +55,7 @@ namespace emmVRC.Menus
                     Functions.PlayerHacks.Waypoints.SaveWaypoints();
                     LoadMenu();
                 }), null);
-            }, "Removes all of the waypoints for the current world", ButtonAPI.xIconSprite);
+            }, "Removes all of the waypoints for the current world", ButtonAPI.trashIconSprite);
 
             waypointsGroup = new ButtonGroup(waypointsPage, "");
 

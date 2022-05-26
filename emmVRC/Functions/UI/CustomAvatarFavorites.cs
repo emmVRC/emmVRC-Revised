@@ -188,9 +188,11 @@ namespace emmVRC.Functions.UI
                 currentSortingMode = 0;
             sortingInverse = Configuration.JSONConfig.SortingInverse;
 
-            pageAvatar = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar").gameObject;
-            FavoriteButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Favorite Button").gameObject;
-            FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/"));
+            VRC.UI.PageAvatar pageAvatarComp = UnityEngine.Resources.FindObjectsOfTypeAll<VRC.UI.PageAvatar>().FirstOrDefault();
+
+            pageAvatar = pageAvatarComp.gameObject;
+            FavoriteButton = pageAvatarComp.transform.Find("Favorite Button").gameObject;
+            FavoriteButtonNew = UnityEngine.Object.Instantiate<GameObject>(FavoriteButton, pageAvatarComp.transform);
             FavoriteButtonNewButton = FavoriteButtonNew.GetComponent<Button>();
             FavoriteButtonNewButton.onClick.RemoveAllListeners();
             FavoriteButtonNewButton.onClick.AddListener(new System.Action(() =>
@@ -205,7 +207,7 @@ namespace emmVRC.Functions.UI
                 {
 
                     if (!Utils.PlayerUtils.DoesUserHaveVRCPlus())
-                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Attributes.VRCPlusMessage, 0f);
+                        VRCUiPopupManager.prop_VRCUiPopupManager_0.ShowAlert("VRChat Plus Required", Functions.Core.Localization.currentLanguage.VRCPlusMessage, 0f);
                     else
                     {
                         if (((apiAvatar.releaseStatus == "public" || apiAvatar.authorId == APIUser.CurrentUser.id) && apiAvatar.releaseStatus != null))
@@ -267,11 +269,11 @@ namespace emmVRC.Functions.UI
             //    ShowAuthorButton.SetActive(false);
 
             GameObject oldPublicAvatarList;
-            oldPublicAvatarList = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
+            oldPublicAvatarList = pageAvatarComp.transform.Find("Vertical Scroll View/Viewport/Content/Legacy Avatar List").gameObject;
             PublicAvatarList = GameObject.Instantiate(oldPublicAvatarList, oldPublicAvatarList.transform.parent);
             PublicAvatarList.transform.SetAsFirstSibling();
 
-            ChangeButton = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar/Change Button").gameObject;
+            ChangeButton = pageAvatarComp.transform.Find("Change Button").gameObject;
             baseChooseEvent = ChangeButton.GetComponent<Button>().onClick;
             ChangeButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
             ChangeButton.GetComponent<Button>().onClick.AddListener(new System.Action(() =>
@@ -458,7 +460,7 @@ namespace emmVRC.Functions.UI
                 }
                 MelonLoader.MelonCoroutines.Start(WaitToEnableSearch());
             };
-            VRCUiPageHeader pageheader = QuickMenuUtils.GetVRCUiMInstance().GetComponentInChildren<VRCUiPageHeader>(true);
+            VRCUiPageHeader pageheader = UnityEngine.Resources.FindObjectsOfTypeAll<VRCUiPageHeader>().FirstOrDefault();
             if (pageheader != null)
                 searchBox = pageheader.field_Public_UiInputField_0;
             searchBoxAction = UnhollowerRuntimeLib.DelegateSupport.ConvertDelegate<UnityAction<string>>((System.Action<string>)((string searchTerm) =>

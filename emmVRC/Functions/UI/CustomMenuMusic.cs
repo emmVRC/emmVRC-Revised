@@ -48,7 +48,7 @@ namespace emmVRC.Functions.UI
                     int randomIndex = rndm.Next(availableCustomMenuMusics.Length);
                     emmVRCLoader.Logger.LogDebug("Picked track: " + availableCustomMenuMusics[randomIndex]);
                     GameObject loadingMusic1 = GameObject.Find("LoadingBackground_TealGradient_Music/LoadingSound");
-                    GameObject loadingMusic2 = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Popups/LoadingPopup/LoadingSound").gameObject;
+                    GameObject loadingMusic2 = VRC.UI.UIManagerImpl.prop_UIManagerImpl_0.transform.Find("MenuContent/Popups/LoadingPopup/LoadingSound").gameObject;
                     if (loadingMusic1 != null)
                         loadingMusic1.GetComponent<AudioSource>().Stop();
                     if (loadingMusic2 != null)

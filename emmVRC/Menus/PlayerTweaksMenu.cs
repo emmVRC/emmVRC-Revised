@@ -37,7 +37,7 @@ namespace emmVRC.Menus
             if (buildIndex != -1 || _initialized) return;
 
             playerTweaksPage = new MenuPage("emmVRC_PlayerTweaks", "Player Tweaks", false, true);
-            playerTweaksButton = new SingleButton(FunctionsMenu.tweaksGroup, "Player", OpenMenu, "Functions that affect the current world you're in", Functions.Core.Resources.PlayerIcon);
+            playerTweaksButton = new SingleButton(FunctionsMenu.tweaksGroup, "Player", OpenMenu, "Functions that affect you as a player", Functions.Core.Resources.PlayerIcon);
 
             avatarsGroup = new ButtonGroup(playerTweaksPage, "Avatars");
             removeLoadedDynamicBonesButton = new SimpleSingleButton(avatarsGroup, "Remove\nLoaded\nDynanic\nBones", () =>

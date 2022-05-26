@@ -51,7 +51,7 @@ namespace emmVRC.Menus
         {
             if (buildIndex != -1 || _initialized) return;
 
-            alarmPage = new MenuPage("emmVRC_Alarms", "Alarms", false, true, true, () => { OpenDeleteMenu(); }, "Select an alarm to be deleted", Utils.ButtonAPI.xIconSprite);
+            alarmPage = new MenuPage("emmVRC_Alarms", "Alarms", false, true, true, () => { OpenDeleteMenu(); }, "Select an alarm to be deleted", Utils.ButtonAPI.trashIconSprite);
             alarmPage.menuContents.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childControlHeight = true;
             alarmButton = new SingleButton(Menus.FunctionsMenu.featuresGroup, "Alarms", () => { OpenMenu(); }, "View and set alarms to go off at real or instance times", Functions.Core.Resources.AlarmClockIcon);
 

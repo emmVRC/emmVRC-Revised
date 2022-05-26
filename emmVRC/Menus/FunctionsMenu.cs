@@ -22,7 +22,7 @@ namespace emmVRC.Menus
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             if (buildIndex != -1 || _initialized) return;
-            basePage = new Utils.MenuPage("emmVRC_MainMenu", "emmVRC", true, false, true, () => Utils.ButtonAPI.GetQuickMenuInstance().AskConfirmOpenURL("https://discord.gg/emmVRC"), "<color=#FF69B4>emmVRC</color> version " + Objects.Attributes.Version+".\nClick to join our Discord!", Functions.Core.Resources.onlineSprite, true);
+            basePage = new Utils.MenuPage("emmVRC_MainMenu", "emmVRC", true, false, true, () => System.Diagnostics.Process.Start("https://discord.gg/emmVRC"), "<color=#FF69B4>emmVRC</color> version " + Objects.Attributes.Version+".\nClick to join our Discord!", Functions.Core.Resources.onlineSprite, true);
             mainTab = new Utils.Tab(Utils.ButtonAPI.menuTabBase.transform.parent, "emmVRC_MainMenu", "emmVRC", Functions.Core.Resources.TabIcon, () => {
                 if (Configuration.JSONConfig.AcceptedEULAVersion != Objects.Attributes.EULAVersion)
                 {

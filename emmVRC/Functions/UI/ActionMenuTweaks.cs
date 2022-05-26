@@ -18,8 +18,8 @@ namespace emmVRC.Functions.UI
         }
         public static void Apply()
         {
-            QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.parent.Find("ActionMenu/Container/MoveMenuL").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
-            QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.parent.Find("ActionMenu/Container/MoveMenuR").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
+            UnityEngine.Resources.FindObjectsOfTypeAll<ActionMenuDriver>().FirstOrDefault().transform.Find("Container/MoveMenuL").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
+            UnityEngine.Resources.FindObjectsOfTypeAll<ActionMenuDriver>().FirstOrDefault().transform.Find("Container/MoveMenuR").gameObject.SetActive(!Configuration.JSONConfig.DisableOneHandMovement);
         }
     }
 }

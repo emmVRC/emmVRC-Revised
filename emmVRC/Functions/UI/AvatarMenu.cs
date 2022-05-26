@@ -26,7 +26,7 @@ namespace emmVRC.Functions.UI
         public override void OnUiManagerInit()
         {
             // Gather all the GameObjects for the VRChat default avatar lists (that we can about anyway)
-            avatarScreen = Libraries.QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Screens/Avatar").gameObject;
+            avatarScreen = UnityEngine.Resources.FindObjectsOfTypeAll<VRC.UI.PageAvatar>().FirstOrDefault().gameObject;
             hotWorldsViewPort = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Avatar Worlds (What's Hot)/ViewPort").gameObject;
             hotWorldsButton = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Avatar Worlds (What's Hot)/Button").gameObject;
             randomWorldsViewPort = avatarScreen.transform.Find("Vertical Scroll View/Viewport/Content/Avatar Worlds (Random)/ViewPort").gameObject;
