@@ -38,7 +38,7 @@ namespace emmVRC.Menus
                     OpenMenu();
                     ButtonAPI.GetQuickMenuInstance().ShowAlert("Instance History has been cleared");
                 }), new System.Action(() => { }));
-            }, "Clear your instance history", ButtonAPI.xIconSprite);
+            }, "Clear your instance history", ButtonAPI.trashIconSprite);
             instanceHistoryButton = new SingleButton(FunctionsMenu.featuresGroup, "Instance\nHistory", () =>
             {
                 OpenMenu();

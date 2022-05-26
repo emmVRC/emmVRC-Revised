@@ -34,7 +34,8 @@ namespace emmVRC.Utils
         internal static Sprite onIconSprite;
         internal static Sprite plusIconSprite;
         internal static Sprite xIconSprite;
-        
+        internal static Sprite trashIconSprite;
+
         internal static VRC.UI.Elements.QuickMenu GetQuickMenuInstance()
         {
             return UnityEngine.Resources.FindObjectsOfTypeAll<VRC.UI.Elements.QuickMenu>().FirstOrDefault();
@@ -60,6 +61,11 @@ namespace emmVRC.Utils
             while (GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/") == null)
                 yield return new WaitForEndOfFrame();
             singleButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions/Button_Respawn").gameObject;
+            for (int i = 0; i < singleButtonBase.GetComponentsInChildren<VRC.UI.Elements.Tooltips.UiTooltip>().Count; i++)
+            {
+                if (singleButtonBase.GetComponentsInChildren<VRC.UI.Elements.Tooltips.UiTooltip>()[i].field_Public_String_0 == "" && singleButtonBase.GetComponentsInChildren<VRC.UI.Elements.Tooltips.UiTooltip>()[i].field_Public_String_1 == "")
+                    GameObject.DestroyImmediate(singleButtonBase.GetComponentsInChildren<VRC.UI.Elements.Tooltips.UiTooltip>()[i]);
+            };
             textButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Settings/Panel_QM_ScrollRect/Viewport/VerticalLayoutGroup/Buttons_Debug/Button_Build").gameObject;
             toggleButtonBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Settings/Panel_QM_ScrollRect/Viewport/VerticalLayoutGroup/Buttons_UI_Elements_Row_1/Button_ToggleQMInfo").gameObject;
             buttonGroupBase = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Dashboard/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_QuickActions").gameObject;
@@ -75,7 +81,8 @@ namespace emmVRC.Utils
 
             onIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Notifications/Panel_NoNotifications_Message/Icon").GetComponent<Image>().sprite;
             plusIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Here/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_WorldActions/Button_FavoriteWorld/Icon").GetComponent<Image>().sprite;
-            xIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Here/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_WorldActions/Button_FavoriteWorld/Icon_Secondary").GetComponent<Image>().sprite;
+            xIconSprite = toggleButtonBase.transform.Find("Icon_Off").GetComponent<Image>().sprite;
+            trashIconSprite = GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent/Menu_Here/ScrollRect/Viewport/VerticalLayoutGroup/Buttons_WorldActions/Button_FavoriteWorld/Icon_Secondary").GetComponent<Image>().sprite;
         }
     }
     public class SingleButton
@@ -480,7 +487,7 @@ namespace emmVRC.Utils
         public readonly Transform menuContents;
         private readonly TextMeshProUGUI pageTitleText;
         private readonly bool isRoot;
-        private readonly GameObject backButtonGameObject;
+        public readonly GameObject backButtonGameObject;
         private readonly GameObject extButtonGameObject;
         private bool preserveColor;
         public readonly RectMask2D menuMask;
@@ -515,9 +522,9 @@ namespace emmVRC.Utils
             backButtonGameObject.SetActive(backButton);
             backButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
             backButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
-                if (isRoot)
-                    ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_Boolean_0("QuickMenuDashboard");
-                else
+                //if (isRoot)
+                //    ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_Boolean_0("QuickMenuDashboard");
+                //else
                     this.page.Method_Protected_Virtual_New_Void_0();
             }));
             extButtonGameObject.SetActive(extButton);
@@ -531,7 +538,7 @@ namespace emmVRC.Utils
                 if (preserveColor)
                 {
                     extButtonGameObject.GetComponentInChildren<Image>().color = Color.white;
-                    extButtonGameObject.GetComponentInChildren<VRC.UI.Core.Styles.StyleElement>(true).enabled = false;
+                    extButtonGameObject.GetComponentInChildren<VRC.UI.Core.Styles.StyleElement>().enabled = false;
                 }
             }
             this.preserveColor = preserveColor;
@@ -553,16 +560,12 @@ namespace emmVRC.Utils
         }
         public void OpenMenu()
         {
-            if (isRoot)
-                ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
-            else
-                ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(page.field_Public_String_0);
-            //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First().PushPage(pageTitleText.text);
-            //UnityEngine.Resources.FindObjectsOfTypeAll<MenuStateController>().First()._currentRootPage.PushPage(page);
+            ButtonAPI.GetMenuStateControllerInstance().Method_Public_Void_String_UIContext_Boolean_TransitionType_0(page.field_Public_String_0, page.prop_UIContext_0, false, UIPage.TransitionType.Right);
         }
         public void CloseMenu()
         {
-            typeof(UIPage).GetMethods().First(a => XrefUtils.CheckUsing(a, "Method_Public_Void_UIPage_0")).Invoke(page, null);
+            backButtonGameObject.GetComponentInChildren<Button>().onClick.Invoke();
+            //typeof(UIPage).GetMethods().First(a => XrefUtils.CheckUsing(a, "Method_Public_Void_UIPage_0")).Invoke(page, null);
             //page.Method_Public_Virtual_New_Void_0();
         }
     }
@@ -869,6 +872,7 @@ namespace emmVRC.Utils
             leftGameObject.name = "WingMenu_" + menuName+"_L";
             leftGameObject.SetActive(false);
             GameObject.DestroyImmediate(leftGameObject.GetComponent<UIPage>());
+            GameObject.DestroyImmediate(leftGameObject.GetComponent<MonoBehaviourPublicOb_aGa_aUnique>());
             leftPage = leftGameObject.AddComponent<UIPage>();
             leftPage.field_Public_String_0 = menuName+"_L";
             leftPage.field_Private_Boolean_1 = true;
@@ -883,18 +887,19 @@ namespace emmVRC.Utils
                 ButtonAPI.GetLeftWingControllerInstance().field_Public_ArrayOf_UIPage_0 = menuRootPages.ToArray();
             }
             leftGameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").DestroyChildren();
+            leftGameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").GetComponent<VerticalLayoutGroup>().spacing = 0;
+            leftGameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup").GetComponent<VerticalLayoutGroup>().padding = new RectOffset(0, 0, 0, 0);
             leftMenuContents = leftGameObject.transform.Find("ScrollRect/Viewport/VerticalLayoutGroup");
+            leftMenuContents.transform.DestroyChildren();
             leftPageTitleText = leftGameObject.GetComponentInChildren<TextMeshProUGUI>(true);
             leftPageTitleText.text = pageTitle;
             isRoot = root;
             leftBackButtonGameObject = leftGameObject.transform.Find("WngHeader_H1/LeftItemContainer/Button_Back").gameObject;
             leftBackButtonGameObject.SetActive(backButton);
             leftBackButtonGameObject.GetComponentInChildren<Button>().onClick = new Button.ButtonClickedEvent();
-            leftBackButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() => {
-                if (isRoot)
-                    ButtonAPI.GetLeftWingControllerInstance().Method_Public_Void_String_Boolean_0("WingMenu");
-                else
-                    this.leftPage.Method_Protected_Virtual_New_Void_0();
+            leftBackButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
+            {
+                    ButtonAPI.GetLeftWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_TransitionType_0(leftPage.field_Public_String_0, leftPage.prop_UIContext_0, false, UIPage.TransitionType.Left);
             }));
             this.preserveColor = preserveColor;
 
@@ -918,21 +923,19 @@ namespace emmVRC.Utils
             rightBackButtonGameObject = rightGameObject.transform.Find("WngHeader_H1/LeftItemContainer/Button_Back").gameObject;
             rightBackButtonGameObject.GetComponentInChildren<Button>().onClick.AddListener(new System.Action(() =>
             {
-                if (isRoot)
-                    ButtonAPI.GetRightWingControllerInstance().Method_Public_Void_String_Boolean_0("WingMenu");
-                else
-                    this.rightPage.Method_Protected_Virtual_New_Void_0();
+                    ButtonAPI.GetRightWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_TransitionType_0(rightPage.field_Public_String_0, rightPage.prop_UIContext_0, false, UIPage.TransitionType.Left);
+                //this.rightPage.Method_Protected_Virtual_New_Void_0();
             }));
         }
         public void OpenLeftMenu()
         {
-            ButtonAPI.GetLeftWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(leftPage.field_Public_String_0);
-            ButtonAPI.GetLeftWingControllerInstance().field_Private_ArrayOf_Wing_0.First().field_Private_String_0 = leftPage.field_Public_String_0;
+            ButtonAPI.GetLeftWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_TransitionType_0(leftPage.field_Public_String_0, leftPage.prop_UIContext_0, false, UIPage.TransitionType.Right);
+            ButtonAPI.GetLeftWingControllerInstance().field_Private_ArrayOf_Wing_0.First().prop_String_0 = leftPage.field_Public_String_0;
         }
         public void OpenRightMenu()
         {
-            ButtonAPI.GetRightWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_0(rightPage.field_Public_String_0);
-            ButtonAPI.GetRightWingControllerInstance().field_Private_ArrayOf_Wing_0.First().field_Private_String_0 = rightPage.field_Public_String_0;
+            ButtonAPI.GetRightWingControllerInstance().Method_Public_Void_String_UIContext_Boolean_TransitionType_0(rightPage.field_Public_String_0, rightPage.prop_UIContext_0, false, UIPage.TransitionType.Right);
+            ButtonAPI.GetRightWingControllerInstance().field_Private_ArrayOf_Wing_0.First().prop_String_0 = rightPage.field_Public_String_0;
         }
         public void CloseLeftMenu()
         {

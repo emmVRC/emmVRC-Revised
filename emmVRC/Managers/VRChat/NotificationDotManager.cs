@@ -18,7 +18,7 @@ namespace emmVRC.Managers.VRChat
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             if (buildIndex != -1 || _initialized) return;
-            GameObject iconParent = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud/NotificationDotParent");
+            GameObject iconParent = GameObject.Find("UserInterface/UnscaledUI/HudContent_Old/Hud/NotificationDotParent");
             emmVRCIcon = null; 
             foreach (var child in iconParent.transform)
             {

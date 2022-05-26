@@ -97,7 +97,7 @@ namespace emmVRC.Menus
                     Managers.emmVRCNotificationsManager.AddNotification(new Objects.Notification("Avatar Export", Functions.Core.Resources.alertSprite, "Your emmVRC Favorite list has been exported to UserData/emmVRC/ExportedList.json", true, false, null, "", "", true, null, "Dismiss"));
                 }), null);
             }, "Export your emmVRC Avatar Favorites to a file");
-            settingsButton = new SingleButton(FunctionsMenu.otherGroup, "Settings", OpenMenu, "", Functions.Core.Resources.SettingsIcon);
+            settingsButton = new SingleButton(FunctionsMenu.otherGroup, "Settings", OpenMenu, "Configure settings with emmVRC", Functions.Core.Resources.SettingsIcon);
 
 
             featuresGroup = new ButtonGroup(settingsPage, "Features");

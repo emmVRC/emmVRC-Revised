@@ -14,6 +14,7 @@ namespace emmVRC.Libraries
     public class QuickMenuUtils
     {
         // Fetch the VRCUiManager instance
+        [System.ObsoleteAttribute("VRCUiManager no longer functions the same. Please use VRC.UI.UiManagerImpl")]
         public static VRCUiManager GetVRCUiMInstance()
         {
             return VRCUiManager.prop_VRCUiManager_0;

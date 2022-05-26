@@ -19,9 +19,9 @@ namespace emmVRC.Functions.UI
         public static void Process()
         {
             if (micTooltipDesktop == null)
-                micTooltipDesktop = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud/VoiceDotParent/PushToTalkKeybd");
+                micTooltipDesktop = GameObject.Find("UserInterface/UnscaledUI/HudContent_Old/Hud/VoiceDotParent/PushToTalkKeybd");
             if (micTooltipXbox == null)
-                micTooltipXbox = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud/VoiceDotParent/PushToTalkXbox");
+                micTooltipXbox = GameObject.Find("UserInterface/UnscaledUI/HudContent_Old/Hud/VoiceDotParent/PushToTalkXbox");
             micTooltipDesktop.transform.localScale = (Configuration.JSONConfig.DisableMicTooltip ? Vector3.zero : Vector3.one);
             micTooltipXbox.transform.localScale = (Configuration.JSONConfig.DisableMicTooltip ? Vector3.zero : Vector3.one);
         }

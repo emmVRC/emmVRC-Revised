@@ -40,30 +40,6 @@ namespace emmVRC.Functions.Core
             {
                 emmVRCLoader.Logger.LogError("Station patching failed: " + ex.ToString());
             }
-            if (!Functions.Core.ModCompatibility.FBTSaver && !Functions.Core.ModCompatibility.IKTweaks && Type.GetType("VRCTrackingSteam") != null/* !Environment.CurrentDirectory.Contains("vrchat-vrchat")*/) // Yet another of yet another crusty Oculus check
-            {
-                try
-                {
-                    foreach (System.Reflection.MethodInfo inf in System.Reflection.Assembly.GetAssembly(typeof(QuickMenuContextualDisplay)).GetType("VRCTrackingSteam", true, true).GetMethods())
-                    {
-                        if (inf.GetParameters().Length == 1 && inf.GetParameters().First().ParameterType == typeof(string) && inf.ReturnType == typeof(bool) && inf.GetRuntimeBaseDefinition() == inf)
-                        {
-                            emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(inf, new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("IsCalibratedForAvatar", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                        }
-                    }
-                    foreach (System.Reflection.MethodInfo inf in System.Reflection.Assembly.GetAssembly(typeof(QuickMenuContextualDisplay)).GetType("VRCTrackingSteam", true, true).GetMethods())
-                    {
-                        if (inf.GetParameters().Length == 3 && inf.GetParameters().First().ParameterType == typeof(Animator) && inf.ReturnType == typeof(void) && inf.GetRuntimeBaseDefinition() == inf)
-                        {
-                            emmVRCLoader.emmVRCLoaderMod.instance.HarmonyInstance.Patch(inf, new HarmonyLib.HarmonyMethod(typeof(Hooking).GetMethod("PerformCalibration", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    emmVRCLoader.Logger.LogError("VRCTrackingSteam hooking failed: " + ex.ToString());
-                }
-            }
             try
             {
                 foreach (MethodInfo method in typeof(PlayerNameplate).GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => methodMatchRegex.IsMatch(x.Name)))
@@ -120,37 +96,6 @@ namespace emmVRC.Functions.Core
                         __instance.field_Private_VRCPlayer_0.GetNameplateBackground().color = (ColorConversion.HexToColor(Configuration.JSONConfig.NewUserNamePlateColorHex));
                 }
             }
-        }
-        private static bool IsCalibratedForAvatar(ref VRCTrackingSteam __instance, ref bool __result, string __0)
-        {
-            if (__0 != null && Functions.PlayerHacks.FBTSaving.IsPreviouslyCalibrated(__0) && RoomManager.field_Internal_Static_ApiWorld_0 != null && Configuration.JSONConfig.TrackingSaving)
-            {
-                emmVRCLoader.Logger.LogDebug("Avatar was previously calibrated, loading calibration data");
-                __result = true;
-                Functions.PlayerHacks.FBTSaving.LoadCalibrationInfo(__instance, __0);
-                return false;
-            }
-            else
-            {
-                emmVRCLoader.Logger.LogDebug("Avatar was not previously calibrated, or tracking saving is off");
-                __result = false;
-                return true;
-            }
-        }
-        private static bool PerformCalibration(ref VRCTrackingSteam __instance, Animator __0, bool __1, bool __2)
-        {
-            if (__0 == null || __instance == null) return true;
-            if (Configuration.JSONConfig.TrackingSaving)
-            {
-                emmVRCLoader.Logger.LogDebug("Saving calibration info...");
-                if (VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0 != null)
-                    MelonLoader.MelonCoroutines.Start(Functions.PlayerHacks.FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_0.id));
-                else if (VRCPlayer.field_Internal_Static_VRCPlayer_0.field_Private_VRCAvatarManager_0.field_Private_ApiAvatar_1 != null)
-                    MelonLoader.MelonCoroutines.Start(Functions.PlayerHacks.FBTSaving.SaveCalibrationInfo(__instance, VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCAvatarManager_0.field_Private_ApiAvatar_1.id));
-                else
-                    emmVRCLoader.Logger.LogError("Could not fetch avatar information for this avatar");
-            }
-            return true;
         }
 
         private static bool SetControllerVisibility(VRCTrackingManager __instance, bool __0)

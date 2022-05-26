@@ -24,7 +24,7 @@ namespace emmVRC.Functions.UI
         {
             if (buildIndex != -1 || _initialized) return;
 
-            emojiFavouritesPage = new MenuPage("emmVRC_FavouriteEmojis", "Favorite Emojis", false, true, true, () => { ButtonAPI.GetQuickMenuInstance().ShowCustomDialog("Emoji Favorites", "Are you sure you want to clear your Emoji Favorites?", "", "Yes", "No", null, () => { Configuration.WriteConfigOption("FavouritedEmojis", new List<int>()); OpenMenu(); }, null); }, "Select to clear your Emoji Favorites", ButtonAPI.xIconSprite);
+            emojiFavouritesPage = new MenuPage("emmVRC_FavouriteEmojis", "Favorite Emojis", false, true, true, () => { ButtonAPI.GetQuickMenuInstance().ShowCustomDialog("Emoji Favorites", "Are you sure you want to clear your Emoji Favorites?", "", "Yes", "No", null, () => { Configuration.WriteConfigOption("FavouritedEmojis", new List<int>()); OpenMenu(); }, null); }, "Select to clear your Emoji Favorites", ButtonAPI.trashIconSprite);
 
             emojiFavouritesPage.menuContents.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().childControlHeight = true;
             emojiGroups = new List<ButtonGroup>();

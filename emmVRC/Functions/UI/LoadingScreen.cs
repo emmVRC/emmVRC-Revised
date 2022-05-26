@@ -16,7 +16,9 @@ namespace emmVRC.Functions.UI
         public static GameObject functionsButton;
         public override void OnUiManagerInit()
         {
-            functionsButton = GameObject.Instantiate(QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Popups/LoadingPopup/ButtonMiddle"), QuickMenuUtils.GetVRCUiMInstance().menuContent().transform.Find("Popups/LoadingPopup")).gameObject;
+            GameObject LoadingPopupBase = UnityEngine.Resources.FindObjectsOfTypeAll<VRCUiPageLoading>().FirstOrDefault().gameObject;
+
+            functionsButton = GameObject.Instantiate(LoadingPopupBase.transform.Find("ButtonMiddle").gameObject, LoadingPopupBase.transform);
             functionsButton.GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, -128f);
             functionsButton.SetActive(Configuration.JSONConfig.ForceRestartButtonEnabled);
             functionsButton.name = "LoadingFunctionsButton";
