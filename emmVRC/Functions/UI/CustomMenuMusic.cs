@@ -25,7 +25,6 @@ namespace emmVRC.Functions.UI
         {
             if (!Functions.Core.ModCompatibility.BetterLoadingScreen)
             {
-
                 if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/CustomMenuMusic")))
                     Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/CustomMenuMusic"));
                 if (File.Exists(Path.Combine(Environment.CurrentDirectory, "UserData/emmVRC/custommenu.ogg")))
@@ -48,7 +47,7 @@ namespace emmVRC.Functions.UI
                     int randomIndex = rndm.Next(availableCustomMenuMusics.Length);
                     emmVRCLoader.Logger.LogDebug("Picked track: " + availableCustomMenuMusics[randomIndex]);
                     GameObject loadingMusic1 = GameObject.Find("LoadingBackground_TealGradient_Music/LoadingSound");
-                    GameObject loadingMusic2 = VRC.UI.UIManagerImpl.prop_UIManagerImpl_0.transform.Find("MenuContent/Popups/LoadingPopup/LoadingSound").gameObject;
+                    GameObject loadingMusic2 = VRC.UI.UIManagerImpl.prop_UIManagerImpl_0.field_Private_Transform_0.Find("MenuContent/Popups/LoadingPopup/LoadingSound")?.gameObject;
                     if (loadingMusic1 != null)
                         loadingMusic1.GetComponent<AudioSource>().Stop();
                     if (loadingMusic2 != null)

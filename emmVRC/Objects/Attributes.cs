@@ -8,15 +8,19 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 2, 0, 0);
-        public const int LastTestedBuildNumber = 1201;
+        public static readonly Version Version = new Version(3, 2, 1, 0);
+        public const int LastTestedBuildNumber = 1203;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "5/26/2022";
+        public const string DateUpdated = "5/28/2022";
         //  "This is an pre-release build! Do not distribute to others."
         //  When writing the changelog, please only include changes for the current minor version, unless a new minor version just came out
         public const string Changelog =
 
+            "<b>v3.2.1</b>\n" +
+            "• Fixed the \"Search Avatars\" button in the User Info not working\n" +
+            "• Fixed custom menu music not working\n" +
+            "• Added extra debug information to aid with troubleshooting some other errors\n\n" +
             "<b>v3.2.0</b>\n" +
             "• Added back the Alarm Clock, complete with an infinite number of alarms, and a total rework for UI 2.0\n" +
             "• Added back the Clock, now available in the bottom of the Launch Pad of the Quick Menu\n" +
@@ -41,10 +45,7 @@ namespace emmVRC.Objects
             "• Removed extraneous code to improve performance and reliability\n\n" +
             "<b>v3.1.5</b>\n" +
             "• Favorites & search will no longer always show an error bot.\n" +
-            "• Menu recoloring should no longer throw an error on startup. (Some things may look wrong! let us know!)\n\n" +
-            "<b>v3.1.4</b>\n" +
-            "• Attempted to make login text more clear about how to make a pin and set up the emmVRC Network\n" +
-            "• Fixed issues with Oculus, including network login and Risky Functions\n\n";
+            "• Menu recoloring should no longer throw an error on startup. (Some things may look wrong! let us know!)\n\n";
         public static bool Debug = false;
         public static readonly Version MinimumMelonLoaderVersion = new Version(0, 5, 4);
         public static readonly Version MinimumemmVRCLoaderVersion = new Version(1, 5, 0);

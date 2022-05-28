@@ -91,8 +91,8 @@ namespace emmVRC.Functions.UI
                     else
                         PortalToUserButton.SetActive(false);
                 }
-                catch
-                {
+                catch 
+                { 
                 }
                 try
                 {
@@ -143,7 +143,7 @@ namespace emmVRC.Functions.UI
             {
                 if (userInfo.field_Private_APIUser_0 != null)
                 {
-                    VRCUiManager.prop_VRCUiManager_0.ShowScreen(VRCUiManager.prop_VRCUiManager_0.menuContent().transform.Find("Screens/Avatar").GetComponent<VRCUiPage>());
+                    Functions.UI.MainMenu.avatarButton.GetComponentInChildren<Button>().onClick.Invoke();
                     MelonLoader.MelonCoroutines.Start(Functions.UI.CustomAvatarFavorites.SearchAvatarsAfterDelay(userInfo.field_Private_APIUser_0.GetName()));
                 }
             }));
