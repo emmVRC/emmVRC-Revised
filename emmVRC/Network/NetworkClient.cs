@@ -27,7 +27,7 @@ namespace emmVRC.Network
         public static HttpClient httpClient;
         public static NetworkConfiguration networkConfiguration;
 
-        private string _configUrl = "https://dl.emmvrc.com/configuration.php";
+        private string _configUrl = "https://prod-dl.emmvrc.com/config";
         private static string _jwtToken;
         public static bool HasJwtToken => !string.IsNullOrWhiteSpace(_jwtToken);
 
@@ -127,9 +127,7 @@ namespace emmVRC.Network
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
                 $"emmVRC/1.0 (Client; emmVRCClient/{Attributes.Version}, Headset; {(XRDevice.isPresent ? XRDevice.model : "None")})");
             
-            //httpClient.BaseAddress = new Uri(networkConfiguration.APIUrl);
-            //httpClient.BaseAddress = new Uri("http://127.0.0.1:3002/");
-            httpClient.BaseAddress = new Uri("https://prod-api.emmvrc.com/");
+            httpClient.BaseAddress = new Uri(networkConfiguration.APIUrl);
             Logger.Log("Initialized network config.");
         }
         

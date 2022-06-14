@@ -140,7 +140,8 @@ namespace emmVRC.Functions.Core
                 var fileHash = HashUtil.GetSHA256(filePath);
                 assetBundleRequest = UnityWebRequest.Get($"https://prod-dl.emmvrc.com/resources/{assetType}/{fileHash}");
 
-                assetBundleRequest.SendWebRequest();
+                yield return assetBundleRequest.SendWebRequest();
+                
                 while (!assetBundleRequest.isDone && !assetBundleRequest.isHttpError)
                     yield return new WaitForSeconds(0.1f);
 
@@ -158,13 +159,7 @@ namespace emmVRC.Functions.Core
                 else
                 {
                     if (assetBundleRequest.responseCode == 200)
-                    {
                         File.WriteAllBytes(Path.Combine(dependenciesPath, "Resources.emm"), assetBundleRequest.downloadHandler.data);
-                        AssetBundleCreateRequest dlBundle = AssetBundle.LoadFromMemoryAsync(assetBundleRequest.downloadHandler.data);
-                        while (!dlBundle.isDone)
-                            yield return new WaitForSeconds(0.1f);
-                        emmVRCBundle = dlBundle.assetBundle;
-                    }
                     
                     try
                     {

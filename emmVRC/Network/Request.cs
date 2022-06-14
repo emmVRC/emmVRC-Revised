@@ -30,6 +30,9 @@ namespace emmVRC.Network
                 using (var responseMessage = await NetworkClient.httpClient.SendAsync(requestMessage))
                 {
                     var (statusCode, response) = (responseMessage.StatusCode, await responseMessage.Content.ReadAsStringAsync());
+                    #if DEBUG
+                    Logger.Log($"{statusCode} | {response}");
+                    #endif
                     return (statusCode, response);
                 }
             }

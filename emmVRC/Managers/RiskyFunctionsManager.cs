@@ -27,7 +27,7 @@ namespace emmVRC.Managers
             NetworkEvents.OnInstanceChanged += OnInstanceChange;
             NetworkEvents.OnLocalPlayerJoined += (VRC.Player player) => { 
                 if (player.field_Private_APIUser_0 != null && player.field_Private_APIUser_0.id == APIUser.CurrentUser.id)
-                    UnityWebRequestUtils.Get($"https://dl.emmvrc.com/riskyfuncs.php?worldid={RoomManager.field_Internal_Static_ApiWorld_0.id}", new Action<string>((result) => OnFinish(result, RoomManager.field_Internal_Static_ApiWorld_0)));
+                    UnityWebRequestUtils.Get($"https://prod-dl.emmvrc.com/risky_func/{RoomManager.field_Internal_Static_ApiWorld_0.id}", new Action<string>((result) => OnFinish(result, RoomManager.field_Internal_Static_ApiWorld_0)));
             };
         }
 

@@ -8,15 +8,18 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 2, 1, 0);
-        public const int LastTestedBuildNumber = 1203;
+        public static readonly Version Version = new Version(3, 3, 0, 0);
+        public const int LastTestedBuildNumber = 1205;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
-        public const string DateUpdated = "5/28/2022";
+        public const string DateUpdated = "6/14/2022";
         //  "This is an pre-release build! Do not distribute to others."
         //  When writing the changelog, please only include changes for the current minor version, unless a new minor version just came out
         public const string Changelog =
-
+            "<b>v3.3.0</b>\n" +
+            "• Switched over to our new network.\n" +
+            "• Favorites menu is now more informative if an error happens.\n" +
+            "• Fixed update notice throwing an error.\n\n" +
             "<b>v3.2.1</b>\n" +
             "• Fixed the \"Search Avatars\" button in the User Info not working\n" +
             "• Fixed custom menu music not working\n" +
