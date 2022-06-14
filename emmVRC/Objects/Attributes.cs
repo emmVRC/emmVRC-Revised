@@ -8,7 +8,7 @@ namespace emmVRC.Objects
 {
     public class Attributes
     {
-        public static readonly Version Version = new Version(3, 3, 0, 0);
+        public static readonly Version Version = new Version(3, 3, 1, 0);
         public const int LastTestedBuildNumber = 1205;
         public const string EULAVersion = "1.0.1";
         public const bool Beta = false;
@@ -16,6 +16,8 @@ namespace emmVRC.Objects
         //  "This is an pre-release build! Do not distribute to others."
         //  When writing the changelog, please only include changes for the current minor version, unless a new minor version just came out
         public const string Changelog =
+            "<b>v3.3.1</b>\n" +
+            "• Fixed unfavoriting avatars.\n\n" +
             "<b>v3.3.0</b>\n" +
             "• Switched over to our new network.\n" +
             "• Favorites menu is now more informative if an error happens.\n" +

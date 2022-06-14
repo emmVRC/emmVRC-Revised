@@ -513,7 +513,7 @@ namespace emmVRC.Functions.UI
         {
             
 
-            var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Post, "/avatar", new Avatar(apiAvatar));
+            var (httpStatus, response) = await Request.AttemptRequest(HttpMethod.Delete, "/avatar", new Avatar(apiAvatar));
 
             switch (httpStatus)
             {
