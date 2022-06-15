@@ -25,6 +25,10 @@ namespace emmVRC.Network
                 if (@object != null)
                     requestMessage.Content = new StringContent(Encoder.Encode(@object), Encoding.UTF8,
                         "application/json");
+                
+                #if DEBUG
+                Logger.Log($"Req | {Encoder.Encode(@object)}");
+                #endif
 
                 // TODO Remove static HttpClient
                 using (var responseMessage = await NetworkClient.httpClient.SendAsync(requestMessage))

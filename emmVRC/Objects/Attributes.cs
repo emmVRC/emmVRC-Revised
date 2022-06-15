@@ -53,7 +53,7 @@ namespace emmVRC.Objects
             "• Menu recoloring should no longer throw an error on startup. (Some things may look wrong! let us know!)\n\n";
         public static bool Debug = false;
         public static readonly Version MinimumMelonLoaderVersion = new Version(0, 5, 4);
-        public static readonly Version MinimumemmVRCLoaderVersion = new Version(1, 5, 0);
+        public static readonly Version MinimumemmVRCLoaderVersion = new Version(1, 6, 0);
         //public static readonly string[] FlavourTextList = {
         //            "Did you know that Tab is also a drink?",
         //            "Going strong for 2 years!",
